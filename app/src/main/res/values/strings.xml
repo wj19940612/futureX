@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">FutureX</string>
+
+    <!-- http 请求信息 -->
+    <string name="http_error_null">空数据异常</string>
+    <string name="http_error_timeout">网络请求超时</string>
+    <string name="http_error_network">网络异常</string>
+    <string name="http_error_parse">数据解析异常</string>
+    <string name="http_error_server">服务器有事出去一会儿稍等一下,马上回来</string>
+
+    <!--crash-->
+    <string name="restart_app">重启应用</string>
+    <string name="cut">剪切</string>
 </resources>
