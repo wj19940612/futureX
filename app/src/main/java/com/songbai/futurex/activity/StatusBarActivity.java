@@ -19,9 +19,14 @@ import java.lang.reflect.Method;
 
 /**
  * Modified by john on 08/03/2018
- *
- * 控制状态栏的 Activity
- *
+ * <p>
+ * 控制状态栏亮色和暗色的 Activity
+ * <p>
+ * miui v6 之后才可以实现黑色字状态栏效果
+ * <p>
+ * flyme4 之后才可以显示黑色字
+ * <p>
+ * native api23 M 之后可以
  */
 public class StatusBarActivity extends AppCompatActivity {
 
