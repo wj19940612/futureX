@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.igexin.sdk.PushManager;
 import com.sbai.httplib.ReqLogger;
 import com.songbai.futurex.activity.CrashInfoActivity;
 import com.songbai.futurex.http.Api;
+import com.songbai.futurex.service.PushIntentService;
+import com.songbai.futurex.service.PushService;
 
 /**
  * Modified by john on 23/01/2018
@@ -30,6 +33,10 @@ public class App extends Application {
             }
         });
 
+        //init getui sdk
+        PushManager.getInstance().initialize(this, PushService.class);
+//        //init getui service
+        PushManager.getInstance().registerPushIntentService(this, PushIntentService.class);
         processCaughtException();
     }
 
@@ -40,7 +47,7 @@ public class App extends Application {
 //                if (BuildConfigUtils.isProductFlavor()) {
 //                    submitErrorInfoToServers(e);
 //                } else {
-                    openCrashInfoPage(e);
+                openCrashInfoPage(e);
 //                }
                 System.exit(1);
             }

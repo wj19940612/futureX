@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    def verName = System.getProperties().getProperty("verName")
+    def verCode = System.getProperties().getProperty("verCode")
+
+    def alphaVersionName = verName ? verName : alphaVerName
+    def alphaVersionCode = verCode ? verCode : alphaVerCode
+
+    println alphaVersionName
+    println alphaVersionCode
+
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.songbai.futurex"
@@ -10,7 +19,13 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField('String', 'HOST', '\"\"')
+        buildConfigField('String', 'HOST', '\"ex.bitfutu.re\"')
+
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "APP_ID",
+                GETUI_APP_KEY   : "APP_KEY",
+                GETUI_APP_SECRET: "APP_SECRET"
+        ]
     }
     buildTypes {
         release {
@@ -18,20 +33,47 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    flavorDimensions("app")
 
-    // third
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation project(path: ':httplib')
-    implementation project(path: ':glide')
+    productFlavors {
+        dev {
+//            applicationIdSuffix '.dev'
+            versionName "1.0"
+//            minSdkVersion 21
+            buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "APP_ID",
+                    GETUI_APP_KEY   : "APP_KEY",
+                    GETUI_APP_SECRET: "APP_SECRET"
+            ]
+        }
+        alpha {
+            versionCode alphaVersionCode as Integer
+            versionName alphaVersionName
+            buildConfigField('String', 'HOST', '\"ex.esongbai.xyz\"')
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "APP_ID",
+                    GETUI_APP_KEY   : "APP_KEY",
+                    GETUI_APP_SECRET: "APP_SECRET"
+            ]
+        }
+    }
+
+    dependencies {
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
+        implementation 'com.android.support:appcompat-v7:27.1.1'
+        implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+        testImplementation 'junit:junit:4.12'
+        androidTestImplementation 'com.android.support.test:runner:1.0.2'
+        androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+        implementation 'com.android.support:recyclerview-v7:27.1.1'
+
+        // third
+        implementation 'com.jakewharton:butterknife:8.8.1'
+        annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+        implementation 'com.getui:sdk-for-google-play:4.3.0.0'
+        implementation project(path: ':httplib')
+        implementation project(path: ':glide')
+    }
 }

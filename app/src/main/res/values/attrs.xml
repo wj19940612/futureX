@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--底部 tabs-->
+    <declare-styleable name="BottomTabs">
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColor" format="color"/>
+        <attr name="drawablePadding" format="dimension"/>
+        <attr name="textPaddingTop" format="dimension"/>
+        <attr name="textPaddingBottom" format="dimension"/>
+        <attr name="textArray" format="reference"/>
+        <attr name="iconArray" format="reference"/>
+    </declare-styleable>
+
+    <!--每个页面都会添加的 TitleBar-->
+    <declare-styleable name="TitleBar">
+        <attr name="titleText" format="reference|string"/>
+        <attr name="titleTextSize" format="dimension|reference"/>
+        <attr name="titleTextColor" format="color"/>
+        <attr name="titleTextAlpha" format="float"/>
+        <attr name="customView" format="reference"/>
+        <attr name="rightBackground" format="reference"/>
+        <attr name="rightText" format="reference|string"/>
+        <attr name="rightTextSize" format="dimension"/>
+        <attr name="rightTextColor" format="color"/>
+        <attr name="rightImage" format="reference"/>
+        <attr name="rightTextRightImage" format="reference"/>
+        <attr name="rightVisible" format="boolean"/>
+        <attr name="backFeature" format="boolean"/>
+        <attr name="backIcon" format="reference"/>
+        <attr name="backText" format="reference|string"/>
+        <attr name="backTextSize" format="dimension|reference"/>
+        <attr name="backTextColor" format="color"/>
+        <attr name="hasBottomSplitLine"/>
+        <attr name="splitLineColor"/>
+        <attr name="leftViewLeftPadding" format="dimension|reference"/>
+        <attr name="android:maxLines"/>
+        <attr name="titleLeftMargin" format="dimension|reference"/>
+        <attr name="titleRightMargin" format="dimension|reference"/>
+    </declare-styleable>
+
+
+    <!--带图标和文字的行控件-->
+    <declare-styleable name="IconTextRow">
+        <attr name="leftIcon" format="reference"/>
+        <attr name="rightIcon" format="reference"/>
+        <attr name="rightIconVisibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
+        <attr name="subText" format="reference|string"/>
+        <attr name="subTextSize" format="reference|dimension"/>
+        <attr name="subTextColor" format="color"/>
+        <attr name="subTextBackground" format="reference"/>
+        <attr name="subTextLeftDrawable" format="reference"/>
+        <attr name="subTextRightDrawable" format="reference"/>
+        <attr name="subTextRightMargin" format="reference|dimension"/>
+        <attr name="subTextSingleLine" format="boolean"/>
+        <attr name="subTextLeftMargin" format="reference|dimension"/>
+        <attr name="subTextVisible">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
+        <attr name="rowText" format="reference|string"/>
+        <attr name="rowTextSize" format="dimension"/>
+        <attr name="rowTextColor" format="color"/>
+        <attr name="rowSubText" format="reference|string"/>
+        <attr name="rowSubTextSize" format="dimension"/>
+        <attr name="rowSubTextColor" format="color"/>
+        <attr name="rowTextSpaceExtra" format="dimension"/>
+        <attr name="rowVerticalPadding" format="dimension"/>
+        <attr name="rowHorizontalPadding" format="dimension"/>
+        <attr name="hasBottomSplitLine"/>
+        <attr name="splitLineColor"/>
+        <attr name="splitLineLeftPadding" format="dimension"/>
+    </declare-styleable>
+</resources>
