@@ -10,4 +10,8 @@
     <color name="text49">#494949</color>
     <color name="text99">#999</color>
     <color name="disable">#83868a</color>
+
+    <color name="bgF5F5">#F5F5F5</color>
+    <color name="text666">#666</color>
+
 </resources>

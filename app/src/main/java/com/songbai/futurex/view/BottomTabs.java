@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 
+
 public class BottomTabs extends LinearLayout {
 
     private static final int KEY_POSITION = -2;
