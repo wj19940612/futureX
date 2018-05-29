@@ -9,5 +9,10 @@
     <color name="text">#222</color>
     <color name="text49">#494949</color>
     <color name="text99">#999</color>
+    <color name="text66">#666666</color>
     <color name="disable">#83868a</color>
+
+    <color name="white">@android:color/white</color>
+    <color name="black">@android:color/black</color>
+    <color name="selectedGray">#939EA5</color>
 </resources>

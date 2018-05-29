@@ -15,7 +15,6 @@
             android:id="@+id/headLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_launcher_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -31,8 +30,7 @@
                 android:layout_marginStart="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_launcher_background"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/userName"
@@ -56,7 +54,6 @@
             app:layout_constraintTop_toBottomOf="@+id/headLayout"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bg_F5F5"
             app:subTextColor="@android:color/white"
             app:subTextSize="12sp"
             app:subTextVisible="gone"/>
@@ -88,7 +85,6 @@
             app:layout_constraintTop_toBottomOf="@+id/order"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bg_F5F5"
             app:subTextColor="@android:color/white"
             app:subTextSize="12sp"
             app:subTextVisible="gone"/>
@@ -129,8 +125,6 @@
             app:layout_constraintTop_toBottomOf="@+id/customService"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"/>
-
     </android.support.constraint.ConstraintLayout>
-
 </android.support.v4.widget.NestedScrollView>
 

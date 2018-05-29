@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ggggg"
-        android:background="@drawable/btn_primary"
-        android:padding="20dp"/>
-
+    <com.songbai.futurex.view.RadioButtonHeader
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        app:pointColor="@color/red"
+        app:tabArray="@array/marketTabs"
+        app:tabMargin="24dp"/>
 </android.support.constraint.ConstraintLayout>

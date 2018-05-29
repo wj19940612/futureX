@@ -11,4 +11,12 @@
     <!--crash-->
     <string name="restart_app">重启应用</string>
     <string name="cut">剪切</string>
+
+    <string-array name="marketTabs">
+        <item>全部</item>
+        <item>未付款</item>
+        <item>已付款</item>
+        <item>已取消</item>
+        <item>已完成</item>
+    </string-array>
 </resources>
