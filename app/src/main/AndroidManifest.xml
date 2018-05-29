@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.songbai.futurex">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -21,6 +23,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
 
+        <service android:name=".service.PushIntentService"/>
+        <service
+            android:name=".service.PushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice"/>
     </application>
 
 </manifest>
