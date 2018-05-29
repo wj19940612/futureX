@@ -27,6 +27,9 @@ import java.lang.reflect.Method;
  * flyme4 之后才可以显示黑色字
  * <p>
  * native api23 M 之后可以
+ * <p>
+ * >=android 6.0 api 23, statusbar 使用白底黑色字
+ * < android 6.0 api 23, statusbar 使用黑底系统自带字
  */
 public class StatusBarActivity extends AppCompatActivity {
 
@@ -74,6 +77,16 @@ public class StatusBarActivity extends AppCompatActivity {
         view.setPadding(0, paddingTop, 0, 0);
     }
 
+    /**
+     * 增加View的paddingTop,增加的值为状态栏高度
+     */
+    public void setStatusBarHeightPadding(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(),
+                    view.getPaddingRight(), view.getPaddingBottom());
+        }
+    }
+
     private int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -84,13 +97,33 @@ public class StatusBarActivity extends AppCompatActivity {
     }
 
     /**
+     * android 6.0设置字体颜色
+     */
+    public void setStatusBarDarkModeForM(boolean dark) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+
+            int systemUiVisibility = window.getDecorView().getSystemUiVisibility();
+            if (dark) {
+                systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                systemUiVisibility |= View.SYSTEM_UI_FLAG_VISIBLE;
+            }
+            window.getDecorView().setSystemUiVisibility(systemUiVisibility);
+        }
+    }
+
+    /**
      * 设置Android状态栏的字体颜色，状态栏为亮色的时候字体和图标是黑色，状态栏为暗色的时候字体和图标为白色
      *
      * @param dark 状态栏字体是否为深色
      */
     private void setStatusBarFontIconDark(boolean dark) {
         // 小米 MIUI
-        if (isMiui()) {
+        if (betweenMIUI6And9()) {
             try {
                 Window window = getWindow();
                 Class clazz = getWindow().getClass();
@@ -138,6 +171,22 @@ public class StatusBarActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
         }*/
+    }
+
+    /**
+     * 判断是否为MIUI[6,9)
+     */
+    public static boolean betweenMIUI6And9() {
+        try {
+            Class<?> clz = Class.forName("android.os.SystemProperties");
+            Method mtd = clz.getMethod("get", String.class);
+            String val = (String) mtd.invoke(null, "ro.miui.ui.version.name");
+            val = val.replaceAll("[vV]", "");
+            int version = Integer.parseInt(val);
+            return version >= 6 && version < 9;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isMiui() {
