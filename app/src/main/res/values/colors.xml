@@ -15,4 +15,7 @@
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="selectedGray">#939EA5</color>
+    <color name="bgF5F5">#F5F5F5</color>
+    <color name="text666">#666</color>
+
 </resources>

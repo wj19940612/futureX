@@ -12,11 +12,81 @@
     <string name="restart_app">重启应用</string>
     <string name="cut">剪切</string>
 
-    <string-array name="marketTabs">
-        <item>全部</item>
-        <item>未付款</item>
-        <item>已付款</item>
-        <item>已取消</item>
-        <item>已完成</item>
+    <!-- Dialog -->
+    <string name="ok">确定</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+
+    <string name="take_phone_from_camera">拍照</string>
+    <string name="look_big_picture">查看大图</string>
+    <string name="take_phone_from_phone">从手机相册选择</string>
+    <string name="take_phone_cancel">取消</string>
+
+    <string name="click_login">点击登录</string>
+    <string name="property">我的资产</string>
+    <string name="trade_order_log">币币交易历史</string>
+    <string name="fiat_trade_order">法币交易订单</string>
+    <string name="invite">邀请返佣</string>
+    <string name="message_center">消息中心</string>
+    <string name="safety_center">安全中心</string>
+    <string name="custom_service">聊天客服</string>
+    <string name="settings">设置</string>
+    <string name="personal_data">个人信息</string>
+    <string name="head_portrait">头像</string>
+    <string name="nick_name">昵称</string>
+    <string name="real_name">真实姓名</string>
+    <string name="phone_authentication">手机认证</string>
+    <string name="mail_authentication">邮箱认证</string>
+    <string name="primary_authentication">初级认证</string>
+    <string name="advanced_authentication">高级认证</string>
+    <string name="fiat_pay_management">法币支付管理</string>
+    <string name="address_management">提币地址管理</string>
+    <string name="please_select">请设置</string>
+    <string name="set_nick">设置昵称</string>
+    <string name="please_input_nick_name">请输入昵称</string>
+    <string name="save">保存</string>
+    <string name="update_success">更新成功</string>
+    <string name="bind_phone">绑定手机</string>
+    <string name="please_input_phone_num">请输入手机号码</string>
+    <string name="get_auth_code">发送验证码</string>
+    <string name="message_auth_code">短信验证码</string>
+    <string name="mail_auth_code">邮箱验证码</string>
+    <string name="resend">重新发送</string>
+    <string name="confirm_bind">确认绑定</string>
+    <string name="bind_mail">绑定邮箱</string>
+
+    <string name="please_open_camera_permission">请打开相机权限</string>
+    <string name="sd_is_not_useful">sd卡不可使用</string>
+
+    <string name="send">发送</string>
+    <string name="gallery">相册</string>
+    <string name="preview">预览</string>
+    <string name="all_image">所有图片</string>
+
+    <string name="save_to_the_gallery">是否保存到相册</string>
+    <string name="image_save_fail">图片保存失败</string>
+    <string name="is_sure_delete_photo">要删除这张照片吗?</string>
+
+    <!-- bottom tabs -->
+    <string name="home">首页</string>
+    <string name="market">行情</string>
+    <string name="fiat_coin">法币</string>
+    <string name="coin_coin">币币</string>
+    <string name="mine">我的</string>
+    <string-array name="tabTexts">
+        <item>@string/home</item>
+        <item>@string/market</item>
+        <item>@string/fiat_coin</item>
+        <item>@string/coin_coin</item>
+        <item>@string/mine</item>
     </string-array>
+    <integer-array name="tabIcons">
+        <item>@drawable/tab_home</item>
+        <item>@drawable/tab_market</item>
+        <item>@drawable/tab_fiat_coin</item>
+        <item>@drawable/tab_coin_coin</item>
+        <item>@drawable/tab_mine</item>
+    </integer-array>
 </resources>

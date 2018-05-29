@@ -22,6 +22,34 @@
             android:name=".activity.CrashInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.PersonalDataActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.ModifyNickNameActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.BindPhoneActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.ClipHeadImageActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ImagePreViewActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ImageSelectActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.LookBigPictureActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".service.PushIntentService"/>
         <service
