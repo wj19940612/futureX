@@ -75,6 +75,7 @@
     <string name="fiat_coin">法币</string>
     <string name="coin_coin">币币</string>
     <string name="mine">我的</string>
+
     <string-array name="tabTexts">
         <item>@string/home</item>
         <item>@string/market</item>
@@ -82,11 +83,12 @@
         <item>@string/coin_coin</item>
         <item>@string/mine</item>
     </string-array>
+
     <integer-array name="tabIcons">
         <item>@drawable/tab_home</item>
         <item>@drawable/tab_market</item>
-        <item>@drawable/tab_fiat_coin</item>
-        <item>@drawable/tab_coin_coin</item>
+        <item>@drawable/tab_legal_currency</item>
+        <item>@drawable/tab_trade</item>
         <item>@drawable/tab_mine</item>
     </integer-array>
 </resources>

@@ -8,8 +8,10 @@ import android.support.v4.view.ViewPager;
 
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.fragment.HomeFragment;
-import com.songbai.futurex.fragment.LoginFragment;
-import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.LegalCurrencyFragment;
+import com.songbai.futurex.fragment.MarketFragment;
+import com.songbai.futurex.fragment.MineFragment;
+import com.songbai.futurex.fragment.TradeFragment;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
 
@@ -56,10 +58,6 @@ public class MainActivity extends BaseActivity {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
 //                umengClickStatistics(position);
-                if (position == 2) {
-                    UniqueActivity.launcher(getActivity(), LoginFragment.class)
-                            .putExtra("test", "test").execute();
-                }
             }
         });
 
@@ -80,13 +78,13 @@ public class MainActivity extends BaseActivity {
                 case 0:
                     return new HomeFragment();
                 case 1:
-                    return new HomeFragment();
+                    return new MarketFragment();
                 case 2:
-                    return new HomeFragment();
+                    return new LegalCurrencyFragment();
                 case 3:
-                    return new HomeFragment();
+                    return new TradeFragment();
                 case 4:
-                    return new HomeFragment();
+                    return new MineFragment();
             }
             return null;
         }

@@ -35,3 +35,4 @@
 - 现货市场 cash market
 - 基准货币 base currenc
 - 计价货币 counter currency
+- 法币 legal currency
