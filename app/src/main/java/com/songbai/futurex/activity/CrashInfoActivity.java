@@ -12,7 +12,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExKeys;
-import com.songbai.futurex.MainActivity;
 import com.songbai.futurex.R;
 
 import java.io.IOException;

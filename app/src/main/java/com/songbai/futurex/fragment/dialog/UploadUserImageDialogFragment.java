@@ -45,6 +45,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
     private static final String KEY_TYPE = "type";
     private static final String KEY_IMAGE_URL_INDEX = "key_image_url_index";
+    private static final String KEY_SELECT_IMAGE_HINT = "key_select_image_hint";
 
     //不做任何处理，只返回图片地址
     public static final int IMAGE_TYPE_NOT_DEAL = 1750;
@@ -73,6 +74,8 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     //打开自定义画廊页面请求码
     private static final int REQ_CODE_TAKE_PHONE_FROM_GALLERY = 46606;
 
+    @BindView(R.id.selectImageHint)
+    AppCompatTextView mSelectImageHint;
     @BindView(R.id.takePhoneFromCamera)
     AppCompatTextView mTakePhoneFromCamera;
     @BindView(R.id.takePhoneFromGallery)
@@ -90,6 +93,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private String HDPictureUrl;
     private int mImageDealType;
     private int mImageUrlIndex;
+    private String mSelectImageHintText;
 
     public interface OnImagePathListener {
         void onImagePath(int index, String imagePath);
@@ -112,10 +116,15 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     }
 
     public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex) {
+        return newInstance(type, url, imageIndex, "");
+    }
+
+    public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex, String selectImageHint) {
         Bundle args = new Bundle();
         args.putInt(KEY_TYPE, type);
         args.putString(KEY_IMAGE_URL, url);
         args.putInt(KEY_IMAGE_URL_INDEX, imageIndex);
+        args.putString(KEY_SELECT_IMAGE_HINT, selectImageHint);
         UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -141,6 +150,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
             mImageDealType = getArguments().getInt(KEY_TYPE, IMAGE_TYPE_NOT_DEAL);
             HDPictureUrl = getArguments().getString(KEY_IMAGE_URL);
             mImageUrlIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
+            mSelectImageHintText = getArguments().getString(KEY_SELECT_IMAGE_HINT, "");
         }
     }
 
@@ -149,11 +159,13 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 //        || mImageDealType == IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE
-        if (!TextUtils.isEmpty(HDPictureUrl) ) {
+        if (!TextUtils.isEmpty(HDPictureUrl)) {
             mLookHDPicture.setVisibility(View.VISIBLE);
         } else {
             mLookHDPicture.setVisibility(View.GONE);
         }
+        mSelectImageHint.setVisibility(TextUtils.isEmpty(mSelectImageHintText) ? View.GONE : View.VISIBLE);
+        mSelectImageHint.setText(mSelectImageHintText);
     }
 
     @Nullable

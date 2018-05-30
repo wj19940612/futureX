@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.StatusBarActivity;
+import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.utils.Launcher;
 
 import butterknife.ButterKnife;
@@ -33,11 +34,18 @@ public class PersonalDataActivity extends StatusBarActivity {
         mBind.unbind();
     }
 
-    @OnClick({R.id.nickName, R.id.realName, R.id.phoneAuthentication, R.id.mailAuthentication, R.id.primaryAuthentication, R.id.advancedAuthentication, R.id.fiatPayManagement, R.id.addressManagement})
+    @OnClick({R.id.headImageLayout, R.id.nickName, R.id.realName, R.id.phoneAuthentication,
+            R.id.mailAuthentication, R.id.primaryAuthentication, R.id.advancedAuthentication,
+            R.id.fiatPayManagement, R.id.addressManagement})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.headImageLayout:
+                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
+                uploadUserImageDialogFragment.show(getSupportFragmentManager());
+                break;
             case R.id.nickName:
-                Launcher.with(this, ModifyNickNameActivity.class);
+                Launcher.with(this, ModifyNickNameActivity.class).execute();
                 break;
             case R.id.realName:
                 break;

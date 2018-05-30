@@ -172,7 +172,7 @@ public class SmartDialog {
         mMessageText = null;
         mMessageGravity = Gravity.CENTER_VERTICAL;
         mMessageTextSize = 14;
-        mMessageTextColor = ContextCompat.getColor(mActivity, R.color.text666);
+        mMessageTextColor = ContextCompat.getColor(mActivity, R.color.text66);
         mMessageTextMaxLines = 3;
         mWidthScale = 0;
         mHeightScale = 0;

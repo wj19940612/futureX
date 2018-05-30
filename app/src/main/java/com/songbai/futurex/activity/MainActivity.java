@@ -1,4 +1,4 @@
-package com.songbai.futurex;
+package com.songbai.futurex.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.HomeFragment;
 import com.songbai.futurex.fragment.LegalCurrencyFragment;
 import com.songbai.futurex.fragment.MarketFragment;

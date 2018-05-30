@@ -19,9 +19,10 @@
     <string name="yes">是</string>
     <string name="no">否</string>
 
+    <string name="please_select_portrait">请选择头像</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="look_big_picture">查看大图</string>
-    <string name="take_phone_from_phone">从手机相册选择</string>
+    <string name="take_phone_from_phone">从相册选择</string>
     <string name="take_phone_cancel">取消</string>
 
     <string name="click_login">点击登录</string>

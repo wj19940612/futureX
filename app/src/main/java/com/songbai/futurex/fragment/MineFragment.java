@@ -3,17 +3,15 @@ package com.songbai.futurex.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
-import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -32,23 +30,25 @@ public class MineFragment extends BaseFragment {
     ImageView mHeadPortrait;
     @BindView(R.id.userName)
     TextView mUserName;
-    @BindView(R.id.safeGrade)
-    TextView mSafeGrade;
     @BindView(R.id.userPhone)
     TextView mUserPhone;
     @BindView(R.id.userInfoGroup)
-    ConstraintLayout mUserInfoGroup;
+    LinearLayout mUserInfoGroup;
     @BindView(R.id.login)
     TextView mLogin;
     @BindView(R.id.msgCenter)
     IconTextRow mMsgCenter;
+    @BindView(R.id.property)
+    IconTextRow mProperty;
+    @BindView(R.id.tradeOrderLog)
+    IconTextRow mTradeOrderLog;
     private Unbinder mBind;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
-        mBind = ButterKnife.bind(view);
+        mBind = ButterKnife.bind(this,view);
         return view;
     }
 
@@ -70,12 +70,12 @@ public class MineFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Apic.getMsgCount().callback(new Callback<String>() {
-                @Override
-                protected void onRespSuccess(String resp) {
-                    mMsgCenter.setSubText(resp);
-                }
-            }).fire();
+//            Apic.getMsgCount().callback(new Callback<String>() {
+//                @Override
+//                protected void onRespSuccess(String resp) {
+//                    mMsgCenter.setSubText(resp);
+//                }
+//            }).fire();
         }
     }
 
@@ -85,11 +85,14 @@ public class MineFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.property, R.id.tradeOrderLog, R.id.fiatTradeOrder, R.id.invite, R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
+    @OnClick({R.id.userInfoGroup, R.id.property, R.id.tradeOrderLog, R.id.fiatTradeOrder, R.id.invite,
+            R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.property:
+            case R.id.userInfoGroup:
                 Launcher.with(this, PersonalDataActivity.class).execute();
+                break;
+            case R.id.property:
                 break;
             case R.id.tradeOrderLog:
                 break;

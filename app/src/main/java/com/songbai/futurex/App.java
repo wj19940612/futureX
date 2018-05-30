@@ -8,6 +8,7 @@ import android.util.Log;
 import com.igexin.sdk.PushManager;
 import com.sbai.httplib.ReqLogger;
 import com.songbai.futurex.activity.CrashInfoActivity;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.service.PushIntentService;
 import com.songbai.futurex.service.PushService;

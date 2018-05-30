@@ -25,6 +25,17 @@ public class Apic {
     }
 
     /**
+     * /user/user/updatePic.do
+     * POST
+     * 更新头像接口(陈作衡)
+     */
+    public static Api submitPortraitPath(String data) {
+        return Api.post("/user/user/updatePic.do",
+                new ReqParams()
+                        .put("pic", data));
+    }
+
+    /**
      *
      */
     // TODO: 2018/5/29 修改昵称

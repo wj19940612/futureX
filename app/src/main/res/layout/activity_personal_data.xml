@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="14dp"
             android:text="@string/head_portrait"
             android:textColor="@color/text49"
             android:textSize="16sp"/>
@@ -54,7 +54,7 @@
             android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="12dp"
-            android:background="@color/disable"/>
+            android:background="@color/bgF5F5"/>
     </RelativeLayout>
 
     <com.songbai.futurex.view.IconTextRow

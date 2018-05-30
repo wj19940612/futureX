@@ -4,16 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/bgF5F5"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    tools:context=".fragment.MineFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/headLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,154 +26,166 @@
                 android:id="@+id/headPortrait"
                 android:layout_width="68dp"
                 android:layout_height="68dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="65dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="45dp"
+                android:background="@drawable/ic_default_avatar_big"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <FrameLayout
+                android:id="@+id/userInfoContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/headPortrait"
+                app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/headPortrait"
+                app:layout_constraintTop_toTopOf="@+id/headPortrait">
 
-                <android.support.constraint.ConstraintLayout
+                <LinearLayout
                     android:id="@+id/userInfoGroup"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
                         android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         tools:text="昵称"/>
-
-                    <TextView
-                        android:id="@+id/safeGrade"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
 
                     <TextView
                         android:id="@+id/userPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginStart="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/userName"
-                        app:layout_constraintTop_toBottomOf="@+id/userName"
+                        android:layout_marginTop="15dp"
+                        android:textSize="14sp"
                         tools:text="手机：138943898"/>
-                </android.support.constraint.ConstraintLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/click_login"/>
-
+                    android:text="@string/click_login"
+                    android:visibility="gone"/>
             </FrameLayout>
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:src="@drawable/ic_common_right_arrow"
+                app:layout_constraintBottom_toBottomOf="@+id/headPortrait"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/headPortrait"/>
+
+        </android.support.constraint.ConstraintLayout>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/property"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@android:color/white"
+            android:background="@drawable/bg_white"
             app:hasBottomSplitLine="true"
-            app:rowSubTextColor="@color/text"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/property"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:subTextColor="@android:color/white"
-            app:subTextSize="12sp"
-            app:subTextVisible="gone"/>
+            app:splitLineColor="@color/bgF5F5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/tradeOrderLog"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/bg_white"
             app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/trade_order_log"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
-
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/fiatTradeOrder"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/bg_white"
             android:visibility="visible"
             app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/fiat_trade_order"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/invite"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/bg_white"
             android:visibility="visible"
-            app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/invite"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:subTextColor="@android:color/white"
-            app:subTextSize="12sp"
-            app:subTextVisible="gone"/>
+            app:splitLineColor="@color/bgF5F5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/msgCenter"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_white"
             android:visibility="visible"
             app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/message_center"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"
+            app:subTextColor="@android:color/white"
             tools:subText="3"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/safetyCenter"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/bg_white"
             android:visibility="visible"
             app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/safety_center"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/customService"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/bg_white"
             android:visibility="visible"
             app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/custom_service"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/settings"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/bg_white"
             android:visibility="visible"
-            app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/settings"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"/>
