@@ -10,7 +10,6 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.HomeFragment;
 import com.songbai.futurex.fragment.MineFragment;
 import com.songbai.futurex.fragment.LoginFragment;
-import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
 
@@ -30,7 +29,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        translucentStatusBar();
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
         mViewPager.setOffscreenPageLimit(4);
@@ -43,6 +42,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 mBottomTabs.selectTab(position);
+                setStatusBarDarkModeForM(position != 0 && position != 4);
             }
 
             @Override

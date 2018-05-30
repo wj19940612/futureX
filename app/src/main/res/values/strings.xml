@@ -38,10 +38,10 @@
     <string name="head_portrait">头像</string>
     <string name="nick_name">昵称</string>
     <string name="real_name">真实姓名</string>
-    <string name="phone_authentication">手机认证</string>
-    <string name="mail_authentication">邮箱认证</string>
-    <string name="primary_authentication">初级认证</string>
-    <string name="advanced_authentication">高级认证</string>
+    <string name="phone_certification">手机认证</string>
+    <string name="mail_certification">邮箱认证</string>
+    <string name="primary_certification">初级认证</string>
+    <string name="advanced_certification">高级认证</string>
     <string name="fiat_pay_management">法币支付管理</string>
     <string name="address_management">提币地址管理</string>
     <string name="please_select">请设置</string>
@@ -69,6 +69,27 @@
     <string name="save_to_the_gallery">是否保存到相册</string>
     <string name="image_save_fail">图片保存失败</string>
     <string name="is_sure_delete_photo">要删除这张照片吗?</string>
+
+    <string name="total_property_equivalent">总资产折合（BTC）</string>
+    <string name="_property_equivalent">推广返佣折合（BTC）</string>
+    <string name="invite_num_x">共邀请用户\n%1$d人</string>
+    <string name="available_amount_x">%1$s\n可用</string>
+    <string name="freeze_amount_x">%1$s\n冻结</string>
+
+    <string name="language">语言</string>
+    <string name="about_us">关于我们</string>
+    <string name="feedback">建议反馈</string>
+    <string name="logout">退出登录</string>
+    <string name="platform_introduction">平台介绍</string>
+    <string name="company_introduction">公司介绍</string>
+    <string name="connect_customer_service">联系客服</string>
+    <string name="version_updating">版本更新</string>
+    <string name="feedback_content">反馈内容</string>
+    <string name="feedback_image_hint">图片（选填，提供问题的截图）</string>
+    <string name="feedback_hint">请描述问题发生的具体场景，最好附上截图说明</string>
+    <string name="confirm_submit">确认提交</string>
+    <string name="customer_service_title">客服小三</string>
+    <string name="input_hint">输入信息，按Enter发送</string>
 
     <!-- bottom tabs -->
     <string name="home">首页</string>

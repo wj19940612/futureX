@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.songbai.futurex.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/about_us"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/ic_about_logo"/>
+
+    <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/platformIntroduction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/platform_introduction"
+        app:rowTextSize="16sp"/>
+
+    <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/companyIntroduction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/company_introduction"
+        app:rowTextSize="16sp"/>
+
+    <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/connectCustomerService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/connect_customer_service"
+        app:rowTextSize="16sp"/>
+
+    <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/versionUpdating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/version_updating"
+        app:rowTextSize="16sp"
+        app:subText="V1.0"
+        app:subTextColor="@color/text99"
+        app:subTextSize="14sp"/>
+
+</LinearLayout>

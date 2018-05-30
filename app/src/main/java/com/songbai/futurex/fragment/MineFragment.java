@@ -3,6 +3,7 @@ package com.songbai.futurex.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
+import com.songbai.futurex.fragment.mine.CustomerServiceFragment;
+import com.songbai.futurex.fragment.mine.SettingsFragment;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -26,6 +32,8 @@ import butterknife.Unbinder;
  */
 public class MineFragment extends BaseFragment {
 
+    @BindView(R.id.headLayout)
+    ConstraintLayout mHeadLayout;
     @BindView(R.id.headPortrait)
     ImageView mHeadPortrait;
     @BindView(R.id.userName)
@@ -48,7 +56,8 @@ public class MineFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
-        mBind = ButterKnife.bind(this,view);
+        mBind = ButterKnife.bind(this, view);
+        ((BaseActivity)getActivity()).setStatusBarHeightPadding(mHeadLayout);
         return view;
     }
 
@@ -93,6 +102,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(this, PersonalDataActivity.class).execute();
                 break;
             case R.id.property:
+                Launcher.with(this, MyPropertyActivity.class).execute();
                 break;
             case R.id.tradeOrderLog:
                 break;
@@ -105,8 +115,10 @@ public class MineFragment extends BaseFragment {
             case R.id.safetyCenter:
                 break;
             case R.id.customService:
+                UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();
                 break;
             case R.id.settings:
+                UniqueActivity.launcher(getActivity(), SettingsFragment.class).execute();
                 break;
             default:
         }

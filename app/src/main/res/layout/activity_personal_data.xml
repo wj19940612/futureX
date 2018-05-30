@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgF5F5"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
@@ -28,7 +29,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="14dp"
             android:text="@string/head_portrait"
-            android:textColor="@color/text49"
+            android:textColor="@color/text"
             android:textSize="16sp"/>
 
         <ImageView
@@ -65,8 +66,10 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/nick_name"
-        app:rowTextColor="@color/text49"
-        app:rowTextSize="16sp"/>
+        app:rowTextColor="@color/text"
+        app:rowTextSize="16sp"
+        app:subTextColor="@color/text99"
+        app:subTextSize="14sp"/>
 
     <com.songbai.futurex.view.IconTextRow
         android:id="@+id/realName"
@@ -75,12 +78,14 @@
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/real_name"
-        app:rowTextColor="@color/text49"
+        app:rowTextColor="@color/text"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"/>
+        app:subText="@string/please_select"
+        app:subTextColor="@color/text99"
+        app:subTextSize="14sp"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/phoneAuthentication"
+        android:id="@+id/phoneCertification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
@@ -88,46 +93,53 @@
         app:hasBottomSplitLine="true"
         app:layout_constraintTop_toBottomOf="@+id/sex"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/phone_authentication"
-        app:rowTextColor="@color/text49"
+        app:rowText="@string/phone_certification"
+        app:rowTextColor="@color/text"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"/>
+        app:subText="@string/please_select"
+        app:subTextColor="@color/text99"
+        app:subTextSize="14sp"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/mailAuthentication"
+        android:id="@+id/mailCertification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         app:hasBottomSplitLine="true"
         app:layout_constraintTop_toBottomOf="@+id/sex"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/mail_authentication"
-        app:rowTextColor="@color/text49"
+        app:rowText="@string/mail_certification"
+        app:rowTextColor="@color/text"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"/>
+        app:subText="@string/please_select"
+        app:subTextColor="@color/text99"
+        app:subTextRightDrawable="@drawable/ic_common_unautherized"
+        app:subTextSize="14sp"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/primaryAuthentication"
+        android:id="@+id/primaryCertification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         app:hasBottomSplitLine="true"
         app:layout_constraintTop_toBottomOf="@+id/sex"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/primary_authentication"
-        app:rowTextColor="@color/text49"
+        app:rowText="@string/primary_certification"
+        app:rowTextColor="@color/text"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"/>
+        app:subText="@string/please_select"
+        app:subTextColor="@color/text99"
+        app:subTextSize="14sp"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/advancedAuthentication"
+        android:id="@+id/seniorCertification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         app:layout_constraintTop_toBottomOf="@+id/sex"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/advanced_authentication"
-        app:rowTextColor="@color/text49"
+        app:rowText="@string/advanced_certification"
+        app:rowTextColor="@color/text"
         app:rowTextSize="16sp"
         app:subText="@string/please_select"/>
 
@@ -140,7 +152,7 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/fiat_pay_management"
-        app:rowTextColor="@color/text49"
+        app:rowTextColor="@color/text"
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
@@ -150,7 +162,7 @@
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/address_management"
-        app:rowTextColor="@color/text49"
+        app:rowTextColor="@color/text"
         app:rowTextSize="16sp"/>
 
 </LinearLayout>

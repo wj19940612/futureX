@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.songbai.futurex"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.songbai.futurex">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -51,6 +51,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LookBigPictureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.MyPropertyActivity"
             android:screenOrientation="portrait"/>
 
         <service android:name=".service.PushIntentService"/>
