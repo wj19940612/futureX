@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.fragment.HomeFragment;
+import com.songbai.futurex.fragment.MineFragment;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
 
@@ -79,7 +80,7 @@ public class MainActivity extends BaseActivity {
                 case 3:
                     return new HomeFragment();
                 case 4:
-                    return new HomeFragment();
+                    return new MineFragment();
             }
             return null;
         }

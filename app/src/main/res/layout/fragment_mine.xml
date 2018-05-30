@@ -42,8 +42,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/userInfoGroup"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/userName"
@@ -82,7 +81,8 @@
                     android:id="@+id/login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/click_login"/>
+                    android:text="@string/click_login"
+                    android:visibility="gone"/>
 
             </FrameLayout>
 
@@ -98,7 +98,7 @@
             app:rowText="@string/property"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor=""
+            app:splitLineColor="@color/bgF5F5"
             app:subTextColor="@android:color/white"
             app:subTextSize="12sp"
             app:subTextVisible="gone"/>
@@ -110,7 +110,9 @@
             app:hasBottomSplitLine="true"
             app:rowText="@string/trade_order_log"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"
+            app:subTextColor="@android:color/white"/>
 
 
         <com.songbai.futurex.view.IconTextRow
@@ -121,18 +123,19 @@
             app:hasBottomSplitLine="true"
             app:rowText="@string/fiat_trade_order"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"
+            app:subTextColor="@android:color/white"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/invite"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:visibility="visible"
-            app:hasBottomSplitLine="true"
             app:rowText="@string/invite"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor=""
+            app:splitLineColor="@color/bgF5F5"
             app:subTextColor="@android:color/white"
             app:subTextSize="12sp"
             app:subTextVisible="gone"/>
@@ -146,6 +149,8 @@
             app:rowText="@string/message_center"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"
+            app:subTextColor="@android:color/white"
             tools:subText="3"/>
 
         <com.songbai.futurex.view.IconTextRow
@@ -156,7 +161,9 @@
             app:hasBottomSplitLine="true"
             app:rowText="@string/safety_center"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"
+            app:subTextColor="@android:color/white"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/customService"
@@ -166,7 +173,9 @@
             app:hasBottomSplitLine="true"
             app:rowText="@string/custom_service"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"
+            app:subTextColor="@android:color/white"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/settings"
@@ -176,7 +185,9 @@
             app:hasBottomSplitLine="true"
             app:rowText="@string/settings"
             app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"/>
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5F5"
+            app:subTextColor="@android:color/white"/>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
 

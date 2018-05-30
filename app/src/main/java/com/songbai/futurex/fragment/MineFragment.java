@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
-import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -70,12 +68,12 @@ public class MineFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Apic.getMsgCount().callback(new Callback<String>() {
-                @Override
-                protected void onRespSuccess(String resp) {
-                    mMsgCenter.setSubText(resp);
-                }
-            }).fire();
+//            Apic.getMsgCount().callback(new Callback<String>() {
+//                @Override
+//                protected void onRespSuccess(String resp) {
+//                    mMsgCenter.setSubText(resp);
+//                }
+//            }).fire();
         }
     }
 
