@@ -1,4 +1,4 @@
-package com.songbai.futurex;
+package com.songbai.futurex.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.HomeFragment;
 import com.songbai.futurex.fragment.MineFragment;
 import com.songbai.futurex.view.BottomTabs;
@@ -16,7 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
-
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
     @BindView(R.id.bottomTabs)
@@ -28,6 +27,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
         mViewPager.setOffscreenPageLimit(4);

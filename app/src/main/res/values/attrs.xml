@@ -38,7 +38,6 @@
         <attr name="titleRightMargin" format="dimension|reference"/>
     </declare-styleable>
 
-
     <!--带图标和文字的行控件-->
     <declare-styleable name="IconTextRow">
         <attr name="leftIcon" format="reference"/>
@@ -74,5 +73,12 @@
         <attr name="hasBottomSplitLine"/>
         <attr name="splitLineColor"/>
         <attr name="splitLineLeftPadding" format="dimension"/>
+    </declare-styleable>
+
+    <!--RadioButtonHeader-->
+    <declare-styleable name="RadioButtonHeader">
+        <attr name="tabArray" format="reference"/>
+        <attr name="tabMargin" format="dimension|reference"/>
+        <attr name="pointColor" format="color|reference"/>
     </declare-styleable>
 </resources>

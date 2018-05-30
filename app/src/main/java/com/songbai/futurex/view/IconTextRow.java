@@ -104,8 +104,7 @@ public class IconTextRow extends LinearLayout {
         mHasBottomSplitLine = typedArray.getBoolean(R.styleable.IconTextRow_hasBottomSplitLine, false);
         mSplitLineColor = typedArray.getColorStateList(R.styleable.IconTextRow_splitLineColor);
         if (mSplitLineColor == null) {
-            // TODO: 2018/5/28 分割线
-            mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.disable));
+            mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.bgF5F5));
         }
         mSplitLineLeftPadding = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_splitLineLeftPadding, defaultPadding);
         mSplitLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_SPLIT_LINE_DP,
