@@ -36,19 +36,15 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.ClipHeadImageActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ImagePreViewActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ImageSelectActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LookBigPictureActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
 
         <service android:name=".service.PushIntentService"/>

@@ -6,6 +6,20 @@
               android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/selectImageHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:adjustViewBounds="true"
+        android:background="@color/bgF5F5"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="@string/please_select_portrait"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
+
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/lookHDPicture"
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -28,8 +42,8 @@
         android:clickable="true"
         android:gravity="center"
         android:text="@string/take_phone_from_camera"
-        android:textColor="@color/text"
-        android:textSize="17sp"/>
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"/>
 
 
     <android.support.v7.widget.AppCompatTextView
@@ -40,8 +54,8 @@
         android:background="@drawable/bg_white"
         android:gravity="center"
         android:text="@string/take_phone_from_phone"
-        android:textColor="@color/text"
-        android:textSize="17sp"/>
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/takePhoneCancel"
@@ -52,7 +66,7 @@
         android:clickable="true"
         android:gravity="center"
         android:text="@string/take_phone_cancel"
-        android:textColor="@color/text49"
-        android:textSize="17sp"/>
+        android:textColor="@color/text66"
+        android:textSize="16sp"/>
 
 </LinearLayout>

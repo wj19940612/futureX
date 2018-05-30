@@ -8,6 +8,9 @@ import android.view.View;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.clipimage.ClipImageLayout;
 
@@ -55,16 +58,16 @@ public class ClipHeadImageActivity extends BaseActivity {
 
     private void submitPortraitPath(final String data) {
         // TODO: 2018/5/29
-//        Apic.submitPortraitPath(data)
-//                .timeout(10_000)
-//                .indeterminate(this)
-//                .callback(new Callback<Resp<Object>>() {
-//                    @Override
-//                    protected void onRespSuccess(Resp<Object> resp) {
-//                        requestUserInfo();
-//                    }
-//                })
-//                .fire();
+        Apic.submitPortraitPath(data)
+                .timeout(10_000)
+                .indeterminate(this)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        requestUserInfo();
+                    }
+                })
+                .fire();
     }
 
     private void requestUserInfo() {

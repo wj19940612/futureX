@@ -15,6 +15,7 @@ import com.sbai.httplib.ReqLogger;
 import com.sbai.httplib.ReqParams;
 import com.sbai.httplib.RequestManager;
 import com.songbai.futurex.BuildConfig;
+import com.songbai.futurex.utils.BuildConfigUtils;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -29,21 +30,6 @@ import java.util.Set;
  * <p>
  */
 public class Api extends RequestManager {
-
-    public static final String FOREIGN_HOST = "https://fx.forexvv.com";
-
-    public static String FIXED_HOST;
-    public static String P_CODE;
-    public static String SIGN;
-
-    static {
-        FIXED_HOST = BuildConfig.HOST.substring(0, BuildConfig.HOST.indexOf("?"));
-        int pCodeIndex = BuildConfig.HOST.indexOf("pCode=") + "pCode=".length();
-        int argsSplitIndex = BuildConfig.HOST.indexOf("&");
-        int signIndex = argsSplitIndex + "&sign=".length();
-        P_CODE = BuildConfig.HOST.substring(pCodeIndex, argsSplitIndex);
-        SIGN = BuildConfig.HOST.substring(signIndex);
-    }
 
     private static Set<String> sCurrentUrls = new HashSet<>();
 
@@ -230,7 +216,7 @@ public class Api extends RequestManager {
             mApi = mReqParams.replaceHolders(mApi);
         }
 
-        String host = TextUtils.isEmpty(mHost) ? FIXED_HOST : mHost;
+        String host = TextUtils.isEmpty(mHost) ? getFixedHost() : mHost;
         String url = new StringBuilder(host).append(mApi).toString();
         if (mMethod == GET && mReqParams != null) {
             url += mReqParams.toString();
@@ -238,6 +224,14 @@ public class Api extends RequestManager {
         }
 
         return url;
+    }
+
+    public static String getFixedHost() {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase("dev")
+                || BuildConfig.FLAVOR.equalsIgnoreCase(BuildConfigUtils.FLAVOR_NAME_ALPHA)) {
+            return "http://" + BuildConfig.HOST;
+        }
+        return "http://" + BuildConfig.HOST;
     }
 
     public static void cancel(String tag) {
