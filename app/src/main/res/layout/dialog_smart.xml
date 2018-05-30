@@ -30,7 +30,7 @@
             android:gravity="center_vertical"
             android:lineSpacingExtra="3dp"
             android:maxLines="2"
-            android:textColor="@color/text"
+            android:textColor="@color/text22"
             android:textSize="17sp"
             tools:text="啥地方噶进口飞机都是的撒娇开发环境撒打开了凤凰科技的撒都十分罕见的萨克"/>
     </LinearLayout>
@@ -87,7 +87,7 @@
             android:minWidth="75dp"
             android:padding="12dp"
             android:text="@string/ok"
-            android:textColor="@color/text"
+            android:textColor="@color/text22"
             android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>

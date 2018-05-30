@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgF5F5"
+    android:background="@color/bgF5"
     android:orientation="vertical"
     tools:context=".activity.mine.BindPhoneActivity">
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:drawablePadding="4dp"
-            android:textColor="@color/text"
+            android:textColor="@color/text22"
             android:textSize="16sp"
             tools:text="0086"/>
 

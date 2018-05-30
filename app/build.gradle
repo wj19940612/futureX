@@ -80,7 +80,3 @@ android {
         implementation project(path: ':glide')
     }
 }
-
-dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:+'
-}

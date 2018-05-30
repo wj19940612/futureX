@@ -102,7 +102,7 @@ public class TitleBar extends RelativeLayout {
         mHasBottomSplitLine = typedArray.getBoolean(R.styleable.TitleBar_hasBottomSplitLine, false);
         mSplitLineColor = typedArray.getColorStateList(R.styleable.TitleBar_splitLineColor);
         if (mSplitLineColor == null) {
-            mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.bgF5F5));
+            mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.bgF5));
         }
         mSplitLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_SPLIT_LINE_DP,
                 getResources().getDisplayMetrics());

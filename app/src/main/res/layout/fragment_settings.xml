@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgF5F5"
+    android:background="@color/bgF5"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
@@ -22,7 +22,7 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/language"
-        app:rowTextColor="@color/text"
+        app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
@@ -33,7 +33,7 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/about_us"
-        app:rowTextColor="@color/text"
+        app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
@@ -43,7 +43,7 @@
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/feedback"
-        app:rowTextColor="@color/text"
+        app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>
 
     <View
