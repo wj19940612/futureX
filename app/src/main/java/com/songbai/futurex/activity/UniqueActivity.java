@@ -67,7 +67,7 @@ public class UniqueActivity extends BaseActivity {
             onPostActivityCreated(savedInstanceState);
         }
 
-        public abstract void onCreateWithExtras(Bundle savedInstanceState, Bundle extras);
+        protected abstract void onCreateWithExtras(Bundle savedInstanceState, Bundle extras);
 
         protected abstract void onPostActivityCreated(Bundle savedInstanceState);
     }
