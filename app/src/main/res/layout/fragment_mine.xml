@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgF5F5"
+    android:background="@color/bgF5"
     android:scrollbars="none"
     tools:context=".fragment.MineFragment">
 
@@ -98,7 +98,7 @@
             app:rowText="@string/property"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5F5"/>
+            app:splitLineColor="@color/bgF5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/tradeOrderLog"
@@ -110,7 +110,7 @@
             app:rowText="@string/trade_order_log"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5F5"/>
+            app:splitLineColor="@color/bgF5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/fiatTradeOrder"
@@ -123,7 +123,7 @@
             app:rowText="@string/fiat_trade_order"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5F5"/>
+            app:splitLineColor="@color/bgF5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/invite"
@@ -135,7 +135,7 @@
             app:rowText="@string/invite"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5F5"/>
+            app:splitLineColor="@color/bgF5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/msgCenter"
@@ -149,7 +149,7 @@
             app:rowText="@string/message_center"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5F5"
+            app:splitLineColor="@color/bgF5"
             app:subTextColor="@android:color/white"
             tools:subText="3"/>
 
@@ -164,7 +164,7 @@
             app:rowText="@string/safety_center"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5F5"/>
+            app:splitLineColor="@color/bgF5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/customService"
@@ -177,7 +177,7 @@
             app:rowText="@string/custom_service"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5F5"/>
+            app:splitLineColor="@color/bgF5"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/settings"

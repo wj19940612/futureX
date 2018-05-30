@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/bgF5F5"
+              android:background="@color/bgF5"
               android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatTextView
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
         android:adjustViewBounds="true"
-        android:background="@color/bgF5F5"
+        android:background="@color/bgF5"
         android:clickable="true"
         android:gravity="center"
         android:padding="6dp"
@@ -29,7 +29,7 @@
         android:clickable="true"
         android:gravity="center"
         android:text="@string/look_big_picture"
-        android:textColor="@color/text"
+        android:textColor="@color/text22"
         android:textSize="17sp"
         android:visibility="gone"/>
 

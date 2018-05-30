@@ -81,4 +81,13 @@
         <attr name="tabMargin" format="dimension|reference"/>
         <attr name="pointColor" format="color|reference"/>
     </declare-styleable>
+
+
+    <!--密码输入控件-->
+    <declare-styleable name="PasswordEditText">
+        <attr name="textHint" format="reference|string"/>
+        <attr name="hasBottomSplitLine"/>
+        <attr name="splitLineColor"/>
+        <attr name="maxCharNum" format="integer"/>
+    </declare-styleable>
 </resources>

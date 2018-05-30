@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FutureX</string>
+    <string name="app_name">BITFUTURE</string>
 
     <!-- http 请求信息 -->
     <string name="http_error_null">空数据异常</string>
@@ -8,7 +8,7 @@
     <string name="http_error_parse">数据解析异常</string>
     <string name="http_error_server">服务器有事出去一会儿稍等一下,马上回来</string>
 
-    <!--crash-->
+    <!-- Crash -->
     <string name="restart_app">重启应用</string>
     <string name="cut">剪切</string>
 
@@ -92,4 +92,13 @@
         <item>@drawable/tab_trade</item>
         <item>@drawable/tab_mine</item>
     </integer-array>
+
+    <!--Login/Register/SetPsd/-->
+    <string name="login_x">登录%1$s</string>
+    <string name="phone_or_email">手机号或邮箱</string>
+    <string name="login">登录</string>
+    <string name="password">密码</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="go_register">去注册</string>
+    
 </resources>

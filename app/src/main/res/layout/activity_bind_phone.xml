@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:drawablePadding="4dp"
-            android:textColor="@color/text"
+            android:textColor="@color/text22"
             android:textSize="16sp"
             tools:text="0086"/>
 
