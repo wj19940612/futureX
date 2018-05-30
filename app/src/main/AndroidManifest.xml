@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.songbai.futurex">
+<manifest package="com.songbai.futurex"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -18,10 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.CrashInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.UniqueActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.mine.PersonalDataActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -48,11 +54,13 @@
             android:screenOrientation="portrait"/>
 
         <service android:name=".service.PushIntentService"/>
+
         <service
             android:name=".service.PushService"
             android:exported="true"
             android:label="PushService"
             android:process=":pushservice"/>
+
     </application>
 
 </manifest>

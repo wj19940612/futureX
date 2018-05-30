@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.HomeFragment;
 import com.songbai.futurex.fragment.MineFragment;
+import com.songbai.futurex.fragment.LoginFragment;
+import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
 
@@ -16,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
+
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
     @BindView(R.id.bottomTabs)
@@ -54,6 +57,10 @@ public class MainActivity extends BaseActivity {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
 //                umengClickStatistics(position);
+                if (position == 2) {
+                    UniqueActivity.launcher(getActivity(), LoginFragment.class)
+                            .putExtra("test", "test").execute();
+                }
             }
         });
 

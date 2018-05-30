@@ -11,7 +11,6 @@ import android.widget.ScrollView;
 
 import com.sbai.httplib.ReqIndeterminate;
 import com.songbai.futurex.activity.BaseActivity;
-import com.songbai.futurex.http.Api;
 import com.songbai.futurex.utils.TimerHandler;
 
 public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHandler.TimerCallback {
@@ -53,7 +52,7 @@ public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHan
     public void onDestroyView() {
         super.onDestroyView();
         stopScheduleJob();
-        Api.cancel(TAG);
+        //Api.cancel(TAG);
     }
 
     private void scrollToTop(View view) {
