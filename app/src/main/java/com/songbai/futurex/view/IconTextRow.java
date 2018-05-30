@@ -132,7 +132,7 @@ public class IconTextRow extends LinearLayout {
 
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         setPadding(mHorizontalPadding, mVerticalPadding, mHorizontalPadding, mVerticalPadding);
 
         LayoutParams params;

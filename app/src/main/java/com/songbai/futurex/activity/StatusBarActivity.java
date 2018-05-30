@@ -110,7 +110,7 @@ public class StatusBarActivity extends AppCompatActivity {
             if (dark) {
                 systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             } else {
-                systemUiVisibility |= View.SYSTEM_UI_FLAG_VISIBLE;
+                systemUiVisibility &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             }
             window.getDecorView().setSystemUiVisibility(systemUiVisibility);
         }

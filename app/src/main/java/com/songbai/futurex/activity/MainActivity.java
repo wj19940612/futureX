@@ -31,7 +31,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        translucentStatusBar();
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
         mViewPager.setOffscreenPageLimit(4);
@@ -44,6 +44,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 mBottomTabs.selectTab(position);
+                setStatusBarDarkModeForM(position != 0 && position != 4);
             }
 
             @Override
