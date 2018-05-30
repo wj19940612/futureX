@@ -23,9 +23,10 @@ public class UniqueActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_unique);
 
         initData(getIntent());
+
+        setContentView(R.layout.activity_unique);
 
         Fragment fragment = Fragment.instantiate(getActivity(), mFragmentName, mExtras);
 

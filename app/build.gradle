@@ -40,7 +40,7 @@ android {
         dev {
 //            applicationIdSuffix '.dev'
             versionName "1.0"
-//            minSdkVersion 21
+            minSdkVersion 21
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             manifestPlaceholders = [
                     GETUI_APP_ID    : "APP_ID",
@@ -79,4 +79,8 @@ android {
         implementation project(path: ':httplib')
         implementation project(path: ':glide')
     }
+}
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:+'
 }

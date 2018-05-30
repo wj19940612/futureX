@@ -48,13 +48,15 @@
             android:minHeight="50dp">
 
             <EditText
-                android:id="@+id/phoneNumber"
+                android:id="@+id/phoneOrEmail"
                 style="@style/SignEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:hint="@string/phone_or_email"/>
+                android:hint="@string/phone_or_email"
+                android:imeOptions="actionNext"
+                android:maxLength="50"/>
 
             <ImageView
                 android:id="@+id/phoneNumberClear"
@@ -78,7 +80,7 @@
             android:layout_height="wrap_content"
             android:minHeight="50dp"
             android:visibility="visible"
-            app:maxCharNum="18"
+            app:maxCharNum="50"
             app:textHint="@string/password"/>
 
         <View

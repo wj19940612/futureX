@@ -18,14 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.CrashInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.UniqueActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"/>
 
         <activity
@@ -54,7 +55,6 @@
             android:screenOrientation="portrait"/>
 
         <service android:name=".service.PushIntentService"/>
-
         <service
             android:name=".service.PushService"
             android:exported="true"

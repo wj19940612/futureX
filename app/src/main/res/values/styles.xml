@@ -50,6 +50,7 @@
     <!--登录注册控件样式-->
     <style name="SignEditText" parent="@android:style/TextAppearance">
         <item name="android:background">@null</item>
+        <item name="android:inputType">text</item>
         <item name="android:paddingBottom">12dp</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:textColor">@color/text22</item>
@@ -57,6 +58,16 @@
         <item name="android:maxLines">1</item>
         <item name="android:textColorHint">@color/text99</item>
         <item name="android:textCursorDrawable">@drawable/cursor_primary</item>
+    </style>
+
+    <!-- 底部出现的 Activity 主题 -->
+    <style name="BottomEnterExitActivity" parent="AppTheme">
+        <item name="android:windowAnimationStyle">@style/EnterExitBottom</item>
+    </style>
+
+    <style name="EnterExitBottom" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:activityOpenExitAnimation">@anim/hold</item>
     </style>
 
 </resources>
