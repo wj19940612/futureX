@@ -66,6 +66,11 @@ public class PasswordEditText extends LinearLayout {
         mHasBottomSplitLine = typedArray.getBoolean(R.styleable.PasswordEditText_hasBottomSplitLine, false);
         mSplitLineColor = typedArray.getColorStateList(R.styleable.PasswordEditText_splitLineColor);
         mMaxCharNum = typedArray.getInt(R.styleable.PasswordEditText_maxCharNum, Integer.MAX_VALUE);
+
+        mBottomLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_LINE_HEIGHT,
+                getResources().getDisplayMetrics());
+        mBottomLineHeight = typedArray.getDimension(R.styleable.PasswordEditText_splitLineHeight, mBottomLineHeight);
+
         if (mSplitLineColor == null) {
             mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), android.R.color.black));
         }
@@ -78,10 +83,6 @@ public class PasswordEditText extends LinearLayout {
         setGravity(Gravity.CENTER_VERTICAL);
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-        mBottomLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                DEFAULT_LINE_HEIGHT,
-                getResources().getDisplayMetrics());
 
         setOrientation(HORIZONTAL);
         mPassword = initPasswordEditText();

@@ -1,6 +1,7 @@
 package com.songbai.futurex.activity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -85,10 +86,10 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
     }
 
     private void showSaveImageDialog() {
-        SmartDialog.single(getActivity(), getString(R.string.save_to_the_gallery))
+        SmartDialog.solo(getActivity(), getString(R.string.save_to_the_gallery))
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
+                    public void onClick(DialogInterface dialog) {
                         dialog.dismiss();
                         if (!TextUtils.isEmpty(mPortrait)) {
                             downLoadImage(mPortrait);
@@ -97,8 +98,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
                             saveBitmapToGallery(bitmap);
                         }
                     }
-                })
-                .show();
+                }).show();
     }
 
     private void downLoadImage(final String portrait) {
@@ -160,17 +160,17 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
     }
 
     private void showDeleteDialog() {
-        SmartDialog.single(getActivity())
+        SmartDialog.solo(getActivity())
                 .setTitle(getString(R.string.is_sure_delete_photo))
                 .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
+                    public void onClick(DialogInterface dialog) {
                         dialog.dismiss();
                     }
                 })
                 .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
+                    public void onClick(DialogInterface dialog) {
                         setResult(RESULT_OK);
                         dialog.dismiss();
                         finish();

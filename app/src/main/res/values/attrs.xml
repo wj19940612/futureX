@@ -82,12 +82,25 @@
         <attr name="pointColor" format="color|reference"/>
     </declare-styleable>
 
-
     <!--密码输入控件-->
     <declare-styleable name="PasswordEditText">
         <attr name="textHint" format="reference|string"/>
         <attr name="hasBottomSplitLine"/>
         <attr name="splitLineColor"/>
         <attr name="maxCharNum" format="integer"/>
+        <attr name="splitLineHeight" format="dimension|reference"/>
+    </declare-styleable>
+
+    <!--固定宽度自动缩小的 TextView 控件-->
+    <declare-styleable name="AutofitTextView">
+        <!-- Minimum size of the text. -->
+        <attr name="minTextSize" format="dimension"/>
+        <!-- Amount of precision used to calculate the correct text size to fit within its
+        bounds. Lower precision is more precise and takes more time. -->
+        <attr name="precision" format="float"/>
+        <!-- Defines whether to automatically resize text to fit to the view's bounds. -->
+        <attr name="sizeToFit" format="boolean"/>
+        <!-- Max view width that cannot beyond this -->
+        <attr name="maxViewWidth" format="dimension"/>
     </declare-styleable>
 </resources>

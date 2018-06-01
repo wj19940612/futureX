@@ -51,7 +51,7 @@
     <string name="update_success">更新成功</string>draw_coin
     <string name="bind_phone">绑定手机</string>
     <string name="please_input_phone_num">请输入手机号码</string>
-    <string name="get_auth_code">发送验证码</string>
+    <string name="send_auth_code">发送验证码</string>
     <string name="message_auth_code">短信验证码</string>
     <string name="mail_auth_code">邮箱验证码</string>
     <string name="resend">重新发送</string>
@@ -180,5 +180,26 @@
     <string name="password">密码</string>
     <string name="forget_password">忘记密码</string>
     <string name="go_register">去注册</string>
+    <string name="email_register">邮箱注册</string>
+    <string name="phone_register">手机注册</string>
+    <string name="phone">手机号</string>
+    <string name="email_sample">邮箱&#160;例abc@gmail.com</string>
+    <string name="get_auth_code">获取验证码</string>
+    <string name="sms_auth_code">短信验证码</string>
+    <string name="email_auth_code">邮箱验证码</string>
+    <string name="next">下一步</string>
+    <string name="registered_and_go_login">已有账号，去登录</string>
+    <string name="set_login_password">设置登录密码</string>
+    <string name="at_least_8_english_characters_number_combination">至少8位英文数字组合</string>
+    <string name="password_strength_colon">密码强度：</string>
+    <string name="weak">弱</string>
+    <string name="mid">中</string>
+    <string name="strong">强</string>
+    <string name="login_password">登录密码</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="find_password">找回密码</string>
+    <string name="auth_code_send_to">验证码已发送至</string>
+    <string name="for_your_account_safe_please_input_auth_code">为了您的帐号安全\n请输入验证码</string>
+    <string name="graphic_auth_code">图形验证码</string>
 
 </resources>

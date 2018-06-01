@@ -135,7 +135,7 @@ public class FileUtils {
             String newFileName = fileName.substring(lastIndexOfSeparator + 1, fileName.length());
             File fullDir = new File(root, subDir);
             if (!fullDir.mkdirs()) {
-                Log.d(TAG, "createFile: directory create failure or directory had created");
+                Log.d(TAG, "createFile: directory with failure or directory had created");
             }
 
             if (fullDir.exists()) {
