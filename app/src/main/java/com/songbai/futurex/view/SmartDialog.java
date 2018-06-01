@@ -2,8 +2,12 @@ package com.songbai.futurex.view;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import java.util.HashMap;
@@ -138,19 +142,19 @@ public class SmartDialog {
         mWindowAnim = -1;
     }
 
-//    private void scaleDialog() {
-//        if (mWidthScale == 0 && mHeightScale == 0) return;
-//
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//
-//        int width = mWidthScale == 0 ? ViewGroup.LayoutParams.MATCH_PARENT :
-//                (int) (displayMetrics.widthPixels * mWidthScale);
-//        int height = mHeightScale == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT :
-//                (int) (displayMetrics.heightPixels * mHeightScale);
-//
-//        mAlertDialog.getWindow().setLayout(width, height);
-//    }
+    private void scaleDialog() {
+        if (mWidthScale == 0 && mHeightScale == 0) return;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int width = mWidthScale == 0 ? ViewGroup.LayoutParams.MATCH_PARENT :
+                (int) (displayMetrics.widthPixels * mWidthScale);
+        int height = mHeightScale == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT :
+                (int) (displayMetrics.heightPixels * mHeightScale);
+
+        mAlertDialog.getWindow().setLayout(width, height);
+    }
 
     public SmartDialog setOnDismissListener(OnDismissListener onDismissListener) {
         mDismissListener = onDismissListener;
@@ -243,7 +247,7 @@ public class SmartDialog {
 
         if (mAlertDialog != null && !mActivity.isFinishing()) {
             mAlertDialog.show();
-            //scaleDialog();
+            scaleDialog();
         }
     }
 
@@ -324,6 +328,11 @@ public class SmartDialog {
             WindowManager.LayoutParams params = mAlertDialog.getWindow().getAttributes();
             params.windowAnimations = mWindowAnim;
             mAlertDialog.getWindow().setAttributes(params);
+        }
+
+        if (mCustomViewController != null) {
+            mAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            mWidthScale = 0.85f; // default width scale for custom view
         }
     }
 

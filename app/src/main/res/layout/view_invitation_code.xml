@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="72dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_r4"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center_horizontal"
+            android:text="@string/invitation_code"
+            android:textColor="@color/text22"
+            android:textSize="17sp"/>
+
+        <EditText
+            android:id="@+id/authCodeInput"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/bg_f5_r4"
+            android:hint="@string/please_input_if_you_have_invitation_code"
+            android:maxLines="1"
+            android:paddingLeft="15dp"
+            android:textColor="@color/text66"
+            android:textCursorDrawable="@drawable/cursor_primary"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/next"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_primary"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/btn_skip"
+        android:gravity="center"
+        android:minHeight="44dp"
+        android:minWidth="120dp"
+        android:text="@string/skip"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+</LinearLayout>
+

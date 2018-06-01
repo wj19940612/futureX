@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.view.SmartDialog;
-import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,13 +42,6 @@ public class HomeFragment extends BaseFragment {
 
     @OnClick(R.id.login)
     public void onViewClicked() {
-//        Launcher.with(getActivity(), LoginActivity.class)
-//                .execute();
 
-        AuthCodeViewController authCodeViewController = new AuthCodeViewController(getActivity());
-
-        SmartDialog.solo(getActivity())
-                .setCustomViewController(authCodeViewController)
-                .show();
     }
 }
