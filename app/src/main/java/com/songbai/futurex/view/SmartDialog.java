@@ -3,9 +3,7 @@ package com.songbai.futurex.view;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import java.util.HashMap;
@@ -24,7 +22,7 @@ public class SmartDialog {
 
     private String mTitleText;
     private String mMessageText;
-    private View mCustomView;
+    private CustomViewController mCustomViewController;
 
     private float mWidthScale;
     private float mHeightScale;
@@ -134,31 +132,33 @@ public class SmartDialog {
         mDismissListener = null;
 
         mCancelableOnTouchOutside = true;
-        mCustomView = null;
+        mCustomViewController = null;
 
         mWindowGravity = -1;
         mWindowAnim = -1;
     }
 
-    private void scaleDialog() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        int width = mWidthScale == 0 ? ViewGroup.LayoutParams.MATCH_PARENT :
-                (int) (displayMetrics.widthPixels * mWidthScale);
-        int height = mHeightScale == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT :
-                (int) (displayMetrics.heightPixels * mHeightScale);
-
-        mAlertDialog.getWindow().setLayout(width, height);
-    }
+//    private void scaleDialog() {
+//        if (mWidthScale == 0 && mHeightScale == 0) return;
+//
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//
+//        int width = mWidthScale == 0 ? ViewGroup.LayoutParams.MATCH_PARENT :
+//                (int) (displayMetrics.widthPixels * mWidthScale);
+//        int height = mHeightScale == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT :
+//                (int) (displayMetrics.heightPixels * mHeightScale);
+//
+//        mAlertDialog.getWindow().setLayout(width, height);
+//    }
 
     public SmartDialog setOnDismissListener(OnDismissListener onDismissListener) {
         mDismissListener = onDismissListener;
         return this;
     }
 
-    public SmartDialog setCustomView(View customView) {
-        mCustomView = customView;
+    public SmartDialog setCustomViewController(CustomViewController customViewController) {
+        mCustomViewController = customViewController;
         return this;
     }
 
@@ -243,7 +243,7 @@ public class SmartDialog {
 
         if (mAlertDialog != null && !mActivity.isFinishing()) {
             mAlertDialog.show();
-            scaleDialog();
+            //scaleDialog();
         }
     }
 
@@ -254,8 +254,10 @@ public class SmartDialog {
     }
 
     private void setup() {
-        if (mCustomView != null) {
-            mBuilder.setView(mCustomView);
+        if (mCustomViewController != null) {
+            View customView = mCustomViewController.getCustomView();
+            mBuilder.setView(customView);
+            mCustomViewController.setupView(customView);
         } else {
             mBuilder.setMessage(mMessageText);
             mBuilder.setTitle(mTitleText);
@@ -323,5 +325,11 @@ public class SmartDialog {
             params.windowAnimations = mWindowAnim;
             mAlertDialog.getWindow().setAttributes(params);
         }
+    }
+
+    public interface CustomViewController {
+        View getCustomView();
+
+        void setupView(View view);
     }
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,23 +47,10 @@ public class HomeFragment extends BaseFragment {
 //        Launcher.with(getActivity(), LoginActivity.class)
 //                .execute();
 
-//        new AlertDialog.Builder(getActivity())
-//                .setPositiveButton("E", null)
-//                .create().show();
+        AuthCodeViewController authCodeViewController = new AuthCodeViewController(getActivity());
 
         SmartDialog.solo(getActivity())
-                .setMessage(R.string.message_auth_code)
-                .setPositive(R.string.ok)
+                .setCustomViewController(authCodeViewController)
                 .show();
-
-        mLogin.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SmartDialog.solo(getActivity())
-                        .setMessage(R.string.message_center)
-                        .setPositive(R.string.ok)
-                        .show();
-            }
-        }, 3000);
     }
 }

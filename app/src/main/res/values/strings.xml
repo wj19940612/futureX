@@ -140,5 +140,7 @@
     <string name="confirm_password">确认密码</string>
     <string name="find_password">找回密码</string>
     <string name="auth_code_send_to">验证码已发送至</string>
+    <string name="for_your_account_safe_please_input_auth_code">为了您的帐号安全\n请输入验证码</string>
+    <string name="graphic_auth_code">图形验证码</string>
 
 </resources>
