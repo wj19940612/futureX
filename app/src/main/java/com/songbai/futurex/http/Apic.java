@@ -56,4 +56,41 @@ public class Apic {
                         .put("msgCode", msgCode)
                         .put("type", type));
     }
+
+    /**
+     * /user/userFeedback/addFeedback.do
+     * POST
+     * 添加用户反馈2.3.0(陈作衡)
+     */
+    public static Api addFeedback(String content, String contactInfo, String feedbackPic) {
+        return Api.post("/user/userFeedback/addFeedback.do",
+                new ReqParams()
+                        .put("content", content));
+    }
+
+    /**
+     * /otc/chat/send
+     * POST
+     * 发送消息
+     */
+    public static Api chatSend(String msg, String waresOrderId, int msgType) {
+        return Api.post("/otc/chat/send",
+                new ReqParams()
+                        .put("msg", msg)
+                        .put("waresOrderId", waresOrderId)
+                        .put("msgType", msgType));
+    }
+
+    /**
+     * /otc/chat/history
+     * GET
+     * 历史消息
+     */
+    public static Api chatHistory(String waresOrderId, String startTime, int size) {
+        return Api.post("/otc/chat/history",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId)
+                        .put("startTime", startTime)
+                        .put("size", size));
+    }
 }

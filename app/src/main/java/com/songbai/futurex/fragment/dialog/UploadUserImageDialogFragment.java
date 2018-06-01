@@ -46,6 +46,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private static final String KEY_TYPE = "type";
     private static final String KEY_IMAGE_URL_INDEX = "key_image_url_index";
     private static final String KEY_SELECT_IMAGE_HINT = "key_select_image_hint";
+    private static final String KEY_SELECT_IMAGE_MAX_AMOUNT = "key_select_image_max_amount";
 
     //不做任何处理，只返回图片地址
     public static final int IMAGE_TYPE_NOT_DEAL = 1750;
@@ -94,6 +95,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private int mImageDealType;
     private int mImageUrlIndex;
     private String mSelectImageHintText;
+    private int mImageMaxSelectAmount;
 
     public interface OnImagePathListener {
         void onImagePath(int index, String imagePath);
@@ -120,11 +122,16 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     }
 
     public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex, String selectImageHint) {
+        return newInstance(type, url, imageIndex, "", 0);
+    }
+
+    public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex, String selectImageHint, int maxImageAmount) {
         Bundle args = new Bundle();
         args.putInt(KEY_TYPE, type);
         args.putString(KEY_IMAGE_URL, url);
         args.putInt(KEY_IMAGE_URL_INDEX, imageIndex);
         args.putString(KEY_SELECT_IMAGE_HINT, selectImageHint);
+        args.putInt(KEY_SELECT_IMAGE_MAX_AMOUNT, maxImageAmount);
         UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -151,6 +158,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
             HDPictureUrl = getArguments().getString(KEY_IMAGE_URL);
             mImageUrlIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
             mSelectImageHintText = getArguments().getString(KEY_SELECT_IMAGE_HINT, "");
+            mImageMaxSelectAmount = getArguments().getInt(KEY_SELECT_IMAGE_MAX_AMOUNT, 0);
         }
     }
 
@@ -220,7 +228,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private void openGalleryPage() {
         if (mImageDealType == IMAGE_TYPE_OPEN_CUSTOM_GALLERY) {
             Intent openGalleryIntent = new Intent(getContext(), ImageSelectActivity.class);
-            openGalleryIntent.putExtra(ExtraKeys.IMAGE, 0);
+            openGalleryIntent.putExtra(ExtraKeys.IMAGE, mImageMaxSelectAmount);
             startActivityForResult(openGalleryIntent, REQ_CODE_TAKE_PHONE_FROM_GALLERY);
         } else {
             Intent openAlbumIntent = new Intent(

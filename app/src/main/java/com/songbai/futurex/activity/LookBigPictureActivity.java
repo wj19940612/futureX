@@ -117,7 +117,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
         if (resource != null) {
             File file = ImageUtils.getUtil().saveGalleryBitmap(getActivity(), resource, getFileName());
             if (file != null && file.exists()) {
-                ToastUtil.show(getString(R.string.save_to_the_gallery, getFileName()));
+                ToastUtil.show(getString(R.string.image_save_to_, getFileName()));
             } else {
                 ToastUtil.show(R.string.image_save_fail);
             }

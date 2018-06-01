@@ -3,14 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/property_bg_blue"/>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/property_bg_blue">
 
     <TextView
         android:id="@+id/accountType"
@@ -19,6 +15,7 @@
         android:layout_marginLeft="23dp"
         android:layout_marginStart="23dp"
         android:layout_marginTop="23dp"
+        android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,26 +23,30 @@
         tools:text="个人账户"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/totalPropertyType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:textColor="@color/white"
+        android:includeFontPadding="false"
+        android:textColor="@color/sixtyPercentWhite"
         android:textSize="11sp"
         app:layout_constraintStart_toStartOf="@+id/accountType"
         app:layout_constraintTop_toBottomOf="@+id/accountType"
         tools:text="@string/total_property_equivalent"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/propertyAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
         android:layout_marginTop="6dp"
         android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="28sp"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/totalPropertyType"
+        app:layout_constraintTop_toBottomOf="@+id/totalPropertyType"
         tools:text="0.13429464"/>
 
     <TextView
@@ -58,7 +59,7 @@
         android:gravity="end"
         android:text="@string/invite_num_x"
         android:textColor="@color/white"
-        android:textSize="11sp"
+        android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -66,14 +67,19 @@
     <TextView
         android:id="@+id/transfer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="28dp"
         android:layout_marginEnd="23dp"
         android:layout_marginRight="23dp"
+        android:background="@drawable/bg_transfor"
+        android:gravity="center"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp"
         android:text="一键划转"
         android:textColor="@color/white"
+        android:textSize="12sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintBottom_toBottomOf="@+id/propertyAmount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2"/>
+        app:layout_constraintTop_toTopOf="@+id/propertyAmount"/>
 
 </android.support.constraint.ConstraintLayout>

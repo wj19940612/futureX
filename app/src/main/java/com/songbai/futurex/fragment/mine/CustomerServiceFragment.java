@@ -21,9 +21,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback2D;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.Feedback;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
@@ -40,12 +44,14 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.songbai.futurex.model.Feedback.CONTENT_TYPE_PICTURE;
+import static com.songbai.futurex.model.Feedback.CONTENT_TYPE_TEXT;
 
 /**
  * @author yangguangda
  * @date 2018/5/30
  */
-public class CustomerServiceFragment extends UniqueActivity.UniFragment implements AbsListView.OnScrollListener, SwipeRefreshLayout.OnRefreshListener {
+public class CustomerServiceFragment extends UniqueActivity.UniFragment implements AbsListView.OnScrollListener,
+        SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(android.R.id.list)
@@ -105,21 +111,21 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
     }
 
     private void requestSendFeedback(final String content, final int contentType) {
-//        Apic.requestSendFeedback(content, contentType).tag(TAG)
-//                .callback(new Callback2D<Resp<Object>, Object>() {
-//                    @Override
-//                    protected void onRespSuccessData(Object data) {
-//                        refreshChatList(content, contentType);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(ReqError reqError) {
-//                        super.onFailure(reqError);
-//                        if (contentType == CONTENT_TYPE_TEXT) {
+        Apic.chatSend(content,"", contentType).tag(TAG)
+                .callback(new Callback2D<Resp<Object>, Object>() {
+                    @Override
+                    protected void onRespSuccessData(Object data) {
+                        refreshChatList(content, contentType);
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        if (contentType == CONTENT_TYPE_TEXT) {
 //                            mSend.setEnabled(true);
-//                        }
-//                    }
-//                }).fireFreely();
+                        }
+                    }
+                }).fireFreely();
     }
 
     //请求最新的服务器数据  并取第一条

@@ -54,11 +54,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="14dp"
-        android:text="0/200"
         android:textColor="@color/text99"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/editText"
-        app:layout_constraintEnd_toEndOf="@+id/editText"/>
+        app:layout_constraintEnd_toEndOf="@+id/editText"
+        tools:text="0/200"/>
 
     <TextView
         android:id="@+id/text2"
@@ -77,11 +77,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="14dp"
-        android:text="0/4"
         android:textColor="@color/text99"
         android:textSize="15sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text2"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="0/4"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:background="@color/white"
+        android:overScrollMode="never"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
     <TextView
         android:id="@+id/submit"
@@ -98,14 +111,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2"/>
 </android.support.constraint.ConstraintLayout>

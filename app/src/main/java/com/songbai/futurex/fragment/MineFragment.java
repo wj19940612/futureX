@@ -14,9 +14,12 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.mine.InviteActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
 import com.songbai.futurex.fragment.mine.CustomerServiceFragment;
+import com.songbai.futurex.fragment.mine.MessageCenterFragment;
+import com.songbai.futurex.fragment.mine.SafetyCenterFragment;
 import com.songbai.futurex.fragment.mine.SettingsFragment;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
@@ -57,7 +60,7 @@ public class MineFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
         mBind = ButterKnife.bind(this, view);
-        ((BaseActivity)getActivity()).setStatusBarHeightPadding(mHeadLayout);
+        ((BaseActivity) getActivity()).setStatusBarHeightPadding(mHeadLayout);
         return view;
     }
 
@@ -109,10 +112,13 @@ public class MineFragment extends BaseFragment {
             case R.id.fiatTradeOrder:
                 break;
             case R.id.invite:
+                Launcher.with(this, InviteActivity.class).execute();
                 break;
             case R.id.msgCenter:
+                UniqueActivity.launcher(getActivity(), MessageCenterFragment.class).execute();
                 break;
             case R.id.safetyCenter:
+                UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();
                 break;
             case R.id.customService:
                 UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();

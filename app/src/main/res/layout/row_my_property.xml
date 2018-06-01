@@ -41,4 +41,15 @@
         android:layout_weight="2"
         android:gravity="center|end"
         android:text="@string/freeze_amount_x"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="20dp"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:text="@string/transfer"
+        android:textColor="@color/colorPrimary"
+        android:textSize="12sp"/>
 </LinearLayout>
