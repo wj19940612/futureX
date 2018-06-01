@@ -3,13 +3,13 @@ package com.songbai.futurex.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,12 +46,23 @@ public class HomeFragment extends BaseFragment {
 //        Launcher.with(getActivity(), LoginActivity.class)
 //                .execute();
 
-        new AlertDialog.Builder(getActivity())
-                .setPositiveButton("E", null)
-                .create().show();
+//        new AlertDialog.Builder(getActivity())
+//                .setPositiveButton("E", null)
+//                .create().show();
 
-//        SmartDialog.solo(getActivity())
-//                .defaultScale()
-//                .setTitle("TEST").setMessage("TEST").show();
+        SmartDialog.solo(getActivity())
+                .setMessage(R.string.message_auth_code)
+                .setPositive(R.string.ok)
+                .show();
+
+        mLogin.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SmartDialog.solo(getActivity())
+                        .setMessage(R.string.message_center)
+                        .setPositive(R.string.ok)
+                        .show();
+            }
+        }, 3000);
     }
 }
