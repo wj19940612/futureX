@@ -72,7 +72,7 @@
             android:gravity="center"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:text="@string/get_auth_code"
+            android:text="@string/send_auth_code"
             android:textColor="@color/primary_disable_text_color"
             android:textSize="15sp"/>
     </LinearLayout>
@@ -105,7 +105,7 @@
             android:gravity="center"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:text="@string/get_auth_code"
+            android:text="@string/send_auth_code"
             android:textColor="@color/primary_disable_text_color"
             android:textSize="15sp"/>
     </LinearLayout>

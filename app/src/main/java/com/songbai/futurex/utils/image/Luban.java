@@ -88,7 +88,7 @@ public class Luban implements Handler.Callback {
         if (cacheDir != null) {
             File result = new File(cacheDir, cacheName);
             if (!result.mkdirs() && (!result.exists() || !result.isDirectory())) {
-                // File wasn't able to create a directory, or the result exists but not a directory
+                // File wasn't able to with a directory, or the result exists but not a directory
                 return null;
             }
             return result;

@@ -159,7 +159,7 @@ public class Api extends RequestManager {
             mCallback.setId(mId);
             mCallback.setTag(mTag);
             mCallback.setIndeterminate(mIndeterminate);
-        } else { // create a default callback for handle request finish event
+        } else { // with a default callback for handle request finish event
             mCallback = new ReqCallback<Object>() {
                 @Override
                 public void onSuccess(Object o) {

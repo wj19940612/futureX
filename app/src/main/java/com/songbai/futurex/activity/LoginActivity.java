@@ -160,7 +160,7 @@ public class LoginActivity extends BaseActivity {
                 // TODO: 2018/5/30
                 break;
             case R.id.register:
-                // TODO: 2018/5/30
+
                 break;
             case R.id.phoneNumberClear:
                 mPhoneOrEmail.setText("");
