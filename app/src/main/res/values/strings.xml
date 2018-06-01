@@ -144,6 +144,8 @@
 3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n
 4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n
 5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
+    <string name="filtrate">筛选</string>
+
 
     <string-array name="messageCenterTabTexts">
         <item>消息通知</item>

@@ -68,6 +68,9 @@
             android:name=".activity.mine.DrawCoinActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.PropertyFlowActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".service.PushIntentService"/>
         <service

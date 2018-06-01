@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.DrawCoinActivity;
+import com.songbai.futurex.activity.mine.PropertyFlowActivity;
 import com.songbai.futurex.fragment.BaseFragment;
 import com.songbai.futurex.utils.Launcher;
 
@@ -108,6 +109,7 @@ public class PropertyListFragment extends BaseFragment {
                 Launcher.with(getContext(), DrawCoinActivity.class).execute();
                 break;
             case R.id.propertyFlow:
+                Launcher.with(getContext(), PropertyFlowActivity.class).execute();
                 break;
             case R.id.hideZero:
                 break;
@@ -130,7 +132,7 @@ public class PropertyListFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-            return 5;
+            return 50;
         }
 
         static class PropertyListHolder extends RecyclerView.ViewHolder {
