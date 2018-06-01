@@ -10,6 +10,7 @@
     <color name="text49">#494949</color>
     <color name="text99">#999</color>
     <color name="text66">#666666</color>
+    <color name="textBD">#BDBDBD</color>
     <color name="disable">#83868a</color>
 
     <color name="white">@android:color/white</color>
@@ -18,5 +19,6 @@
 
     <color name="bgF5">#F5F5F5</color>
     <color name="bgDD">#dddddd</color>
+    <color name="sixtyPercentWhite">#99ffffff</color>
 
 </resources>

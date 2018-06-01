@@ -8,7 +8,9 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
+import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
@@ -88,6 +90,7 @@ public class PersonalDataActivity extends BaseActivity {
             case R.id.fiatPayManagement:
                 break;
             case R.id.addressManagement:
+                UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class).execute();
                 break;
             default:
         }

@@ -161,7 +161,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/address_management"
+        app:rowText="@string/draw_coin_address_management"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>
 
