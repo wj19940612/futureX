@@ -27,6 +27,7 @@ public class SmartDialog {
     private String mTitleText;
     private String mMessageText;
     private CustomViewController mCustomViewController;
+    private View mCustomView;
 
     private float mWidthScale;
     private float mHeightScale;
@@ -261,9 +262,9 @@ public class SmartDialog {
 
     private void setup() {
         if (mCustomViewController != null) {
-            View customView = mCustomViewController.getCustomView();
-            mBuilder.setView(customView);
-            mCustomViewController.setupView(customView);
+            View view = mCustomViewController.onCreateView();
+            mBuilder.setView(view);
+            mCustomViewController.setupView(view, this);
         } else {
             mBuilder.setMessage(mMessageText);
             mBuilder.setTitle(mTitleText);
@@ -341,8 +342,8 @@ public class SmartDialog {
     }
 
     public interface CustomViewController {
-        View getCustomView();
+        View onCreateView();
 
-        void setupView(View view);
+        void setupView(View view, SmartDialog dialog);
     }
 }

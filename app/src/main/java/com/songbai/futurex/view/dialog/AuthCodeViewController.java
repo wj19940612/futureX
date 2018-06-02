@@ -23,12 +23,13 @@ public class AuthCodeViewController implements SmartDialog.CustomViewController 
     }
 
     @Override
-    public View getCustomView() {
+    public View onCreateView() {
         return LayoutInflater.from(mContext).inflate(R.layout.view_auth_code, null);
     }
 
     @Override
-    public void setupView(View view) {
+    public void setupView(View view, SmartDialog dialog) {
 
     }
+
 }

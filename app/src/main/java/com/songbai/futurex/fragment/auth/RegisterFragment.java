@@ -149,15 +149,21 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         }
 
         @Override
-        public View getCustomView() {
+        public View onCreateView() {
             return LayoutInflater.from(mContext).inflate(R.layout.view_select_area_codes, null);
         }
 
         @Override
-        public void setupView(View view) {
+        public void setupView(View view, final SmartDialog dialog) {
             mRecyclerView = view.findViewById(R.id.recyclerView);
             mCancel = view.findViewById(R.id.cancel);
             mProgressBar = view.findViewById(R.id.progressBar);
+            mCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
         }
 
         public void setAreaCodeList(List<AreaCode> areaCodeList) {
