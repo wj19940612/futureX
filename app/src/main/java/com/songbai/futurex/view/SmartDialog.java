@@ -143,6 +143,8 @@ public class SmartDialog {
     }
 
     private void scaleDialog() {
+        if (mCustomViewController == null) return;
+
         if (mWidthScale == 0 && mHeightScale == 0) return;
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -332,7 +334,9 @@ public class SmartDialog {
 
         if (mCustomViewController != null) {
             mAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            mWidthScale = 0.85f; // default width scale for custom view
+            if (mWidthScale == 0) {
+                mWidthScale = 0.85f; // default width scale for custom view
+            }
         }
     }
 

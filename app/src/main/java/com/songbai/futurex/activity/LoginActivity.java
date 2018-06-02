@@ -1,5 +1,6 @@
 package com.songbai.futurex.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.fragment.auth.RegisterFragment;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
@@ -21,6 +23,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
+
+    private static final int REQ_CODE_REGISTER = 90;
 
     @BindView(R.id.closePage)
     ImageView mClosePage;
@@ -38,8 +42,8 @@ public class LoginActivity extends BaseActivity {
     ImageView mLoading;
     @BindView(R.id.forgetPassword)
     TextView mForgetPassword;
-    @BindView(R.id.register)
-    TextView mRegister;
+    @BindView(R.id.goRegister)
+    TextView mGoRegister;
     @BindView(R.id.passwordLoginOperations)
     LinearLayout mPasswordLoginOperations;
     @BindView(R.id.contentArea)
@@ -147,7 +151,7 @@ public class LoginActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick({R.id.closePage, R.id.login, R.id.forgetPassword, R.id.register, R.id.phoneNumberClear})
+    @OnClick({R.id.closePage, R.id.login, R.id.forgetPassword, R.id.goRegister, R.id.phoneNumberClear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.closePage:
@@ -159,12 +163,20 @@ public class LoginActivity extends BaseActivity {
             case R.id.forgetPassword:
                 // TODO: 2018/5/30
                 break;
-            case R.id.register:
-
+            case R.id.goRegister:
+                UniqueActivity.launcher(getActivity(), RegisterFragment.class).executeForResult(REQ_CODE_REGISTER);
                 break;
             case R.id.phoneNumberClear:
                 mPhoneOrEmail.setText("");
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_REGISTER && resultCode == RESULT_OK) {
+
         }
     }
 }

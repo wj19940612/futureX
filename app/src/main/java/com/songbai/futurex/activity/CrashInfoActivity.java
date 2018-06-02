@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.songbai.futurex.ExKeys;
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class CrashInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crash_info);
         ButterKnife.bind(this);
 
-        Throwable throwable = (Throwable) getIntent().getSerializableExtra(ExKeys.CRASH_INFO);
+        Throwable throwable = (Throwable) getIntent().getSerializableExtra(ExtraKeys.CRASH_INFO);
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);

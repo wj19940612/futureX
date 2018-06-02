@@ -9,16 +9,21 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.utils.ToastUtil;
 
 /**
- * <p>Implement onFailure() with error toast. Handle token expired in onSuccess()<p/>
  * <p>
- * Two main callbacks to handle our custom reponse: Resp
+ * 使用 Toast 实现 onFailure() 里面错误信息的展示.
+ * <p>
+ * 实现 onSuccess() 中对 http 200 的返回的几种数据类型进行预处理:
  * <ul>
- * <li>onRespSuccess() when Resp.code == 200</li>
- * <li>onRespFailure() when Resp.code != 200</li>
+ * <li>Null 类型，非正常情况下返回的类型，无法处理，Toast 错误提示</li>
+ * <li>{@link Resp} 类型，通用业务业务数据类型：涉及 User's 登录超时处理；
+ * Resp.code 为 200 回调 {@link Callback#onRespSuccess(Object)}, 否则 {@link Callback#onRespFailure(Resp)}</li>
+ * <li>String 类型，业务中有时会需要纯 String 返回数据，需要提前进行 User's 登录超时处理</li>
+ * <li>其他类型，直接返回</li>
  * </ul>
  *
  * @param <T>
  */
+
 public abstract class Callback<T> extends ReqCallback<T> {
 
     @Override
@@ -28,35 +33,38 @@ public abstract class Callback<T> extends ReqCallback<T> {
         }
 
         if (t instanceof Resp) {
-            processRespResult(t);
+            processResp((Resp) t);
         } else if (t instanceof String) {
-            processStringResult(t);
+            processString((String) t);
         } else {
-            onReceiveResponse(t);
+            onRespSuccess(t);
         }
     }
 
-    private void processStringResult(T t) {
-        if (((String) t).indexOf("code") != -1) {
+    private void processString(String s) {
+        if (s.indexOf("code") != -1) {
             try {
-                Resp resp = new Gson().fromJson((String) t, Resp.class);
+                Resp resp = new Gson().fromJson(s, Resp.class);
                 if (resp.isTokenExpired()) {
                     processTokenExpiredError(resp);
+                } else {
+                    onRespSuccess((T) s);
                 }
             } catch (JsonSyntaxException e) {
-                onReceiveResponse(t);
+                onRespSuccess((T) s);
             }
         } else {
-            onReceiveResponse(t);
+            onRespSuccess((T) s);
         }
     }
 
-    private void processRespResult(T t) {
-        Resp resp = (Resp) t;
+    private void processResp(Resp resp) {
         if (resp.isTokenExpired()) {
             processTokenExpiredError(resp);
+        } else if (resp.isSuccess()) {
+            onRespSuccess((T) resp);
         } else {
-            onReceiveResponse(t);
+            onRespFailure(resp);
         }
     }
 
@@ -91,20 +99,6 @@ public abstract class Callback<T> extends ReqCallback<T> {
 
         if (toastError()) {
             ToastUtil.show(toastResId);
-        }
-    }
-
-    private void onReceiveResponse(T t) {
-        if (t instanceof Resp) {
-            Resp resp = (Resp) t;
-            if (resp.isSuccess()) {
-                onRespSuccess(t);
-            } else {
-                onRespFailure(resp);
-                onFailure(null);
-            }
-        } else {
-            onRespSuccess(t);
         }
     }
 

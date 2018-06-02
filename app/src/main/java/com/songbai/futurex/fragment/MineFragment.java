@@ -60,7 +60,7 @@ public class MineFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
         mBind = ButterKnife.bind(this, view);
-        ((BaseActivity) getActivity()).setStatusBarHeightPadding(mHeadLayout);
+        ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mHeadLayout);
         return view;
     }
 

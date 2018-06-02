@@ -26,7 +26,7 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback2D;
+import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.Feedback;
 import com.songbai.futurex.utils.DateUtil;
@@ -112,9 +112,9 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
 
     private void requestSendFeedback(final String content, final int contentType) {
         Apic.chatSend(content,"", contentType).tag(TAG)
-                .callback(new Callback2D<Resp<Object>, Object>() {
+                .callback(new Callback4Resp<Resp<Object>, Object>() {
                     @Override
-                    protected void onRespSuccessData(Object data) {
+                    protected void onRespData(Object data) {
                         refreshChatList(content, contentType);
                     }
 
@@ -134,7 +134,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
 //                .tag(TAG)
 //                .callback(new Callback2D<Resp<FeedbackResp<List<Feedback>>>, FeedbackResp<List<Feedback>>>() {
 //                    @Override
-//                    protected void onRespSuccessData(FeedbackResp<List<Feedback>> data) {
+//                    protected void onRespData(FeedbackResp<List<Feedback>> data) {
 //                        if (data.getContent() != null) {
 //                            updateTheLastMessage(data.getContent(), content, contentType);
 //                        }

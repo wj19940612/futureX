@@ -44,12 +44,12 @@ public class UniqueActivity extends BaseActivity {
         mExtras = intent.getExtras();
     }
 
-    public static Launcher launcher(Context context, Class<?> fragmentClazz) {
+    public static Launcher launcher(Context context, Class<? extends UniFragment> fragmentClazz) {
         return Launcher.with(context, UniqueActivity.class)
                 .putExtra("frag", fragmentClazz.getCanonicalName());
     }
 
-    public static Launcher launcher(Fragment fragment, Class<?> fragmentClazz) {
+    public static Launcher launcher(Fragment fragment, Class<? extends UniFragment> fragmentClazz) {
         return Launcher.with(fragment, UniqueActivity.class)
                 .putExtra("frag", fragmentClazz.getCanonicalName());
     }

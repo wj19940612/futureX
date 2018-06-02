@@ -21,8 +21,8 @@ import java.lang.reflect.Type;
  * <ul>
  * <li>onStart() when request start</li>
  * <li>onFinish() when request finish</li>
- * <li>onSuccess() when request success, code == 200</li>
- * <li>onFailure() when request failure, code != 200</li>
+ * <li>onSuccess() when request success, http code == 200</li>
+ * <li>onFailure() when request failure, http code != 200</li>
  * </ul>
  */
 public abstract class ReqCallback<T> implements Response.Listener<T>, Response.ErrorListener {

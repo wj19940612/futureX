@@ -76,7 +76,7 @@ public class ClipHeadImageActivity extends BaseActivity {
 //                .tag(TAG)
 //                .callback(new Callback2D<Resp<UserInfo>, UserInfo>() {
 //                    @Override
-//                    protected void onRespSuccessData(UserInfo data) {
+//                    protected void onRespData(UserInfo data) {
 //                        LocalUser.getUser().setUserInfo(data);
 //                        ToastUtil.show(R.string.modify_success);
 //                        setResult(RESULT_OK);

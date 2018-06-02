@@ -3,8 +3,6 @@ package com.songbai.futurex.activity;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,16 +30,6 @@ import java.lang.reflect.Method;
  * < android 6.0 api 23, statusbar 使用黑底系统自带字
  */
 public class StatusBarActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // Android 6.0(23)
-            if (isMiui() || isFlyme()) {
-                setStatusBarFontIconDark(true);
-            }
-        }
-    }
 
     protected void translucentStatusBar() {
         //make full transparent statusBar
@@ -72,15 +60,10 @@ public class StatusBarActivity extends AppCompatActivity {
         win.setAttributes(winParams);
     }
 
-    protected void addStatusBarHeightPaddingTop(View view) {
-        int paddingTop = getStatusBarHeight();
-        view.setPadding(0, paddingTop, 0, 0);
-    }
-
     /**
      * 增加View的paddingTop,增加的值为状态栏高度
      */
-    public void setStatusBarHeightPadding(View view) {
+    public void addStatusBarHeightPaddingTop(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(),
                     view.getPaddingRight(), view.getPaddingBottom());

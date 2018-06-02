@@ -1,9 +1,10 @@
 package com.songbai.futurex;
 
 /**
- * Created by ${wangJie} on 2018/1/22.
+ * Modified by john on 2018/6/2
+ * <p>
+ * Description: Extra keys for app
  */
-
 public interface ExtraKeys {
 
     String IMAGE = "image";

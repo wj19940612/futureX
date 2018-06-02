@@ -56,6 +56,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/phoneLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -66,9 +67,9 @@
                 style="@style/SignEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ic_area_code_arrow"
                 android:drawablePadding="4dp"
-                tools:text="0086"/>
+                android:drawableRight="@drawable/ic_area_code_arrow"
+                android:text="0086"/>
 
             <EditText
                 android:id="@+id/phoneNumber"
@@ -80,6 +81,14 @@
                 android:hint="@string/phone"/>
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/email"
+            style="@style/SignEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_sample"
+            android:visibility="gone"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -87,7 +96,6 @@
             android:background="@color/bgF5"/>
 
         <LinearLayout
-            android:id="@+id/authCodeArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"

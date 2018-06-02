@@ -30,7 +30,7 @@ public class App extends Application {
         Api.setLogger(new ReqLogger() {
             @Override
             public void onTag(String log) {
-                Log.d("VolleyHttp", log);
+                Log.d("VHttp", log);
             }
         });
 
@@ -58,7 +58,7 @@ public class App extends Application {
     private void openCrashInfoPage(Throwable e) {
         Intent intent = new Intent();
         intent.setClass(this.getApplicationContext(), CrashInfoActivity.class);
-        intent.putExtra(ExKeys.CRASH_INFO, e);
+        intent.putExtra(ExtraKeys.CRASH_INFO, e);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

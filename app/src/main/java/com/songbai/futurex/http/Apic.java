@@ -12,7 +12,8 @@ public class Apic {
 
     public static final int DEFAULT_PAGE_SIZE = 20;
 
-    public interface url {
+    public static Api getAreaCodes() {
+        return Api.get("/api/user/country/country.d");
     }
 
     /**
@@ -92,5 +93,8 @@ public class Apic {
                         .put("waresOrderId", waresOrderId)
                         .put("startTime", startTime)
                         .put("size", size));
+    }
+
+    public interface url {
     }
 }

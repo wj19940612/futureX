@@ -7,6 +7,8 @@
     <string name="http_error_network">网络异常</string>
     <string name="http_error_parse">数据解析异常</string>
     <string name="http_error_server">服务器有事出去一会儿稍等一下,马上回来</string>
+    <!--data 处理异常-->
+    <string name="data_parse_error">DATA 数据解析异常</string>
 
     <!-- Crash -->
     <string name="restart_app">重启应用</string>
@@ -185,7 +187,7 @@
     <string name="email_register">邮箱注册</string>
     <string name="phone_register">手机注册</string>
     <string name="phone">手机号</string>
-    <string name="email_sample">邮箱&#160;例abc@gmail.com</string>
+    <string name="email_sample">邮箱&#160;&#160;例abc@gmail.com</string>
     <string name="get_auth_code">获取验证码</string>
     <string name="sms_auth_code">短信验证码</string>
     <string name="email_auth_code">邮箱验证码</string>
@@ -206,5 +208,6 @@
     <string name="please_input_if_you_have_invitation_code">若您有邀请码，请输入</string>
     <string name="skip">跳过</string>
     <string name="invitation_code">邀请码</string>
+    <string name="please_choose_country_area_code">请选择国家区号</string>
 
 </resources>

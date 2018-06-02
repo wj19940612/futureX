@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_white"
+        android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/set_cash_pwd"
@@ -27,7 +27,7 @@
     <com.songbai.futurex.view.IconTextRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_white"
+        android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/change_login_pwd"
@@ -37,7 +37,7 @@
     <com.songbai.futurex.view.IconTextRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_white"
+        android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/google_authenticator"
@@ -47,7 +47,7 @@
     <com.songbai.futurex.view.IconTextRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_white"
+        android:background="@drawable/bg_white_pressed_f5"
         app:rowText="@string/gesture_pwd"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>

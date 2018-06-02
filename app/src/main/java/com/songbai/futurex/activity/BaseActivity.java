@@ -15,16 +15,17 @@ import android.widget.AbsListView;
 import android.widget.ScrollView;
 
 import com.sbai.httplib.ReqIndeterminate;
+import com.songbai.futurex.http.Api;
 import com.songbai.futurex.utils.TimerHandler;
 import com.songbai.futurex.view.RequestProgress;
+import com.songbai.futurex.view.SmartDialog;
 
 /**
  * Modified by john on 18/01/2018
  * <p>
  * Description: 基础 Activity
  */
-public class BaseActivity extends StatusBarActivity implements
-        ReqIndeterminate, TimerHandler.TimerCallback {
+public class BaseActivity extends StatusBarActivity implements ReqIndeterminate, TimerHandler.TimerCallback {
 
     public static final String ACTION_TOKEN_EXPIRED = "com.sbai.fin.token_expired";
     public static final String ACTION_LOGIN_SUCCESS = "com.sbai.fin.login_success";
@@ -126,9 +127,9 @@ public class BaseActivity extends StatusBarActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Api.cancel(TAG);
+        Api.cancel(TAG);
 
-        //SmartDialog.dismiss(this);
+        SmartDialog.dismiss(this);
 
         mRequestProgress.dismissAll();
 
