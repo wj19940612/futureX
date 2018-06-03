@@ -24,6 +24,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AreaCode;
+import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.SmartDialog;
 
 import java.util.List;
@@ -116,9 +117,15 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
     }
 
     private void showAreaCodeSelector() {
-        final SelectAreaCodesViewController controller
-                = new SelectAreaCodesViewController(getActivity());
+        final SelectAreaCodesViewController controller = new SelectAreaCodesViewController(getActivity());
+        controller.setSelectListener(new SelectAreaCodesViewController.OnSelectListener() {
+            @Override
+            public void onSelect(AreaCode areaCode) {
+                mAreaCode.setText(areaCode.getTeleCode());
+            }
+        });
         showAreaCodeDialog(controller);
+
         Apic.getAreaCodes().tag(TAG)
                 .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
                     @Override
@@ -143,6 +150,16 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         private TextView mCancel;
         private ProgressBar mProgressBar;
         private List<AreaCode> mAreaCodeList;
+        private OnSelectListener mSelectListener;
+
+
+        interface OnSelectListener {
+            void onSelect(AreaCode areaCode);
+        }
+
+        public void setSelectListener(OnSelectListener selectListener) {
+            mSelectListener = selectListener;
+        }
 
         public SelectAreaCodesViewController(Context context) {
             mContext = context;
@@ -175,7 +192,15 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
             mRecyclerView.addItemDecoration(dividerItemDecoration);
-            AreaCodeAdapter adapter = new AreaCodeAdapter(mAreaCodeList);
+            AreaCodeAdapter adapter = new AreaCodeAdapter(mAreaCodeList, new OnRVItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, Object obj) {
+                    if (obj != null && mSelectListener != null) {
+                        AreaCode areaCode = (AreaCode) obj;
+                        mSelectListener.onSelect(areaCode);
+                    }
+                }
+            });
             mRecyclerView.setAdapter(adapter);
         }
     }
@@ -183,9 +208,11 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
     public static class AreaCodeAdapter extends RecyclerView.Adapter<AreaCodeAdapter.ViewHolder> {
 
         private List<AreaCode> mAreaCodeList;
+        private OnRVItemClickListener mOnRVItemClickListener;
 
-        public AreaCodeAdapter(List<AreaCode> areaCodeList) {
+        public AreaCodeAdapter(List<AreaCode> areaCodeList, OnRVItemClickListener onRVItemClickListener) {
             mAreaCodeList = areaCodeList;
+            mOnRVItemClickListener = onRVItemClickListener;
         }
 
         @NonNull
@@ -198,8 +225,7 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             AreaCode areaCode = mAreaCodeList.get(position);
-            holder.mCountryName.setText(areaCode.getName());
-            holder.mAreaCode.setText(areaCode.getTeleCode());
+            holder.bind(areaCode, position, mOnRVItemClickListener);
         }
 
         @Override
@@ -216,6 +242,17 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
             ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+            }
+
+            public void bind(final AreaCode areaCode, final int position, final OnRVItemClickListener onRVItemClickListener) {
+                mCountryName.setText(areaCode.getName());
+                mAreaCode.setText(areaCode.getTeleCode());
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onRVItemClickListener.onItemClick(v, position, areaCode);
+                    }
+                });
             }
         }
     }

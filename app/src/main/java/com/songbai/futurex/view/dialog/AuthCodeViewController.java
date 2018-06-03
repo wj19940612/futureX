@@ -31,5 +31,4 @@ public class AuthCodeViewController implements SmartDialog.CustomViewController 
     public void setupView(View view, SmartDialog dialog) {
 
     }
-
 }
