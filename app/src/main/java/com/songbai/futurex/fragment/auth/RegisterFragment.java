@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +20,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AreaCode;
+import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.utils.OnRVItemClickListener;
+import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 
 import java.util.List;
@@ -57,8 +63,6 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
     EditText mPhoneAuthCode;
     @BindView(R.id.emailAuthCode)
     EditText mEmailAuthCode;
-    @BindView(R.id.getAuthCode)
-    TextView mGetAuthCode;
     @BindView(R.id.next)
     TextView mNext;
     @BindView(R.id.switchToLogin)
@@ -70,6 +74,19 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
     LinearLayout mPhoneLine;
     @BindView(R.id.email)
     EditText mEmail;
+    @BindView(R.id.emailLine)
+    LinearLayout mEmailLine;
+    @BindView(R.id.getPhoneAuthCode)
+    TextView mGetPhoneAuthCode;
+    @BindView(R.id.phoneAuthCodeLine)
+    LinearLayout mPhoneAuthCodeLine;
+    @BindView(R.id.getEmailAuthCode)
+    TextView mGetEmailAuthCode;
+    @BindView(R.id.emailAuthCodeLine)
+    LinearLayout mEmailAuthCodeLine;
+
+    private boolean mFreezeGetPhoneAuthCode;
+    private boolean mFreezeGetEmailAuthCode;
 
     @Nullable
     @Override
@@ -86,7 +103,59 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        mPhoneNumber.addTextChangedListener(mValidationWatcher);
+        mPhoneAuthCode.addTextChangedListener(mValidationWatcher);
+        mEmail.addTextChangedListener(mValidationWatcher);
+        mEmailAuthCode.addTextChangedListener(mValidationWatcher);
+    }
 
+    private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable editable) {
+            boolean enable = checkNextButtonEnable();
+            if (enable != mNext.isEnabled()) {
+                mNext.setEnabled(enable);
+            }
+
+            if (isPhoneRegister()) {
+                enable = checkGetPhoneAuthCodeEnable();
+                if (enable != mGetPhoneAuthCode.isEnabled()) {
+                    mGetPhoneAuthCode.setEnabled(enable);
+                }
+            } else {
+                enable = checkGetEmailAuthCodeButtonEnable();
+                if (enable != mGetEmailAuthCode.isEnabled()) {
+                    mGetEmailAuthCode.setEnabled(enable);
+                }
+            }
+        }
+    };
+
+    private boolean checkGetPhoneAuthCodeEnable() {
+        String phone = mPhoneNumber.getText().toString().trim();
+        return !TextUtils.isEmpty(phone) && !mFreezeGetPhoneAuthCode;
+    }
+
+    private boolean checkGetEmailAuthCodeButtonEnable() {
+        String email = mEmail.getText().toString().trim();
+        return !TextUtils.isEmpty(email) && !mFreezeGetEmailAuthCode;
+    }
+
+    private boolean checkNextButtonEnable() {
+        if (isPhoneRegister()) {
+            String phone = mPhoneNumber.getText().toString().trim();
+            String phoneAuthCode = mPhoneAuthCode.getText().toString().trim();
+            if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(phoneAuthCode)) {
+                return false;
+            }
+        } else {
+            String email = mEmail.getText().toString().trim();
+            String emailAuthCode = mEmailAuthCode.getText().toString().trim();
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(emailAuthCode)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -95,7 +164,8 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.closePage, R.id.registerTypeSwitch, R.id.areaCode, R.id.getAuthCode, R.id.next, R.id.switchToLogin})
+    @OnClick({R.id.closePage, R.id.registerTypeSwitch, R.id.areaCode, R.id.next, R.id.switchToLogin,
+            R.id.getPhoneAuthCode, R.id.getEmailAuthCode})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.closePage:
@@ -113,7 +183,41 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.switchToLogin:
                 break;
+            case R.id.getPhoneAuthCode:
+                requestPhoneAuthCode();
+                break;
+            case R.id.getEmailAuthCode:
+                break;
         }
+    }
+
+    private void requestPhoneAuthCode() {
+        String phone = mPhoneNumber.getText().toString().trim();
+        String areaCode = mAreaCode.getText().toString();
+        AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
+                .phone(phone)
+                .teleCode(areaCode)
+                .type(AuthCodeGet.TYPE_REGISTER)
+                .build();
+
+        Apic.getAuthCode(authCodeGet).tag(TAG)
+                .callback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
+                                ||failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
+                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
+
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
+                    }
+                }).fire();
     }
 
     private void showAreaCodeSelector() {
@@ -270,10 +374,10 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         mRegisterTypeSwitch.setText(R.string.email_register);
 
         mPhoneLine.setVisibility(View.VISIBLE);
-        mPhoneAuthCode.setVisibility(View.VISIBLE);
+        mPhoneAuthCodeLine.setVisibility(View.VISIBLE);
 
-        mEmail.setVisibility(View.GONE);
-        mEmailAuthCode.setVisibility(View.GONE);
+        mEmailLine.setVisibility(View.GONE);
+        mEmailAuthCodeLine.setVisibility(View.GONE);
     }
 
     private void switchToEmailRegister() {
@@ -281,13 +385,13 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         mRegisterTypeSwitch.setText(R.string.phone_register);
 
         mPhoneLine.setVisibility(View.GONE);
-        mPhoneAuthCode.setVisibility(View.GONE);
+        mPhoneAuthCodeLine.setVisibility(View.GONE);
 
-        mEmail.setVisibility(View.VISIBLE);
-        mEmailAuthCode.setVisibility(View.VISIBLE);
+        mEmailLine.setVisibility(View.VISIBLE);
+        mEmailAuthCodeLine.setVisibility(View.VISIBLE);
     }
 
     private boolean isPhoneRegister() {
-        return mPhoneAuthCode.getVisibility() == View.VISIBLE;
+        return mPhoneLine.getVisibility() == View.VISIBLE;
     }
 }

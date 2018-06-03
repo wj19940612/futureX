@@ -84,4 +84,17 @@ public class AreaCode {
     public void setTeleCode(String teleCode) {
         this.teleCode = teleCode;
     }
+
+    @Override
+    public String toString() {
+        return "AreaCode{" +
+                "country='" + country + '\'' +
+                ", englishName='" + englishName + '\'' +
+                ", lang='" + lang + '\'' +
+                ", locale='" + locale + '\'' +
+                ", name='" + name + '\'' +
+                ", symbol='" + symbol + '\'' +
+                ", teleCode='" + teleCode + '\'' +
+                '}';
+    }
 }

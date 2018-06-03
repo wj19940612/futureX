@@ -1,6 +1,7 @@
 package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
+import com.songbai.futurex.model.local.AuthCodeGet;
 
 /**
  * Modified by john on 23/01/2018
@@ -93,6 +94,17 @@ public class Apic {
                         .put("waresOrderId", waresOrderId)
                         .put("startTime", startTime)
                         .put("size", size));
+    }
+
+    /**
+     * 获取（phone/email）验证码
+     *
+     * @param authCodeGet
+     * @return
+     */
+    public static Api getAuthCode(AuthCodeGet authCodeGet) {
+        return Api.post("/user/validate/sendMsgCode.do",
+                new ReqParams(AuthCodeGet.class, authCodeGet));
     }
 
     public interface url {

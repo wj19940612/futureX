@@ -2,18 +2,12 @@ package com.songbai.futurex.http;
 
 
 public class Resp<T> {
-    // 验证码请求过多 需要图片验证码
-    public static final int CODE_IMAGE_AUTH_CODE_REQUIRED = 1123;
-    //未绑定微信
-    public static final int CODE_NO_BIND_WE_CHAT = 1115;
-    //账号异常
-    public static final int CODE_ACCOUNT_EXCEPTION = 1114;
 
-    //收藏文章已经被下架
-    public static final int CODE_ARTICLE_ALREADY_SOLD_OUT = 1126;
-    // 咨询不存在
-    public static final int CODE_MSG_NOT_FIND = 1302;
-
+    public interface Code {
+        int IMAGE_AUTH_CODE_REQUIRED = 224; // 验证码请求过多 需要图片验证码
+        int IMAGE_AUTH_CODE_TIMEOUT = 225;  // 图片验证码超时
+        int IMAGE_AUTH_CODE_FAILED = 226;  // 图片验证码失败
+    }
 
     private int code;
     private String msg;

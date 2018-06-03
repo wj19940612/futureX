@@ -2,7 +2,6 @@
 <RelativeLayout
     android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -78,16 +77,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
                 android:layout_weight="1"
-                android:hint="@string/phone"/>
+                android:hint="@string/phone"
+                android:inputType="phone"/>
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/email"
-            style="@style/SignEditText"
+        <LinearLayout
+            android:id="@+id/emailLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email_sample"
-            android:visibility="gone"/>
+            android:gravity="center_vertical"
+            android:minHeight="50dp"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/email"
+                style="@style/SignEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_sample"/>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -96,10 +104,12 @@
             android:background="@color/bgF5"/>
 
         <LinearLayout
+            android:id="@+id/phoneAuthCodeLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:minHeight="50dp">
+            android:minHeight="50dp"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/phoneAuthCode"
@@ -111,6 +121,27 @@
                 android:inputType="number"
                 android:maxLength="10"/>
 
+            <TextView
+                android:id="@+id/getPhoneAuthCode"
+                android:layout_width="93dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_primary_r100"
+                android:enabled="false"
+                android:gravity="center"
+                android:text="@string/get_auth_code"
+                android:textColor="@color/white_disabled_gray"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/emailAuthCodeLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="50dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
             <EditText
                 android:id="@+id/emailAuthCode"
                 style="@style/SignEditText"
@@ -119,11 +150,10 @@
                 android:layout_weight="1"
                 android:hint="@string/email_auth_code"
                 android:inputType="number"
-                android:maxLength="10"
-                android:visibility="gone"/>
+                android:maxLength="10"/>
 
             <TextView
-                android:id="@+id/getAuthCode"
+                android:id="@+id/getEmailAuthCode"
                 android:layout_width="93dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"

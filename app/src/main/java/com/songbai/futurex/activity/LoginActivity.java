@@ -137,7 +137,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private boolean checkSignInButtonEnable() {
-        String phoneOrEmail = mPhoneOrEmail.getText().toString();
+        String phoneOrEmail = mPhoneOrEmail.getText().toString().trim();
         String password = mPassword.getPassword();
 
         if (TextUtils.isEmpty(phoneOrEmail)) {
