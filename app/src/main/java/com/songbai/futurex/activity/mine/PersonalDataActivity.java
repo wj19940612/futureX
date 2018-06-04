@@ -10,8 +10,11 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
+import com.songbai.futurex.fragment.mine.BindMailFragment;
+import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
 import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
+import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
@@ -80,11 +83,13 @@ public class PersonalDataActivity extends BaseActivity {
             case R.id.realName:
                 break;
             case R.id.phoneCertification:
-                Launcher.with(this, BindPhoneActivity.class);
+                UniqueActivity.launcher(this, BindPhoneFragment.class).execute();
                 break;
             case R.id.mailCertification:
+                UniqueActivity.launcher(this, BindMailFragment.class).execute();
                 break;
             case R.id.primaryCertification:
+                UniqueActivity.launcher(this, PrimaryCertificationFragment.class).execute();
                 break;
             case R.id.seniorCertification:
                 break;

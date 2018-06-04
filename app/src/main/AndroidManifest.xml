@@ -42,10 +42,6 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.BindPhoneActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.mine.ClipHeadImageActivity"
             android:screenOrientation="portrait"/>
         <activity

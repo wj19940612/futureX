@@ -43,6 +43,10 @@
     <string name="phone_certification">手机认证</string>
     <string name="mail_certification">邮箱认证</string>
     <string name="primary_certification">初级认证</string>
+    <string name="type_of_certification">证件类型</string>
+    <string name="certification_number">证件号码</string>
+    <string name="please_input_real_name">请输入该证件的真实姓名</string>
+    <string name="please_input_certification_number">请输入该证件号码</string>
     <string name="advanced_certification">高级认证</string>
     <string name="legal_currency_pay_management">法币支付管理</string>
     <string name="legal_currency_pay">法币支付</string>
@@ -89,6 +93,9 @@
     <string name="resend">重新发送</string>
     <string name="confirm_bind">确认绑定</string>
     <string name="bind_mail">绑定邮箱</string>
+    <string name="please_input_mail">请输入邮箱</string>
+    <string name="please_input_mail_auth_code">请输入邮箱验证码</string>
+    <string name="please_input_phone_auth_code">请输入手机验证码</string>
 
     <string name="please_open_camera_permission">请打开相机权限</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
