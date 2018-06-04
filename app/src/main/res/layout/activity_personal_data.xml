@@ -144,14 +144,14 @@
         app:subText="@string/please_select"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/fiatPayManagement"
+        android:id="@+id/legalCurrencyPayManagement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/fiat_pay_management"
+        app:rowText="@string/legal_currency_pay_management"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>
 

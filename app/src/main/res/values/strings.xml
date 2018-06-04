@@ -30,7 +30,7 @@
     <string name="click_login">点击登录</string>
     <string name="property">我的资产</string>
     <string name="trade_order_log">币币交易历史</string>
-    <string name="fiat_trade_order">法币交易订单</string>
+    <string name="legal_currency_trade_order">法币交易订单</string>
     <string name="invite">邀请返佣</string>
     <string name="message_center">消息中心</string>
     <string name="safety_center">安全中心</string>
@@ -44,8 +44,38 @@
     <string name="mail_certification">邮箱认证</string>
     <string name="primary_certification">初级认证</string>
     <string name="advanced_certification">高级认证</string>
-    <string name="fiat_pay_management">法币支付管理</string>
+    <string name="legal_currency_pay_management">法币支付管理</string>
+    <string name="legal_currency_pay">法币支付</string>
+    <string name="add_gathering_account">添加收款方式</string>
+    <string name="add_ali_pay">添加支付宝</string>
+    <string name="ali_pay_account">支付宝账号</string>
+    <string name="add_wei_chat_pay">添加微信支付</string>
+    <string name="wei_chat_account">微信账号</string>
+    <string name="please_input_name">请填写姓名</string>
+    <string name="add_banking_card">添加银行卡</string>
+    <string name="please_input_ali_pay_account">请填写支付宝账号</string>
+    <string name="please_input_wei_chat_account">请填写微信号</string>
+    <string name="confirm_add">确认添加</string>
+    <string name="own_bank_name">所属银行</string>
+    <string name="account_sub_bank_name">开户支行</string>
+    <string name="bank_card_number">银行卡号</string>
+    <string name="please_input_account_sub_bank_name">请填写开户支行</string>
+    <string name="please_input_bank_card_number">请填写银行卡号</string>
     <string name="draw_coin_address_management">提币地址管理</string>
+    <string name="bank_name">银行名称</string>
+    <string name="please_input_bank_name">请填写银行名称</string>
+    <string name="bank_code">银行代码</string>
+    <string name="please_input_bank_code">请填写银行代码</string>
+    <string name="sub_bank_name">分行名称</string>
+    <string name="please_input_sub_bank_name">请填写分行名称</string>
+    <string name="bank_card_account">银行卡号</string>
+    <string name="please_input_bank_card_account">请填写银行卡号</string>
+    <string name="bank_card_account_name">账号户名</string>
+    <string name="please_input_bank_card_account_name">请填写账号户名</string>
+    <string name="select_pay_type">选择支付方式</string>
+    <string name="bank_card">银行卡</string>
+    <string name="alipay">支付宝</string>
+    <string name="weichat">微信</string>
     <string name="please_select">请设置</string>
     <string name="set_nick">设置昵称</string>
     <string name="please_input_nick_name">请输入昵称</string>
@@ -142,11 +172,18 @@
     <string name="cash_pwd">资金密码</string>
     <string name="confirm_with_draw">确认提币</string>
     <string name="with_draw_rules">1.最小提币数量为：XX\n
-2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n
-3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n
-4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n
-5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
+        2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n
+        3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n
+        4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n
+        5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="filtrate">筛选</string>
+    <string name="coin_type">币种</string>
+    <string name="flow_type">流水类型</string>
+    <string name="all_type">所有类型</string>
+    <string name="status">状态</string>
+    <string name="all_status">所有状态</string>
+    <string name="time">时间</string>
+    <string name="reset">重置</string>
 
 
     <string-array name="messageCenterTabTexts">
@@ -157,14 +194,14 @@
     <!-- bottom tabs -->
     <string name="home">首页</string>
     <string name="market">行情</string>
-    <string name="fiat_coin">法币</string>
+    <string name="legal_currency">法币</string>
     <string name="coin_coin">币币</string>
     <string name="mine">我的</string>
 
     <string-array name="tabTexts">
         <item>@string/home</item>
         <item>@string/market</item>
-        <item>@string/fiat_coin</item>
+        <item>@string/legal_currency</item>
         <item>@string/coin_coin</item>
         <item>@string/mine</item>
     </string-array>

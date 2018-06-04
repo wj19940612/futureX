@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgF5"
+    android:orientation="vertical">
+
+    <com.songbai.futurex.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/add_banking_card"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:text="地"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="区"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableRight="@drawable/ic_invitation_angle_down"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="12dp"
+            android:text="中国台湾"
+            android:textColor="@color/text22"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainlandGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/own_bank_name"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableRight="@drawable/ic_invitation_angle_down"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="12dp"
+                android:text="中国台湾"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/account_sub_bank_name"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <EditText
+                style="@style/SingleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_account_sub_bank_name"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/bank_card_number"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <EditText
+                style="@style/SingleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_bank_card_number"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/twGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/bank_name"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <EditText
+                style="@style/SingleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_account_sub_bank_name"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/bank_code"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <EditText
+                style="@style/SingleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_bank_code"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/sub_bank_name"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <EditText
+                style="@style/SingleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_sub_bank_name"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/bank_card_account"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <EditText
+                style="@style/SingleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_bank_card_account"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="14dp"
+                android:gravity="center_vertical"
+                android:text="@string/bank_card_account_name"
+                android:textColor="@color/text22"
+                android:textSize="16sp"/>
+
+            <EditText
+                style="@style/SingleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_bank_card_account_name"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/confirm_add"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn_primary"
+        android:gravity="center"
+        android:text="@string/confirm_add"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/input"/>
+
+</LinearLayout>

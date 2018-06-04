@@ -1,51 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/bgF5"
     android:orientation="vertical">
 
-    <com.songbai.futurex.view.TitleBar
+    <com.sbai.bcnews.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backFeature="true"
-        app:hasBottomSplitLine="true"
-        app:rightImage="@drawable/ic_bb_entrust_list_filter"
-        app:rightText="@string/filtrate"
-        app:rightTextColor="@color/text49"
-        app:rightTextSize="13sp"
-        app:rightVisible="true"
-        app:titleText="@string/property_flow"/>
+        app:backFeature="true"/>
 
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipeToLoadLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/titleBar">
+        app:default_to_loading_more_scrolling_duration="500"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"
+        app:load_more_complete_delay_duration="0"
+        app:load_more_final_drag_offset="@dimen/load_more_final_offset_google"
+        app:load_more_trigger_offset="@dimen/load_more_trigger_offset_google"
+        app:refresh_final_drag_offset="@dimen/refresh_final_offset_google"
+        app:refresh_trigger_offset="@dimen/refresh_trigger_offset_google"
+        app:swipe_style="classic">
+
 
         <com.zcmrr.swipelayout.header.RefreshHeaderView
             android:id="@+id/swipe_refresh_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/swipe_target"
+        <ListView
+            android:id="@id/swipe_target"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:clipToPadding="false"/>
 
         <com.zcmrr.swipelayout.foot.LoadMoreFooterView
             android:id="@+id/swipe_load_more_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
 
-    <include
-        layout="@layout/row_filtrate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/titleBar"/>
-</RelativeLayout>
+    </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
+</LinearLayout>
