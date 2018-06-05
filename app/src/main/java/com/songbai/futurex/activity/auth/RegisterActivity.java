@@ -1,9 +1,10 @@
-package com.songbai.futurex.fragment.auth;
+package com.songbai.futurex.activity.auth;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,15 +23,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.auth.SetPsdFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AreaCode;
 import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
@@ -38,16 +43,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-/**
- * Modified by john on 2018/5/31
- * <p>
- * Description:
- * <p>
- * APIs:
- */
-public class RegisterFragment extends UniqueActivity.UniFragment {
+public class RegisterActivity extends BaseActivity {
+
+    private static final int REQ_CODE_LOGIN = 91;
+    private static final int REQ_CODE_SET_PASS = 92;
 
     @BindView(R.id.closePage)
     ImageView mClosePage;
@@ -69,7 +69,6 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
     TextView mSwitchToLogin;
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
-    Unbinder unbinder;
     @BindView(R.id.phoneLine)
     LinearLayout mPhoneLine;
     @BindView(R.id.email)
@@ -84,29 +83,40 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
     TextView mGetEmailAuthCode;
     @BindView(R.id.emailAuthCodeLine)
     LinearLayout mEmailAuthCodeLine;
+    @BindView(R.id.checkUserAgreement)
+    CheckBox mCheckUserAgreement;
 
     private boolean mFreezeGetPhoneAuthCode;
     private boolean mFreezeGetEmailAuthCode;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_register, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
 
-    @Override
-    protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
-    }
-
-    @Override
-    protected void onPostActivityCreated(Bundle savedInstanceState) {
         mPhoneNumber.addTextChangedListener(mValidationWatcher);
         mPhoneAuthCode.addTextChangedListener(mValidationWatcher);
         mEmail.addTextChangedListener(mValidationWatcher);
         mEmailAuthCode.addTextChangedListener(mValidationWatcher);
+        mCheckUserAgreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                boolean enable = checkNextButtonEnable();
+                if (enable != mNext.isEnabled()) {
+                    mNext.setEnabled(enable);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPhoneNumber.removeTextChangedListener(mValidationWatcher);
+        mPhoneAuthCode.removeTextChangedListener(mValidationWatcher);
+        mEmail.removeTextChangedListener(mValidationWatcher);
+        mEmailAuthCode.removeTextChangedListener(mValidationWatcher);
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -145,27 +155,21 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         if (isPhoneRegister()) {
             String phone = mPhoneNumber.getText().toString().trim();
             String phoneAuthCode = mPhoneAuthCode.getText().toString().trim();
-            if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(phoneAuthCode)) {
+            if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(phoneAuthCode) || !mCheckUserAgreement.isChecked()) {
                 return false;
             }
         } else {
             String email = mEmail.getText().toString().trim();
             String emailAuthCode = mEmailAuthCode.getText().toString().trim();
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(emailAuthCode)) {
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(emailAuthCode) || !mCheckUserAgreement.isChecked()) {
                 return false;
             }
         }
         return true;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
     @OnClick({R.id.closePage, R.id.registerTypeSwitch, R.id.areaCode, R.id.next, R.id.switchToLogin,
-            R.id.getPhoneAuthCode, R.id.getEmailAuthCode})
+            R.id.getPhoneAuthCode, R.id.getEmailAuthCode, R.id.userAgreement})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.closePage:
@@ -180,15 +184,65 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
             case R.id.getAuthCode:
                 break;
             case R.id.next:
+                UniqueActivity.launcher(this, SetPsdFragment.class).execute(REQ_CODE_SET_PASS);
                 break;
             case R.id.switchToLogin:
+                openLoginPage();
                 break;
             case R.id.getPhoneAuthCode:
                 requestPhoneAuthCode();
                 break;
             case R.id.getEmailAuthCode:
+                requestEmailAuthCode();
+                break;
+            case R.id.userAgreement:
+                // TODO: 2018/6/4 open user agreement h5
                 break;
         }
+    }
+
+    private void openLoginPage() {
+        ComponentName callingActivity = getActivity().getCallingActivity();
+        if (callingActivity != null && callingActivity.getClassName().equals(LoginActivity.class.getCanonicalName())) {
+            finish();
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute(REQ_CODE_LOGIN);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_LOGIN && resultCode == RESULT_OK) {
+
+        }
+    }
+
+    private void requestEmailAuthCode() {
+        String email = mEmail.getText().toString().trim();
+        AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
+                .email(email)
+                .type(AuthCodeGet.TYPE_REGISTER)
+                .build();
+
+        Apic.getAuthCode(authCodeGet).tag(TAG)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        freezeGetEmailAuthCodeButton();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
+                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
+                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
+                            // TODO: 2018/6/4 图片验证码
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
+                    }
+                }).fire();
     }
 
     private void requestPhoneAuthCode() {
@@ -201,23 +255,77 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
                 .build();
 
         Apic.getAuthCode(authCodeGet).tag(TAG)
-                .callback(new Callback<Resp<JsonObject>>() {
+                .callback(new Callback<Resp>() {
                     @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-
+                    protected void onRespSuccess(Resp resp) {
+                        freezeGetPhoneAuthCodeButton();
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
-                                ||failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
+                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-
+                            // TODO: 2018/6/4 图片验证码
                         } else {
                             super.onRespFailure(failedResp);
                         }
                     }
                 }).fire();
+    }
+
+    private void freezeGetEmailAuthCodeButton() {
+        mFreezeGetEmailAuthCode = true;
+        startScheduleJob(1000);
+        mGetEmailAuthCode.setTag(60);
+        mGetEmailAuthCode.setEnabled(false);
+        mGetEmailAuthCode.setText(getString(R.string.x_seconds, 60));
+    }
+
+    private void freezeGetPhoneAuthCodeButton() {
+        mFreezeGetPhoneAuthCode = true;
+        startScheduleJob(1000);
+        mGetPhoneAuthCode.setTag(60);
+        mGetPhoneAuthCode.setEnabled(false);
+        mGetPhoneAuthCode.setText(getString(R.string.x_seconds, 60));
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        Integer tag = (Integer) mGetPhoneAuthCode.getTag();
+        int phoneAuthCodeCounter = tag != null ? tag.intValue() : 0;
+        tag = (Integer) mGetEmailAuthCode.getTag();
+        int emailAuthCodeCounter = tag != null ? tag.intValue() : 0;
+
+        phoneAuthCodeCounter--;
+        if (phoneAuthCodeCounter <= 0) {
+            if (phoneAuthCodeCounter == 0) {
+                mFreezeGetPhoneAuthCode = false;
+                mGetPhoneAuthCode.setEnabled(true);
+                mGetPhoneAuthCode.setText(R.string.regain);
+                mGetPhoneAuthCode.setTag(null);
+            }
+        } else {
+            mGetPhoneAuthCode.setTag(phoneAuthCodeCounter);
+            mGetPhoneAuthCode.setText(getString(R.string.x_seconds, phoneAuthCodeCounter));
+        }
+
+        emailAuthCodeCounter--;
+        if (emailAuthCodeCounter <= 0) {
+            if (emailAuthCodeCounter == 0) {
+                mFreezeGetEmailAuthCode = false;
+                mGetEmailAuthCode.setEnabled(true);
+                mGetEmailAuthCode.setText(R.string.regain);
+                mGetEmailAuthCode.setTag(null);
+            }
+        } else {
+            mGetEmailAuthCode.setTag(emailAuthCodeCounter);
+            mGetEmailAuthCode.setTag(getString(R.string.x_seconds, emailAuthCodeCounter));
+        }
+
+        if (phoneAuthCodeCounter <= 0 && emailAuthCodeCounter <= 0) {
+            stopScheduleJob();
+        }
     }
 
     private void showAreaCodeSelector() {
@@ -254,14 +362,14 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
         private TextView mCancel;
         private ProgressBar mProgressBar;
         private List<AreaCode> mAreaCodeList;
-        private OnSelectListener mSelectListener;
+        private SelectAreaCodesViewController.OnSelectListener mSelectListener;
 
 
         interface OnSelectListener {
             void onSelect(AreaCode areaCode);
         }
 
-        public void setSelectListener(OnSelectListener selectListener) {
+        public void setSelectListener(SelectAreaCodesViewController.OnSelectListener selectListener) {
             mSelectListener = selectListener;
         }
 
@@ -321,13 +429,13 @@ public class RegisterFragment extends UniqueActivity.UniFragment {
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public AreaCodeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_area_code, parent, false);
-            return new ViewHolder(view);
+            return new AreaCodeAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull AreaCodeAdapter.ViewHolder holder, int position) {
             AreaCode areaCode = mAreaCodeList.get(position);
             holder.bind(areaCode, position, mOnRVItemClickListener);
         }

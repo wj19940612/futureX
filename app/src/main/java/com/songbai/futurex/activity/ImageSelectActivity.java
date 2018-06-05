@@ -169,7 +169,7 @@ public class ImageSelectActivity extends BaseActivity {
                     //跳转预览
                     Launcher.with(this, ImagePreViewActivity.class)
                             .putExtra(ExtraKeys.IMAGE, listSelectedPath.get(0))
-                            .executeForResult(REQ_CODE_TAKE_PHONE_FROM_PREVIEW);
+                            .execute(REQ_CODE_TAKE_PHONE_FROM_PREVIEW);
                 }
                 break;
             case R.id.allPic:

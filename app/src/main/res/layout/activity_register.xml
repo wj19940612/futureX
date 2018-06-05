@@ -190,4 +190,33 @@
             android:text="@string/registered_and_go_login"
             android:textColor="@color/colorPrimary"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkUserAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/cb_user_agreement"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="6dp"
+            android:text="我已阅读并同意"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/userAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="《用户协议》"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp"/>
+    </LinearLayout>
 </RelativeLayout>
