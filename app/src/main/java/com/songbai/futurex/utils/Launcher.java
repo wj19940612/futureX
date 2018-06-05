@@ -15,7 +15,6 @@ public class Launcher {
     private static Launcher sInstance;
 
     private Context mContext;
-    private Fragment mFragment;
 
     private Intent mIntent;
 
@@ -25,7 +24,6 @@ public class Launcher {
 
     public static Launcher with(Fragment fragment, Class<?> clazz) {
         sInstance = new Launcher();
-        sInstance.mFragment = new WeakReference<>(fragment).get();
         sInstance.mContext = new WeakReference<>(fragment.getActivity()).get();
         sInstance.mIntent.setClass(sInstance.mContext, clazz);
         return sInstance;
@@ -99,7 +97,7 @@ public class Launcher {
         }
     }
 
-    public void executeForResult(int requestCode) {
+    public void execute(int requestCode) {
         if (mContext != null) {
             if (mContext instanceof Activity) {
                 Activity activity = (Activity) mContext;
@@ -108,9 +106,9 @@ public class Launcher {
         }
     }
 
-    public void excuteForFragmentResult(int requestCode) {
-        if (mFragment != null && mContext != null) {
-            mFragment.startActivityForResult(mIntent, requestCode);
+    public void execute(Fragment fragment, int requestCode) {
+        if (mContext != null && fragment != null) {
+            fragment.startActivityForResult(mIntent, requestCode);
         }
     }
 }

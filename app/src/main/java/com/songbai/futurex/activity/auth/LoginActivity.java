@@ -1,5 +1,6 @@
-package com.songbai.futurex.activity;
+package com.songbai.futurex.activity.auth;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,8 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.fragment.auth.RegisterFragment;
+import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.utils.KeyBoardUtils;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 
@@ -164,11 +166,20 @@ public class LoginActivity extends BaseActivity {
                 // TODO: 2018/5/30
                 break;
             case R.id.goRegister:
-                UniqueActivity.launcher(getActivity(), RegisterFragment.class).executeForResult(REQ_CODE_REGISTER);
+                openRegisterPage();
                 break;
             case R.id.phoneNumberClear:
                 mPhoneOrEmail.setText("");
                 break;
+        }
+    }
+
+    private void openRegisterPage() {
+        ComponentName callingActivity = getActivity().getCallingActivity();
+        if (callingActivity != null && callingActivity.getClassName().equals(RegisterActivity.class.getCanonicalName())) {
+            getActivity().finish();
+        } else {
+            Launcher.with(getActivity(), RegisterActivity.class).execute(REQ_CODE_REGISTER);
         }
     }
 

@@ -209,5 +209,7 @@
     <string name="skip">跳过</string>
     <string name="invitation_code">邀请码</string>
     <string name="please_choose_country_area_code">请选择国家区号</string>
+    <string name="x_seconds">%1$ds</string>
+    <string name="regain">重新获取</string>
 
 </resources>

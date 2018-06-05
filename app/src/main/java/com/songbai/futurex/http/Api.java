@@ -15,7 +15,6 @@ import com.sbai.httplib.ReqLogger;
 import com.sbai.httplib.ReqParams;
 import com.sbai.httplib.RequestManager;
 import com.songbai.futurex.BuildConfig;
-import com.songbai.futurex.utils.BuildConfigUtils;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -228,7 +227,7 @@ public class Api extends RequestManager {
 
     public static String getFixedHost() {
         if (BuildConfig.FLAVOR.equalsIgnoreCase("dev")
-                || BuildConfig.FLAVOR.equalsIgnoreCase(BuildConfigUtils.FLAVOR_NAME_ALPHA)) {
+                || BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
             return "http://" + BuildConfig.HOST;
         }
         return "http://" + BuildConfig.HOST;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.LoginActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.utils.Launcher;
 
 import butterknife.BindView;

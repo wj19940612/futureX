@@ -82,6 +82,7 @@
         </LinearLayout>
 
         <com.songbai.futurex.view.PasswordEditText
+            android:id="@+id/loginPsd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:textHint="@string/login_password"/>
@@ -93,6 +94,7 @@
             android:background="@color/bgF5"/>
 
         <com.songbai.futurex.view.PasswordEditText
+            android:id="@+id/confirmPsd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:textHint="@string/confirm_password"/>

@@ -103,7 +103,7 @@ public class Apic {
      * @return
      */
     public static Api getAuthCode(AuthCodeGet authCodeGet) {
-        return Api.post("/user/validate/sendMsgCode.do",
+        return Api.post("/api/user/validate/sendMsgCode.do",
                 new ReqParams(AuthCodeGet.class, authCodeGet));
     }
 
