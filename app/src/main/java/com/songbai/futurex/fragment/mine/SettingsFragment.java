@@ -53,6 +53,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.language:
+                UniqueActivity.launcher(getActivity(), SettingLanguageFragment.class).execute();
                 break;
             case R.id.aboutUs:
                 UniqueActivity.launcher(getActivity(), AboutUsFragment.class).execute();
@@ -62,6 +63,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.logout:
                 break;
+            default:
         }
     }
 }

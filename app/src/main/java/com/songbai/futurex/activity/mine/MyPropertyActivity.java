@@ -20,9 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sbai.httplib.ReqCallback;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.fragment.mine.PropertyListFragment;
+import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.utils.Display;
 
 import butterknife.BindView;
@@ -91,6 +94,23 @@ public class MyPropertyActivity extends BaseActivity {
 
             }
         });
+        getAccountData();
+    }
+
+    private void getAccountData() {
+        Apic.getAccountByUser()
+                .callback(new ReqCallback<Object>() {
+                    @Override
+                    public void onSuccess(Object o) {
+
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+
+                    }
+                })
+                .fire();
     }
 
     @Override

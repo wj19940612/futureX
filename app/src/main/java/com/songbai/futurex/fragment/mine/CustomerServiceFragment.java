@@ -64,8 +64,8 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
     EditText mCommentContent;
     @BindView(R.id.addPic)
     ImageButton mAddPic;
-    //    @BindView(R.id.send)
-//    TextView mSend;
+    @BindView(R.id.send)
+    TextView mSend;
     @BindView(R.id.operateArea)
     LinearLayout mOperateArea;
     @BindView(R.id.rootView)
@@ -101,7 +101,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
         mListView.setAdapter(mFeedbackAdapter);
         mListView.setOnScrollListener(this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-//        mSend.setEnabled(false);
+        mSend.setEnabled(false);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
     }
 
     private void requestSendFeedback(final String content, final int contentType) {
-        Apic.chatSend(content,"", contentType).tag(TAG)
+        Apic.chatSend(content, "", contentType).tag(TAG)
                 .callback(new Callback4Resp<Resp<Object>, Object>() {
                     @Override
                     protected void onRespData(Object data) {
@@ -122,7 +122,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
                     public void onFailure(ReqError reqError) {
                         super.onFailure(reqError);
                         if (contentType == CONTENT_TYPE_TEXT) {
-//                            mSend.setEnabled(true);
+                            mSend.setEnabled(true);
                         }
                     }
                 }).fireFreely();
@@ -159,14 +159,15 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
                 sendPicToCustomer();
 
                 break;
-//            case R.id.send:
-//                if (mFeedbackAdapter.getCount() > 6) {
-//                    listViewScrollBottom();
-//                }
-//                String content = mCommentContent.getText().toString().trim();
-//                mSend.setEnabled(false);
-//                requestSendFeedback(content, CONTENT_TYPE_TEXT);
-//                break;
+            case R.id.send:
+                if (mFeedbackAdapter.getCount() > 6) {
+                    listViewScrollBottom();
+                }
+                String content = mCommentContent.getText().toString().trim();
+                mSend.setEnabled(false);
+                requestSendFeedback(content, CONTENT_TYPE_TEXT);
+                break;
+            default:
         }
     }
 
@@ -221,22 +222,22 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
         @Override
         public void afterTextChanged(Editable s) {
             if (TextUtils.isEmpty(mCommentContent.getText().toString().trim())) {
-//                mSend.setEnabled(false);
+                mSend.setEnabled(false);
             } else {
-//                mSend.setEnabled(true);
+                mSend.setEnabled(true);
             }
         }
     };
 
     static class FeedbackAdapter extends BaseAdapter {
 
-        public static final int TYPE_USER = 0;
-        public static final int TYPE_CUSTOMER = 1;
+        static final int TYPE_USER = 0;
+        static final int TYPE_CUSTOMER = 1;
 
         private Context mContext;
         private List<Feedback> mFeedbackList;
 
-        public FeedbackAdapter(Context context, List<Feedback> list) {
+        FeedbackAdapter(Context context, List<Feedback> list) {
             mContext = context;
             mFeedbackList = list;
         }
@@ -338,6 +339,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
                     }
                     customerViewHolder.bindingData(mFeedbackList.get(position), needTitle(position), mContext);
                     break;
+                default:
             }
             return convertView;
         }
@@ -360,7 +362,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
             ImageView mHeadImage;
 
 
-            public UserViewHolder(View itemView) {
+            UserViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);
             }
 
@@ -427,7 +429,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
             @BindView(R.id.text)
             TextView mText;
 
-            public CustomerViewHolder(View view) {
+            CustomerViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 

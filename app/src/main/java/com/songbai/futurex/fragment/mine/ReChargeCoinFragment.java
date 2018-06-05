@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.TitleBar;
 
 import butterknife.BindView;
@@ -49,7 +50,7 @@ public class ReChargeCoinFragment extends UniqueActivity.UniFragment {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Launcher.with(ReChargeCoinFragment.this,RechargeHistoryActivity.class).execute();
             }
         });
     }

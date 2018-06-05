@@ -166,6 +166,8 @@
 3.密钥用于手机更换或遗失时找回谷歌验证器，绑定前请务必将下述密钥备份保存。</string>
     <string name="uncertificated">未认证</string>
     <string name="gesture_pwd">手势密码</string>
+    <string name="set_gesture_pwd">设置手势密码</string>
+    <string name="set_gesture_pwd_hint">创建您的解锁图案，让他人拿到您的手机后，无法打开应用</string>
 
     <string name="draw_coin_address">提币地址</string>
     <string name="add_address">添加地址</string>

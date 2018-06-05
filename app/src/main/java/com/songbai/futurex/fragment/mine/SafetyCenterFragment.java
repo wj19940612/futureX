@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.mine.SetGesturePwdActivity;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -66,6 +68,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
                 UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
                 break;
             case R.id.gesturePwd:
+                Launcher.with(this, SetGesturePwdActivity.class).execute();
                 break;
             default:
         }
