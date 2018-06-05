@@ -116,7 +116,7 @@
             app:splitLineColor="@color/bgF5"/>
 
         <com.songbai.futurex.view.IconTextRow
-            android:id="@+id/fiatTradeOrder"
+            android:id="@+id/legalCurrencyTradeOrder"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/bg_white_pressed_f5"
@@ -124,7 +124,7 @@
             app:hasBottomSplitLine="true"
             app:leftIcon="@drawable/ic_mine_file"
             app:rightIcon="@drawable/ic_common_right_arrow"
-            app:rowText="@string/fiat_trade_order"
+            app:rowText="@string/legal_currency_trade_order"
             app:rowTextSize="16sp"
             app:rowVerticalPadding="0dp"
             app:splitLineColor="@color/bgF5"/>

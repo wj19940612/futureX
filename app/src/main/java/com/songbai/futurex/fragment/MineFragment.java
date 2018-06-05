@@ -97,7 +97,7 @@ public class MineFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.userInfoGroup, R.id.property, R.id.tradeOrderLog, R.id.fiatTradeOrder, R.id.invite,
+    @OnClick({R.id.userInfoGroup, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
             R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -109,7 +109,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.tradeOrderLog:
                 break;
-            case R.id.fiatTradeOrder:
+            case R.id.legalCurrencyTradeOrder:
                 break;
             case R.id.invite:
                 Launcher.with(this, InviteActivity.class).execute();

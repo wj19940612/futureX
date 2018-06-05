@@ -10,7 +10,11 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
+import com.songbai.futurex.fragment.mine.BindMailFragment;
+import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
+import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
+import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
@@ -65,7 +69,7 @@ public class PersonalDataActivity extends BaseActivity {
 
     @OnClick({R.id.headImageLayout, R.id.nickName, R.id.realName, R.id.phoneCertification,
             R.id.mailCertification, R.id.primaryCertification, R.id.seniorCertification,
-            R.id.fiatPayManagement, R.id.addressManagement})
+            R.id.legalCurrencyPayManagement, R.id.addressManagement})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
@@ -79,15 +83,18 @@ public class PersonalDataActivity extends BaseActivity {
             case R.id.realName:
                 break;
             case R.id.phoneCertification:
-                Launcher.with(this, BindPhoneActivity.class);
+                UniqueActivity.launcher(this, BindPhoneFragment.class).execute();
                 break;
             case R.id.mailCertification:
+                UniqueActivity.launcher(this, BindMailFragment.class).execute();
                 break;
             case R.id.primaryCertification:
+                UniqueActivity.launcher(this, PrimaryCertificationFragment.class).execute();
                 break;
             case R.id.seniorCertification:
                 break;
-            case R.id.fiatPayManagement:
+            case R.id.legalCurrencyPayManagement:
+                UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class).execute();
                 break;
             case R.id.addressManagement:
                 UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class).execute();
