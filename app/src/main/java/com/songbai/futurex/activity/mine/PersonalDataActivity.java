@@ -15,6 +15,7 @@ import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
 import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
+import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
@@ -92,6 +93,7 @@ public class PersonalDataActivity extends BaseActivity {
                 UniqueActivity.launcher(this, PrimaryCertificationFragment.class).execute();
                 break;
             case R.id.seniorCertification:
+                UniqueActivity.launcher(this, SeniorCertificationFragment.class).execute();
                 break;
             case R.id.legalCurrencyPayManagement:
                 UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class).execute();

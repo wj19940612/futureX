@@ -9,7 +9,11 @@ import android.view.ViewGroup;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.mine.SetGesturePwdActivity;
+import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.view.IconTextRow;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -19,6 +23,14 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class SafetyCenterFragment extends UniqueActivity.UniFragment {
+    @BindView(R.id.setCashPwd)
+    IconTextRow mSetCashPwd;
+    @BindView(R.id.changeLoginPwd)
+    IconTextRow mChangeLoginPwd;
+    @BindView(R.id.googleAuthenticator)
+    IconTextRow mGoogleAuthenticator;
+    @BindView(R.id.gesturePwd)
+    IconTextRow mGesturePwd;
     private Unbinder mBind;
 
     @Nullable
@@ -43,5 +55,22 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
+    }
+
+    @OnClick({R.id.setCashPwd, R.id.changeLoginPwd, R.id.googleAuthenticator, R.id.gesturePwd})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.setCashPwd:
+                break;
+            case R.id.changeLoginPwd:
+                break;
+            case R.id.googleAuthenticator:
+                UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
+                break;
+            case R.id.gesturePwd:
+                Launcher.with(this, SetGesturePwdActivity.class).execute();
+                break;
+            default:
+        }
     }
 }

@@ -97,19 +97,19 @@
             android:background="@color/bgF5"
             android:visibility="gone"/>
 
-        <!--<TextView-->
-        <!--android:id="@+id/send"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginRight="5dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_weight="1.1"-->
-        <!--android:background="@drawable/btn_send"-->
-        <!--android:gravity="center"-->
-        <!--android:text="@string/send"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--android:textSize="15sp"-->
-        <!--android:visibility="visible"/>-->
+        <TextView
+            android:id="@+id/send"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1.1"
+            android:background="@drawable/btn_primary"
+            android:gravity="center"
+            android:text="@string/send"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="visible"/>
     </LinearLayout>
 </RelativeLayout>

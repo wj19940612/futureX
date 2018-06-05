@@ -3,18 +3,28 @@ package com.songbai.futurex.fragment.dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
@@ -45,6 +55,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
     private static final String KEY_TYPE = "type";
     private static final String KEY_IMAGE_URL_INDEX = "key_image_url_index";
+    private static final String KEY_SELECT_IMAGE_HINT_TEXT = "key_select_image_hint_text";
     private static final String KEY_SELECT_IMAGE_HINT = "key_select_image_hint";
     private static final String KEY_SELECT_IMAGE_MAX_AMOUNT = "key_select_image_max_amount";
 
@@ -85,6 +96,12 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     AppCompatTextView mTakePhoneCancel;
     @BindView(R.id.lookHDPicture)
     AppCompatTextView mLookHDPicture;
+    @BindView(R.id.textExample)
+    TextView mTextExample;
+    @BindView(R.id.hintImg)
+    ImageView mHintImg;
+    @BindView(R.id.imageHintGroup)
+    LinearLayout mImageHintGroup;
 
     private Unbinder mBind;
     private File mFile;
@@ -96,6 +113,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private int mImageUrlIndex;
     private String mSelectImageHintText;
     private int mImageMaxSelectAmount;
+    private int mHintImageID;
 
     public interface OnImagePathListener {
         void onImagePath(int index, String imagePath);
@@ -122,7 +140,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     }
 
     public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex, String selectImageHint) {
-        return newInstance(type, url, imageIndex, "", 0);
+        return newInstance(type, url, imageIndex, selectImageHint, 0);
     }
 
     public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex, String selectImageHint, int maxImageAmount) {
@@ -130,8 +148,21 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         args.putInt(KEY_TYPE, type);
         args.putString(KEY_IMAGE_URL, url);
         args.putInt(KEY_IMAGE_URL_INDEX, imageIndex);
-        args.putString(KEY_SELECT_IMAGE_HINT, selectImageHint);
+        args.putString(KEY_SELECT_IMAGE_HINT_TEXT, selectImageHint);
         args.putInt(KEY_SELECT_IMAGE_MAX_AMOUNT, maxImageAmount);
+        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex, String selectImageHint, int maxImageAmount, int hintImageID) {
+        Bundle args = new Bundle();
+        args.putInt(KEY_TYPE, type);
+        args.putString(KEY_IMAGE_URL, url);
+        args.putInt(KEY_IMAGE_URL_INDEX, imageIndex);
+        args.putString(KEY_SELECT_IMAGE_HINT_TEXT, selectImageHint);
+        args.putInt(KEY_SELECT_IMAGE_MAX_AMOUNT, maxImageAmount);
+        args.putInt(KEY_SELECT_IMAGE_HINT, hintImageID);
         UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -157,8 +188,9 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
             mImageDealType = getArguments().getInt(KEY_TYPE, IMAGE_TYPE_NOT_DEAL);
             HDPictureUrl = getArguments().getString(KEY_IMAGE_URL);
             mImageUrlIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
-            mSelectImageHintText = getArguments().getString(KEY_SELECT_IMAGE_HINT, "");
+            mSelectImageHintText = getArguments().getString(KEY_SELECT_IMAGE_HINT_TEXT, "");
             mImageMaxSelectAmount = getArguments().getInt(KEY_SELECT_IMAGE_MAX_AMOUNT, 0);
+            mHintImageID = getArguments().getInt(KEY_SELECT_IMAGE_HINT, -1);
         }
     }
 
@@ -174,14 +206,52 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         }
         mSelectImageHint.setVisibility(TextUtils.isEmpty(mSelectImageHintText) ? View.GONE : View.VISIBLE);
         mSelectImageHint.setText(mSelectImageHintText);
+        if (mHintImageID != -1) {
+            mHintImg.setImageResource(mHintImageID);
+            mTextExample.setVisibility(View.VISIBLE);
+            mHintImg.setVisibility(View.VISIBLE);
+        } else {
+            mTextExample.setVisibility(View.INVISIBLE);
+            mHintImg.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_upload_user_image, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Window win = getDialog().getWindow();
+        // 一定要设置Background，如果不设置，window属性设置无效
+        win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        WindowManager.LayoutParams params = win.getAttributes();
+        int screenHeight = dm.heightPixels;
+        int statusBarHeight = getStatusBarHeight(getContext());
+        int dialogHeight = screenHeight - statusBarHeight;
+        // 使用ViewGroup.LayoutParams，以便Dialog 宽度充满整个屏幕
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = dialogHeight;
+        win.setAttributes(params);
+    }
+
+    private static int getStatusBarHeight(Context context) {
+        int statusBarHeight = 0;
+        Resources res = context.getResources();
+        int resourceId = res.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = res.getDimensionPixelSize(resourceId);
+        }
+        return statusBarHeight;
     }
 
     @Override
@@ -190,7 +260,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.takePhoneFromCamera, R.id.takePhoneFromGallery, R.id.takePhoneCancel, R.id.lookHDPicture})
+    @OnClick({R.id.takePhoneFromCamera, R.id.takePhoneFromGallery, R.id.takePhoneCancel, R.id.lookHDPicture, R.id.hintImg, R.id.imageHintGroup})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
@@ -222,6 +292,12 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
                         .execute();
                 this.dismissAllowingStateLoss();
                 break;
+            case R.id.hintImg:
+                break;
+            case R.id.imageHintGroup:
+                this.dismissAllowingStateLoss();
+                break;
+            default:
         }
     }
 
@@ -292,6 +368,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
                         dealImagePath(imagePath);
                     }
                     break;
+                default:
             }
         } else {
             dismissAllowingStateLoss();

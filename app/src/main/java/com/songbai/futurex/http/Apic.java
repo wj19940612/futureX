@@ -20,12 +20,21 @@ public class Apic {
     }
 
     /**
+     * /user/country/country.do
+     * GET
+     * 查询系统支持的地区
+     */
+    public static Api getSupportLocal() {
+        return Api.get("/api/user/country/country.do");
+    }
+
+    /**
      * /user/msg/count
      * GET
      * 消息未读数量
      */
     public static Api getMsgCount() {
-        return Api.get("/user/msg/count");
+        return Api.get("/api/user/msg/count");
     }
 
     /**
@@ -34,7 +43,7 @@ public class Apic {
      * 更新头像接口(陈作衡)
      */
     public static Api submitPortraitPath(String data) {
-        return Api.post("/user/user/updatePic.do",
+        return Api.post("/api/user/user/updatePic.do",
                 new ReqParams()
                         .put("pic", data));
     }
@@ -53,7 +62,7 @@ public class Apic {
      * 绑定、修改手机号--薛松
      */
     public static Api updatePhone(String phoneNum, String phoneMsgCode, String msgCode, String type) {
-        return Api.post("/user/userSafe/updatePhone.do",
+        return Api.post("/api/user/userSafe/updatePhone.do",
                 new ReqParams()
                         .put("phone", phoneNum)
                         .put("phoneMsgCode", phoneMsgCode)
@@ -67,7 +76,7 @@ public class Apic {
      * 添加用户反馈2.3.0(陈作衡)
      */
     public static Api addFeedback(String content, String contactInfo, String feedbackPic) {
-        return Api.post("/user/userFeedback/addFeedback.do",
+        return Api.post("/api/user/userFeedback/addFeedback.do",
                 new ReqParams()
                         .put("content", content));
     }
@@ -78,7 +87,7 @@ public class Apic {
      * 发送消息
      */
     public static Api chatSend(String msg, String waresOrderId, int msgType) {
-        return Api.post("/otc/chat/send",
+        return Api.post("/api/otc/chat/send",
                 new ReqParams()
                         .put("msg", msg)
                         .put("waresOrderId", waresOrderId)
@@ -91,11 +100,20 @@ public class Apic {
      * 历史消息
      */
     public static Api chatHistory(String waresOrderId, String startTime, int size) {
-        return Api.post("/otc/chat/history",
+        return Api.post("/api/otc/chat/history",
                 new ReqParams()
                         .put("waresOrderId", waresOrderId)
                         .put("startTime", startTime)
                         .put("size", size));
+    }
+
+    /**
+     * /user/wallet/getAccountByUser.do
+     * GET
+     * 账户查询（叶海啸）
+     */
+    public static Api getAccountByUser() {
+        return Api.get("/api/user/wallet/getAccountByUser.do");
     }
 
     /**

@@ -21,6 +21,9 @@ import com.songbai.futurex.fragment.mine.CustomerServiceFragment;
 import com.songbai.futurex.fragment.mine.MessageCenterFragment;
 import com.songbai.futurex.fragment.mine.SafetyCenterFragment;
 import com.songbai.futurex.fragment.mine.SettingsFragment;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -82,12 +85,12 @@ public class MineFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-//            Apic.getMsgCount().callback(new Callback<String>() {
-//                @Override
-//                protected void onRespSuccess(String resp) {
-//                    mMsgCenter.setSubText(resp);
-//                }
-//            }).fire();
+            Apic.getMsgCount().callback(new Callback<Resp<String>>() {
+                @Override
+                protected void onRespSuccess(Resp<String> resp) {
+                    mMsgCenter.setSubText(resp.getData());
+                }
+            }).fire();
         }
     }
 

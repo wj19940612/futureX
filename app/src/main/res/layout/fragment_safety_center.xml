@@ -14,6 +14,7 @@
         app:titleText="@string/safety_center"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/setCashPwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -25,6 +26,7 @@
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/changeLoginPwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
@@ -35,6 +37,7 @@
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/googleAuthenticator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
@@ -45,6 +48,7 @@
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/gesturePwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
