@@ -2,6 +2,8 @@ package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.model.local.LoginData;
+import com.songbai.futurex.model.local.RegisterData;
 
 /**
  * Modified by john on 23/01/2018
@@ -98,6 +100,8 @@ public class Apic {
 
     /**
      * 获取（phone/email）验证码
+     * <p>
+     * /api/user/validate/sendMsgCode.do
      *
      * @param authCodeGet
      * @return
@@ -105,6 +109,45 @@ public class Apic {
     public static Api getAuthCode(AuthCodeGet authCodeGet) {
         return Api.post("/api/user/validate/sendMsgCode.do",
                 new ReqParams(AuthCodeGet.class, authCodeGet));
+    }
+
+    /**
+     * 注册
+     * <p>
+     * /api/user/user/register.do
+     *
+     * @param registerData
+     * @return
+     */
+    public static Api register(RegisterData registerData) {
+        return Api.post("/api/user/user/register.do",
+                new ReqParams(RegisterData.class, registerData));
+    }
+
+    /**
+     * 获取用户基本信息
+     * <p>
+     * /api/user/user/findUserInfo.do
+     *
+     * @return
+     */
+    public static Api getUserInfo() {
+        return Api.get("/api/user/user/findUserInfo.do");
+    }
+
+    public static String getImageAuthCodeUrl(String msgType) {
+        return null;
+    }
+
+    /**
+     * 登录
+     *
+     * @param loginData
+     * @return
+     */
+    public static Api login(LoginData loginData) {
+        return Api.post("/api/user/user/login.do",
+                new ReqParams(LoginData.class, loginData));
     }
 
     public interface url {

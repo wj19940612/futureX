@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -33,8 +34,10 @@ import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AreaCode;
 import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.model.local.RegisterData;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
+import com.songbai.futurex.utils.StrFormatter;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 
@@ -89,6 +92,8 @@ public class RegisterActivity extends BaseActivity {
     private boolean mFreezeGetPhoneAuthCode;
     private boolean mFreezeGetEmailAuthCode;
 
+    private SelectAreaCodesViewController mSelectAreaCodesViewController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +113,25 @@ public class RegisterActivity extends BaseActivity {
                 }
             }
         });
+
+        mSelectAreaCodesViewController = new SelectAreaCodesViewController(this,
+                new SelectAreaCodesViewController.OnSelectListener() {
+            @Override
+            public void onSelect(AreaCode areaCode) {
+                mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode.getTeleCode()));
+            }
+        });
+        Apic.getAreaCodes().tag(TAG)
+                .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
+                    @Override
+                    protected void onRespData(List<AreaCode> data) {
+                        if (!data.isEmpty()) {
+                            String areaCode = data.get(0).getTeleCode();
+                            mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode));
+                        }
+                        mSelectAreaCodesViewController.setAreaCodeList(data);
+                    }
+                }).fireFreely();
     }
 
     @Override
@@ -181,10 +205,8 @@ public class RegisterActivity extends BaseActivity {
             case R.id.areaCode:
                 showAreaCodeSelector();
                 break;
-            case R.id.getAuthCode:
-                break;
             case R.id.next:
-                UniqueActivity.launcher(this, SetPsdFragment.class).execute(REQ_CODE_SET_PASS);
+                openSetPassPage();
                 break;
             case R.id.switchToLogin:
                 openLoginPage();
@@ -201,6 +223,27 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
+    private void openSetPassPage() {
+        RegisterData registerData = new RegisterData(RegisterData.PLATFORM_ANDROID);
+        if (isPhoneRegister()) {
+            String areaCode = mAreaCode.getText().toString().trim();
+            String phone = mPhoneNumber.getText().toString().trim();
+            String phoneAuthCode = mPhoneAuthCode.getText().toString().trim();
+            registerData.setTelteCode(areaCode);
+            registerData.setPhone(phone);
+            registerData.setMsgCode(phoneAuthCode);
+        } else {
+            String email = mPhoneNumber.getText().toString().trim();
+            String emailAuthCode = mEmailAuthCode.getText().toString().trim();
+            registerData.setEmail(email);
+            registerData.setMsgCode(emailAuthCode);
+        }
+
+        UniqueActivity.launcher(this, SetPsdFragment.class)
+                .putExtra(ExtraKeys.REGISTER_DATA, registerData)
+                .execute(REQ_CODE_SET_PASS);
+    }
+
     private void openLoginPage() {
         ComponentName callingActivity = getActivity().getCallingActivity();
         if (callingActivity != null && callingActivity.getClassName().equals(LoginActivity.class.getCanonicalName())) {
@@ -215,6 +258,10 @@ public class RegisterActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_LOGIN && resultCode == RESULT_OK) {
 
+        }
+        if (requestCode == REQ_CODE_SET_PASS && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 
@@ -237,7 +284,7 @@ public class RegisterActivity extends BaseActivity {
                         if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-                            // TODO: 2018/6/4 图片验证码
+
                         } else {
                             super.onRespFailure(failedResp);
                         }
@@ -266,12 +313,16 @@ public class RegisterActivity extends BaseActivity {
                         if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-                            // TODO: 2018/6/4 图片验证码
+                            showImageAuthCodeDialog();
                         } else {
                             super.onRespFailure(failedResp);
                         }
                     }
                 }).fire();
+    }
+
+    private void showImageAuthCodeDialog() {
+
     }
 
     private void freezeGetEmailAuthCodeButton() {
@@ -320,7 +371,7 @@ public class RegisterActivity extends BaseActivity {
             }
         } else {
             mGetEmailAuthCode.setTag(emailAuthCodeCounter);
-            mGetEmailAuthCode.setTag(getString(R.string.x_seconds, emailAuthCodeCounter));
+            mGetEmailAuthCode.setText(getString(R.string.x_seconds, emailAuthCodeCounter));
         }
 
         if (phoneAuthCodeCounter <= 0 && emailAuthCodeCounter <= 0) {
@@ -329,33 +380,14 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void showAreaCodeSelector() {
-        final SelectAreaCodesViewController controller = new SelectAreaCodesViewController(getActivity());
-        controller.setSelectListener(new SelectAreaCodesViewController.OnSelectListener() {
-            @Override
-            public void onSelect(AreaCode areaCode) {
-                mAreaCode.setText(areaCode.getTeleCode());
-            }
-        });
-        showAreaCodeDialog(controller);
-
-        Apic.getAreaCodes().tag(TAG)
-                .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
-                    @Override
-                    protected void onRespData(List<AreaCode> data) {
-                        controller.setAreaCodeList(data);
-                    }
-                }).fireFreely();
-    }
-
-    private void showAreaCodeDialog(SelectAreaCodesViewController controller) {
-        SmartDialog.with(getActivity()).setCustomViewController(controller)
+        SmartDialog.with(getActivity()).setCustomViewController(mSelectAreaCodesViewController)
                 .setWindowGravity(Gravity.BOTTOM)
                 .setWindowAnim(R.style.BottomDialogAnimation)
                 .setWidthScale(1)
                 .show();
     }
 
-    private static class SelectAreaCodesViewController implements SmartDialog.CustomViewController {
+    private static class SelectAreaCodesViewController extends SmartDialog.CustomViewController {
 
         private Context mContext;
         private RecyclerView mRecyclerView;
@@ -363,27 +395,25 @@ public class RegisterActivity extends BaseActivity {
         private ProgressBar mProgressBar;
         private List<AreaCode> mAreaCodeList;
         private SelectAreaCodesViewController.OnSelectListener mSelectListener;
-
+        private SmartDialog mSmartDialog;
 
         interface OnSelectListener {
             void onSelect(AreaCode areaCode);
         }
 
-        public void setSelectListener(SelectAreaCodesViewController.OnSelectListener selectListener) {
-            mSelectListener = selectListener;
-        }
-
-        public SelectAreaCodesViewController(Context context) {
+        public SelectAreaCodesViewController(Context context, OnSelectListener onSelectListener) {
             mContext = context;
+            mSelectListener = onSelectListener;
         }
 
         @Override
-        public View onCreateView() {
+        protected View onCreateView() {
             return LayoutInflater.from(mContext).inflate(R.layout.view_select_area_codes, null);
         }
 
         @Override
-        public void setupView(View view, final SmartDialog dialog) {
+        protected void onInitView(View view, final SmartDialog dialog) {
+            mSmartDialog = dialog;
             mRecyclerView = view.findViewById(R.id.recyclerView);
             mCancel = view.findViewById(R.id.cancel);
             mProgressBar = view.findViewById(R.id.progressBar);
@@ -393,11 +423,19 @@ public class RegisterActivity extends BaseActivity {
                     dialog.dismiss();
                 }
             });
+            if (mAreaCodeList != null) {
+                updateView();
+            }
         }
 
         public void setAreaCodeList(List<AreaCode> areaCodeList) {
             mAreaCodeList = areaCodeList;
+            if (isInitialized()) {
+                updateView();
+            }
+        }
 
+        private void updateView() {
             mRecyclerView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
 
@@ -410,6 +448,7 @@ public class RegisterActivity extends BaseActivity {
                     if (obj != null && mSelectListener != null) {
                         AreaCode areaCode = (AreaCode) obj;
                         mSelectListener.onSelect(areaCode);
+                        mSmartDialog.dismiss();
                     }
                 }
             });
@@ -458,7 +497,7 @@ public class RegisterActivity extends BaseActivity {
 
             public void bind(final AreaCode areaCode, final int position, final OnRVItemClickListener onRVItemClickListener) {
                 mCountryName.setText(areaCode.getName());
-                mAreaCode.setText(areaCode.getTeleCode());
+                mAreaCode.setText("+" + areaCode.getTeleCode());
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

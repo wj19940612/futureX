@@ -16,9 +16,12 @@ import android.widget.ScrollView;
 
 import com.sbai.httplib.ReqIndeterminate;
 import com.songbai.futurex.http.Api;
+import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
 import com.songbai.futurex.view.RequestProgress;
 import com.songbai.futurex.view.SmartDialog;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Modified by john on 18/01/2018
@@ -176,5 +179,14 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
 
     @Override
     public void onTimeUp(int count) {
+    }
+
+    protected String md5Encrypt(String value) {
+        try {
+            return SecurityUtil.md5Encrypt(value);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return value;
+        }
     }
 }
