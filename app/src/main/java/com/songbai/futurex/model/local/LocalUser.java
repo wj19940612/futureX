@@ -17,6 +17,8 @@ public class LocalUser {
 
     private UserInfo mUserInfo;
     private String mPhone;
+    private String mEmail;
+    private String mLastAct;
 
     public static LocalUser getUser() {
         if (sLocalUser == null) {
@@ -40,11 +42,19 @@ public class LocalUser {
         Preference.get().setUserJson(userJson);
     }
 
-    public void setUserInfo(UserInfo userInfo, String phone) {
+    public void setUserInfo(UserInfo userInfo, String phone, String email) {
         mUserInfo = userInfo;
         mPhone = phone;
+        mEmail = email;
+        mLastAct = chooseLastAccount(mPhone, mEmail);
+
         saveToPreference();
     }
+
+    private String chooseLastAccount(String phone, String email) {
+        return TextUtils.isEmpty(phone) ? email : phone;
+    }
+
 
     public void setUserInfo(UserInfo userInfo) {
         mUserInfo = userInfo;
@@ -55,8 +65,8 @@ public class LocalUser {
         return mUserInfo;
     }
 
-    public String getPhone() {
-        return mPhone;
+    public String getLastAct() {
+        return mLastAct;
     }
 
     public boolean isLogin() {

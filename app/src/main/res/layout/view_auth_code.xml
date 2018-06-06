@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/topTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
@@ -31,7 +32,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="34dp"
             android:layout_weight="1"
             android:background="@null"
             android:hint="@string/graphic_auth_code"
@@ -40,11 +40,25 @@
             android:textCursorDrawable="@drawable/cursor_primary"
             android:textSize="13sp"/>
 
-        <ImageView
-            android:id="@+id/authCodeImage"
-            android:layout_width="144dp"
-            android:layout_height="44dp"
-            android:src="@mipmap/ic_launcher"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/authCodeImage"
+                android:layout_width="144dp"
+                android:layout_height="44dp"/>
+
+            <TextView
+                android:id="@+id/loadImageFailure"
+                android:layout_width="144dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_load_auth_code_failure"
+                android:gravity="center"
+                android:text="@string/click_and_refresh_auth_code"
+                android:textColor="@color/white"
+                android:textSize="13sp"/>
+        </FrameLayout>
     </LinearLayout>
 
     <TextView

@@ -57,7 +57,7 @@ public class RequestManager {
         sLogger = logger;
     }
 
-    protected static void enqueue(Request<?> request) {
+    public static void enqueue(Request<?> request) {
         if (sRequestQueue != null) {
             sRequestQueue.add(request);
             if (sLogger != null) {

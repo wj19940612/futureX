@@ -1,9 +1,12 @@
 package com.songbai.futurex.http;
 
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.sbai.httplib.BitmapCfg;
+import com.sbai.httplib.BitmapRequest;
 import com.sbai.httplib.CookieManger;
 import com.sbai.httplib.GsonRequest;
 import com.sbai.httplib.MultipartRequest;
@@ -48,6 +51,8 @@ public class Api extends RequestManager {
     private File mFile;
     private String mFileName;
 
+    private BitmapCfg mBitmapCfg;
+
     private Api() {
         mMethod = GET;
     }
@@ -72,7 +77,6 @@ public class Api extends RequestManager {
         reqApi.mReqParams = reqParams;
         return reqApi;
     }
-
 
     public static Api post(String api) {
         return post(api, null);
@@ -130,6 +134,11 @@ public class Api extends RequestManager {
         return this;
     }
 
+    public Api bitmapCfg(BitmapCfg bitmapCfg) {
+        mBitmapCfg = bitmapCfg;
+        return this;
+    }
+
     public Api timeout(int timeout) {
         mTimeout = timeout;
         return this;
@@ -179,6 +188,9 @@ public class Api extends RequestManager {
         Type type = mCallback.getGenericType();
         if (mFile != null && !TextUtils.isEmpty(mFileName)) {
             request = new MultipartRequest(mMethod, url, headers, mFileName, mFile, mReqParams, type, mCallback);
+        } else if (mBitmapCfg != null && isBitmapType(type)) {
+            request = new BitmapRequest(url, mBitmapCfg.getMaxWidth(), mBitmapCfg.getMaxHeight(),
+                    mBitmapCfg.getScaleType(), mBitmapCfg.getConfig(), (ReqCallback<Bitmap>) mCallback);
         } else {
             request = new GsonRequest(mMethod, url, headers, mReqParams, mJsonBody, type, mCallback);
         }
@@ -191,6 +203,10 @@ public class Api extends RequestManager {
         // start and enqueue
         mCallback.onStart();
         enqueue(request);
+    }
+
+    private boolean isBitmapType(Type type) {
+        return type instanceof Class && ((Class) type).getSimpleName().equals(Bitmap.class.getSimpleName());
     }
 
     private void setupHeaders(ReqHeaders headers) {

@@ -1,27 +1,43 @@
 package com.songbai.futurex.activity.auth;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.httplib.BitmapCfg;
+import com.sbai.httplib.ReqCallback;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Callback4Resp;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.LoginData;
 import com.songbai.futurex.model.local.RegisterData;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.RegularExpUtils;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
+import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,6 +72,9 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
 
+    private AuthCodeViewController mAuthCodeViewController;
+    private LoginData mLoginData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +94,7 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
+        mPhoneOrEmail.setText(LocalUser.getUser().getLastAct());
         mPassword.addTextChangedListener(mValidationWatcher);
         mPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -163,8 +183,9 @@ public class LoginActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.login:
-                showImageAuthCodeDialog();
-                login();
+                if (mLoading.getVisibility() != View.VISIBLE) {
+                    showImageAuthCodeDialog();
+                }
                 break;
             case R.id.forgetPassword:
                 // TODO: 2018/5/30
@@ -179,20 +200,106 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void showImageAuthCodeDialog() {
-        // todo get image auth code and login, meanwhile anim login button progress
+        mAuthCodeViewController = new AuthCodeViewController(this, new AuthCodeViewController.OnClickListener() {
+            @Override
+            public void onConfirmClick(String authCode) {
+                login(authCode);
+            }
+
+            @Override
+            public void onImageCodeClick(ImageView imageView) {
+                requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
+            }
+        });
+
+        SmartDialog.solo(getActivity())
+                .setCustomViewController(mAuthCodeViewController)
+                .show();
+
+        ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
+        requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
     }
 
-    private void login() {
-        LoginData loginData = new LoginData(RegisterData.PLATFORM_ANDROID);
+    private void login(String authCode) {
+        mLoginData = new LoginData(RegisterData.PLATFORM_ANDROID);
+        mLoginData.setImgCode(authCode);
         String phoneOrEmail = mPhoneOrEmail.getText().toString();
         if (RegularExpUtils.isValidEmail(phoneOrEmail)) {
-            loginData.setEmail(phoneOrEmail);
+            mLoginData.setEmail(phoneOrEmail);
         } else {
-            loginData.setPhone(phoneOrEmail);
+            mLoginData.setPhone(phoneOrEmail);
         }
         String password = md5Encrypt(mPassword.getPassword());
-        loginData.setUserPass(password);
-        //Apic.login(loginData);
+        mLoginData.setUserPass(password);
+
+        Apic.login(mLoginData).tag(TAG)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mLogin.setText(R.string.logining);
+                        mLoading.setVisibility(View.VISIBLE);
+                        mLoading.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.loading));
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        mLogin.setText(R.string.login);
+                        mLoading.setVisibility(View.GONE);
+                        mLoading.clearAnimation();
+                    }
+
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        ToastUtil.show(R.string.login_success);
+                        requestUserInfo();
+                    }
+                }).fireFreely();
+    }
+
+    private void requestUserInfo() {
+        Apic.getUserInfo().tag(TAG).indeterminate(this)
+                .callback(new Callback4Resp<Resp<UserInfo>, UserInfo>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mLogin.setText(R.string.logining);
+                        mLoading.setVisibility(View.VISIBLE);
+                        mLoading.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.loading));
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        mLogin.setText(R.string.login);
+                        mLoading.setVisibility(View.GONE);
+                        mLoading.clearAnimation();
+                    }
+
+                    @Override
+                    protected void onRespData(UserInfo data) {
+                        LocalUser.getUser().setUserInfo(data, mLoginData.getPhone(), mLoginData.getEmail());
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+                    }
+                }).fireFreely();
+    }
+
+    private void requestAuthCodeImage(int width, int height) {
+        Apic.getAuthCodeImage(AuthCodeGet.TYPE_QUICK_LOGIN).tag(TAG)
+                .bitmapCfg(new BitmapCfg(width, height))
+                .callback(new ReqCallback<Bitmap>() {
+                    @Override
+                    public void onSuccess(Bitmap bitmap) {
+                        mAuthCodeViewController.setAuthCodeBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        mAuthCodeViewController.loadImageFailure();
+                    }
+                }).fireFreely();
     }
 
     private void openRegisterPage() {

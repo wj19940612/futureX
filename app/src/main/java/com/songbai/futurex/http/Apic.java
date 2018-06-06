@@ -206,8 +206,16 @@ public class Apic {
         return Api.get("/api/user/user/findUserInfo.do");
     }
 
-    public static String getImageAuthCodeUrl(String msgType) {
-        return null;
+    /**
+     * 获取图片验证码
+     *
+     * @param msgType
+     * @return
+     */
+    public static Api getAuthCodeImage(int msgType) {
+        return Api.get("/api/user/validate/download/codeImg.do",
+                new ReqParams()
+                        .put("msgType", msgType));
     }
 
     /**

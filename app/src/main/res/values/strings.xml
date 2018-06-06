@@ -278,6 +278,7 @@
     <string name="find_password">找回密码</string>
     <string name="auth_code_send_to">验证码已发送至</string>
     <string name="for_your_account_safe_please_input_auth_code">为了您的帐号安全\n请输入验证码</string>
+    <string name="please_input_auth_code">请输入验证码</string>
     <string name="graphic_auth_code">图形验证码</string>
     <string name="please_input_if_you_have_invitation_code">若您有邀请码，请输入</string>
     <string name="skip">跳过</string>
@@ -285,5 +286,8 @@
     <string name="please_choose_country_area_code">请选择国家区号</string>
     <string name="x_seconds">%1$ds</string>
     <string name="regain">重新获取</string>
+    <string name="logining">登录中</string>
+    <string name="click_and_refresh_auth_code">点击刷新验证码</string>
+    <string name="login_success">登录成功</string>
 
 </resources>
