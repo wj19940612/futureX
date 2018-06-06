@@ -16,6 +16,8 @@ import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
 import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
@@ -24,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -55,6 +58,21 @@ public class PersonalDataActivity extends BaseActivity {
         setIconTextRowSubDrawablePadding(mMailCertification);
         setIconTextRowSubDrawablePadding(mPrimaryCertification);
         setIconTextRowSubDrawablePadding(mSeniorCertification);
+        setUserInfo();
+    }
+
+    private void setUserInfo() {
+        LocalUser localUser = LocalUser.getUser();
+        if (localUser.isLogin()) {
+            UserInfo userInfo = localUser.getUserInfo();
+            GlideApp
+                    .with(this)
+                    .load(userInfo.getUserPortrait())
+                    .into(mUserHeadImage);
+            mNickName.setSubText(userInfo.getUserName());
+            mRealName.setSubText(userInfo.getRealName());
+            mPhoneCertification.setSubText(userInfo.getUserPhone());
+        }
     }
 
     private void setIconTextRowSubDrawablePadding(IconTextRow iconTextRow) {

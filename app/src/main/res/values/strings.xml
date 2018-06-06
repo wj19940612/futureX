@@ -28,6 +28,7 @@
     <string name="take_phone_cancel">取消</string>
 
     <string name="click_login">点击登录</string>
+    <string name="phone_number_x">手机：%1$s</string>
     <string name="property">我的资产</string>
     <string name="trade_order_log">币币交易历史</string>
     <string name="legal_currency_trade_order">法币交易订单</string>

@@ -66,6 +66,33 @@ public class Apic {
     }
 
     /**
+     * /api/user/user/findCommissionOfSubordinate
+     * GET
+     * 最近/全部 邀请用户
+     */
+    public static Api findCommissionOfSubordinate() {
+        return Api.get("/api/user/user/findCommissionOfSubordinate");
+    }
+
+    /**
+     * /api/otc/account/list
+     * GET
+     * 法币账户
+     */
+    public static Api accountList() {
+        return Api.get("/api/otc/account/list");
+    }
+
+    /**
+     * /api/user/user/account
+     * GET
+     * 推广员账户
+     */
+    public static Api userAccount() {
+        return Api.get("/api/user/user/account");
+    }
+
+    /**
      * /user/userSafe/updatePhone.do
      * POST
      * 绑定、修改手机号--薛松
