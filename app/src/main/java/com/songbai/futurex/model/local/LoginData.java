@@ -31,4 +31,12 @@ public class LoginData {
     public void setImgCode(String imgCode) {
         this.imgCode = imgCode;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }

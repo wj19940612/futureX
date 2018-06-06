@@ -3,6 +3,7 @@ package com.songbai.futurex.activity.auth;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
@@ -23,6 +24,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.httplib.BitmapCfg;
+import com.sbai.httplib.ReqCallback;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
@@ -40,6 +44,7 @@ import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.StrFormatter;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
 import java.util.List;
 
@@ -93,6 +98,7 @@ public class RegisterActivity extends BaseActivity {
     private boolean mFreezeGetEmailAuthCode;
 
     private SelectAreaCodesViewController mSelectAreaCodesViewController;
+    private AuthCodeViewController mAuthCodeViewController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,16 +212,16 @@ public class RegisterActivity extends BaseActivity {
                 showAreaCodeSelector();
                 break;
             case R.id.next:
-                openSetPassPage();
+                openSetPassPage(null);
                 break;
             case R.id.switchToLogin:
                 openLoginPage();
                 break;
             case R.id.getPhoneAuthCode:
-                requestPhoneAuthCode();
+                requestPhoneAuthCode(null);
                 break;
             case R.id.getEmailAuthCode:
-                requestEmailAuthCode();
+                requestEmailAuthCode(null);
                 break;
             case R.id.userAgreement:
                 // TODO: 2018/6/4 open user agreement h5
@@ -223,8 +229,9 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    private void openSetPassPage() {
+    private void openSetPassPage(String authCode) {
         RegisterData registerData = new RegisterData(RegisterData.PLATFORM_ANDROID);
+        registerData.setMsgCode(authCode);
         if (isPhoneRegister()) {
             String areaCode = mAreaCode.getText().toString().trim();
             String phone = mPhoneNumber.getText().toString().trim();
@@ -233,7 +240,7 @@ public class RegisterActivity extends BaseActivity {
             registerData.setPhone(phone);
             registerData.setMsgCode(phoneAuthCode);
         } else {
-            String email = mPhoneNumber.getText().toString().trim();
+            String email = mEmail.getText().toString().trim();
             String emailAuthCode = mEmailAuthCode.getText().toString().trim();
             registerData.setEmail(email);
             registerData.setMsgCode(emailAuthCode);
@@ -265,11 +272,12 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    private void requestEmailAuthCode() {
+    private void requestEmailAuthCode(String imageAuthCode) {
         String email = mEmail.getText().toString().trim();
         AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
                 .email(email)
                 .type(AuthCodeGet.TYPE_REGISTER)
+                .imgCode(imageAuthCode)
                 .build();
 
         Apic.getAuthCode(authCodeGet).tag(TAG)
@@ -284,7 +292,7 @@ public class RegisterActivity extends BaseActivity {
                         if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-
+                            showImageAuthCodeDialog();
                         } else {
                             super.onRespFailure(failedResp);
                         }
@@ -292,12 +300,13 @@ public class RegisterActivity extends BaseActivity {
                 }).fire();
     }
 
-    private void requestPhoneAuthCode() {
+    private void requestPhoneAuthCode(String imageAuthCode) {
         String phone = mPhoneNumber.getText().toString().trim();
         String areaCode = mAreaCode.getText().toString();
         AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
                 .phone(phone)
                 .teleCode(areaCode)
+                .imgCode(imageAuthCode)
                 .type(AuthCodeGet.TYPE_REGISTER)
                 .build();
 
@@ -322,7 +331,49 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void showImageAuthCodeDialog() {
+        mAuthCodeViewController = new AuthCodeViewController(this, new AuthCodeViewController.OnClickListener() {
+            @Override
+            public void onConfirmClick(String authCode) {
+                if (isPhoneRegister()) {
+                    requestPhoneAuthCode(authCode);
+                } else {
+                    requestEmailAuthCode(authCode);
+                }
+            }
 
+            @Override
+            public void onImageCodeClick(ImageView imageView) {
+                requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
+            }
+        });
+
+        SmartDialog.solo(getActivity())
+                .setCustomViewController(mAuthCodeViewController)
+                .show();
+
+        mAuthCodeViewController.setTitle(R.string.please_input_auth_code);
+        ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
+        requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
+    }
+
+    private void doRegister(String authCode) {
+
+    }
+
+    private void requestAuthCodeImage(int width, int height) {
+        Apic.getAuthCodeImage(AuthCodeGet.TYPE_REGISTER).tag(TAG)
+                .bitmapCfg(new BitmapCfg(width, height))
+                .callback(new ReqCallback<Bitmap>() {
+                    @Override
+                    public void onSuccess(Bitmap bitmap) {
+                        mAuthCodeViewController.setAuthCodeBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        mAuthCodeViewController.loadImageFailure();
+                    }
+                }).fireFreely();
     }
 
     private void freezeGetEmailAuthCodeButton() {

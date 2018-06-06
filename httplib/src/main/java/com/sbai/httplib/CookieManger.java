@@ -80,8 +80,36 @@ public class CookieManger {
             if (builder.length() > 0) {
                 builder.delete(builder.length() - 2, builder.length());
             }
+
+            // get image sign
+            for (int i = 0; i < cookies.length; i++) {
+                builder.append(getImageSign(cookies[i])).append("; ");
+            }
+            if (builder.length() > 0) {
+                builder.delete(builder.length() - 2, builder.length());
+            }
         }
         return builder.toString();
+    }
+
+    private String getToken(String cookie) {
+        String[] splits = cookie.split(";");
+        for (String split : splits) {
+            if (split.indexOf("token") != -1) {
+                return split;
+            }
+        }
+        return "";
+    }
+
+    private String getImageSign(String cookie) {
+        String[] splits = cookie.split(";");
+        for (String split : splits) {
+            if (split.indexOf("img_sign") != -1) {
+                return split;
+            }
+        }
+        return "";
     }
 
     private void saveRawCookies() {
@@ -129,16 +157,6 @@ public class CookieManger {
             }
             return result;
         }
-    }
-
-    private String getToken(String cookie) {
-        String[] splits = cookie.split(";");
-        for (String split : splits) {
-            if (split.indexOf("token") != -1) {
-                return split;
-            }
-        }
-        return "";
     }
 
     public void clearRawCookies() {

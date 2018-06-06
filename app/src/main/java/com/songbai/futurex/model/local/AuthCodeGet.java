@@ -9,11 +9,13 @@ package com.songbai.futurex.model.local;
  */
 public class AuthCodeGet {
 
-    public static final int TYPE_REGISTER = 1;
-    public static final int TYPE_MODIFY_PHONE = 2;
+    public static final int TYPE_REGISTER = 1; // 注册
+    public static final int TYPE_MODIFY_PHONE = 2; // 修改手机号
     public static final int TYPE_QUICK_LOGIN = 3;
-    public static final int TYPE_SAFE_PSD = 4;
+    public static final int TYPE_SAFE_PSD = 4; // 修改安全密码
     public static final int TYPE_FORGET_PSD = 5;
+    public static final int BINDING_EMAIL = 6; // 绑定邮箱
+    public static final int HISTORY_ACCOUNT_VERIFY = 7; // 历史账号验证
 
     private String phone;
     private String email;

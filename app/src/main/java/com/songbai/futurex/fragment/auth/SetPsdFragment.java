@@ -234,7 +234,7 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback4Resp<Resp<UserInfo>, UserInfo>() {
                     @Override
                     protected void onRespData(UserInfo data) {
-                        LocalUser.getUser().setUserInfo(data, mRegisterData.getPhone());
+                        LocalUser.getUser().setUserInfo(data, mRegisterData.getPhone(), mRegisterData.getEmail());
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     }

@@ -54,6 +54,10 @@ public class RegisterData implements Parcelable {
         return phone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     @Override
     public int describeContents() {
         return 0;
