@@ -157,7 +157,10 @@
     <string name="create_customization_poster">生成专属海报</string>
 
     <string name="set_cash_pwd">资金密码设置</string>
-    <string name="send_sms_phone_hint">已发送至您的手机号：%1$s，请注意查收</string>
+    <string name="send_sms_auth_code_phone_hint_x">已发送至您的手机号：%1$s，请注意查收</string>
+    <string name="send_mail_auth_code_hint_x">已发送至您的邮箱：%1$s，请注意查收</string>
+    <string name="the_two_passwords_differ">两次密码输入不一致</string>
+    <string name="auth_code_error">验证码错误</string>
     <string name="change_login_pwd">修改登录密码</string>
     <string name="new_login_pwd">新登录密码</string>
     <string name="please_input_new_login_pwd">请输入新登录密码</string>

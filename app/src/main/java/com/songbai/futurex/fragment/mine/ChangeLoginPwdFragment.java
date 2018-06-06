@@ -3,6 +3,8 @@ package com.songbai.futurex.fragment.mine;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 
 import butterknife.BindView;
@@ -48,8 +51,24 @@ public class ChangeLoginPwdFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-
+        mPassword.addTextChangedListener(mTextWatcher);
+        mConfirmPassword.addTextChangedListener(mTextWatcher);
+        mSmsAuthCode.addTextChangedListener(mTextWatcher);
     }
+
+    private ValidationWatcher mTextWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            String password = mPassword.getPassword();
+            String confirmPassword = mConfirmPassword.getPassword();
+            String authCode = mSmsAuthCode.getText().toString();
+            if (TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(authCode)) {
+                mConfirm.setEnabled(false);
+            } else {
+                mConfirm.setEnabled(true);
+            }
+        }
+    };
 
     @Override
     public void onDestroyView() {

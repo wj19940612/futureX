@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -35,7 +38,18 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        createGoogleKey();
+    }
 
+    private void createGoogleKey() {
+        Apic.createGoogleKey()
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+
+                    }
+                })
+                .fire();
     }
 
     @Override
