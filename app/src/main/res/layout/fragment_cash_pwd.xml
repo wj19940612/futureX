@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.songbai.futurex.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/set_cash_pwd"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="14dp"
+            android:text="@string/cash_pwd"
+            android:textColor="@color/text22"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.songbai.futurex.view.PasswordEditText
+            android:id="@+id/password"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:background="@drawable/bg_white_has_under_line"
+            android:minHeight="50dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="20dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9"
+            app:maxCharNum="50"
+            app:textHint="@string/please_input_new_login_pwd"/>
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="确认密码"
+            android:textColor="@color/text22"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintTop_toBottomOf="@+id/password"/>
+
+        <com.songbai.futurex.view.PasswordEditText
+            android:id="@+id/confirmPassword"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:background="@drawable/bg_white_has_under_line"
+            android:minHeight="50dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="20dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11"
+            app:maxCharNum="50"
+            app:textHint="@string/confirm_login_pwd"/>
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/sms_auth_code"
+            android:textColor="@color/text22"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/textView11"
+            app:layout_constraintTop_toBottomOf="@+id/confirmPassword"/>
+
+        <EditText
+            android:id="@+id/smsAuthCode"
+            style="@style/SingleEditText"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:hint="@string/please_input_sms_auth_code"
+            android:minHeight="50dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/textView13"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView12"/>
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="@string/send_auth_code"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/smsAuthCode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/smsAuthCode"/>
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/text66"
+        android:textSize="12sp"
+        tools:text="@string/send_sms_phone_hint"/>
+
+    <TextView
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/btn_primary"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="@string/set_cash_pwd_rules"
+        android:textColor="@color/text66"
+        android:textSize="12sp"/>
+</LinearLayout>

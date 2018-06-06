@@ -6,12 +6,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.activity.mine.SetGesturePwdActivity;
-import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.view.IconTextRow;
+import com.songbai.futurex.view.PasswordEditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,21 +22,21 @@ import butterknife.Unbinder;
  * @author yangguangda
  * @date 2018/5/30
  */
-public class SafetyCenterFragment extends UniqueActivity.UniFragment {
-    @BindView(R.id.setCashPwd)
-    IconTextRow mSetCashPwd;
-    @BindView(R.id.changeLoginPwd)
-    IconTextRow mChangeLoginPwd;
-    @BindView(R.id.googleAuthenticator)
-    IconTextRow mGoogleAuthenticator;
-    @BindView(R.id.gesturePwd)
-    IconTextRow mGesturePwd;
+public class ChangeLoginPwdFragment extends UniqueActivity.UniFragment {
+    @BindView(R.id.password)
+    PasswordEditText mPassword;
+    @BindView(R.id.confirmPassword)
+    PasswordEditText mConfirmPassword;
+    @BindView(R.id.smsAuthCode)
+    EditText mSmsAuthCode;
+    @BindView(R.id.confirm)
+    TextView mConfirm;
     private Unbinder mBind;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_safety_center, container, false);
+        View view = inflater.inflate(R.layout.fragment_change_login_pwd, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -57,20 +57,12 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.setCashPwd, R.id.changeLoginPwd, R.id.googleAuthenticator, R.id.gesturePwd})
+    @OnClick({R.id.smsAuthCode, R.id.confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.setCashPwd:
-                UniqueActivity.launcher(this, CashPwdFragment.class).execute();
+            case R.id.smsAuthCode:
                 break;
-            case R.id.changeLoginPwd:
-                UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();
-                break;
-            case R.id.googleAuthenticator:
-                UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
-                break;
-            case R.id.gesturePwd:
-                Launcher.with(this, SetGesturePwdActivity.class).execute();
+            case R.id.confirm:
                 break;
             default:
         }

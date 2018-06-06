@@ -36,6 +36,15 @@ public class Apic {
     }
 
     /**
+     * /api/user/user/findUserInfo.do
+     * POST
+     * 用户基本信息
+     */
+    public static Api findUserInfo() {
+        return Api.get("/api/user/user/findUserInfo.do");
+    }
+
+    /**
      * /user/user/updatePic.do
      * POST
      * 更新头像接口(陈作衡)

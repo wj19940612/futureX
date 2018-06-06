@@ -85,13 +85,29 @@ public class MineFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Apic.getMsgCount().callback(new Callback<Resp<String>>() {
-                @Override
-                protected void onRespSuccess(Resp<String> resp) {
-                    mMsgCenter.setSubText(resp.getData());
-                }
-            }).fire();
+            getMessageCount();
+            getUserInfo();
         }
+    }
+
+    private void getMessageCount() {
+        Apic.getMsgCount().callback(new Callback<Resp<String>>() {
+            @Override
+            protected void onRespSuccess(Resp<String> resp) {
+                mMsgCenter.setSubText(resp.getData());
+            }
+        }).fire();
+    }
+
+    private void getUserInfo() {
+        Apic.findUserInfo()
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+
+                    }
+                })
+                .fire();
     }
 
     @Override
