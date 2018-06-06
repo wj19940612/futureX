@@ -20,12 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sbai.httplib.ReqCallback;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.fragment.mine.PropertyListFragment;
 import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.Display;
 
 import butterknife.BindView;
@@ -46,6 +47,7 @@ public class MyPropertyActivity extends BaseActivity {
     private Unbinder mBind;
     float mPagerTranslationX;
     private int mCardPagePadding;
+    private PropertyCardAdapter mPropertyCardAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +55,8 @@ public class MyPropertyActivity extends BaseActivity {
         setContentView(R.layout.activity_my_property);
         mBind = ButterKnife.bind(this);
         mPagerTranslationX = Display.dp2Px(20, getResources());
-        PropertyCardAdapter propertyCardAdapter = new PropertyCardAdapter();
-        mPropertyCardPager.setAdapter(propertyCardAdapter);
+        mPropertyCardAdapter = new PropertyCardAdapter();
+        mPropertyCardPager.setAdapter(mPropertyCardAdapter);
         mPropertyCardPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -94,19 +96,61 @@ public class MyPropertyActivity extends BaseActivity {
 
             }
         });
-        getAccountData();
+        accountList();
+        userAccount();
+        findCommissionOfSubordinate();
     }
 
-    private void getAccountData() {
-        Apic.getAccountByUser()
-                .callback(new ReqCallback<Object>() {
+    private void accountList() {
+        Apic.accountList()
+                .callback(new Callback<AccountList>() {
                     @Override
-                    public void onSuccess(Object o) {
+                    public void onFailure(ReqError reqError) {
 
                     }
 
                     @Override
+                    protected void onRespSuccess(AccountList resp) {
+                        setAccountData(resp);
+                    }
+                })
+                .fire();
+    }
+
+    private void setAccountData(AccountList accountList) {
+//        Log.e("wtf",accountList.getBalance());
+        mPropertyCardAdapter.setAccountList(accountList);
+        mPropertyCardAdapter.notifyDataSetChanged();
+    }
+
+    private void userAccount() {
+        Apic.userAccount()
+                .callback(new Callback<Object>() {
+
+                    @Override
                     public void onFailure(ReqError reqError) {
+
+                    }
+
+                    @Override
+                    protected void onRespSuccess(Object resp) {
+
+                    }
+                })
+                .fire();
+    }
+
+    private void findCommissionOfSubordinate() {
+        Apic.findCommissionOfSubordinate()
+                .callback(new Callback<Object>() {
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+
+                    }
+
+                    @Override
+                    protected void onRespSuccess(Object resp) {
 
                     }
                 })
@@ -130,6 +174,7 @@ public class MyPropertyActivity extends BaseActivity {
         TextView mInviteNum;
         @BindView(R.id.transfer)
         TextView mTransfer;
+        private AccountList mAccountList;
 
         @Override
         public int getCount() {
@@ -139,6 +184,12 @@ public class MyPropertyActivity extends BaseActivity {
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            // 最简单解决 notifyDataSetChanged() 页面不刷新问题的方法
+            return POSITION_NONE;
         }
 
         @NonNull
@@ -152,7 +203,10 @@ public class MyPropertyActivity extends BaseActivity {
                     view.setBackgroundResource(R.drawable.property_bg_blue);
                     mAccountType.setText(R.string.personal_account);
                     mTotalPropertyType.setText(R.string.total_property_equivalent);
-                    mPropertyAmount.setText("0.13429464");
+                    if (mAccountList != null) {
+                        Log.e("wtf", "mmmmmm");
+                        mPropertyAmount.setText(mAccountList.getBalance());
+                    }
                     mInviteNum.setVisibility(View.GONE);
                     mTransfer.setVisibility(View.GONE);
                     break;
@@ -181,6 +235,10 @@ public class MyPropertyActivity extends BaseActivity {
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
+        }
+
+        void setAccountList(AccountList accountList) {
+            mAccountList = accountList;
         }
     }
 

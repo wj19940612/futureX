@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.SetGesturePwdActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -48,7 +51,18 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        isDrawPass();
+    }
 
+    private void isDrawPass() {
+        Apic.isDrawPass()
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+
+                    }
+                })
+                .fire();
     }
 
     @Override
@@ -61,8 +75,10 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.setCashPwd:
+                UniqueActivity.launcher(this, CashPwdFragment.class).execute();
                 break;
             case R.id.changeLoginPwd:
+                UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();
                 break;
             case R.id.googleAuthenticator:
                 UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();

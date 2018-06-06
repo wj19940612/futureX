@@ -39,6 +39,15 @@ public class Apic {
     }
 
     /**
+     * /api/user/user/findUserInfo.do
+     * POST
+     * 用户基本信息
+     */
+    public static Api findUserInfo() {
+        return Api.get("/api/user/user/findUserInfo.do");
+    }
+
+    /**
      * /user/user/updatePic.do
      * POST
      * 更新头像接口(陈作衡)
@@ -58,6 +67,33 @@ public class Apic {
     }
 
     /**
+     * /api/user/user/findCommissionOfSubordinate
+     * GET
+     * 最近/全部 邀请用户
+     */
+    public static Api findCommissionOfSubordinate() {
+        return Api.get("/api/user/user/findCommissionOfSubordinate");
+    }
+
+    /**
+     * /api/otc/account/list
+     * GET
+     * 法币账户
+     */
+    public static Api accountList() {
+        return Api.get("/api/otc/account/list");
+    }
+
+    /**
+     * /api/user/user/account
+     * GET
+     * 推广员账户
+     */
+    public static Api userAccount() {
+        return Api.get("/api/user/user/account");
+    }
+
+    /**
      * /user/userSafe/updatePhone.do
      * POST
      * 绑定、修改手机号--薛松
@@ -69,6 +105,50 @@ public class Apic {
                         .put("phoneMsgCode", phoneMsgCode)
                         .put("msgCode", msgCode)
                         .put("type", type));
+    }
+
+    /**
+     * /api/user/userSafe/isDrawPass.do
+     * POST
+     * 是否设置资金密码--薛松
+     */
+    public static Api isDrawPass() {
+        return Api.get("/api/user/userSafe/isDrawPass.do");
+    }
+
+    /**
+     * /api/user/userSafe/setDrawPass.do
+     * POST
+     * 设置、资金密码--薛松
+     */
+    public static Api setDrawPass(String drawPass, String affirmPass, String msgCode, String type) {
+        return Api.post("/api/user/userSafe/setDrawPass.do",
+                new ReqParams()
+                        .put("phone", drawPass)
+                        .put("phoneMsgCode", affirmPass)
+                        .put("msgCode", msgCode)
+                        .put("type", type));
+    }
+
+    /**
+     * /api/user/user/updateLoginPass.do
+     * POST
+     * 修改登录密码
+     */
+    public static Api updateLoginPass(String newUserPass, String oldUserPass) {
+        return Api.post("/api/user/user/updateLoginPass.do",
+                new ReqParams()
+                        .put("newUserPass", newUserPass)
+                        .put("oldUserPass", oldUserPass));
+    }
+
+    /**
+     * /api/user/userSafe/createGoogleKey.do
+     * POST
+     * 生成google验证码密钥--薛松
+     */
+    public static Api createGoogleKey() {
+        return Api.post("/api/user/userSafe/createGoogleKey.do");
     }
 
     /**

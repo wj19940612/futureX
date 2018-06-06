@@ -24,6 +24,9 @@ import com.songbai.futurex.fragment.mine.SettingsFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.UnreadMessageCount;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -31,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -85,13 +89,57 @@ public class MineFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Apic.getMsgCount().callback(new Callback<Resp<String>>() {
-                @Override
-                protected void onRespSuccess(Resp<String> resp) {
-                    mMsgCenter.setSubText(resp.getData());
-                }
-            }).fire();
+            getMessageCount();
+            setUserInfo();
         }
+    }
+
+    private void setUserInfo() {
+        LocalUser localUser = LocalUser.getUser();
+        if (localUser.isLogin()) {
+            UserInfo userInfo = localUser.getUserInfo();
+            GlideApp
+                    .with(this)
+                    .load(userInfo.getUserPortrait())
+                    .into(mHeadPortrait);
+            mUserName.setText(userInfo.getUserName());
+            mUserPhone.setText(getString(R.string.phone_number_x, userInfo.getUserPhone()));
+            int authenticationStatus = userInfo.getAuthenticationStatus();
+            if (authenticationStatus == 1) {
+                mUserName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_certification_primary, 0);
+            } else if (authenticationStatus == 2) {
+                mUserName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_certification_senior, 0);
+            }
+            mUserInfoGroup.setVisibility(View.VISIBLE);
+            mLogin.setVisibility(View.GONE);
+        } else {
+            mLogin.setVisibility(View.VISIBLE);
+            mUserInfoGroup.setVisibility(View.GONE);
+        }
+    }
+
+    private void getMessageCount() {
+        Apic.getMsgCount().callback(new Callback<Resp<UnreadMessageCount>>() {
+            @Override
+            protected void onRespSuccess(Resp<UnreadMessageCount> resp) {
+                setUnreadMessageCount(resp.getData().getCount());
+            }
+        }).fire();
+    }
+
+    private void getUserInfo() {
+        Apic.findUserInfo()
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                    }
+                })
+                .fire();
+    }
+
+    private void setUnreadMessageCount(Integer count) {
+        mMsgCenter.getSubTextView().setVisibility(count == 0 ? View.INVISIBLE : View.VISIBLE);
+        mMsgCenter.setSubText(String.valueOf(count));
     }
 
     @Override
