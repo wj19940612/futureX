@@ -47,7 +47,8 @@
             <ImageView
                 android:id="@+id/authCodeImage"
                 android:layout_width="144dp"
-                android:layout_height="44dp"/>
+                android:layout_height="44dp"
+                android:scaleType="fitXY"/>
 
             <TextView
                 android:id="@+id/loadImageFailure"

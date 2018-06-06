@@ -21,6 +21,8 @@ import com.sbai.httplib.ReqCallback;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.auth.FindPsdFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -149,7 +151,7 @@ public class LoginActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
-            boolean enable = checkSignInButtonEnable();
+            boolean enable = checkLoginButtonEnable();
             if (enable != mLogin.isEnabled()) {
                 mLogin.setEnabled(enable);
             }
@@ -161,7 +163,7 @@ public class LoginActivity extends BaseActivity {
         return !TextUtils.isEmpty(phone);
     }
 
-    private boolean checkSignInButtonEnable() {
+    private boolean checkLoginButtonEnable() {
         String phoneOrEmail = mPhoneOrEmail.getText().toString().trim();
         String password = mPassword.getPassword();
 
@@ -188,7 +190,7 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.forgetPassword:
-                // TODO: 2018/5/30
+                UniqueActivity.launcher(getActivity(), FindPsdFragment.class).execute();
                 break;
             case R.id.goRegister:
                 openRegisterPage();
@@ -217,7 +219,7 @@ public class LoginActivity extends BaseActivity {
                 .show();
 
         ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
-        requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
+        requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
     }
 
     private void login(String authCode) {

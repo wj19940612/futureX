@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -39,6 +40,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AreaCode;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.RegisterData;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.StrFormatter;
@@ -127,6 +129,17 @@ public class RegisterActivity extends BaseActivity {
                 mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode.getTeleCode()));
             }
         });
+        mRootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    KeyBoardUtils.closeKeyboard(mRootView);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         Apic.getAreaCodes().tag(TAG)
                 .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
                     @Override
@@ -212,7 +225,7 @@ public class RegisterActivity extends BaseActivity {
                 showAreaCodeSelector();
                 break;
             case R.id.next:
-                openSetPassPage(null);
+                openSetPassPage();
                 break;
             case R.id.switchToLogin:
                 openLoginPage();
@@ -229,9 +242,8 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    private void openSetPassPage(String authCode) {
+    private void openSetPassPage() {
         RegisterData registerData = new RegisterData(RegisterData.PLATFORM_ANDROID);
-        registerData.setMsgCode(authCode);
         if (isPhoneRegister()) {
             String areaCode = mAreaCode.getText().toString().trim();
             String phone = mPhoneNumber.getText().toString().trim();
@@ -353,11 +365,7 @@ public class RegisterActivity extends BaseActivity {
 
         mAuthCodeViewController.setTitle(R.string.please_input_auth_code);
         ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
-        requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
-    }
-
-    private void doRegister(String authCode) {
-
+        requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
     }
 
     private void requestAuthCodeImage(int width, int height) {

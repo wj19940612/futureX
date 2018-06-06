@@ -39,6 +39,8 @@ public class UniqueActivity extends BaseActivity {
         }
     }
 
+
+
     private void initData(Intent intent) {
         mFragmentName = intent.getStringExtra("frag");
         mExtras = intent.getExtras();

@@ -2,6 +2,7 @@ package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.model.local.LoginData;
 import com.songbai.futurex.model.local.RegisterData;
 
@@ -174,6 +175,17 @@ public class Apic {
     public static Api login(LoginData loginData) {
         return Api.post("/api/user/user/login.do",
                 new ReqParams(LoginData.class, loginData));
+    }
+
+    /**
+     * 设置新的登录密码
+     *
+     * @param findPsdData
+     * @return
+     */
+    public static Api updateLoginPsd(FindPsdData findPsdData) {
+        return Api.post("/api/user/user/forgetUserPass.do",
+                new ReqParams(FindPsdData.class, findPsdData));
     }
 
     public interface url {

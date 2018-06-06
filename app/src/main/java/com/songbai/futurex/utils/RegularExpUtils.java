@@ -51,7 +51,7 @@ public class RegularExpUtils {
      * @return
      */
     public static boolean isValidEmail(String email) {
-        String pattern = "^([a-z0-9A-Z]+[-|\\\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\\\.)+[a-zA-Z]{2,}$";
+        String pattern = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
         return Pattern.matches(pattern, email);
     }
 }

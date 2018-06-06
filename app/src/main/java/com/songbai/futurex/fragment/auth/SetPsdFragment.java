@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -24,8 +25,10 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.RegisterData;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.RegularExpUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
@@ -39,9 +42,7 @@ import butterknife.Unbinder;
 /**
  * Modified by john on 2018/5/31
  * <p>
- * Description:
- * <p>
- * APIs:
+ * Description: 设置登录密码页面，用于注册和忘记密码时候设置密码
  */
 public class SetPsdFragment extends UniqueActivity.UniFragment {
 
@@ -62,6 +63,8 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
     PasswordEditText mLoginPsd;
     @BindView(R.id.confirmPsd)
     PasswordEditText mConfirmPsd;
+    @BindView(R.id.pageTitle)
+    TextView mPageTitle;
 
     enum PsdStrength {
         NONE,
@@ -71,7 +74,9 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
     }
 
     private PsdStrength mCurPsdStrength;
-    private RegisterData mRegisterData;
+
+    private RegisterData mRegisterData; // 注册数据
+    private FindPsdData mFindPsdData; // 找回密码数据
 
     @Nullable
     @Override
@@ -84,12 +89,30 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
         mRegisterData = extras.getParcelable(ExtraKeys.REGISTER_DATA);
+        mFindPsdData = extras.getParcelable(ExtraKeys.FIND_PSD_DATA);
     }
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mLoginPsd.addTextChangedListener(mLoginPsdWatcher);
         mConfirmPsd.addTextChangedListener(mValidationWatcher);
+
+        mRootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    KeyBoardUtils.closeKeyboard(mRootView);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        if (mFindPsdData != null) {
+            mPageTitle.setText(R.string.set_new_login_password);
+        } else {
+            mPageTitle.setText(R.string.set_login_password);
+        }
     }
 
     private ValidationWatcher mLoginPsdWatcher = new ValidationWatcher() {
@@ -193,9 +216,26 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
                 getActivity().finish();
                 break;
             case R.id.confirm:
-                showInvitationCodeDialog();
+                if (mFindPsdData != null) {
+                    requestUpdatePassword();
+                } else {
+                    showInvitationCodeDialog();
+                }
                 break;
         }
+    }
+
+    private void requestUpdatePassword() {
+        String password = mConfirmPsd.getPassword();
+        mFindPsdData.setUserPass(md5Encrypt(password));
+        Apic.updateLoginPsd(mFindPsdData).tag(TAG).indeterminate(this)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+                    }
+                }).fire();
     }
 
     private void showInvitationCodeDialog() {

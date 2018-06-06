@@ -38,7 +38,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/pageTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -50,6 +49,7 @@
                 android:id="@+id/phoneOrEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:textColor="@color/text49"
                 android:textSize="30sp"
                 android:visibility="visible"
@@ -57,14 +57,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/authCodeArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:minHeight="50dp">
 
             <EditText
-                android:id="@+id/phoneAuthCode"
+                android:id="@+id/authCode"
                 style="@style/SignEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -72,17 +71,6 @@
                 android:hint="@string/sms_auth_code"
                 android:inputType="number"
                 android:maxLength="10"/>
-
-            <EditText
-                android:id="@+id/emailAuthCode"
-                style="@style/SignEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/email_auth_code"
-                android:inputType="number"
-                android:maxLength="10"
-                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/getAuthCode"
