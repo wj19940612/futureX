@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.songbai.futurex.R;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RequestProgress {
@@ -63,7 +65,8 @@ public class RequestProgress {
     private static class ProgressDialog {
 
         public static Dialog show(Context context, DialogInterface.OnCancelListener cancelListener, boolean cancelable) {
-            Dialog dialog = new Dialog(context);
+            Dialog dialog = new Dialog(context, R.style.DialogTheme_NoTitle);
+            //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(cancelable);
             dialog.setCanceledOnTouchOutside(false);
             dialog.setContentView(createView(context));

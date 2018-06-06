@@ -12,7 +12,10 @@ import android.widget.ScrollView;
 import com.sbai.httplib.ReqIndeterminate;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Api;
+import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
+
+import java.security.NoSuchAlgorithmException;
 
 public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHandler.TimerCallback {
 
@@ -127,5 +130,14 @@ public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHan
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    protected String md5Encrypt(String value) {
+        try {
+            return SecurityUtil.md5Encrypt(value);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return value;
+        }
     }
 }

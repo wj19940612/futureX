@@ -43,4 +43,15 @@ public class RegularExpUtils {
         String pattern = "^(?![\\da-zA-Z]+$)(?![a-zA-Z\\W_]+$)(?![\\d\\W_]+$)([\\da-zA-Z\\W_]{8,})$";
         return Pattern.matches(pattern, password);
     }
+
+    /**
+     * 判断是否是合法邮箱
+     *
+     * @param email
+     * @return
+     */
+    public static boolean isValidEmail(String email) {
+        String pattern = "^([a-z0-9A-Z]+[-|\\\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\\\.)+[a-zA-Z]{2,}$";
+        return Pattern.matches(pattern, email);
+    }
 }

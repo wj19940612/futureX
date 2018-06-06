@@ -6,8 +6,6 @@ package com.songbai.futurex.utils;
 
 public class StrFormatter {
 
-    private static final String TAG = "StrFormatter";
-
     /**
      * 格式化手机号 为 *** **** ****
      *
@@ -77,76 +75,11 @@ public class StrFormatter {
         return bankCardNoSpace;
     }
 
-    /**
-     * 替换//为换行
-     *
-     * @param text
-     * @return
-     */
-    public static String getFormatText(String text) {
-        return text.replace("//", "\n");
+    public static String getFormatAreaCode(String areaCode) {
+        while (areaCode.length() < 4) {
+            areaCode = "0" + areaCode;
+        }
+        return areaCode;
     }
 
-    /**
-     * 5.15454
-     *
-     * @return 5.12  小数点后两位
-     */
-    public static String getFormatMoney(String money) {
-        if (money.equalsIgnoreCase(".")) {
-            return "";
-        } else if (money.length() == 2) {
-            if (money.startsWith("0") && !money.endsWith(".")) {
-                return money.substring(1);
-            }
-        }
-        if (money.contains(".") && money.indexOf(".") + 4 == money.length()) {
-            return money.substring(0, money.indexOf(".") + 3);
-        }
-        return money;
-    }
-
-    /**
-     * 对局总数＜10000，数值全部显示
-     * 对局总数＝10000，显示1万
-     * 对局总数＞10000，显示1万+，后续以万位递进
-     * <p>
-     * 元宝数＜10000，数值全部显示
-     * 元宝数＝10000，显示1万
-     * 元宝数＞10000，显示1万+，后续以万位递进
-     * 元宝数＝1亿，显示1亿
-     * 元宝数＞1亿，显示1亿+，以亿为单位递进
-     *
-     * @param money
-     * @return
-     */
-    public static String formIngotNumber(long money) {
-
-        if (money < FinanceUtil.TEN_THOUSAND) {
-            return String.valueOf(money);
-        } else if (money < FinanceUtil.ONE_HUNDRED_MILLION) {
-            if (money % FinanceUtil.TEN_THOUSAND == 0) {
-                return  (money / FinanceUtil.TEN_THOUSAND) + FinanceUtil.UNIT_WANG;
-            } else {
-                return  (money / FinanceUtil.TEN_THOUSAND) + "万+";
-            }
-        } else {
-            if (money % FinanceUtil.ONE_HUNDRED_MILLION == 0) {
-                return (money / FinanceUtil.ONE_HUNDRED_MILLION) + FinanceUtil.UNIT_YI;
-            } else {
-                return (money / FinanceUtil.ONE_HUNDRED_MILLION) + "亿+";
-            }
-        }
-    }
-
-    public static String getFormatCount(int count) {
-        String number = String.valueOf(count);
-        int length = number.length();
-        if (count >= 10000 && count < 100000000) {
-            return number.substring(0, length - 4) + "." + number.substring(length - 4, length - 3) + FinanceUtil.UNIT_WANG;
-        } else if (count >= 100000000) {
-            return number.substring(0, length - 8) + "." + number.substring(length - 8, length - 7) + FinanceUtil.UNIT_YI;
-        }
-        return number + "";
-    }
 }

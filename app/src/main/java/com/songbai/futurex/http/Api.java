@@ -14,7 +14,9 @@ import com.sbai.httplib.ReqIndeterminate;
 import com.sbai.httplib.ReqLogger;
 import com.sbai.httplib.ReqParams;
 import com.sbai.httplib.RequestManager;
+import com.songbai.futurex.App;
 import com.songbai.futurex.BuildConfig;
+import com.songbai.futurex.utils.AppInfo;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -196,9 +198,9 @@ public class Api extends RequestManager {
         if (!TextUtils.isEmpty(cookies)) {
             headers.put("Cookie", cookies);
         }
-//        headers.put("lemi-version", AppInfo.getVersionName(App.getAppContext()))
-//                .put("lemi-device", AppInfo.getDeviceHardwareId(App.getAppContext()))
-//                .put("lemi-channel", "android:" + AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));
+        headers.put("ex-version", AppInfo.getVersionName(App.getAppContext()))
+                .put("ex-device", AppInfo.getDeviceHardwareId(App.getAppContext()))
+                .put("ex-channel", "android:" + AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));
     }
 
     private static class RequestFinishedListener implements ReqCallback.onFinishedListener {

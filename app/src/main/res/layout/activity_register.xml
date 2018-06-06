@@ -7,7 +7,8 @@
     android:background="@android:color/white"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/closePage"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="4dp"
                 android:drawableRight="@drawable/ic_area_code_arrow"
-                android:text="0086"/>
+                tools:text="0086"/>
 
             <EditText
                 android:id="@+id/phoneNumber"

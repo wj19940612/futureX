@@ -15,8 +15,11 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.model.local.LoginData;
+import com.songbai.futurex.model.local.RegisterData;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.RegularExpUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 
@@ -160,7 +163,8 @@ public class LoginActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.login:
-                // TODO: 2018/5/30 login process 
+                showImageAuthCodeDialog();
+                login();
                 break;
             case R.id.forgetPassword:
                 // TODO: 2018/5/30
@@ -172,6 +176,23 @@ public class LoginActivity extends BaseActivity {
                 mPhoneOrEmail.setText("");
                 break;
         }
+    }
+
+    private void showImageAuthCodeDialog() {
+        // todo get image auth code and login, meanwhile anim login button progress
+    }
+
+    private void login() {
+        LoginData loginData = new LoginData(RegisterData.PLATFORM_ANDROID);
+        String phoneOrEmail = mPhoneOrEmail.getText().toString();
+        if (RegularExpUtils.isValidEmail(phoneOrEmail)) {
+            loginData.setEmail(phoneOrEmail);
+        } else {
+            loginData.setPhone(phoneOrEmail);
+        }
+        String password = md5Encrypt(mPassword.getPassword());
+        loginData.setUserPass(password);
+        //Apic.login(loginData);
     }
 
     private void openRegisterPage() {
@@ -187,7 +208,7 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_REGISTER && resultCode == RESULT_OK) {
-
+            finish();
         }
     }
 }
