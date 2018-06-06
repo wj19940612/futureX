@@ -42,9 +42,7 @@ import butterknife.Unbinder;
 /**
  * Modified by john on 2018/6/6
  * <p>
- * Description:
- * <p>
- * APIs:
+ * Description: 忘记密码找回密码
  */
 public class FindPsdFragment extends UniqueActivity.UniFragment {
 

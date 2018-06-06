@@ -41,9 +41,7 @@ import butterknife.Unbinder;
 /**
  * Modified by john on 2018/6/6
  * <p>
- * Description:
- * <p>
- * APIs:
+ * Description: 邮箱或者手机号输入验证码页面
  */
 public class AuthCodeFragment extends UniqueActivity.UniFragment {
 
