@@ -272,6 +272,7 @@
     <string name="next">下一步</string>
     <string name="registered_and_go_login">已有账号，去登录</string>
     <string name="set_login_password">设置登录密码</string>
+    <string name="set_new_login_password">设置新登录密码</string>
     <string name="at_least_8_english_characters_number_combination">至少8位英文数字组合</string>
     <string name="password_strength_colon">密码强度：</string>
     <string name="weak">弱</string>

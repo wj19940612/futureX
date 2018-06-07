@@ -37,7 +37,12 @@ public class UserInfo {
     private String teleCode; // 国际长途电话区号
     private String userName;  // 用户名
     private String userPhone; // 手机号
+    private String userEmail;
     private String userPortrait; // 用户头像
+
+    public String getUserEmail() {
+        return userEmail;
+    }
 
     public int getAuthenticationStatus() {
         return authenticationStatus;
