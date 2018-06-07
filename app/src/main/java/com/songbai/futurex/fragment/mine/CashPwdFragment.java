@@ -133,6 +133,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.sendSmsAuthCode:
+                getAuthCode();
                 break;
             case R.id.confirm:
                 String password = mPassword.getPassword();
