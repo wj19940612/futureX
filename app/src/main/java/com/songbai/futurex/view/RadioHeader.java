@@ -5,53 +5,65 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.design.widget.TabLayout;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
 
 /**
- * Modified by john on 2018/5/29
+ * Modified by john on 2018/6/7
  * <p>
  * Description: 单选头部（支持红点通知，选中后消失）
- * <p>
- * APIs:
  */
-public class RadioButtonHeader extends LinearLayout {
+public class RadioHeader extends LinearLayout {
 
-    private TabLayout mTabLayout;
     private CharSequence[] mTabArray;
     private SparseIntArray mSparseIntArray;
+
     private Paint mPaint;
-    private float mTabMargin;
+    private int mTabInterval;
     private int mPointColor;
+    private int mSelectedPosition;
 
     private float mRadius;
     private float mRadiusWithNum;
     private float mTextOffset;
     private float mPointMarginLeft;
 
-    public RadioButtonHeader(Context context, AttributeSet attrs) {
+    private OnTabSelectedListener mOnTabSelectedListener;
+
+    public interface OnTabSelectedListener {
+        void onTabSelected(int position);
+    }
+
+    public void setOnTabSelectedListener(OnTabSelectedListener onTabSelectedListener) {
+        mOnTabSelectedListener = onTabSelectedListener;
+    }
+
+    public RadioHeader(Context context) {
+        super(context);
+        init();
+    }
+
+    public RadioHeader(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         processAttrs(attrs);
         init();
     }
 
     private void processAttrs(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.RadioButtonHeader);
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.RadioHeader);
 
-        mTabArray = typedArray.getTextArray(R.styleable.RadioButtonHeader_tabArray);
-        mTabMargin = typedArray.getDimension(R.styleable.RadioButtonHeader_tabMargin, 0);
-        mPointColor = typedArray.getColor(R.styleable.RadioButtonHeader_pointColor,
+        mTabArray = typedArray.getTextArray(R.styleable.RadioHeader_tabArray);
+        mTabInterval = typedArray.getDimensionPixelOffset(R.styleable.RadioHeader_tabInterval, 0);
+        mPointColor = typedArray.getColor(R.styleable.RadioHeader_pointColor,
                 ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
 
         typedArray.recycle();
@@ -59,13 +71,15 @@ public class RadioButtonHeader extends LinearLayout {
 
     private void init() {
         setWillNotDraw(false);
-        setOrientation(VERTICAL);
+        setOrientation(HORIZONTAL);
+
+        mSparseIntArray = new SparseIntArray();
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mSparseIntArray = new SparseIntArray();
         mRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         mRadiusWithNum = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7, getResources().getDisplayMetrics());
         mPointMarginLeft = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+
         float fontSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 9, getResources().getDisplayMetrics());
         mPaint.setTextSize(fontSize);
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
@@ -73,53 +87,51 @@ public class RadioButtonHeader extends LinearLayout {
         float fontHeight = fontMetrics.bottom - fontMetrics.top;
         mTextOffset = fontHeight / 2 - fontMetrics.bottom;
 
-        mTabLayout = (TabLayout) LayoutInflater.from(getContext()).inflate(R.layout.radio_button_header, null);
-        addView(mTabLayout);
+        for (int i = 0; i < mTabArray.length; i++) {
+            View view = createTab(mTabArray[i]);
+            LinearLayout.LayoutParams params = (LayoutParams) view.getLayoutParams();
+            if (params == null) {
+                params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            }
+            if (i != 0) {
+                params.setMargins(mTabInterval, 0, 0, 0);
+            }
+            addView(view, params);
 
-        for (CharSequence sequence : mTabArray) {
-            mTabLayout.addTab(mTabLayout.newTab().setCustomView(createTab(sequence)));
+            final int finalI = i;
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectTab(finalI);
+                }
+            });
         }
 
-        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-            View tab = ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(i);
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
-            if (i == 0) continue;
-            p.setMargins((int) mTabMargin, 0, 0, 0);
-            tab.requestLayout();
+        if (mTabArray.length > 0) {
+            getChildAt(0).setSelected(true);
         }
+    }
 
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mSparseIntArray.delete(mTabLayout.getSelectedTabPosition());
-                invalidate();
-            }
+    private void selectTab(int position) {
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).setSelected(false);
+        }
+        mSelectedPosition = position;
+        getChildAt(mSelectedPosition).setSelected(true);
+        onTabSelected(mSelectedPosition);
+    }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+    private void onTabSelected(int position) {
+        if (mOnTabSelectedListener != null) {
+            mOnTabSelectedListener.onTabSelected(position);
+        }
     }
 
     private View createTab(CharSequence sequence) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.radio_button_header_tab, null);
-
-        TextView textView = view.findViewById(R.id.text);
-        textView.setText(sequence);
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        if (params == null) {
-            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-        }
-        view.setLayoutParams(params);
-
-        return view;
+        View tab = LayoutInflater.from(getContext()).inflate(R.layout.radio_header_tab, null);
+        TextView text = (TextView) tab.findViewById(R.id.text);
+        text.setText(sequence);
+        return tab;
     }
 
     public void notify(int index) {
@@ -127,7 +139,7 @@ public class RadioButtonHeader extends LinearLayout {
     }
 
     public void notify(int index, int number) {
-        if (index >= 0 && index < mTabLayout.getTabCount()) {
+        if (index >= 0 && index < getChildCount()) {
             mSparseIntArray.put(index, number);
             invalidate();
         }
@@ -136,24 +148,22 @@ public class RadioButtonHeader extends LinearLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mSparseIntArray.delete(mTabLayout.getSelectedTabPosition());
 
-        Log.d("Temp", "onDraw: " + mSparseIntArray.size()); // todo remove later
+        mSparseIntArray.delete(mSelectedPosition);
 
         for (int i = 0; i < mSparseIntArray.size(); i++) {
             int key = mSparseIntArray.keyAt(i);
             int value = mSparseIntArray.valueAt(i);
-            int selectedPos = mTabLayout.getSelectedTabPosition();
 
-            if (key < 0 || key >= mTabLayout.getTabCount() || key == selectedPos) continue;
+            if (key < 0 || key >= getChildCount() || key == mSelectedPosition) continue;
 
-            View tab = getTab(key);
+            View tab = getChildAt(key);
             drawNotifyPoint(tab, value, canvas);
         }
     }
 
-    private void drawNotifyPoint(View tabView, int value, Canvas canvas) {
-        float cx = tabView.getRight() + mPointMarginLeft;
+    private void drawNotifyPoint(View tab, int value, Canvas canvas) {
+        float cx = tab.getRight() + mPointMarginLeft;
         float cy = getHeight() / 2;
         if (value < 0) {
             mPaint.setColor(mPointColor);
@@ -173,10 +183,5 @@ public class RadioButtonHeader extends LinearLayout {
             mPaint.setColor(Color.WHITE);
             canvas.drawText(text, cx - textW / 2, cy + mTextOffset, mPaint);
         }
-    }
-
-    private View getTab(int index) {
-        View tabAt = ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(index);
-        return tabAt;
     }
 }

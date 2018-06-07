@@ -13,18 +13,6 @@
         app:hasBottomSplitLine="true"
         app:titleText="@string/message_center"/>
 
-    <com.songbai.futurex.view.RadioButtonHeader
-        android:id="@+id/indicator"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:background="@color/white"
-        android:paddingBottom="6dp"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:paddingTop="6dp"
-        app:tabArray="@array/messageCenterTabTexts"
-        app:tabMargin="30dp"/>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"

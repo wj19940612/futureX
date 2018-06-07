@@ -3,7 +3,6 @@ package com.songbai.futurex.fragment.mine;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.view.RadioButtonHeader;
 
 import java.util.ArrayList;
 
@@ -27,8 +25,6 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class MessageCenterFragment extends UniqueActivity.UniFragment {
-    @BindView(R.id.indicator)
-    RadioButtonHeader mIndicator;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     private Unbinder mBind;
@@ -54,8 +50,6 @@ public class MessageCenterFragment extends UniqueActivity.UniFragment {
         MessagePageAdapter adapter = new MessagePageAdapter(getChildFragmentManager());
         adapter.setList(fragments);
         mViewPager.setAdapter(adapter);
-        TabLayout tabLayout = (TabLayout) mIndicator.getChildAt(0);
-        tabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override

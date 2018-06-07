@@ -238,7 +238,6 @@
     <string name="legal_currency">法币</string>
     <string name="coin_coin">币币</string>
     <string name="mine">我的</string>
-
     <string-array name="tabTexts">
         <item>@string/home</item>
         <item>@string/market</item>
@@ -246,7 +245,6 @@
         <item>@string/coin_coin</item>
         <item>@string/mine</item>
     </string-array>
-
     <integer-array name="tabIcons">
         <item>@drawable/tab_home</item>
         <item>@drawable/tab_market</item>
@@ -295,4 +293,11 @@
     <string name="click_and_refresh_auth_code">点击刷新验证码</string>
     <string name="login_success">登录成功</string>
 
+    <!--Market&Trade-->
+    <string-array name="market_radio_header">
+        <item>USDT</item>
+        <item>BTC</item>
+        <item>ETH</item>
+        <item>自选</item>
+    </string-array>
 </resources>
