@@ -12,6 +12,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -26,7 +27,6 @@ import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.fragment.mine.PropertyListFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.Display;
 
 import butterknife.BindView;
@@ -96,48 +96,7 @@ public class MyPropertyActivity extends BaseActivity {
 
             }
         });
-        accountList();
-        userAccount();
         findCommissionOfSubordinate();
-    }
-
-    private void accountList() {
-        Apic.accountList()
-                .callback(new Callback<AccountList>() {
-                    @Override
-                    public void onFailure(ReqError reqError) {
-
-                    }
-
-                    @Override
-                    protected void onRespSuccess(AccountList resp) {
-                        setAccountData(resp);
-                    }
-                })
-                .fire();
-    }
-
-    private void setAccountData(AccountList accountList) {
-//        Log.e("wtf",accountList.getBalance());
-        mPropertyCardAdapter.setAccountList(accountList);
-        mPropertyCardAdapter.notifyDataSetChanged();
-    }
-
-    private void userAccount() {
-        Apic.userAccount()
-                .callback(new Callback<Object>() {
-
-                    @Override
-                    public void onFailure(ReqError reqError) {
-
-                    }
-
-                    @Override
-                    protected void onRespSuccess(Object resp) {
-
-                    }
-                })
-                .fire();
     }
 
     private void findCommissionOfSubordinate() {
@@ -163,6 +122,11 @@ public class MyPropertyActivity extends BaseActivity {
         mBind.unbind();
     }
 
+    public void setAccountAmount(String balance) {
+        mPropertyCardAdapter.setAccountList(balance);
+        mPropertyCardAdapter.notifyDataSetChanged();
+    }
+
     static class PropertyCardAdapter extends PagerAdapter {
         @BindView(R.id.accountType)
         TextView mAccountType;
@@ -174,7 +138,7 @@ public class MyPropertyActivity extends BaseActivity {
         TextView mInviteNum;
         @BindView(R.id.transfer)
         TextView mTransfer;
-        private AccountList mAccountList;
+        private String mBalance;
 
         @Override
         public int getCount() {
@@ -187,7 +151,7 @@ public class MyPropertyActivity extends BaseActivity {
         }
 
         @Override
-        public int getItemPosition(Object object) {
+        public int getItemPosition(@NonNull Object object) {
             // 最简单解决 notifyDataSetChanged() 页面不刷新问题的方法
             return POSITION_NONE;
         }
@@ -203,9 +167,8 @@ public class MyPropertyActivity extends BaseActivity {
                     view.setBackgroundResource(R.drawable.property_bg_blue);
                     mAccountType.setText(R.string.personal_account);
                     mTotalPropertyType.setText(R.string.total_property_equivalent);
-                    if (mAccountList != null) {
-                        Log.e("wtf", "mmmmmm");
-                        mPropertyAmount.setText(mAccountList.getBalance());
+                    if (!TextUtils.isEmpty(mBalance)) {
+                        mPropertyAmount.setText(mBalance);
                     }
                     mInviteNum.setVisibility(View.GONE);
                     mTransfer.setVisibility(View.GONE);
@@ -237,8 +200,8 @@ public class MyPropertyActivity extends BaseActivity {
             container.removeView((View) object);
         }
 
-        void setAccountList(AccountList accountList) {
-            mAccountList = accountList;
+        void setAccountList(String balance) {
+            mBalance = balance;
         }
     }
 

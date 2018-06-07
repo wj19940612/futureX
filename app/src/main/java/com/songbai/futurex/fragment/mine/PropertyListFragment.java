@@ -12,12 +12,20 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.DrawCoinActivity;
+import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PropertyFlowActivity;
 import com.songbai.futurex.fragment.BaseFragment;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.Launcher;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +55,7 @@ public class PropertyListFragment extends BaseFragment {
     ConstraintLayout mPropertyOperateGroup;
     private Unbinder mBind;
     private int mPropertyType;
+    private PropertyListAdapter mAdapter;
 
     public static PropertyListFragment newInstance(int position) {
         Bundle bundle = new Bundle();
@@ -88,9 +97,13 @@ public class PropertyListFragment extends BaseFragment {
             default:
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(new PropertyListAdapter());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(new PropertyListAdapter());
+        mAdapter = new PropertyListAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+        if (mPropertyType == 0) {
+            accountList();
+        } else if (mPropertyType == 1) {
+            userAccount();
+        }
     }
 
     @Override
@@ -117,7 +130,43 @@ public class PropertyListFragment extends BaseFragment {
         }
     }
 
+    private void accountList() {
+        Apic.accountList()
+                .callback(new Callback<Resp<AccountList>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AccountList> resp) {
+                        setAdapter(resp.getData());
+                    }
+                })
+                .fire();
+    }
+
+    private void userAccount() {
+        Apic.userAccount()
+                .callback(new Callback<Object>() {
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+
+                    }
+
+                    @Override
+                    protected void onRespSuccess(Object resp) {
+
+                    }
+                })
+                .fire();
+    }
+
+    private void setAdapter(AccountList accountList) {
+        ((MyPropertyActivity) getActivity()).setAccountAmount(accountList.getBalance());
+        mAdapter.setList(accountList.getAccount());
+        mAdapter.notifyDataSetChanged();
+    }
+
     static class PropertyListAdapter extends RecyclerView.Adapter {
+        private List<AccountList.AccountBean> mList;
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -132,7 +181,14 @@ public class PropertyListFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-            return 50;
+            if (mList == null) {
+                return 0;
+            }
+            return mList.size();
+        }
+
+        public void setList(List<AccountList.AccountBean> list) {
+            mList = list;
         }
 
         static class PropertyListHolder extends RecyclerView.ViewHolder {

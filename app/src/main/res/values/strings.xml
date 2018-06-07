@@ -158,6 +158,8 @@
     <string name="create_customization_poster">生成专属海报</string>
 
     <string name="set_cash_pwd">资金密码设置</string>
+    <string name="please_input_set_cash_pwd">请输入资金密码</string>
+    <string name="confirm_set_cash_pwd">确认资金密码</string>
     <string name="send_sms_auth_code_phone_hint_x">已发送至您的手机号：%1$s，请注意查收</string>
     <string name="send_mail_auth_code_hint_x">已发送至您的邮箱：%1$s，请注意查收</string>
     <string name="the_two_passwords_differ">两次密码输入不一致</string>
@@ -169,6 +171,7 @@
     <string name="please_input_sms_auth_code">请输入短信验证码</string>
     <string name="google_authenticator">Google认证</string>
     <string name="google_authenticator_code">谷歌验证码</string>
+    <string name="please_input_google_authenticator_code">谷歌验证码</string>
     <string name="please_google_authenticator_code">请输入谷歌验证码</string>
     <string name="google_authenticator_hint">1.安装在“Google Authenticator”应用程序中，点击右上角“+”号，然后选择“手动输入验证码”或“扫描条形码”。\n
         2.扫描下方二维码或手动输入下述密钥添加验证令牌。\n
