@@ -264,6 +264,7 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
+                        LocalUser.getUser().login();
                         requestUserInfo();
                     }
                 }).fire();

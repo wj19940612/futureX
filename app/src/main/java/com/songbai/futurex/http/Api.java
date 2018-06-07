@@ -19,6 +19,7 @@ import com.sbai.httplib.ReqParams;
 import com.sbai.httplib.RequestManager;
 import com.songbai.futurex.App;
 import com.songbai.futurex.BuildConfig;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.AppInfo;
 
 import java.io.File;
@@ -210,10 +211,17 @@ public class Api extends RequestManager {
     }
 
     private void setupHeaders(ReqHeaders headers) {
-        String cookies = CookieManger.getInstance().getCookies();
+        String cookies = LocalUser.getUser().getToken();
+        String imageSign = CookieManger.getInstance().getNameValuePair("img_sign");
+
+        if (!TextUtils.isEmpty(imageSign)) {
+            cookies = imageSign + (TextUtils.isEmpty(cookies) ? "" : "; " + cookies);
+        }
+
         if (!TextUtils.isEmpty(cookies)) {
             headers.put("Cookie", cookies);
         }
+
         headers.put("ex-version", AppInfo.getVersionName(App.getAppContext()))
                 .put("ex-device", AppInfo.getDeviceHardwareId(App.getAppContext()))
                 .put("ex-channel", "android:" + AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));

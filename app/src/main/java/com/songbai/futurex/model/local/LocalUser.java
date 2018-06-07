@@ -3,6 +3,7 @@ package com.songbai.futurex.model.local;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.sbai.httplib.CookieManger;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.model.UserInfo;
 
@@ -19,6 +20,7 @@ public class LocalUser {
     private String mPhone;
     private String mEmail;
     private String mLastAct;
+    private String mToken;
 
     public static LocalUser getUser() {
         if (sLocalUser == null) {
@@ -42,6 +44,10 @@ public class LocalUser {
         Preference.get().setUserJson(userJson);
     }
 
+    public void login() {
+        mToken = CookieManger.getInstance().getNameValuePair("token");
+    }
+
     public void setUserInfo(UserInfo userInfo, String phone, String email) {
         mUserInfo = userInfo;
         mPhone = phone;
@@ -55,9 +61,9 @@ public class LocalUser {
         return TextUtils.isEmpty(phone) ? email : phone;
     }
 
-
     public void setUserInfo(UserInfo userInfo) {
         mUserInfo = userInfo;
+
         saveToPreference();
     }
 
@@ -69,12 +75,17 @@ public class LocalUser {
         return mLastAct;
     }
 
+    public String getToken() {
+        return mToken;
+    }
+
     public boolean isLogin() {
-        return mUserInfo != null;
+        return mUserInfo != null && !TextUtils.isEmpty(mToken);
     }
 
     public void logout() {
         mUserInfo = null;
+        mToken = null;
         saveToPreference();
     }
 

@@ -255,6 +255,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp resp) {
                         ToastUtil.show(R.string.login_success);
+                        LocalUser.getUser().login();
                         requestUserInfo();
                     }
                 }).fireFreely();

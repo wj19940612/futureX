@@ -12,9 +12,7 @@ import java.util.Map;
 /**
  * Modified by john on 18/01/2018
  * <p>
- * Description:
- *
- * Cookie 处理类，用于保存原始 cookie 以及返回处理后的 cookie
+ * Description: Cookie 处理类，用于保存原始 cookie 以及返回处理后的 cookie
  */
 public class CookieManger {
 
@@ -23,7 +21,7 @@ public class CookieManger {
     private static CookieManger sCookieManger;
 
     private File mAppDataDir;
-    private String mRawCookie;
+    private String mLastCookie;
 
     public static CookieManger getInstance() {
         if (sCookieManger == null) {
@@ -38,74 +36,43 @@ public class CookieManger {
 
     public void parse(Map<String, String> headers) {
         String rawCookie = headers.get("Set-Cookie");
-        if (!TextUtils.isEmpty(rawCookie)) {
-
-            if (!rawCookie.equals(mRawCookie)) {
-                mRawCookie = rawCookie;
-                saveRawCookies();
-            }
-        }
+        mLastCookie = rawCookie;
     }
 
     /**
      * rawCookie:
      * <p>
-     * token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; Version=1; Path=/
+     * token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; Version=1; Path=/(\n)
      * token2="NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ="; Version=1; Path=/
      */
-    public String getRawCookie() {
-        if (TextUtils.isEmpty(mRawCookie)) {
-            mRawCookie = getRawCookies();
-        }
-        return mRawCookie;
+    public String getLastCookie() {
+        return mLastCookie;
     }
 
     /**
-     * processed Cookie:
+     * 获取名值对
      *
+     * @param keyword
      * @return eg. token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; token2="NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ="
      */
-    public String getCookies() {
+    public String getNameValuePair(String keyword) {
+        if (TextUtils.isEmpty(mLastCookie)) return "";
+
         StringBuilder builder = new StringBuilder();
-
-        if (TextUtils.isEmpty(mRawCookie)) {
-            mRawCookie = getRawCookies();
+        String[] cookies = mLastCookie.split("\n");
+        for (String cookie : cookies) {
+            builder.append(indexOfNameValuePair(cookie, keyword)).append("; ");
         }
-
-        if (!TextUtils.isEmpty(mRawCookie)) {
-            String[] cookies = mRawCookie.split("\n");
-            for (int i = 0; i < cookies.length; i++) {
-                builder.append(getToken(cookies[i])).append("; ");
-            }
-            if (builder.length() > 0) {
-                builder.delete(builder.length() - 2, builder.length());
-            }
-
-            // get image sign
-            for (int i = 0; i < cookies.length; i++) {
-                builder.append(getImageSign(cookies[i])).append("; ");
-            }
-            if (builder.length() > 0) {
-                builder.delete(builder.length() - 2, builder.length());
-            }
+        if (builder.length() > 0) {
+            builder.delete(builder.length() - 2, builder.length());
         }
         return builder.toString();
     }
 
-    private String getToken(String cookie) {
+    private String indexOfNameValuePair(String cookie, String keyword) {
         String[] splits = cookie.split(";");
         for (String split : splits) {
-            if (split.indexOf("token") != -1) {
-                return split;
-            }
-        }
-        return "";
-    }
-
-    private String getImageSign(String cookie) {
-        String[] splits = cookie.split(";");
-        for (String split : splits) {
-            if (split.indexOf("img_sign") != -1) {
+            if (split.indexOf(keyword) != -1) {
                 return split;
             }
         }
@@ -117,7 +84,7 @@ public class CookieManger {
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(file);
-            outputStream.write(mRawCookie.getBytes());
+            outputStream.write(mLastCookie.getBytes());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -160,7 +127,7 @@ public class CookieManger {
     }
 
     public void clearRawCookies() {
-        mRawCookie = null;
+        mLastCookie = null;
         File file = new File(mAppDataDir, FILE_NAME);
         if (file.exists()) {
             file.delete();
