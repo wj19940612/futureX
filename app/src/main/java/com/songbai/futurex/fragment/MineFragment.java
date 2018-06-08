@@ -75,6 +75,7 @@ public class MineFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         updateUserLoginStatus();
+        mMsgCenter.getSubTextView().setVisibility(View.INVISIBLE);
     }
 
     private void updateUserLoginStatus() {

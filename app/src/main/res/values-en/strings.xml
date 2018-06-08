@@ -242,11 +242,11 @@
     </string-array>
 
     <!-- bottom tabs -->
-    <string name="home">首页</string>
-    <string name="market">行情</string>
-    <string name="legal_currency">法币</string>
-    <string name="coin_coin">币币</string>
-    <string name="mine">我的</string>
+    <string name="home">home</string>
+    <string name="market">market</string>
+    <string name="legal_currency">Legalurrency</string>
+    <string name="coin_coin">coin2coin</string>
+    <string name="mine">mine</string>
 
     <string-array name="tabTexts">
         <item>@string/home</item>

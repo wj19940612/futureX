@@ -74,12 +74,11 @@
         android:gravity="center"
         android:paddingLeft="11dp"
         android:paddingRight="11dp"
-        android:text="一键划转"
         android:textColor="@color/white"
         android:textSize="12sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/propertyAmount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/propertyAmount"/>
+        app:layout_constraintTop_toTopOf="@+id/propertyAmount"
+        tools:text="@string/transfer"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -48,6 +48,17 @@
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/googleAuthenticatorSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_pressed_f5"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/google_authenticator_settings"
+        app:rowTextColor="@color/text22"
+        app:rowTextSize="16sp"/>
+
+    <com.songbai.futurex.view.IconTextRow
         android:id="@+id/gesturePwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

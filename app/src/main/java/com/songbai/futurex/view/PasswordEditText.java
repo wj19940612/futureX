@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Selection;
@@ -26,6 +27,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.utils.RegularExpUtils;
+import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.inputfilter.PasswordInputFilter;
 
 import java.lang.reflect.Field;
@@ -45,6 +48,18 @@ public class PasswordEditText extends LinearLayout {
     private Paint mPaint;
     private float mBottomLineHeight;
     private int mMaxCharNum;
+    private boolean mShowPsdStrength;
+    private ImageView mPwdStrength;
+
+    private OnPwdStrengthChangeListener mOnPwdStrengthChangeListener;
+    private int mPsdStrengthMinLength;
+
+    enum PsdStrength {
+        NONE,
+        WEAK,
+        MID,
+        STRONG
+    }
 
     public PasswordEditText(Context context) {
         super(context);
@@ -66,6 +81,8 @@ public class PasswordEditText extends LinearLayout {
         mHasBottomSplitLine = typedArray.getBoolean(R.styleable.PasswordEditText_hasBottomSplitLine, false);
         mSplitLineColor = typedArray.getColorStateList(R.styleable.PasswordEditText_splitLineColor);
         mMaxCharNum = typedArray.getInt(R.styleable.PasswordEditText_maxCharNum, Integer.MAX_VALUE);
+        mShowPsdStrength = typedArray.getBoolean(R.styleable.PasswordEditText_showPsdStrength, false);
+        mPsdStrengthMinLength = typedArray.getInt(R.styleable.PasswordEditText_psdStrengthMinLength, 8);
 
         mBottomLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_LINE_HEIGHT,
                 getResources().getDisplayMetrics());
@@ -88,6 +105,11 @@ public class PasswordEditText extends LinearLayout {
         mPassword = initPasswordEditText();
         setHint(mTextHint);
 
+        mPwdStrength = new ImageView(getContext());
+        mPwdStrength.setVisibility(mShowPsdStrength ? VISIBLE : GONE);
+        if (mShowPsdStrength) {
+            mPassword.addTextChangedListener(psdWatcher);
+        }
         mShowPassword = new ImageView(getContext());
         mShowPassword.setImageResource(R.drawable.btn_show_password);
         mShowPassword.setOnClickListener(new OnClickListener() {
@@ -100,6 +122,7 @@ public class PasswordEditText extends LinearLayout {
         LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
         addView(mPassword, params);
+        addView(mPwdStrength);
         addView(mShowPassword);
     }
 
@@ -175,6 +198,78 @@ public class PasswordEditText extends LinearLayout {
             e.printStackTrace();
         }
         return editText;
+    }
+
+    private PsdStrength mCurPsdStrength;
+
+    private ValidationWatcher psdWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            PsdStrength psdStrength = getPasswordStrength();
+            if (mOnPwdStrengthChangeListener != null) {
+                mOnPwdStrengthChangeListener.onPwdStrengthChange(psdStrength);
+            }
+            if (mCurPsdStrength != psdStrength) {
+                mCurPsdStrength = psdStrength;
+                if (!mShowPsdStrength || mCurPsdStrength == PsdStrength.NONE) {
+                    mPwdStrength.setVisibility(View.GONE);
+                } else {
+                    mPwdStrength.setVisibility(View.VISIBLE);
+                }
+                updatePsdStrengthView();
+            }
+        }
+    };
+
+    private void updatePsdStrengthView() {
+        switch (mCurPsdStrength) {
+            case STRONG:
+                mPwdStrength.setImageResource(R.drawable.img_psd_security_strong);
+                break;
+            case MID:
+                mPwdStrength.setImageResource(R.drawable.img_psd_security_mid);
+                break;
+            case WEAK:
+                mPwdStrength.setImageResource(R.drawable.img_psd_security_weak);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private PsdStrength getPasswordStrength() {
+        String password = getPassword();
+        if (password.length() < mPsdStrengthMinLength) {
+            return PsdStrength.NONE;
+        }
+
+        if (RegularExpUtils.isWeakPassword(password)) {
+            return PsdStrength.WEAK;
+        }
+
+        if (RegularExpUtils.isMiddlePassword(password)) {
+            return PsdStrength.MID;
+        }
+
+        if (RegularExpUtils.isStrongPassword(password)) {
+            return PsdStrength.STRONG;
+        }
+
+        return PsdStrength.NONE;
+    }
+
+    public interface OnPwdStrengthChangeListener {
+        void onPwdStrengthChange(PsdStrength psdStrength);
+    }
+
+    public void setOnPwdStrengthChangeListener(OnPwdStrengthChangeListener onPwdStrengthChangeListener) {
+        mOnPwdStrengthChangeListener = onPwdStrengthChangeListener;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mPassword.removeTextChangedListener(psdWatcher);
     }
 
     @Override

@@ -15,15 +15,17 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.mine.FundsTransferFragment;
 import com.songbai.futurex.fragment.mine.PropertyListFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -42,12 +44,17 @@ public class MyPropertyActivity extends BaseActivity {
     ViewPager mPropertyCardPager;
     @BindView(R.id.propertyListPager)
     ViewPager mPropertyListPager;
+    @BindView(R.id.indicatorContiner)
+    LinearLayout mIndicatorContiner;
     @BindView(R.id.indicator)
     View mIndicator;
     private Unbinder mBind;
     float mPagerTranslationX;
     private int mCardPagePadding;
     private PropertyCardAdapter mPropertyCardAdapter;
+    int size = 3;
+    private int mScrollWidth;
+    private String[] mAccountAmount = new String[3];
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,13 +62,23 @@ public class MyPropertyActivity extends BaseActivity {
         setContentView(R.layout.activity_my_property);
         mBind = ButterKnife.bind(this);
         mPagerTranslationX = Display.dp2Px(20, getResources());
+        mIndicatorContiner.post(new Runnable() {
+            @Override
+            public void run() {
+                int measuredWidth = mIndicatorContiner.getMeasuredWidth();
+                mScrollWidth = (int) (measuredWidth / size + 0.5);
+                ViewGroup.LayoutParams layoutParams = mIndicator.getLayoutParams();
+                layoutParams.width = mScrollWidth;
+            }
+        });
         mPropertyCardAdapter = new PropertyCardAdapter();
+        mPropertyCardAdapter.setData(mAccountAmount);
+        mPropertyCardPager.setOffscreenPageLimit(2);
         mPropertyCardPager.setAdapter(mPropertyCardAdapter);
         mPropertyCardPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.e("wtf", "position=" + position + ",positionOffset=" + positionOffset);
-                mPropertyCardPager.setTranslationX(-mPagerTranslationX * (1 - 2 * (position + positionOffset)));
+                setCardPagerTranslationX(position, positionOffset);
                 mPropertyListPager.scrollTo((int) ((position + positionOffset) * mPropertyListPager.getMeasuredWidth()), 0);
                 mIndicator.setTranslationX(mIndicator.getMeasuredWidth() * (position + positionOffset));
             }
@@ -79,11 +96,12 @@ public class MyPropertyActivity extends BaseActivity {
         mCardPagePadding = (int) Display.dp2Px(12, getResources());
         mPropertyCardPager.setPageMargin(mCardPagePadding);
         mPropertyListPager.setAdapter(new PropertyListAdapter(getSupportFragmentManager()));
+        mPropertyListPager.setOffscreenPageLimit(2);
         mPropertyListPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 mPropertyCardPager.scrollTo((int) ((position + positionOffset) * (mPropertyCardPager.getMeasuredWidth() + mCardPagePadding)), 0);
-                mPropertyCardPager.setTranslationX(-mPagerTranslationX * (1 - 2 * (position + positionOffset)));
+                setCardPagerTranslationX(position, positionOffset);
                 mIndicator.setTranslationX(mIndicator.getMeasuredWidth() * (position + positionOffset));
             }
 
@@ -97,6 +115,16 @@ public class MyPropertyActivity extends BaseActivity {
             }
         });
         findCommissionOfSubordinate();
+    }
+
+    private void setCardPagerTranslationX(int position, float positionOffset) {
+        if (position <= 1) {
+            mPropertyCardPager.setTranslationX(-mPagerTranslationX * (1 - (position + positionOffset)));
+        } else if (position >= size - 2) {
+            mPropertyCardPager.setTranslationX(mPagerTranslationX * (position + positionOffset - size + 2));
+        } else {
+            mPropertyCardPager.setTranslationX(0);
+        }
     }
 
     private void findCommissionOfSubordinate() {
@@ -122,8 +150,8 @@ public class MyPropertyActivity extends BaseActivity {
         mBind.unbind();
     }
 
-    public void setAccountAmount(String balance) {
-        mPropertyCardAdapter.setAccountList(balance);
+    public void setAccountAmount(int position, String balance) {
+        mAccountAmount[position] = balance;
         mPropertyCardAdapter.notifyDataSetChanged();
     }
 
@@ -138,11 +166,11 @@ public class MyPropertyActivity extends BaseActivity {
         TextView mInviteNum;
         @BindView(R.id.transfer)
         TextView mTransfer;
-        private String mBalance;
+        private String[] mData;
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -159,25 +187,31 @@ public class MyPropertyActivity extends BaseActivity {
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            Context context = container.getContext();
+            final Context context = container.getContext();
             View view = LayoutInflater.from(context).inflate(R.layout.row_account_property, container, false);
             ButterKnife.bind(this, view);
+            if (!TextUtils.isEmpty(mData[position])) {
+                mPropertyAmount.setText(mData[position]);
+            }
             switch (position) {
                 case 0:
-                    view.setBackgroundResource(R.drawable.property_bg_blue);
-                    mAccountType.setText(R.string.personal_account);
+                    view.setBackgroundResource(R.drawable.property_bg_purple);
+                    mAccountType.setText(R.string.coin_coin_account);
                     mTotalPropertyType.setText(R.string.total_property_equivalent);
-                    if (!TextUtils.isEmpty(mBalance)) {
-                        mPropertyAmount.setText(mBalance);
-                    }
+                    mTransfer.setText(R.string.transfer);
                     mInviteNum.setVisibility(View.GONE);
-                    mTransfer.setVisibility(View.GONE);
                     break;
                 case 1:
+                    view.setBackgroundResource(R.drawable.property_bg_blue);
+                    mAccountType.setText(R.string.legal_currency_account);
+                    mTotalPropertyType.setText(R.string.total_property_equivalent);
+                    mTransfer.setText(R.string.transfer);
+                    mInviteNum.setVisibility(View.GONE);
+                    break;
+                case 2:
                     view.setBackgroundResource(R.drawable.property_bg_green);
                     mAccountType.setText(R.string.promoted_account);
                     mTotalPropertyType.setText(R.string.promoted_property_equivalent);
-                    mPropertyAmount.setText("0.13429464");
                     int num = 189;
                     String string = context.getString(R.string.invite_num_x, num);
                     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(string);
@@ -186,11 +220,17 @@ public class MyPropertyActivity extends BaseActivity {
                     spannableStringBuilder.setSpan(new AbsoluteSizeSpan(11, true),
                             0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mInviteNum.setText(spannableStringBuilder);
+                    mTransfer.setText(R.string.fast_transfer);
                     mInviteNum.setVisibility(View.VISIBLE);
-                    mTransfer.setVisibility(View.VISIBLE);
                     break;
                 default:
             }
+            mTransfer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UniqueActivity.launcher(context, FundsTransferFragment.class).execute();
+                }
+            });
             container.addView(view);
             return view;
         }
@@ -200,8 +240,8 @@ public class MyPropertyActivity extends BaseActivity {
             container.removeView((View) object);
         }
 
-        void setAccountList(String balance) {
-            mBalance = balance;
+        public void setData(String[] data) {
+            mData = data;
         }
     }
 
@@ -217,7 +257,7 @@ public class MyPropertyActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 }

@@ -30,6 +30,15 @@ public class Apic {
     }
 
     /**
+     * /api/user/country/lang.do
+     * GET
+     * 查询系统所有的语言
+     */
+    public static Api getSupportLang() {
+        return Api.get("/api/user/country/lang.do");
+    }
+
+    /**
      * /user/msg/count
      * GET
      * 消息未读数量
@@ -121,13 +130,23 @@ public class Apic {
      * POST
      * 设置、资金密码--薛松
      */
-    public static Api setDrawPass(String drawPass, String affirmPass, String msgCode, String type) {
+    public static Api setDrawPass(String drawPass, String affirmPass, String msgCode, String type, String googleCode) {
         return Api.post("/api/user/userSafe/setDrawPass.do",
                 new ReqParams()
                         .put("phone", drawPass)
                         .put("phoneMsgCode", affirmPass)
                         .put("msgCode", msgCode)
-                        .put("type", type));
+                        .put("type", type)
+                        .put("googleCode", googleCode));
+    }
+
+    /**
+     * /api/user/userSafe/needGoogle.do
+     * POST
+     * 是否需要google--薛松
+     */
+    public static Api needGoogle(String type) {
+        return Api.post("/api/user/userSafe/needGoogle.do", new ReqParams().put("type", type));
     }
 
     /**
@@ -149,6 +168,29 @@ public class Apic {
      */
     public static Api createGoogleKey() {
         return Api.post("/api/user/userSafe/createGoogleKey.do");
+    }
+
+    /**
+     * /api/user/upload/image.do
+     * POST
+     * 上传图片-单个图片
+     */
+
+    public static Api uploadImage(String picture) {
+        return Api.post("/api/user/upload/image.do",
+                new ReqParams()
+                        .put("picture", picture));
+    }
+
+    /**
+     * /api/user/upload/images.do
+     * POST
+     * 上传图片-多个图片
+     */
+    public static Api uploadImages(String picture) {
+        return Api.post("/api/user/upload/images.do",
+                new ReqParams()
+                        .put("picture", picture));
     }
 
     /**

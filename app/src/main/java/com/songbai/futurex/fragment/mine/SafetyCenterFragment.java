@@ -56,10 +56,17 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
 
     private void isDrawPass() {
         Apic.isDrawPass()
-                .callback(new Callback<Resp<Object>>() {
+                .callback(new Callback<Resp>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
+                    protected void onRespSuccess(Resp resp) {
 
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.Code.CASH_PWD_NONE) {
+                            mSetCashPwd.setSubText(R.string.not_set);
+                        }
                     }
                 })
                 .fire();
@@ -71,7 +78,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.setCashPwd, R.id.changeLoginPwd, R.id.googleAuthenticator, R.id.gesturePwd})
+    @OnClick({R.id.setCashPwd, R.id.changeLoginPwd, R.id.googleAuthenticator, R.id.googleAuthenticatorSettings, R.id.gesturePwd})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.setCashPwd:
@@ -81,6 +88,9 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
                 UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();
                 break;
             case R.id.googleAuthenticator:
+                UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
+                break;
+            case R.id.googleAuthenticatorSettings:
                 UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
                 break;
             case R.id.gesturePwd:

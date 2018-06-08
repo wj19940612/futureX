@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.ValidationWatcher;
+import com.songbai.futurex.utils.image.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -49,6 +54,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
     private static final int MAX_IMAGE_SIZE = 4;
     private ArrayList<String> mImages = new ArrayList<>();
     private FeedbackPicAdapter mPicAdapter;
+    private String mContent;
 
     @Nullable
     @Override
@@ -60,7 +66,6 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
     }
 
     @Override
@@ -108,13 +113,35 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
                 }).show(getChildFragmentManager());
     }
 
-    // TODO: 2018/5/31 调试接口
-    public void addFeedback(String content, String contactInfo, String feedbackPic) {
+    public void uploadImages(String data) {
+        Apic.uploadImages(data)
+                .callback(new Callback<Resp<ArrayList<String>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<ArrayList<String>> resp) {
+                        Log.e("wtf", new Gson().toJson(resp.getData()));
+                        addFeedback(mContent, new Gson().toJson(resp.getData()));
+                    }
+                })
+                .fire();
+    }
+
+    private void restView() {
+        mEditText.setText(null);
+        mImages.clear();
+        mPicAdapter.notifyDataSetChanged();
+    }
+
+    public void addFeedback(String content, String feedbackPic) {
+        LocalUser user = LocalUser.getUser();
+        String contactInfo = "";
+        if (user.isLogin()) {
+            contactInfo = user.getLastAct();
+        }
         Apic.addFeedback(content, contactInfo, feedbackPic)
                 .callback(new Callback<Object>() {
                     @Override
                     protected void onRespSuccess(Object resp) {
-                        mEditText.setText(null);
+                        restView();
                     }
                 }).fire();
     }
@@ -127,9 +154,19 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
 
     @OnClick(R.id.submit)
     public void onViewClicked() {
-        String content = mEditText.getText().toString();
-        if (!TextUtils.isEmpty(content)) {
-            addFeedback(content, null, null);
+        mContent = mEditText.getText().toString();
+        if (!TextUtils.isEmpty(mContent)) {
+            if (mImages.size() > 0) {
+                StringBuilder data = new StringBuilder();
+                for (String image : mImages) {
+                    data.append(ImageUtils.compressImageToBase64(image));
+                    data.append(";");
+                }
+                data.substring(0, data.length() - 1);
+                uploadImages(data.toString());
+                return;
+            }
+            addFeedback(mContent, null);
         }
     }
 
@@ -138,7 +175,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         private ArrayList<String> mList;
         private static OnImageClickListener mOnImageClickListener;
 
-        public FeedbackPicAdapter(Context context) {
+        FeedbackPicAdapter(Context context) {
             mContext = context;
         }
 
@@ -171,7 +208,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
             mList = list;
         }
 
-        public void setOnImageClickListener(OnImageClickListener onImageClickListener) {
+        void setOnImageClickListener(OnImageClickListener onImageClickListener) {
             mOnImageClickListener = onImageClickListener;
         }
 

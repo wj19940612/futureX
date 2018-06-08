@@ -11,6 +11,7 @@ public class Preference {
     interface Key {
         String USER_JSON = "userJson";
         String ACCOUNT_TYPE = "account_type";
+        String LOCALE_JSON = "locale_json";
     }
 
     private static Preference sInstance;
@@ -58,6 +59,14 @@ public class Preference {
 
     public String getUserJson() {
         return mPrefs.getString(Key.USER_JSON, null);
+    }
+
+    public void setLocalJson(String localJson) {
+        apply(Key.LOCALE_JSON, localJson);
+    }
+
+    public String getLocalJson() {
+        return mPrefs.getString(Key.LOCALE_JSON, null);
     }
 
     public int getUserAccountType(String phone) {
