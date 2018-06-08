@@ -76,10 +76,11 @@
     </declare-styleable>
 
     <!--RadioButtonHeader-->
-    <declare-styleable name="RadioButtonHeader">
+    <declare-styleable name="RadioHeader">
         <attr name="tabArray" format="reference"/>
-        <attr name="tabMargin" format="dimension|reference"/>
+        <attr name="tabInterval" format="dimension|reference"/>
         <attr name="pointColor" format="color|reference"/>
+        <attr name="hasMore" format="boolean"/>
     </declare-styleable>
 
     <!--密码输入控件-->
