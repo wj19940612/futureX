@@ -14,6 +14,7 @@
         app:titleText="@string/select_pay_type"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/bankCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -23,6 +24,7 @@
         app:rowText="@string/bank_card"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/aliPay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
@@ -31,6 +33,7 @@
         app:rowText="@string/alipay"/>
 
     <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/wechatPay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"

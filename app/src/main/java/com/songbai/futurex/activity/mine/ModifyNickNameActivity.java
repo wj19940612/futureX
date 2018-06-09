@@ -16,6 +16,8 @@ import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.inputfilter.EmojiFilter;
@@ -56,11 +58,6 @@ public class ModifyNickNameActivity extends BaseActivity {
             if (mSubmitNickName.isEnabled() != submitBenEnable) {
                 mUserNameInput.setSelection(s.length());
                 mSubmitNickName.setEnabled(submitBenEnable);
-//                if (submitBenEnable) {
-//                    mClear.setVisibility(View.VISIBLE);
-//                } else {
-//                    mClear.setVisibility(View.GONE);
-//                }
             }
         }
     };
@@ -118,12 +115,13 @@ public class ModifyNickNameActivity extends BaseActivity {
             case R.id.submitNickName:
                 submitNickName();
                 break;
+            default:
         }
     }
 
     private void submitNickName() {
         final String nickName = mUserNameInput.getText().toString();
-        Apic.submitNickName(nickName)
+        Apic.updateNickName(nickName)
                 .tag(TAG)
                 .indeterminate(this)
                 .callback(new Callback<Resp<Object>>() {
@@ -131,10 +129,10 @@ public class ModifyNickNameActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(R.string.update_success);
-//                        UserInfo userInfo = LocalUser.getUser().getUserInfo();
-//                        userInfo.setUserName(nickName);
-//                        setResult(RESULT_OK);
-//                        finish();
+                        UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                        userInfo.setUserName(nickName);
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 })
                 .fire();

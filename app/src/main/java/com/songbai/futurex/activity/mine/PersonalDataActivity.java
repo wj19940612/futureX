@@ -1,25 +1,32 @@
 package com.songbai.futurex.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.fragment.mine.BindMailFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
 import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Display;
+import com.songbai.futurex.utils.ImagePicker;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -49,6 +56,8 @@ public class PersonalDataActivity extends BaseActivity {
     @BindView(R.id.seniorCertification)
     IconTextRow mSeniorCertification;
     private Unbinder mBind;
+    private boolean mHasPhone;
+    private boolean mHasEmail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,13 +80,57 @@ public class PersonalDataActivity extends BaseActivity {
                     .into(mUserHeadImage);
             mNickName.setSubText(userInfo.getUserName());
             mRealName.setSubText(userInfo.getRealName());
-            mPhoneCertification.setSubText(userInfo.getUserPhone());
+            String userPhone = userInfo.getUserPhone();
+            mHasPhone = !TextUtils.isEmpty(userPhone);
+            if (mHasPhone) {
+                mPhoneCertification.setSubText(userPhone);
+            } else {
+                setIconTextRowSubDrawable(mPhoneCertification, R.drawable.ic_common_unautherized);
+            }
+            String userEmail = userInfo.getUserEmail();
+            mHasEmail = !TextUtils.isEmpty(userEmail);
+            if (mHasEmail) {
+                mMailCertification.setSubText(userEmail);
+            } else {
+                setIconTextRowSubDrawable(mMailCertification, R.drawable.ic_common_unautherized);
+            }
+            // 认证状态:0未完成任何认证,1初级认证,2高级认证成功,3高级认证审核中,4高级认证失败
+            int authenticationStatus = userInfo.getAuthenticationStatus();
+            switch (authenticationStatus) {
+                case 0:
+                    setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_unautherized);
+                    setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_unautherized);
+                    break;
+                case 1:
+                    setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
+                    setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_unautherized);
+                    break;
+                case 2:
+                    setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
+                    setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_autherized);
+                    break;
+                case 3:
+                    setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
+                    setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_inreview);
+                    mSeniorCertification.setSubText(R.string.certificating);
+                    break;
+                case 4:
+                    setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
+                    setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_unautherized);
+                    break;
+                default:
+            }
         }
     }
 
     private void setIconTextRowSubDrawablePadding(IconTextRow iconTextRow) {
         TextView subTextView = iconTextRow.getSubTextView();
         subTextView.setCompoundDrawablePadding((int) Display.dp2Px(9, getResources()));
+    }
+
+    private void setIconTextRowSubDrawable(IconTextRow iconTextRow, @DrawableRes int id) {
+        TextView subTextView = iconTextRow.getSubTextView();
+        subTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, id, 0);
     }
 
     @Override
@@ -92,9 +145,18 @@ public class PersonalDataActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
-                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
-                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
-                uploadUserImageDialogFragment.show(getSupportFragmentManager());
+//                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+//                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
+//                uploadUserImageDialogFragment.show(getSupportFragmentManager());
+                ImagePicker
+                        .create(this)
+                        .openGallery()
+                        .maxSelectNum(1)
+                        .forResult();
+//                ImagePicker
+//                        .create(this)
+//                        .openCamera()
+//                        .forResult();
                 break;
             case R.id.nickName:
                 Launcher.with(this, ModifyNickNameActivity.class).execute();
@@ -105,7 +167,7 @@ public class PersonalDataActivity extends BaseActivity {
                 UniqueActivity.launcher(this, BindPhoneFragment.class).execute();
                 break;
             case R.id.mailCertification:
-                UniqueActivity.launcher(this, BindMailFragment.class).execute();
+                UniqueActivity.launcher(this, BindMailFragment.class).putExtra(ExtraKeys.HAS_BIND_EMAIL, mHasEmail).execute();
                 break;
             case R.id.primaryCertification:
                 UniqueActivity.launcher(this, PrimaryCertificationFragment.class).execute();
@@ -120,6 +182,38 @@ public class PersonalDataActivity extends BaseActivity {
                 UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class).execute();
                 break;
             default:
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ImagePicker.IMAGE_TYPE_OPEN_CUSTOM_GALLERY) {
+            if (data != null) {
+                String stringExtra = data.getStringExtra(ExtraKeys.IMAGE_PATH);
+                String image = ImageUtils.compressImageToBase64(stringExtra, this);
+                Apic.submitPortraitPath(image)
+                        .callback(new Callback<Object>() {
+                            @Override
+                            protected void onRespSuccess(Object resp) {
+
+                            }
+                        })
+                        .fire();
+            }
+        } else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
+            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
+            if (!TextUtils.isEmpty(galleryBitmapPath)) {
+                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
+                Apic.submitPortraitPath(image)
+                        .callback(new Callback<Object>() {
+                            @Override
+                            protected void onRespSuccess(Object resp) {
+
+                            }
+                        })
+                        .fire();
+            }
         }
     }
 }

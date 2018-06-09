@@ -89,6 +89,8 @@
         <attr name="hasBottomSplitLine"/>
         <attr name="splitLineColor"/>
         <attr name="maxCharNum" format="integer"/>
+        <attr name="showPsdStrength" format="boolean"/>
+        <attr name="psdStrengthMinLength" format="string"/>
         <attr name="splitLineHeight" format="dimension|reference"/>
     </declare-styleable>
 

@@ -35,14 +35,16 @@
             android:id="@+id/password"
             android:layout_width="0dp"
             android:layout_height="43dp"
-            android:background="@drawable/bg_white_has_under_line"
             android:minHeight="50dp"
             android:paddingLeft="12dp"
             android:paddingRight="20dp"
+            app:hasBottomSplitLine="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9"
             app:maxCharNum="50"
+            app:showPsdStrength="true"
+            app:splitLineColor="@color/bgF5"
             app:textHint="@string/please_input_cash_pwd"/>
 
         <TextView
@@ -60,18 +62,19 @@
             android:id="@+id/confirmPassword"
             android:layout_width="0dp"
             android:layout_height="43dp"
-            android:background="@drawable/bg_white_has_under_line"
             android:minHeight="50dp"
             android:paddingLeft="12dp"
             android:paddingRight="20dp"
+            app:hasBottomSplitLine="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView11"
             app:maxCharNum="50"
+            app:splitLineColor="@color/bgF5"
             app:textHint="@string/confirm_set_cash_pwd"/>
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/smsAuthCodeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -89,25 +92,24 @@
             android:hint="@string/please_input_sms_auth_code"
             android:inputType="number"
             android:minHeight="50dp"
-            app:layout_constraintEnd_toStartOf="@+id/sendSmsAuthCode"
+            app:layout_constraintEnd_toStartOf="@+id/sendAuthCode"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView12"/>
+            app:layout_constraintTop_toBottomOf="@+id/smsAuthCodeText"/>
 
         <TextView
-            android:id="@+id/sendSmsAuthCode"
+            android:id="@+id/sendAuthCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:text="@string/send_auth_code"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/primary_disabled_gray"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/smsAuthCode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/smsAuthCode"/>
 
-
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/googleAuthCodeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/google_authenticator_code"
@@ -117,6 +119,7 @@
             app:layout_constraintTop_toBottomOf="@id/smsAuthCode"/>
 
         <EditText
+            android:id="@+id/googleAuthCode"
             style="@style/SingleEditText"
             android:layout_width="0dp"
             android:layout_height="43dp"
@@ -125,7 +128,7 @@
             android:minHeight="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13"/>
+            app:layout_constraintTop_toBottomOf="@+id/googleAuthCodeText"/>
     </android.support.constraint.ConstraintLayout>
 
     <TextView
@@ -136,7 +139,7 @@
         android:layout_marginTop="6dp"
         android:textColor="@color/text66"
         android:textSize="12sp"
-        android:visibility="gone"
+        android:visibility="invisible"
         tools:text="@string/send_sms_auth_code_phone_hint_x"/>
 
     <TextView

@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
@@ -80,7 +81,7 @@
         app:rowText="@string/real_name"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"
+        app:subText="@string/please_set"
         app:subTextColor="@color/text99"
         app:subTextSize="14sp"/>
 
@@ -96,9 +97,9 @@
         app:rowText="@string/phone_certification"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"
         app:subTextColor="@color/text99"
-        app:subTextSize="14sp"/>
+        app:subTextSize="14sp"
+        tools:subText="@string/please_set"/>
 
     <com.songbai.futurex.view.IconTextRow
         android:id="@+id/mailCertification"
@@ -111,10 +112,9 @@
         app:rowText="@string/mail_certification"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"
         app:subTextColor="@color/text99"
-        app:subTextRightDrawable="@drawable/ic_common_unautherized"
-        app:subTextSize="14sp"/>
+        app:subTextSize="14sp"
+        tools:subTextRightDrawable="@drawable/ic_common_unautherized"/>
 
     <com.songbai.futurex.view.IconTextRow
         android:id="@+id/primaryCertification"
@@ -127,7 +127,6 @@
         app:rowText="@string/primary_certification"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
-        app:subText="@string/please_select"
         app:subTextColor="@color/text99"
         app:subTextSize="14sp"/>
 
@@ -140,8 +139,7 @@
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/senior_certification"
         app:rowTextColor="@color/text22"
-        app:rowTextSize="16sp"
-        app:subText="@string/please_select"/>
+        app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
         android:id="@+id/legalCurrencyPayManagement"

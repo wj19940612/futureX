@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
@@ -45,15 +46,16 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/bankArea"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawableRight="@drawable/ic_invitation_angle_down"
+            android:drawableRight="@drawable/ic_common_pop_arrow_down"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:paddingRight="12dp"
-            android:text="中国台湾"
             android:textColor="@color/text22"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            tools:text="中国台湾"/>
     </LinearLayout>
 
     <LinearLayout
@@ -69,7 +71,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -78,15 +80,16 @@
                 android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/mainlandBankName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawableRight="@drawable/ic_invitation_angle_down"
+                android:drawableRight="@drawable/ic_common_pop_arrow_down"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
+                android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:text="中国台湾"
                 android:textColor="@color/text22"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                tools:text="中国台湾"/>
         </LinearLayout>
 
         <LinearLayout
@@ -96,7 +99,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -105,13 +108,14 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/mainlandBankBranch"
                 style="@style/SingleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_account_sub_bank_name"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"/>
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -120,7 +124,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -129,6 +133,7 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/mainlandCardNumber"
                 style="@style/SingleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -153,7 +158,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -162,13 +167,14 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/twBankName"
                 style="@style/SingleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_account_sub_bank_name"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"/>
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -177,7 +183,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -186,13 +192,14 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/bankCode"
                 style="@style/SingleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_bank_code"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"/>
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -201,7 +208,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -210,13 +217,14 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/twBankBranch"
                 style="@style/SingleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_sub_bank_name"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"/>
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -226,7 +234,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -235,13 +243,14 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/twCardNumber"
                 style="@style/SingleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_bank_card_account"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"/>
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -250,7 +259,7 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
@@ -259,13 +268,14 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/realName"
                 style="@style/SingleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_bank_card_account_name"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"/>
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
         </LinearLayout>
 
     </LinearLayout>

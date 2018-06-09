@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgF5"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/selectHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:adjustViewBounds="true"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="@string/please_select_portrait"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white_pressed_f5"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/take_phone_cancel"
+        android:textColor="@color/text66"
+        android:textSize="16sp"/>
+</LinearLayout>

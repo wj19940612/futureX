@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -45,6 +47,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(new LegalCurrencyPayAdapter());
     }
@@ -57,10 +60,11 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
     @OnClick(R.id.addGathering)
     public void onViewClicked() {
-        UniqueActivity.launcher(this, AddPayFragment.class).execute();
+        UniqueActivity.launcher(this, SelectPayTypeFragment.class).execute();
     }
 
     static class LegalCurrencyPayAdapter extends RecyclerView.Adapter {
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,7 +74,9 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+            if (holder instanceof LegalCurrencyHolder) {
+                ((LegalCurrencyHolder) holder).bindData();
+            }
         }
 
         @Override
@@ -79,8 +85,22 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         }
 
         static class LegalCurrencyHolder extends RecyclerView.ViewHolder {
-            public LegalCurrencyHolder(View view) {
+            @BindView(R.id.icon)
+            ImageView mIcon;
+            @BindView(R.id.accountName)
+            TextView mAccountName;
+            @BindView(R.id.account)
+            TextView mAccount;
+            @BindView(R.id.delete)
+            TextView mDelete;
+
+            LegalCurrencyHolder(View view) {
                 super(view);
+                ButterKnife.bind(this, view);
+            }
+
+            void bindData() {
+
             }
         }
     }

@@ -3,7 +3,6 @@ package com.songbai.futurex.fragment.mine;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,16 +13,12 @@ import android.widget.TextView;
 
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.activity.mine.DrawCoinActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
-import com.songbai.futurex.activity.mine.PropertyFlowActivity;
 import com.songbai.futurex.fragment.BaseFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountList;
-import com.songbai.futurex.utils.Launcher;
 
 import java.util.List;
 
@@ -45,14 +40,6 @@ public class PropertyListFragment extends BaseFragment {
     TextView mHideZero;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.rechargeCoin)
-    TextView mRechargeCoin;
-    @BindView(R.id.drawCoin)
-    TextView mDrawCoin;
-    @BindView(R.id.propertyFlow)
-    TextView mPropertyFlow;
-    @BindView(R.id.propertyOperateGroup)
-    ConstraintLayout mPropertyOperateGroup;
     private Unbinder mBind;
     private int mPropertyType;
     private PropertyListAdapter mAdapter;
@@ -85,23 +72,12 @@ public class PropertyListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        switch (mPropertyType) {
-            case 0:
-                mPropertyOperateGroup.setVisibility(View.VISIBLE);
-                mHideZero.setVisibility(View.VISIBLE);
-                break;
-            case 1:
-                mPropertyOperateGroup.setVisibility(View.GONE);
-                mHideZero.setVisibility(View.GONE);
-                break;
-            default:
-        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyListAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        if (mPropertyType == 0) {
+        if (mPropertyType == 1) {
             accountList();
-        } else if (mPropertyType == 1) {
+        } else if (mPropertyType == 2) {
             userAccount();
         }
     }
@@ -112,18 +88,9 @@ public class PropertyListFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.rechargeCoin, R.id.drawCoin, R.id.propertyFlow, R.id.hideZero})
+    @OnClick({R.id.hideZero})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.rechargeCoin:
-                UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class).execute();
-                break;
-            case R.id.drawCoin:
-                Launcher.with(getContext(), DrawCoinActivity.class).execute();
-                break;
-            case R.id.propertyFlow:
-                Launcher.with(getContext(), PropertyFlowActivity.class).execute();
-                break;
             case R.id.hideZero:
                 break;
             default:
@@ -135,7 +102,7 @@ public class PropertyListFragment extends BaseFragment {
                 .callback(new Callback<Resp<AccountList>>() {
                     @Override
                     protected void onRespSuccess(Resp<AccountList> resp) {
-                        setAdapter(resp.getData());
+                        setAdapter(1,resp.getData());
                     }
                 })
                 .fire();
@@ -158,8 +125,8 @@ public class PropertyListFragment extends BaseFragment {
                 .fire();
     }
 
-    private void setAdapter(AccountList accountList) {
-        ((MyPropertyActivity) getActivity()).setAccountAmount(accountList.getBalance());
+    private void setAdapter(int postiton, AccountList accountList) {
+        ((MyPropertyActivity) getActivity()).setAccountAmount(postiton,accountList.getBalance());
         mAdapter.setList(accountList.getAccount());
         mAdapter.notifyDataSetChanged();
     }

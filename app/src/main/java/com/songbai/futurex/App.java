@@ -12,6 +12,9 @@ import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.service.PushIntentService;
 import com.songbai.futurex.service.PushService;
+import com.songbai.futurex.utils.LanguageUtils;
+
+import java.util.Locale;
 
 /**
  * Modified by john on 23/01/2018
@@ -36,9 +39,15 @@ public class App extends Application {
 
         //init getui sdk
         PushManager.getInstance().initialize(this, PushService.class);
-//        //init getui service
+        //init getui service
         PushManager.getInstance().registerPushIntentService(this, PushIntentService.class);
         processCaughtException();
+        setLanguage();
+    }
+
+    private void setLanguage() {
+        Locale locale = LanguageUtils.getCurrentLocale(this);
+        LanguageUtils.updateLocale(this, locale);
     }
 
     private void processCaughtException() {
