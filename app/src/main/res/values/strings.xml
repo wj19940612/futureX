@@ -300,4 +300,10 @@
         <item>ETH</item>
         <item>自选</item>
     </string-array>
+    <string name="main_area">主区</string>
+    <string name="creative_area">创新区</string>
+    <string name="new_currency_area">新币区</string>
+    <string name="no_currency_for_now">暂无币种</string>
+    <string name="here_will_show_your_optional">这里会展示您的自选币种</string>
+    <string name="add_optional">+添加自选</string>
 </resources>

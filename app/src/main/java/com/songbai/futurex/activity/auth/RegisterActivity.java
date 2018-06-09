@@ -515,7 +515,7 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    public static class AreaCodeAdapter extends RecyclerView.Adapter<AreaCodeAdapter.ViewHolder> {
+    static class AreaCodeAdapter extends RecyclerView.Adapter<AreaCodeAdapter.ViewHolder> {
 
         private List<AreaCode> mAreaCodeList;
         private OnRVItemClickListener mOnRVItemClickListener;

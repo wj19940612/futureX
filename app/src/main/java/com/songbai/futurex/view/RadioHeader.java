@@ -40,7 +40,7 @@ public class RadioHeader extends LinearLayout {
     private OnTabSelectedListener mOnTabSelectedListener;
 
     public interface OnTabSelectedListener {
-        void onTabSelected(int position);
+        void onTabSelected(int position, String content);
     }
 
     public void setOnTabSelectedListener(OnTabSelectedListener onTabSelectedListener) {
@@ -108,22 +108,25 @@ public class RadioHeader extends LinearLayout {
         }
 
         if (mTabArray.length > 0) {
+            mSelectedPosition = 0;
             getChildAt(0).setSelected(true);
         }
     }
 
     private void selectTab(int position) {
+        if (position == mSelectedPosition) return;
+
         for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).setSelected(false);
         }
         mSelectedPosition = position;
         getChildAt(mSelectedPosition).setSelected(true);
-        onTabSelected(mSelectedPosition);
+        onTabSelected(mSelectedPosition, mTabArray[mSelectedPosition]);
     }
 
-    private void onTabSelected(int position) {
+    private void onTabSelected(int position, CharSequence title) {
         if (mOnTabSelectedListener != null) {
-            mOnTabSelectedListener.onTabSelected(position);
+            mOnTabSelectedListener.onTabSelected(position, title.toString());
         }
     }
 
@@ -143,6 +146,21 @@ public class RadioHeader extends LinearLayout {
             mSparseIntArray.put(index, number);
             invalidate();
         }
+    }
+
+    public String getSelectTab() {
+        if (mTabArray != null && mTabArray.length > 0) {
+            return mTabArray[mSelectedPosition].toString();
+        }
+        return null;
+    }
+
+    public int getSelectedPosition() {
+        return mSelectedPosition;
+    }
+
+    public int getTabCount() {
+        return getChildCount();
     }
 
     @Override
