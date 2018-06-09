@@ -11,6 +11,8 @@ import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.clipimage.ClipImageLayout;
 
@@ -72,18 +74,18 @@ public class ClipHeadImageActivity extends BaseActivity {
 
     private void requestUserInfo() {
         // TODO: 2018/5/29
-//        Apic.requestUserInfo()
-//                .tag(TAG)
-//                .callback(new Callback2D<Resp<UserInfo>, UserInfo>() {
-//                    @Override
-//                    protected void onRespData(UserInfo data) {
-//                        LocalUser.getUser().setUserInfo(data);
+        Apic.findUserInfo()
+                .tag(TAG)
+                .callback(new Callback<Resp<UserInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        LocalUser.getUser().setUserInfo(resp.getData());
 //                        ToastUtil.show(R.string.modify_success);
-//                        setResult(RESULT_OK);
-//                        finish();
-//                    }
-//                })
-//                .fire();
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                })
+                .fire();
     }
 
 }

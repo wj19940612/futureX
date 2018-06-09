@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -50,6 +53,18 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
             }
         });
         mRecyclerView.setAdapter(adapter);
+        getDrawWalletAddrByCoinType();
+    }
+
+    private void getDrawWalletAddrByCoinType() {
+        Apic.getDrawWalletAddrByCoinType()
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+
+                    }
+                })
+                .fire();
     }
 
     @Override

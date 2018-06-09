@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".activity.mine.ClipHeadImageActivity">
 
-    <com.sbai.bcnews.view.clipimage.ClipImageLayout
+    <com.songbai.futurex.view.clipimage.ClipImageLayout
         android:id="@+id/clipImageLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"

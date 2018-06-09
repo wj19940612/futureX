@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="100dp"
+    android:layout_height="40dp"
+    android:gravity="center"
+    android:minHeight="40dp"
+    android:minWidth="100dp"
+    android:orientation="vertical"
+    android:textColor="@color/text22"
+    android:textSize="14sp"
+    tools:text="@string/cn_mainland"/>

@@ -23,7 +23,7 @@ public class LanguageUtils {
      * @param context context
      * @return locale
      */
-    public static Locale getuserlocale(Context context) {
+    public static Locale getUserLocale(Context context) {
         String localJson = Preference.get().getLocalJson();
         if (TextUtils.isEmpty(localJson)) {
             return getCurrentLocale(context);

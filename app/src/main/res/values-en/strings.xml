@@ -94,7 +94,7 @@
     <string name="bank_card">银行卡</string>
     <string name="alipay">支付宝</string>
     <string name="weichat">微信</string>
-    <string name="please_select">请设置</string>
+    <string name="please_set">请设置</string>
     <string name="not_set">未设置</string>
     <string name="set_nick">设置昵称</string>
     <string name="please_input_nick_name">请输入昵称</string>

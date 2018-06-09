@@ -54,4 +54,7 @@ public interface ExtraKeys {
 
     String REGISTER_DATA = "register_data";
     String FIND_PSD_DATA = "find_psd_data";
+
+    String HAS_BIND_EMAIL = "has_bind_email";
+    String IS_ALIPAY = "is_alipay";
 }

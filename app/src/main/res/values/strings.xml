@@ -43,7 +43,12 @@
     <string name="real_name">真实姓名</string>
     <string name="phone_certification">手机认证</string>
     <string name="mail_certification">邮箱认证</string>
+    <string name="certificating">认证中</string>
     <string name="primary_certification">初级认证</string>
+    <string name="pleas_select_credentials_type">请选择证件类型</string>
+    <string name="mainland_id_card">中国大陆身份证</string>
+    <string name="tw_id_card">中国台湾身份证</string>
+    <string name="passport">护照</string>
     <string name="type_of_certification">证件类型</string>
     <string name="certification_number">证件号码</string>
     <string name="please_input_real_name">请输入该证件的真实姓名</string>
@@ -64,6 +69,7 @@
         点击添加可查看示例，请提交您本人的身份材料照片。照片请勿进行PS处理！</string>
     <string name="legal_currency_pay_management">法币支付管理</string>
     <string name="legal_currency_pay">法币支付</string>
+    <string name="delete">删除</string>
     <string name="add_gathering_account">添加收款方式</string>
     <string name="add_ali_pay">添加支付宝</string>
     <string name="ali_pay_account">支付宝账号</string>
@@ -80,6 +86,8 @@
     <string name="please_input_account_sub_bank_name">请填写开户支行</string>
     <string name="please_input_bank_card_number">请填写银行卡号</string>
     <string name="draw_coin_address_management">提币地址管理</string>
+    <string name="cn_tw">中国台湾</string>
+    <string name="cn_mainland">中国大陆</string>
     <string name="bank_name">银行名称</string>
     <string name="please_input_bank_name">请填写银行名称</string>
     <string name="bank_code">银行代码</string>
@@ -94,7 +102,7 @@
     <string name="bank_card">银行卡</string>
     <string name="alipay">支付宝</string>
     <string name="weichat">微信</string>
-    <string name="please_select">请设置</string>
+    <string name="please_set">请设置</string>
     <string name="not_set">未设置</string>
     <string name="set_nick">设置昵称</string>
     <string name="please_input_nick_name">请输入昵称</string>
@@ -107,6 +115,8 @@
     <string name="mail_auth_code">邮箱验证码</string>
     <string name="resend">重新发送</string>
     <string name="confirm_bind">确认绑定</string>
+    <string name="confirm_unbind">确认解绑</string>
+    <string name="unbind_mail">解绑邮箱</string>
     <string name="bind_mail">绑定邮箱</string>
     <string name="please_input_mail">请输入邮箱</string>
     <string name="please_input_mail_auth_code">请输入邮箱验证码</string>
@@ -185,6 +195,9 @@
 
     <string name="draw_coin_address">提币地址</string>
     <string name="add_address">添加地址</string>
+    <string name="address">地址</string>
+    <string name="remark">备注</string>
+    <string name="input_or_peast_address">输入或粘贴地址</string>
     <string name="no_record">暂无记录</string>
 
     <string name="coin_coin_account">币币账户</string>

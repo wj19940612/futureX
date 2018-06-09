@@ -1,6 +1,7 @@
 package com.songbai.futurex.fragment.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -91,7 +92,10 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
         boolean changed = LanguageUtils.updateLocale(getContext(), locale);
         if (changed) {
             mLanguageAdapter.notifyDataSetChanged();
-            Launcher.with(getContext(), MainActivity.class).execute();
+            Launcher.with(getContext(), MainActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .execute();
         }
     }
 
@@ -147,7 +151,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
             }
 
             private void bindData(Context context, final SupportLang supportLang) {
-                Locale locale = LanguageUtils.getuserlocale(context);
+                Locale locale = LanguageUtils.getUserLocale(context);
                 boolean match;
                 String country = supportLang.getCountry();
                 if (TextUtils.isEmpty(country)) {
