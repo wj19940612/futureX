@@ -197,7 +197,7 @@
     <string name="add_address">添加地址</string>
     <string name="address">地址</string>
     <string name="remark">备注</string>
-    <string name="input_or_peast_address">输入或粘贴地址</string>
+    <string name="input_or_paste_address">输入或粘贴地址</string>
     <string name="no_record">暂无记录</string>
 
     <string name="coin_coin_account">币币账户</string>
@@ -225,7 +225,7 @@
     <string name="promoted_account">推广账户</string>
     <string name="search_property">搜索资产</string>
     <string name="available">可用</string>
-    <string name="input_or_paste_address">输入或长按粘贴地址</string>
+    <string name="input_or_long_press_paste_address">输入或长按粘贴地址</string>
     <string name="with_draw_amount_hint">最小提币数量 200 BTC</string>
     <string name="please_input_cash_pwd">请输入资金密码</string>
     <string name="amount">数量</string>
