@@ -48,8 +48,8 @@ public class MineFragment extends BaseFragment {
     ImageView mHeadPortrait;
     @BindView(R.id.userName)
     TextView mUserName;
-    @BindView(R.id.userPhone)
-    TextView mUserPhone;
+    @BindView(R.id.authenticationStatus)
+    ImageView mAuthenticationStatus;
     @BindView(R.id.userInfoGroup)
     LinearLayout mUserInfoGroup;
     @BindView(R.id.login)
@@ -102,14 +102,14 @@ public class MineFragment extends BaseFragment {
             GlideApp
                     .with(this)
                     .load(userInfo.getUserPortrait())
+                    .circleCrop()
                     .into(mHeadPortrait);
             mUserName.setText(userInfo.getUserName());
-            mUserPhone.setText(getString(R.string.phone_number_x, userInfo.getUserPhone()));
             int authenticationStatus = userInfo.getAuthenticationStatus();
             if (authenticationStatus == 1) {
-                mUserName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_certification_primary, 0);
+                mAuthenticationStatus.setImageResource(R.drawable.ic_certification_primary);
             } else if (authenticationStatus == 2) {
-                mUserName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_certification_senior, 0);
+                mAuthenticationStatus.setImageResource(R.drawable.ic_certification_senior);
             }
             mUserInfoGroup.setVisibility(View.VISIBLE);
             mLogin.setVisibility(View.GONE);

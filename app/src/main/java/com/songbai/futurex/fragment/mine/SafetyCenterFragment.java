@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.SetGesturePwdActivity;
@@ -35,6 +36,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.gesturePwd)
     IconTextRow mGesturePwd;
     private Unbinder mBind;
+    private boolean hasWithDrawPass;
 
     @Nullable
     @Override
@@ -59,12 +61,13 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
-
+                        hasWithDrawPass = true;
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == Resp.Code.CASH_PWD_NONE) {
+                            hasWithDrawPass = false;
                             mSetCashPwd.setSubText(R.string.not_set);
                         }
                     }
@@ -82,7 +85,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.setCashPwd:
-                UniqueActivity.launcher(this, CashPwdFragment.class).execute();
+                UniqueActivity.launcher(this, CashPwdFragment.class).putExtra(ExtraKeys.HAS_WITH_DRAW_PASS,hasWithDrawPass).execute();
                 break;
             case R.id.changeLoginPwd:
                 UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();

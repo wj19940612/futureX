@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
@@ -118,8 +116,13 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<ArrayList<String>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<String>> resp) {
-                        Log.e("wtf", new Gson().toJson(resp.getData()));
-                        addFeedback(mContent, new Gson().toJson(resp.getData()));
+                        StringBuilder builder = new StringBuilder();
+                        for (String url : resp.getData()) {
+                            builder.append(url);
+                            builder.append(",");
+                        }
+                        builder.substring(0, builder.length() - 1);
+                        addFeedback(mContent, builder.toString());
                     }
                 })
                 .fire();

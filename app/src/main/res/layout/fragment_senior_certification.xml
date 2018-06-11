@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
@@ -25,10 +26,10 @@
         app:rowTextColor="@color/text22"
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"
-        app:subText="身份证"
         app:subTextColor="@color/text99"
         app:subTextRightMargin="0dp"
-        app:subTextSize="15sp"/>
+        app:subTextSize="15sp"
+        tools:subText="身份证"/>
 
     <com.songbai.futurex.view.IconTextRow
         android:id="@+id/realName"
@@ -41,10 +42,10 @@
         app:rowTextColor="@color/text22"
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"
-        app:subText="张三"
         app:subTextColor="@color/text99"
         app:subTextRightMargin="0dp"
-        app:subTextSize="15sp"/>
+        app:subTextSize="15sp"
+        tools:subText="张三"/>
 
     <com.songbai.futurex.view.IconTextRow
         android:id="@+id/certificationNumber"

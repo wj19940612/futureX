@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,12 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.local.RealNameAuthData;
+import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.ItemSelectController;
 
@@ -30,6 +38,8 @@ import butterknife.Unbinder;
 public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.type)
     TextView mType;
+    @BindView(R.id.confirmSubmit)
+    TextView mConfirmSubmit;
     @BindView(R.id.realName)
     EditText mRealName;
     @BindView(R.id.certificationNumber)
@@ -37,6 +47,9 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
     private Integer[] type = new Integer[]{R.string.mainland_id_card, R.string.tw_id_card, R.string.passport};
     private Unbinder mBind;
     private SmartDialog mSmartDialog;
+    private int mCertificationType;
+    private String mName;
+    private String mNumber;
 
     @Nullable
     @Override
@@ -53,8 +66,19 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-
+        mRealName.addTextChangedListener(mWatcher);
+        mCertificationNumber.addTextChangedListener(mWatcher);
     }
+
+    private ValidationWatcher mWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            mName = mRealName.getText().toString();
+            mNumber = mCertificationNumber.getText().toString();
+            boolean enabled = !TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mNumber);
+            mConfirmSubmit.setEnabled(enabled);
+        }
+    };
 
     @Override
     public void onDestroyView() {
@@ -62,8 +86,37 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick(R.id.type)
-    public void onViewClicked() {
+    @OnClick({R.id.type, R.id.confirmSubmit})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.type:
+                showCertificationTypeSelector();
+                break;
+            case R.id.confirmSubmit:
+                submitCertification(mCertificationType, mName, mNumber);
+                break;
+            default:
+        }
+    }
+
+    private void submitCertification(int idType, String name, String idcardNum) {
+        RealNameAuthData realNameAuthData = RealNameAuthData.Builder.create()
+                .type(idType)
+                .name(name)
+                .idcardNum(idcardNum)
+                .build();
+        Apic.realNameAuth(realNameAuthData)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(R.string.primary_certification_complete);
+                        PrimaryCertificationFragment.this.getActivity().finish();
+                    }
+                })
+                .fire();
+    }
+
+    private void showCertificationTypeSelector() {
         ItemSelectController itemSelectController = new ItemSelectController(getContext());
         CertificationTypeAdapter adapter = new CertificationTypeAdapter();
         adapter.setData(type);
@@ -73,10 +126,13 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
                 mType.setText(id);
                 switch (id) {
                     case R.string.mainland_id_card:
+                        mCertificationType = 0;
                         break;
                     case R.string.tw_id_card:
+                        mCertificationType = 1;
                         break;
                     case R.string.passport:
+                        mCertificationType = 2;
                         break;
                     default:
                 }

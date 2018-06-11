@@ -57,4 +57,8 @@ public interface ExtraKeys {
 
     String HAS_BIND_EMAIL = "has_bind_email";
     String IS_ALIPAY = "is_alipay";
+    String AUTHENTICATION_STATUS = "authentication_status";
+    String HAS_WITH_DRAW_PASS = "has_with_draw_pass";
+    String BIND_BANK_LIST = "bind_bank_list";
+    String COIN_INFO = "coin_info";
 }

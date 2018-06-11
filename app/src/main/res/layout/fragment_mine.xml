@@ -57,19 +57,15 @@
                         android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="5dp"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         tools:text="昵称"/>
 
-                    <TextView
-                        android:id="@+id/userPhone"
+                    <ImageView
+                        android:id="@+id/authenticationStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        tools:text="手机：138943898"/>
+                        android:layout_marginTop="15dp"/>
                 </LinearLayout>
 
                 <TextView

@@ -90,4 +90,18 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/confirmSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn_primary"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/confirm_submit"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"/>
 </LinearLayout>
