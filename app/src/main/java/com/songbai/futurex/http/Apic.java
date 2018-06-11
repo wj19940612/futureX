@@ -352,6 +352,30 @@ public class Apic {
                 new ReqParams(FindPsdData.class, findPsdData));
     }
 
+    /**
+     * 获取自选列表
+     *
+     * @return
+     */
+    public static Api getOptionalList() {
+        return Api.get("/api/entrust/pairs/pairsSimpleList.do",
+                new ReqParams()
+                        .put("type", 1));
+    }
+
+    /**
+     * 根据计价货币获取货币对
+     *
+     * @param suffixSymbol
+     * @return
+     */
+    public static Api getCurrencyPairList(String suffixSymbol) {
+        return Api.get("/api/entrust/pairs/pairsSimpleList.do",
+                new ReqParams()
+                        .put("type", 0)
+                        .put("suffixSymbol", suffixSymbol));
+    }
+
     public interface url {
     }
 }
