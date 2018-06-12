@@ -128,8 +128,8 @@
     <string name="total_property_equivalent">总资产折合（BTC）</string>
     <string name="promoted_property_equivalent">推广返佣折合（BTC）</string>
     <string name="invite_num_x">共邀请用户\n%1$d人</string>
-    <string name="available_amount_x">%1$s\n可用</string>
-    <string name="freeze_amount_x">%1$s\n冻结</string>
+    <string name="amount_available_x">%1$s\n可用</string>
+    <string name="amount_freeze_x">%1$s\n冻结</string>
 
     <string name="language">语言</string>
     <string name="about_us">关于我们</string>

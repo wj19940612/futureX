@@ -4,51 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="70dp">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/coinType"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
         android:layout_weight="1"
         android:gravity="center|left"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="USDT"
-            android:textColor="@color/text22"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="法币交易"
-            android:textColor="@color/colorPrimary"
-            android:textSize="12sp"/>
-    </LinearLayout>
+        android:text="USDT"
+        android:textColor="@color/text22"
+        android:textSize="18sp"/>
 
     <TextView
+        android:id="@+id/availableAmount"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center|end"
-        android:text="@string/available_amount_x"/>
+        android:text="@string/amount_available_x"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
 
     <TextView
+        android:id="@+id/freezeAmount"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="12dp"
         android:layout_weight="2"
         android:gravity="center|end"
-        android:text="@string/freeze_amount_x"/>
+        android:text="@string/amount_freeze_x"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
 
     <TextView
+        android:id="@+id/transfer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="14dp"
         android:drawablePadding="5dp"
         android:gravity="center"
+        android:padding="6dp"
         android:text="@string/transfer"
         android:textColor="@color/colorPrimary"
         android:textSize="12sp"/>

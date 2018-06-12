@@ -15,6 +15,8 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.local.CoinAddressCountWrapper;
+import com.songbai.futurex.model.mine.CoinAddress;
 import com.songbai.futurex.model.mine.CoinInfo;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -54,25 +56,28 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
         mAdapter.setOnAddressTypeClickListener(new DrawCoinAddressAdapter.OnAddressTypeClickListener() {
             @Override
             public void onAddressTypeClick(CoinInfo coinInfo) {
-                UniqueActivity.launcher(getActivity(), DrawCoinAddressListFragment.class).putExtra(ExtraKeys.COIN_INFO,coinInfo).execute();
+                UniqueActivity.launcher(getActivity(), DrawCoinAddressListFragment.class).putExtra(ExtraKeys.COIN_INFO, coinInfo).execute();
             }
         });
         mRecyclerView.setAdapter(mAdapter);
         coinLoadSimpleList();
-        getDrawWalletAddrByCoinType();
     }
 
     private void coinLoadSimpleList() {
         Apic.coinLoadSimpleList()
                 .callback(new Callback<Resp<ArrayList<CoinInfo>>>() {
-
-                    private ArrayList<CoinInfo> mCoinInfos;
-
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CoinInfo>> resp) {
-                        mCoinInfos = resp.getData();
-                        mAdapter.setList(mCoinInfos);
+                        ArrayList<CoinInfo> coinInfos = resp.getData();
+                        ArrayList<CoinAddressCountWrapper> coinAddressCountWrappers = new ArrayList<>();
+                        for (CoinInfo coinInfo : coinInfos) {
+                            CoinAddressCountWrapper coinAddressCountWrapper = new CoinAddressCountWrapper();
+                            coinAddressCountWrapper.setCoinInfo(coinInfo);
+                            coinAddressCountWrappers.add(coinAddressCountWrapper);
+                        }
+                        mAdapter.setList(coinAddressCountWrappers);
                         mAdapter.notifyDataSetChanged();
+                        getDrawWalletAddrByCoinType();
                     }
                 })
                 .fire();
@@ -80,13 +85,27 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
 
     private void getDrawWalletAddrByCoinType() {
         Apic.getDrawWalletAddrByCoinType("")
-                .callback(new Callback<Resp<Object>>() {
+                .callback(new Callback<Resp<ArrayList<CoinAddress>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-
+                    protected void onRespSuccess(Resp<ArrayList<CoinAddress>> resp) {
+                        sortAndSetAddressCount(resp);
                     }
                 })
                 .fire();
+    }
+
+    private void sortAndSetAddressCount(Resp<ArrayList<CoinAddress>> resp) {
+        ArrayList<CoinAddress> coinAddresses = resp.getData();
+        for (CoinAddressCountWrapper addressCountWrapper : mAdapter.getList()) {
+            String symbol = addressCountWrapper.getCoinInfo().getSymbol();
+            for (CoinAddress coinAddress : coinAddresses) {
+                if (symbol.equalsIgnoreCase(coinAddress.getCoinType())) {
+                    int count = addressCountWrapper.getCount();
+                    addressCountWrapper.setCount(count + 1);
+                }
+            }
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -97,7 +116,7 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
 
     static class DrawCoinAddressAdapter extends RecyclerView.Adapter {
         private static OnAddressTypeClickListener mOnAddressTypeClickListener;
-        private ArrayList<CoinInfo> mList= new ArrayList<>();
+        private ArrayList<CoinAddressCountWrapper> mList = new ArrayList<CoinAddressCountWrapper>();
 
         @NonNull
         @Override
@@ -122,7 +141,11 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
             mOnAddressTypeClickListener = onAddressTypeClickListener;
         }
 
-        public void setList(ArrayList<CoinInfo> list) {
+        public ArrayList<CoinAddressCountWrapper> getList() {
+            return mList;
+        }
+
+        public void setList(ArrayList<CoinAddressCountWrapper> list) {
             mList.clear();
             mList.addAll(list);
         }
@@ -136,8 +159,10 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDate(final CoinInfo coinInfo) {
+            private void bindDate(CoinAddressCountWrapper coinAddressCountWrapper) {
+                final CoinInfo coinInfo = coinAddressCountWrapper.getCoinInfo();
                 mAddressType.setText(coinInfo.getSymbol().toUpperCase());
+                mAddressType.setSubText(String.valueOf(coinAddressCountWrapper.getCount()));
                 mAddressType.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

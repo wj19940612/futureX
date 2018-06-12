@@ -4,6 +4,7 @@ import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.FindPsdData;
+import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LoginData;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
@@ -200,11 +201,22 @@ public class Apic {
     }
 
     /**
+     * /user/wallet/getAccountByUser.do
+     * GET
+     * 账户查询（叶海啸）
+     * 币币账户
+     */
+    public static Api getAccountByUser(String coinType) {
+        return Api.get("/api/user/wallet/getAccountByUser.do",
+                new ReqParams().put("coinType", coinType));
+    }
+
+    /**
      * /api/otc/account/list
      * GET
      * 法币账户
      */
-    public static Api accountList() {
+    public static Api otcAccountList() {
         return Api.get("/api/otc/account/list");
     }
 
@@ -215,6 +227,31 @@ public class Apic {
      */
     public static Api userAccount() {
         return Api.get("/api/user/user/account");
+    }
+
+    /**
+     * /api/otc/account/transfer
+     * POST
+     * 资金划转--(v1.1)
+     */
+    public static Api accountTransfer(String coinType, int type, String count) {
+        return Api.post("/api/otc/account/transfer",
+                new ReqParams()
+                        .put("coinType", coinType)
+                        .put("type", type)
+                        .put("count", count));
+    }
+
+    /**
+     * /api/user/wallet/getUserFinanceFlow.do
+     * GET
+     * 资产明细（叶海啸）
+     */
+    public static Api getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData,int page,int pageSize) {
+        return Api.get("/api/user/wallet/getUserFinanceFlow.do",
+                new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
+                        .put("page",page)
+                        .put("pageSize",pageSize));
     }
 
     /**
@@ -343,15 +380,6 @@ public class Apic {
                         .put("waresOrderId", waresOrderId)
                         .put("startTime", startTime)
                         .put("size", size));
-    }
-
-    /**
-     * /user/wallet/getAccountByUser.do
-     * GET
-     * 账户查询（叶海啸）
-     */
-    public static Api getAccountByUser() {
-        return Api.get("/api/user/wallet/getAccountByUser.do");
     }
 
     /**

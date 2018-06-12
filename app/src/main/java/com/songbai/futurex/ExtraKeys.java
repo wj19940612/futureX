@@ -61,4 +61,7 @@ public interface ExtraKeys {
     String HAS_WITH_DRAW_PASS = "has_with_draw_pass";
     String BIND_BANK_LIST = "bind_bank_list";
     String COIN_INFO = "coin_info";
+    String TRANSFER_TYPE = "transfer_type";
+    String ACCOUNT_BEANS = "account_beans";
+    String ACCOUNT_BEAN= "account_bean";
 }

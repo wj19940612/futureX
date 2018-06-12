@@ -143,8 +143,8 @@
     <string name="total_property_equivalent">总资产折合（BTC）</string>
     <string name="promoted_property_equivalent">推广返佣折合（BTC）</string>
     <string name="invite_num_x">共邀请用户\n%1$d人</string>
-    <string name="available_amount_x">%1$s\n可用</string>
-    <string name="freeze_amount_x">%1$s\n冻结</string>
+    <string name="amount_available_x">%1$s\n可用</string>
+    <string name="amount_freeze_x">%1$s\n冻结</string>
 
     <string name="language">语言</string>
     <string name="about_us">关于我们</string>
@@ -214,9 +214,13 @@
     <string name="fast_transfer">一键划转</string>
     <string name="funds_transfer">资金划转</string>
     <string name="transfer_amount">划转数量</string>
+    <string name="most_transfer_amount_type_x">最多可转%1$s %2$s</string>
     <string name="transfer_all">全部划转</string>
     <string name="confirm_transfer">确认划转</string>
     <string name="recharge_coin">充币</string>
+    <string name="history">历史记录</string>
+    <string name="available_amount_x">可用 %1$s</string>
+    <string name="freeze_amount_x">冻结 %1$s</string>
     <string name="recharge_history">历史充值</string>
     <string name="save_qr_code">保存二维码</string>
     <string name="copy_address">复制地址</string>

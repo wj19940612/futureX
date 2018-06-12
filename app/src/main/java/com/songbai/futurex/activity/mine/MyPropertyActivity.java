@@ -2,6 +2,7 @@ package com.songbai.futurex.activity.mine;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.httplib.ReqError;
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -29,7 +32,15 @@ import com.songbai.futurex.fragment.mine.FundsTransferFragment;
 import com.songbai.futurex.fragment.mine.PropertyListFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.AccountList;
+import com.songbai.futurex.model.mine.InviteSubordinate;
 import com.songbai.futurex.utils.Display;
+import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.view.TitleBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +51,8 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class MyPropertyActivity extends BaseActivity {
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.propertyCardPager)
     ViewPager mPropertyCardPager;
     @BindView(R.id.propertyListPager)
@@ -54,13 +67,24 @@ public class MyPropertyActivity extends BaseActivity {
     private PropertyCardAdapter mPropertyCardAdapter;
     int size = 3;
     private int mScrollWidth;
-    private String[] mAccountAmount = new String[3];
+    private SparseArray<AccountList> mAccountLists = new SparseArray<>(3);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_property);
         mBind = ButterKnife.bind(this);
+        initView();
+        findCommissionOfSubordinate();
+    }
+
+    private void initView() {
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(MyPropertyActivity.this, PropertyFlowActivity.class).execute();
+            }
+        });
         mPagerTranslationX = Display.dp2Px(20, getResources());
         mIndicatorContiner.post(new Runnable() {
             @Override
@@ -72,7 +96,7 @@ public class MyPropertyActivity extends BaseActivity {
             }
         });
         mPropertyCardAdapter = new PropertyCardAdapter();
-        mPropertyCardAdapter.setData(mAccountAmount);
+        mPropertyCardAdapter.setData(mAccountLists);
         mPropertyCardPager.setOffscreenPageLimit(2);
         mPropertyCardPager.setAdapter(mPropertyCardAdapter);
         mPropertyCardPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -114,7 +138,6 @@ public class MyPropertyActivity extends BaseActivity {
 
             }
         });
-        findCommissionOfSubordinate();
     }
 
     private void setCardPagerTranslationX(int position, float positionOffset) {
@@ -129,15 +152,17 @@ public class MyPropertyActivity extends BaseActivity {
 
     private void findCommissionOfSubordinate() {
         Apic.findCommissionOfSubordinate()
-                .callback(new Callback<Object>() {
+                .callback(new Callback<Resp<InviteSubordinate>>() {
 
                     @Override
-                    public void onFailure(ReqError reqError) {
-
+                    protected void onRespSuccess(Resp<InviteSubordinate> resp) {
+                        InviteSubordinate inviteSubordinate = resp.getData();
+                        int resultCount = inviteSubordinate.getResultCount();
+                        mPropertyCardAdapter.setInviteCount(resultCount);
                     }
 
                     @Override
-                    protected void onRespSuccess(Object resp) {
+                    public void onFailure(ReqError reqError) {
 
                     }
                 })
@@ -150,8 +175,8 @@ public class MyPropertyActivity extends BaseActivity {
         mBind.unbind();
     }
 
-    public void setAccountAmount(int position, String balance) {
-        mAccountAmount[position] = balance;
+    public void setAccountAmount(int position, AccountList accountList) {
+        mAccountLists.put(position, accountList);
         mPropertyCardAdapter.notifyDataSetChanged();
     }
 
@@ -166,7 +191,8 @@ public class MyPropertyActivity extends BaseActivity {
         TextView mInviteNum;
         @BindView(R.id.transfer)
         TextView mTransfer;
-        private String[] mData;
+        private SparseArray<AccountList> mData;
+        private int mInviteCount;
 
         @Override
         public int getCount() {
@@ -186,12 +212,16 @@ public class MyPropertyActivity extends BaseActivity {
 
         @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
             final Context context = container.getContext();
             View view = LayoutInflater.from(context).inflate(R.layout.row_account_property, container, false);
             ButterKnife.bind(this, view);
-            if (!TextUtils.isEmpty(mData[position])) {
-                mPropertyAmount.setText(mData[position]);
+            final AccountList accountList = mData.get(position);
+            if (accountList != null) {
+                String balance = accountList.getBalance();
+                if (!TextUtils.isEmpty(balance)) {
+                    mPropertyAmount.setText(balance);
+                }
             }
             switch (position) {
                 case 0:
@@ -212,8 +242,7 @@ public class MyPropertyActivity extends BaseActivity {
                     view.setBackgroundResource(R.drawable.property_bg_green);
                     mAccountType.setText(R.string.promoted_account);
                     mTotalPropertyType.setText(R.string.promoted_property_equivalent);
-                    int num = 189;
-                    String string = context.getString(R.string.invite_num_x, num);
+                    String string = context.getString(R.string.invite_num_x, mInviteCount);
                     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(string);
                     spannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.sixtyPercentWhite)),
                             0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -228,11 +257,26 @@ public class MyPropertyActivity extends BaseActivity {
             mTransfer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UniqueActivity.launcher(context, FundsTransferFragment.class).execute();
+                    if (position < 2) {
+                        List<AccountList.AccountBean> accountBeans = accountList.getAccount();
+                        if (accountBeans.size() < 1) {
+                            return;
+                        }
+                        UniqueActivity.launcher(context, FundsTransferFragment.class)
+                                .putExtra(ExtraKeys.TRANSFER_TYPE, position)
+                                .putExtra(ExtraKeys.ACCOUNT_BEANS, (ArrayList<? extends Parcelable>) accountBeans)
+                                .execute();
+                    } else {
+                        showTransferPop();
+                    }
                 }
             });
             container.addView(view);
             return view;
+        }
+
+        private void showTransferPop() {
+
         }
 
         @Override
@@ -240,8 +284,12 @@ public class MyPropertyActivity extends BaseActivity {
             container.removeView((View) object);
         }
 
-        public void setData(String[] data) {
+        public void setData(SparseArray<AccountList> data) {
             mData = data;
+        }
+
+        public void setInviteCount(int inviteCount) {
+            mInviteCount = inviteCount;
         }
     }
 
