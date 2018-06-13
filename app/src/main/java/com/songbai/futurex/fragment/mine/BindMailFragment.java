@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.AuthCodeGet;
-import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -57,6 +55,8 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
     private Unbinder mBind;
     private AuthCodeViewController mAuthCodeViewController;
     private boolean mHasBindEmail;
+    private boolean mFreezeGetEmailAuthCode;
+    private boolean mFreezeGetPhoneAuthCode;
 
     @Nullable
     @Override
@@ -100,12 +100,6 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
         return !TextUtils.isEmpty(email) && !TextUtils.isEmpty(mailAuthCode) && !TextUtils.isEmpty(smsAuthCode);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mBind.unbind();
-    }
-
     @OnClick({R.id.getMailAuthCode, R.id.getSmsAuthCode, R.id.confirmBind})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -117,7 +111,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
                 getEmailAuthCode(email);
                 break;
             case R.id.getSmsAuthCode:
-                getSmsAuthCode();
+                showImageAuthCodeDialog();
                 break;
             case R.id.confirmBind:
                 bindMail(mEmail.getText().toString(), mMailAuthCode.getText().toString(), mSmsAuthCode.getText().toString());
@@ -135,38 +129,26 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Object>() {
                     @Override
                     protected void onRespSuccess(Object resp) {
-
+                        freezeGetEmailAuthCodeButton();
                     }
                 })
                 .fire();
     }
 
-    private void getSmsAuthCode() {
-        AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
-                .phone(LocalUser.getUser().getLastAct())
-                .type(AuthCodeGet.TYPE_SAFE_PSD)
-                .build();
-        Apic.getAuthCode(authCodeGet)
-                .callback(new Callback<Resp<Object>>() {
+    private void freezeGetEmailAuthCodeButton() {
+        mFreezeGetEmailAuthCode = true;
+        startScheduleJob(1000);
+        mGetMailAuthCode.setTag(60);
+        mGetMailAuthCode.setEnabled(false);
+        mGetMailAuthCode.setText(getString(R.string.x_seconds, 60));
+    }
 
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-                            Log.e("wtf", "adsfdsf");
-                            showImageAuthCodeDialog();
-                        } else {
-                            super.onRespFailure(failedResp);
-                        }
-                    }
-                })
-                .fire();
+    private void freezeGetPhoneAuthCodeButton() {
+        mFreezeGetPhoneAuthCode = true;
+        startScheduleJob(1000);
+        mGetSmsAuthCode.setTag(60);
+        mGetSmsAuthCode.setEnabled(false);
+        mGetSmsAuthCode.setText(getString(R.string.x_seconds, 60));
     }
 
     private void showImageAuthCodeDialog() {
@@ -191,21 +173,12 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
         requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
     }
 
-    // TODO: 2018/6/9 有疑问
     private void requestPhoneAuthCode(String imageAuthCode) {
-        AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
-                .imgCode(imageAuthCode)
-                .type(AuthCodeGet.TYPE_SAFE_PSD)
-                .build();
-
-        Apic.getAuthCode(authCodeGet).tag(TAG)
+        Apic.sendOld(imageAuthCode, AuthCodeGet.BINDING_EMAIL).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
-//                        freezeGetPhoneAuthCodeButton();
-//                        mSendAuthHint.setVisibility(View.VISIBLE);
-//                        mSendAuthHint.setText(mMailMode ? getString(R.string.send_mail_auth_code_hint_x, mUserEmail)
-//                                : getString(R.string.send_sms_auth_code_phone_hint_x, mUserPhone));
+                        freezeGetPhoneAuthCodeButton();
                     }
 
                     @Override
@@ -222,7 +195,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
     }
 
     private void requestAuthCodeImage(int width, int height) {
-        Apic.getAuthCodeImage(AuthCodeGet.TYPE_SAFE_PSD).tag(TAG)
+        Apic.getAuthCodeImage(AuthCodeGet.BINDING_EMAIL).tag(TAG)
                 .bitmapCfg(new BitmapCfg(width, height))
                 .callback(new ReqCallback<Bitmap>() {
                     @Override
@@ -237,7 +210,6 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
                 }).fireFreely();
     }
 
-    // TODO: 2018/6/9 接口有问题
     private void bindMail(String email, String emailMsgCode, String phoneMsgCode) {
         Apic.bindEmail(email, emailMsgCode, phoneMsgCode)
                 .callback(new Callback<Object>() {
@@ -247,5 +219,11 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
                     }
                 })
                 .fire();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBind.unbind();
     }
 }

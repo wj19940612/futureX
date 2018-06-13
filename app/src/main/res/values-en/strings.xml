@@ -128,8 +128,8 @@
     <string name="total_property_equivalent">总资产折合（BTC）</string>
     <string name="promoted_property_equivalent">推广返佣折合（BTC）</string>
     <string name="invite_num_x">共邀请用户\n%1$d人</string>
-    <string name="available_amount_x">%1$s\n可用</string>
-    <string name="freeze_amount_x">%1$s\n冻结</string>
+    <string name="amount_available_x">%1$s\n可用</string>
+    <string name="amount_freeze_x">%1$s\n冻结</string>
 
     <string name="language">语言</string>
     <string name="about_us">关于我们</string>
@@ -212,7 +212,7 @@
     <string name="promoted_account">推广账户</string>
     <string name="search_property">搜索资产</string>
     <string name="available">可用</string>
-    <string name="input_or_paste_address">输入或长按粘贴地址</string>
+    <string name="input_or_long_press_paste_address">输入或长按粘贴地址</string>
     <string name="with_draw_amount_hint">最小提币数量 200 BTC</string>
     <string name="please_input_cash_pwd">请输入资金密码</string>
     <string name="amount">数量</string>

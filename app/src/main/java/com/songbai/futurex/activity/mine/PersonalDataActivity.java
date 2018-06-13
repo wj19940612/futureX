@@ -21,6 +21,7 @@ import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Display;
@@ -41,6 +42,8 @@ import sbai.com.glide.GlideApp;
  */
 public class PersonalDataActivity extends BaseActivity {
 
+    private static final int MODIFY_PERSONAL_DATA = 12313;
+
     @BindView(R.id.userHeadImage)
     ImageView mUserHeadImage;
     @BindView(R.id.nickName)
@@ -58,6 +61,7 @@ public class PersonalDataActivity extends BaseActivity {
     private Unbinder mBind;
     private boolean mHasPhone;
     private boolean mHasEmail;
+    private int mAuthenticationStatus;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +81,7 @@ public class PersonalDataActivity extends BaseActivity {
             GlideApp
                     .with(this)
                     .load(userInfo.getUserPortrait())
+                    .circleCrop()
                     .into(mUserHeadImage);
             mNickName.setSubText(userInfo.getUserName());
             mRealName.setSubText(userInfo.getRealName());
@@ -95,8 +100,8 @@ public class PersonalDataActivity extends BaseActivity {
                 setIconTextRowSubDrawable(mMailCertification, R.drawable.ic_common_unautherized);
             }
             // 认证状态:0未完成任何认证,1初级认证,2高级认证成功,3高级认证审核中,4高级认证失败
-            int authenticationStatus = userInfo.getAuthenticationStatus();
-            switch (authenticationStatus) {
+            mAuthenticationStatus = userInfo.getAuthenticationStatus();
+            switch (mAuthenticationStatus) {
                 case 0:
                     setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_unautherized);
                     setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_unautherized);
@@ -159,27 +164,31 @@ public class PersonalDataActivity extends BaseActivity {
 //                        .forResult();
                 break;
             case R.id.nickName:
-                Launcher.with(this, ModifyNickNameActivity.class).execute();
+                Launcher.with(this, ModifyNickNameActivity.class).putExtra(ExtraKeys.NICK_NAME, LocalUser.getUser().getUserInfo().getUserName()).execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.realName:
                 break;
             case R.id.phoneCertification:
-                UniqueActivity.launcher(this, BindPhoneFragment.class).execute();
+                UniqueActivity.launcher(this, BindPhoneFragment.class).execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.mailCertification:
-                UniqueActivity.launcher(this, BindMailFragment.class).putExtra(ExtraKeys.HAS_BIND_EMAIL, mHasEmail).execute();
+                UniqueActivity.launcher(this, BindMailFragment.class).putExtra(ExtraKeys.HAS_BIND_EMAIL, mHasEmail).execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.primaryCertification:
-                UniqueActivity.launcher(this, PrimaryCertificationFragment.class).execute();
+                if (mAuthenticationStatus > 0) {
+                    return;
+                }
+                UniqueActivity.launcher(this, PrimaryCertificationFragment.class).execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.seniorCertification:
-                UniqueActivity.launcher(this, SeniorCertificationFragment.class).execute();
+                UniqueActivity.launcher(this, SeniorCertificationFragment.class)
+                        .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus).execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.legalCurrencyPayManagement:
-                UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class).execute();
+                UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class).execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.addressManagement:
-                UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class).execute();
+                UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class).execute(MODIFY_PERSONAL_DATA);
                 break;
             default:
         }
@@ -192,28 +201,52 @@ public class PersonalDataActivity extends BaseActivity {
             if (data != null) {
                 String stringExtra = data.getStringExtra(ExtraKeys.IMAGE_PATH);
                 String image = ImageUtils.compressImageToBase64(stringExtra, this);
-                Apic.submitPortraitPath(image)
-                        .callback(new Callback<Object>() {
-                            @Override
-                            protected void onRespSuccess(Object resp) {
-
-                            }
-                        })
-                        .fire();
+                uploadImage(image);
             }
         } else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
             String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
             if (!TextUtils.isEmpty(galleryBitmapPath)) {
                 String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
-                Apic.submitPortraitPath(image)
-                        .callback(new Callback<Object>() {
-                            @Override
-                            protected void onRespSuccess(Object resp) {
-
-                            }
-                        })
-                        .fire();
+                uploadImage(image);
             }
+        } else if (requestCode == MODIFY_PERSONAL_DATA) {
+            requestUserInfo();
         }
+    }
+
+    private void uploadImage(String image) {
+        Apic.uploadImage(image)
+                .callback(new Callback<Resp<String>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<String> resp) {
+                        submitPortraitPath(resp.getData());
+                    }
+                })
+                .fire();
+    }
+
+    private void submitPortraitPath(String image) {
+        Apic.submitPortraitPath(image)
+                .callback(new Callback<Object>() {
+                    @Override
+                    protected void onRespSuccess(Object resp) {
+                        //                        ToastUtil.show(R.string.modify_success);
+                        requestUserInfo();
+                    }
+                })
+                .fire();
+    }
+
+    private void requestUserInfo() {
+        Apic.findUserInfo()
+                .tag(TAG)
+                .callback(new Callback<Resp<UserInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        LocalUser.getUser().setUserInfo(resp.getData());
+                        setUserInfo();
+                    }
+                })
+                .fire();
     }
 }

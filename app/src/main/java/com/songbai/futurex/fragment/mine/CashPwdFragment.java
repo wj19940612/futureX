@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.sbai.httplib.BitmapCfg;
 import com.sbai.httplib.ReqCallback;
 import com.sbai.httplib.ReqError;
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
@@ -28,6 +29,7 @@ import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
 import butterknife.BindView;
@@ -43,6 +45,8 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     private static final String TAG = CashPwdFragment.class.getSimpleName();
     private static final String SET_CASH_AUTH_TYPE_PHONE = "0";
     private static final String SET_CASH_AUTH_TYPE_MAIL = "1";
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.password)
     PasswordEditText mPassword;
     @BindView(R.id.confirmPassword)
@@ -69,6 +73,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     private AuthCodeViewController mAuthCodeViewController;
     private boolean mNeedGoogle;
     private boolean mFreezeGetPhoneAuthCode;
+    private boolean mHsaWithDrawPass;
 
     @Nullable
     @Override
@@ -80,7 +85,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
+        mHsaWithDrawPass = extras.getBoolean(ExtraKeys.HAS_WITH_DRAW_PASS);
     }
 
     @Override
@@ -93,6 +98,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     }
 
     private void initView() {
+        mTitleBar.setTitle(mHsaWithDrawPass ? R.string.change_cash_pwd : R.string.set_cash_pwd);
         mUserInfo = LocalUser.getUser().getUserInfo();
         mUserPhone = mUserInfo.getUserPhone();
         mUserEmail = mUserInfo.getUserEmail();
@@ -127,35 +133,6 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                     }
                 })
                 .fire();
-    }
-
-    private void getAuthCode() {
-        AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
-                .type(AuthCodeGet.TYPE_SAFE_PSD)
-                .build();
-
-        Apic.getAuthCode(authCodeGet).tag(TAG)
-                .callback(new Callback<Resp>() {
-                    @Override
-                    protected void onRespSuccess(Resp resp) {
-//                        freezeGetPhoneAuthCodeButton();
-                        mSendAuthHint.setVisibility(View.VISIBLE);
-                        mSendAuthHint.setText(mMailMode ? getString(R.string.send_mail_auth_code_hint_x, mUserEmail)
-                                : getString(R.string.send_sms_auth_code_phone_hint_x, mUserPhone));
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-                            // TODO: 2018/6/6
-                            showImageAuthCodeDialog();
-                        } else {
-                            super.onRespFailure(failedResp);
-                        }
-                    }
-                }).fire();
     }
 
     private void freezeGetPhoneAuthCodeButton() {
@@ -197,16 +174,11 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     }
 
     private void requestPhoneAuthCode(String imageAuthCode) {
-        AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
-                .imgCode(imageAuthCode)
-                .type(AuthCodeGet.TYPE_SAFE_PSD)
-                .build();
-
-        Apic.getAuthCode(authCodeGet).tag(TAG)
+        Apic.sendOld(imageAuthCode, AuthCodeGet.TYPE_SAFE_PSD).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
-//                        freezeGetPhoneAuthCodeButton();
+                        freezeGetPhoneAuthCodeButton();
                         mSendAuthHint.setVisibility(View.VISIBLE);
                         mSendAuthHint.setText(mMailMode ? getString(R.string.send_mail_auth_code_hint_x, mUserEmail)
                                 : getString(R.string.send_sms_auth_code_phone_hint_x, mUserPhone));
@@ -246,7 +218,8 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-
+                        ToastUtil.show(R.string.set_cash_pwd_success);
+                        CashPwdFragment.this.getActivity().finish();
                     }
                 })
                 .fire();
@@ -262,7 +235,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.sendAuthCode:
-                getAuthCode();
+                showImageAuthCodeDialog();
                 break;
             case R.id.confirm:
                 String password = mPassword.getPassword();
@@ -275,7 +248,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                 if (mNeedGoogle && TextUtils.isEmpty(mGoogleAuthCode.getText().toString())) {
                     return;
                 }
-                setDrawPass(password, confirmPassword, msgCode,
+                setDrawPass(md5Encrypt(password), md5Encrypt(confirmPassword), msgCode,
                         mMailMode ? SET_CASH_AUTH_TYPE_MAIL : SET_CASH_AUTH_TYPE_PHONE,
                         mNeedGoogle ? mGoogleAuthCode.getText().toString() : "");
             default:

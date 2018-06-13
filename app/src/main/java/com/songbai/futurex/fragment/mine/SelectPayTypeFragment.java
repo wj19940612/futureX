@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -29,6 +30,7 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.wechatPay)
     IconTextRow mWechatPay;
     private Unbinder mBind;
+    private BindBankList mBindBankList;
 
     @Nullable
     @Override
@@ -40,12 +42,16 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
+        mBindBankList = extras.getParcelable(ExtraKeys.BIND_BANK_LIST);
     }
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-
+        if (mBindBankList != null) {
+            BindBankList.AliPayBean aliPay = mBindBankList.getAliPay();
+            mAliPay.setSubText(aliPay.getCardNumber());
+            mWechatPay.setSubText(mBindBankList.getWechat().getCardNumber());
+        }
     }
 
     @Override
@@ -58,13 +64,13 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bankCard:
-                UniqueActivity.launcher(this, AddBankingCardFragment.class).execute();
+                UniqueActivity.launcher(this, AddBankingCardFragment.class).putExtra(ExtraKeys.BIND_BANK_LIST,mBindBankList).execute();
                 break;
             case R.id.aliPay:
-                UniqueActivity.launcher(this, AddPayFragment.class).putExtra(ExtraKeys.IS_ALIPAY,true).execute();
+                UniqueActivity.launcher(this, AddPayFragment.class).putExtra(ExtraKeys.IS_ALIPAY,true).putExtra(ExtraKeys.BIND_BANK_LIST,mBindBankList).execute();
                 break;
             case R.id.wechatPay:
-                UniqueActivity.launcher(this, AddPayFragment.class).putExtra(ExtraKeys.IS_ALIPAY,false).execute();
+                UniqueActivity.launcher(this, AddPayFragment.class).putExtra(ExtraKeys.IS_ALIPAY,false).putExtra(ExtraKeys.BIND_BANK_LIST,mBindBankList).execute();
                 break;
             default:
         }

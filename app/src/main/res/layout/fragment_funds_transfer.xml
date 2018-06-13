@@ -74,9 +74,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="17dp"
             android:drawablePadding="6dp"
-            android:text="USDT"
             android:textColor="@color/text22"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            tools:text="USDT"/>
     </LinearLayout>
 
     <LinearLayout
@@ -103,6 +103,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="end|center_vertical"
+            android:inputType="numberDecimal"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             tools:hint="最多可转10.88888888 USDT"/>

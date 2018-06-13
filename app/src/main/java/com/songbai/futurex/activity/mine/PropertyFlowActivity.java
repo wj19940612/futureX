@@ -17,6 +17,11 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.songbai.futurex.R;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.PagingResp;
+import com.songbai.futurex.model.local.GetUserFinanceFlowData;
+import com.songbai.futurex.model.mine.CoinProperty;
 import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
 import com.songbai.futurex.view.TitleBar;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
@@ -46,6 +51,9 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
     RelativeLayout mRootView;
     @BindView(R.id.filtrateGroup)
     LinearLayout mFiltrateGroup;
+    private GetUserFinanceFlowData mGetUserFinanceFlowData;
+    private int mPage = 0;
+    private int mPageSize = 20;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,18 +68,17 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
             @Override
             public void onClick(View v) {
                 // TODO: 2018/6/4 动画
-//                mFiltrateGroup.setVisibility(mFiltrateGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                TimePickerView pvTime = new TimePickerBuilder(PropertyFlowActivity.this, new OnTimeSelectListener() {
-                    @Override
-                    public void onTimeSelect(Date date, View v) {
-                        Toast.makeText(PropertyFlowActivity.this, "title", Toast.LENGTH_SHORT).show();
-                    }
-                }).build();
-                pvTime.show();
+                mFiltrateGroup.setVisibility(mFiltrateGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             }
         });
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
         mSwipeTarget.setAdapter(new PropertyFlowAdapter());
+        mGetUserFinanceFlowData = new GetUserFinanceFlowData();
+        mGetUserFinanceFlowData.setCoinType("");
+        mGetUserFinanceFlowData.setFlowType(0);
+        mGetUserFinanceFlowData.setStartTime("");
+        mGetUserFinanceFlowData.setEndTime("");
+        getUserFinanceFlow();
     }
 
     @Override
@@ -86,14 +93,35 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
 
     @Override
     public void onRefresh() {
+        mPage = 0;
+        getUserFinanceFlow();
+    }
 
+    private void getUserFinanceFlow() {
+        Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize)
+                .callback(new Callback<PagingResp<CoinProperty>>() {
+                    @Override
+                    protected void onRespSuccess(PagingResp<CoinProperty> resp) {
+                    }
+                })
+                .fire();
+    }
+
+    private void showTimePicker() {
+        TimePickerView pvTime = new TimePickerBuilder(PropertyFlowActivity.this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                Toast.makeText(PropertyFlowActivity.this, "title", Toast.LENGTH_SHORT).show();
+            }
+        }).build();
+        pvTime.show();
     }
 
     static class PropertyFlowAdapter extends RecyclerView.Adapter {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_property_flow, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_coin_property, parent, false);
             return new PropertyFlowHolder(view);
         }
 

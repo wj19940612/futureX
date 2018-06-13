@@ -45,6 +45,7 @@
     <string name="mail_certification">邮箱认证</string>
     <string name="certificating">认证中</string>
     <string name="primary_certification">初级认证</string>
+    <string name="primary_certification_complete">初级验证完成</string>
     <string name="pleas_select_credentials_type">请选择证件类型</string>
     <string name="mainland_id_card">中国大陆身份证</string>
     <string name="tw_id_card">中国台湾身份证</string>
@@ -77,6 +78,8 @@
     <string name="wei_chat_account">微信账号</string>
     <string name="please_input_name">请填写姓名</string>
     <string name="add_banking_card">添加银行卡</string>
+    <string name="with_draw_pass">资金密码</string>
+    <string name="please_input_with_draw_pass">请输入资金密码</string>
     <string name="please_input_ali_pay_account">请填写支付宝账号</string>
     <string name="please_input_wei_chat_account">请填写微信号</string>
     <string name="confirm_add">确认添加</string>
@@ -101,7 +104,9 @@
     <string name="select_pay_type">选择支付方式</string>
     <string name="bank_card">银行卡</string>
     <string name="alipay">支付宝</string>
+    <string name="wechatpay">微信支付</string>
     <string name="weichat">微信</string>
+    <string name="edit">编辑</string>
     <string name="please_set">请设置</string>
     <string name="not_set">未设置</string>
     <string name="set_nick">设置昵称</string>
@@ -138,8 +143,8 @@
     <string name="total_property_equivalent">总资产折合（BTC）</string>
     <string name="promoted_property_equivalent">推广返佣折合（BTC）</string>
     <string name="invite_num_x">共邀请用户\n%1$d人</string>
-    <string name="available_amount_x">%1$s\n可用</string>
-    <string name="freeze_amount_x">%1$s\n冻结</string>
+    <string name="amount_available_x">%1$s\n可用</string>
+    <string name="amount_freeze_x">%1$s\n冻结</string>
 
     <string name="language">语言</string>
     <string name="about_us">关于我们</string>
@@ -168,7 +173,9 @@
     <string name="invite_buddies">邀请好友加入</string>
     <string name="create_customization_poster">生成专属海报</string>
 
+    <string name="change_cash_pwd">修改资金密码</string>
     <string name="set_cash_pwd">资金密码设置</string>
+    <string name="set_cash_pwd_success">资金密码设置成功</string>
     <string name="please_input_set_cash_pwd">请输入资金密码</string>
     <string name="confirm_set_cash_pwd">确认资金密码</string>
     <string name="send_sms_auth_code_phone_hint_x">已发送至您的手机号：%1$s，请注意查收</string>
@@ -197,7 +204,7 @@
     <string name="add_address">添加地址</string>
     <string name="address">地址</string>
     <string name="remark">备注</string>
-    <string name="input_or_peast_address">输入或粘贴地址</string>
+    <string name="input_or_paste_address">输入或粘贴地址</string>
     <string name="no_record">暂无记录</string>
 
     <string name="coin_coin_account">币币账户</string>
@@ -207,9 +214,13 @@
     <string name="fast_transfer">一键划转</string>
     <string name="funds_transfer">资金划转</string>
     <string name="transfer_amount">划转数量</string>
+    <string name="most_transfer_amount_type_x">最多可转%1$s %2$s</string>
     <string name="transfer_all">全部划转</string>
     <string name="confirm_transfer">确认划转</string>
     <string name="recharge_coin">充币</string>
+    <string name="history">历史记录</string>
+    <string name="available_amount_x">可用 %1$s</string>
+    <string name="freeze_amount_x">冻结 %1$s</string>
     <string name="recharge_history">历史充值</string>
     <string name="save_qr_code">保存二维码</string>
     <string name="copy_address">复制地址</string>
@@ -225,7 +236,7 @@
     <string name="promoted_account">推广账户</string>
     <string name="search_property">搜索资产</string>
     <string name="available">可用</string>
-    <string name="input_or_paste_address">输入或长按粘贴地址</string>
+    <string name="input_or_long_press_paste_address">输入或长按粘贴地址</string>
     <string name="with_draw_amount_hint">最小提币数量 200 BTC</string>
     <string name="please_input_cash_pwd">请输入资金密码</string>
     <string name="amount">数量</string>

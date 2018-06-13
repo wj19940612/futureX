@@ -89,6 +89,33 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="14dp"
+            android:gravity="center_vertical"
+            android:text="@string/with_draw_pass"
+            android:textColor="@color/text22"
+            android:textSize="16sp"/>
+
+        <com.songbai.futurex.view.PasswordEditText
+            android:id="@+id/withDrawPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:visibility="visible"
+            app:maxCharNum="50"
+            app:textHint="@string/please_input_with_draw_pass"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/confirm_add"
         android:layout_width="match_parent"

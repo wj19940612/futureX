@@ -4,7 +4,9 @@ import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.FindPsdData;
+import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LoginData;
+import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
 
 /**
@@ -91,6 +93,45 @@ public class Apic {
     }
 
     /**
+     * /api/user/userSafe/realNameAuth.do
+     * POST
+     * 身份认证--薛松
+     * 初级认证
+     */
+    public static Api realNameAuth(RealNameAuthData realNameAuthData) {
+        return Api.post("/api/user/userSafe/realNameAuth.do",
+                new ReqParams(RealNameAuthData.class, realNameAuthData));
+    }
+
+    /**
+     * /api/user/userSafe/getUserAuth.do
+     * GET
+     * 或者用户的认证信息--薛松
+     */
+    public static Api getUserAuth() {
+        return Api.get("/api/user/userSafe/getUserAuth.do");
+    }
+
+    /**
+     * /api/otc/bank/authenticationName
+     * GET
+     * 获取用户认证姓名
+     */
+    public static Api authenticationName() {
+        return Api.get("/api/otc/bank/authenticationName");
+    }
+
+    /**
+     * /api/otc/bank/bindList.do
+     * GET
+     * 支付管理
+     */
+    public static Api bindList(int type) {
+        return Api.get("/api/otc/bank/bindList.do",
+                new ReqParams().put("type", type));
+    }
+
+    /**
      * /api/otc/bank/bind
      * POST
      * 绑定卡号--(v1.1)
@@ -109,12 +150,45 @@ public class Apic {
     }
 
     /**
+     * /api/entrust/coin/loadSimpleList.do
+     * GET
+     * 查询所有币种
+     */
+    public static Api coinLoadSimpleList() {
+        return Api.get("/api/entrust/coin/loadSimpleList.do");
+    }
+
+    /**
      * /api/user/wallet/getDrawWalletAddrByCoinType.do
      * GET
      * 获取提现地址列表（叶海啸）
      */
-    public static Api getDrawWalletAddrByCoinType() {
-        return Api.get("/api/user/wallet/getDrawWalletAddrByCoinType.do");
+    public static Api getDrawWalletAddrByCoinType(String coinType) {
+        return Api.get("/api/user/wallet/getDrawWalletAddrByCoinType.do", new ReqParams().put("coinType", coinType));
+    }
+
+    /**
+     * /api/user/wallet/addDrawWalletAddrByCoinType.do
+     * POST
+     * 添加提现地址（叶海啸）
+     */
+    public static Api addDrawWalletAddrByCoinType(String coinType, String toAddr, String remark) {
+        return Api.post("/api/user/wallet/addDrawWalletAddrByCoinType.do",
+                new ReqParams()
+                        .put("coinType", coinType)
+                        .put("toAddr", toAddr)
+                        .put("remark", remark));
+    }
+
+    /**
+     * /api/user/wallet/removeDrawWalletAddr.do
+     * POST
+     * 删除提现地址（叶海啸）
+     */
+    public static Api removeDrawWalletAddr(int id) {
+        return Api.post("/api/user/wallet/removeDrawWalletAddr.do",
+                new ReqParams()
+                        .put("id", id));
     }
 
     /**
@@ -127,11 +201,22 @@ public class Apic {
     }
 
     /**
+     * /user/wallet/getAccountByUser.do
+     * GET
+     * 账户查询（叶海啸）
+     * 币币账户
+     */
+    public static Api getAccountByUser(String coinType) {
+        return Api.get("/api/user/wallet/getAccountByUser.do",
+                new ReqParams().put("coinType", coinType));
+    }
+
+    /**
      * /api/otc/account/list
      * GET
      * 法币账户
      */
-    public static Api accountList() {
+    public static Api otcAccountList() {
         return Api.get("/api/otc/account/list");
     }
 
@@ -142,6 +227,31 @@ public class Apic {
      */
     public static Api userAccount() {
         return Api.get("/api/user/user/account");
+    }
+
+    /**
+     * /api/otc/account/transfer
+     * POST
+     * 资金划转--(v1.1)
+     */
+    public static Api accountTransfer(String coinType, int type, String count) {
+        return Api.post("/api/otc/account/transfer",
+                new ReqParams()
+                        .put("coinType", coinType)
+                        .put("type", type)
+                        .put("count", count));
+    }
+
+    /**
+     * /api/user/wallet/getUserFinanceFlow.do
+     * GET
+     * 资产明细（叶海啸）
+     */
+    public static Api getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData,int page,int pageSize) {
+        return Api.get("/api/user/wallet/getUserFinanceFlow.do",
+                new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
+                        .put("page",page)
+                        .put("pageSize",pageSize));
     }
 
     /**
@@ -175,8 +285,8 @@ public class Apic {
     public static Api setDrawPass(String drawPass, String affirmPass, String msgCode, String type, String googleCode) {
         return Api.post("/api/user/userSafe/setDrawPass.do",
                 new ReqParams()
-                        .put("phone", drawPass)
-                        .put("phoneMsgCode", affirmPass)
+                        .put("drawPass", drawPass)
+                        .put("affirmPass", affirmPass)
                         .put("msgCode", msgCode)
                         .put("type", type)
                         .put("googleCode", googleCode));
@@ -273,15 +383,6 @@ public class Apic {
     }
 
     /**
-     * /user/wallet/getAccountByUser.do
-     * GET
-     * 账户查询（叶海啸）
-     */
-    public static Api getAccountByUser() {
-        return Api.get("/api/user/wallet/getAccountByUser.do");
-    }
-
-    /**
      * 获取（phone/email）验证码
      * <p>
      * /api/user/validate/sendMsgCode.do
@@ -292,6 +393,16 @@ public class Apic {
     public static Api getAuthCode(AuthCodeGet authCodeGet) {
         return Api.post("/api/user/validate/sendMsgCode.do",
                 new ReqParams(AuthCodeGet.class, authCodeGet));
+    }
+
+    /**
+     * /api/user/userSafe/sendOld.do
+     * POST
+     * 发送验证码(需要原有的手机号或者短信校验使用)--薛松
+     */
+    public static Api sendOld(String imgCode, int smsType) {
+        return Api.post("/api/user/userSafe/sendOld.do",
+                new ReqParams().put("imgCode", imgCode).put("smsType", smsType));
     }
 
     /**

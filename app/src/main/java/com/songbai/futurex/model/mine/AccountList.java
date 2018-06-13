@@ -1,15 +1,20 @@
 package com.songbai.futurex.model.mine;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author yangguangda
  * @date 2018/6/6
  */
-public class AccountList {
+public class AccountList implements Parcelable {
+
     /**
-     * balance : 9,994.00013176
-     * account : [{"coinType":"usdt","estimate":"0.00013176","freeze":"0.0000000000","usable":"1.0000000000"},{"coinType":"btc","estimate":"9,994.00000000","freeze":"0.00000000","usable":"9,994.00000000"},{"coinType":"eth","estimate":"0.00000000","freeze":"0.00000000","usable":"0.00000000"}]
+     * balance : 1.3334794261721573E9
+     * account : [{"ableCoin":999999999,"coinType":"etc","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["etc_usdt","etc_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"btc","estimateBtc":999999999,"freezeCoin":0,"isCanDraw":1,"pairs":["btc_usdt"],"recharge":1},{"ableCoin":999999999,"coinType":"usdt","estimateBtc":146094.17215737264,"freezeCoin":0,"isCanDraw":1,"pairs":["btc_usdt","eth_usdt","ltc_usdt","neo_usdt","bch_usdt","qtum_usdt","etc_usdt","eos_usdt"],"recharge":1},{"ableCoin":999999999,"coinType":"eth","estimateBtc":333333333,"freezeCoin":0,"isCanDraw":1,"pairs":["eth_btc","eth_usdt"],"recharge":1},{"ableCoin":999999999,"coinType":"ltc","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["ltc_usdt","ltc_eth","ltc_btc"],"recharge":1},{"ableCoin":999999999,"coinType":"bch","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["bch_usdt","bch_btc","bch_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"qtum","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["qtum_usdt","qtum_btc","qtum_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"bcx","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":[],"recharge":1},{"ableCoin":999999999,"coinType":"neo","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["neo_usdt","neo_btc","neo_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"eos","estimateBtc":0,"freezeCoin":0,"isCanDraw":0,"pairs":["eos_usdt"],"recharge":0}]
      */
 
     private String balance;
@@ -31,18 +36,37 @@ public class AccountList {
         this.account = account;
     }
 
-    public static class AccountBean {
+    public static class AccountBean implements Parcelable {
+        public static final int CANT_RECHAREGE = 0;
+        public static final int CAN_RECHAREGE = 1;
+        public static final int CANT_DRAW = 0;
+        public static final int CAN_DRAW = 1;
+
         /**
-         * coinType : usdt
-         * estimate : 0.00013176
-         * freeze : 0.0000000000
-         * usable : 1.0000000000
+         * ableCoin : 999999999
+         * coinType : etc
+         * estimateBtc : 0
+         * freezeCoin : 0
+         * isCanDraw : 1 //0：不可提币 1可提
+         * pairs : ["etc_usdt","etc_eth"]
+         * recharge : 1 //0：不可充值币1：可充币
          */
 
+        private String ableCoin;
         private String coinType;
-        private String estimate;
-        private String freeze;
-        private String usable;
+        private String estimateBtc;
+        private String freezeCoin;
+        private int isCanDraw;
+        private int recharge;
+        private List<String> pairs;
+
+        public String getAbleCoin() {
+            return ableCoin;
+        }
+
+        public void setAbleCoin(String ableCoin) {
+            this.ableCoin = ableCoin;
+        }
 
         public String getCoinType() {
             return coinType;
@@ -52,28 +76,117 @@ public class AccountList {
             this.coinType = coinType;
         }
 
-        public String getEstimate() {
-            return estimate;
+        public String getEstimateBtc() {
+            return estimateBtc;
         }
 
-        public void setEstimate(String estimate) {
-            this.estimate = estimate;
+        public void setEstimateBtc(String estimateBtc) {
+            this.estimateBtc = estimateBtc;
         }
 
-        public String getFreeze() {
-            return freeze;
+        public String getFreezeCoin() {
+            return freezeCoin;
         }
 
-        public void setFreeze(String freeze) {
-            this.freeze = freeze;
+        public void setFreezeCoin(String freezeCoin) {
+            this.freezeCoin = freezeCoin;
         }
 
-        public String getUsable() {
-            return usable;
+        public int getIsCanDraw() {
+            return isCanDraw;
         }
 
-        public void setUsable(String usable) {
-            this.usable = usable;
+        public void setIsCanDraw(int isCanDraw) {
+            this.isCanDraw = isCanDraw;
         }
+
+        public int getRecharge() {
+            return recharge;
+        }
+
+        public void setRecharge(int recharge) {
+            this.recharge = recharge;
+        }
+
+        public List<String> getPairs() {
+            return pairs;
+        }
+
+        public void setPairs(List<String> pairs) {
+            this.pairs = pairs;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.ableCoin);
+            dest.writeString(this.coinType);
+            dest.writeString(this.estimateBtc);
+            dest.writeString(this.freezeCoin);
+            dest.writeInt(this.isCanDraw);
+            dest.writeInt(this.recharge);
+            dest.writeStringList(this.pairs);
+        }
+
+        public AccountBean() {
+        }
+
+        protected AccountBean(Parcel in) {
+            this.ableCoin = in.readString();
+            this.coinType = in.readString();
+            this.estimateBtc = in.readString();
+            this.freezeCoin = in.readString();
+            this.isCanDraw = in.readInt();
+            this.recharge = in.readInt();
+            this.pairs = in.createStringArrayList();
+        }
+
+        public static final Creator<AccountBean> CREATOR = new Creator<AccountBean>() {
+            @Override
+            public AccountBean createFromParcel(Parcel source) {
+                return new AccountBean(source);
+            }
+
+            @Override
+            public AccountBean[] newArray(int size) {
+                return new AccountBean[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.balance);
+        dest.writeList(this.account);
+    }
+
+    public AccountList() {
+    }
+
+    protected AccountList(Parcel in) {
+        this.balance = in.readString();
+        this.account = new ArrayList<AccountBean>();
+        in.readList(this.account, AccountBean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<AccountList> CREATOR = new Parcelable.Creator<AccountList>() {
+        @Override
+        public AccountList createFromParcel(Parcel source) {
+            return new AccountList(source);
+        }
+
+        @Override
+        public AccountList[] newArray(int size) {
+            return new AccountList[size];
+        }
+    };
 }

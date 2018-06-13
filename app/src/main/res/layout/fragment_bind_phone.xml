@@ -25,12 +25,12 @@
         android:visibility="visible">
 
         <TextView
+            android:id="@+id/areaCode"
+            style="@style/SignEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
             android:drawablePadding="4dp"
-            android:textColor="@color/text22"
-            android:textSize="16sp"
+            android:drawableRight="@drawable/ic_area_code_arrow"
             tools:text="0086"/>
 
         <EditText

@@ -17,6 +17,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:rightText="@string/property_flow"
+        app:rightTextColor="@color/text49"
+        app:rightTextSize="13sp"
+        app:rightVisible="true"
         app:titleText="@string/property"/>
 
     <RelativeLayout
