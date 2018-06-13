@@ -12,6 +12,7 @@ public class Preference {
         String USER_JSON = "userJson";
         String ACCOUNT_TYPE = "account_type";
         String LOCALE_JSON = "locale_json";
+        String SERVER_TIME = "server_time";
     }
 
     private static Preference sInstance;
@@ -75,5 +76,22 @@ public class Preference {
 
     public void setUserAccountType(String phone, int accountType) {
         getEditor().putInt(phone + Key.ACCOUNT_TYPE, accountType);
+    }
+
+    public void setTimestamp(String key, long timestamp) {
+        apply(key, timestamp);
+    }
+
+    public long getTimestamp(String key) {
+        return mPrefs.getLong(key, 0);
+    }
+
+
+    public void setServerTime(long serverTime) {
+        apply(Key.SERVER_TIME, serverTime);
+    }
+
+    public long getServerTime() {
+        return mPrefs.getLong(Key.SERVER_TIME, 0);
     }
 }

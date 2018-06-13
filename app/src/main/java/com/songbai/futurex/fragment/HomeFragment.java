@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.auth.LoginActivity;
-import com.songbai.futurex.utils.Launcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +48,6 @@ public class HomeFragment extends BaseFragment {
 
     @OnClick(R.id.login)
     public void onViewClicked() {
-        Launcher.with(getActivity(), LoginActivity.class).execute();
+        //Launcher.with(getActivity(), LoginActivity.class).execute();
     }
 }

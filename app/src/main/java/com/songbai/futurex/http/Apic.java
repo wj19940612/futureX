@@ -509,6 +509,25 @@ public class Apic {
                         .put("suffixSymbol", suffixSymbol));
     }
 
+    /**
+     * 获取 socket 配置，host & port
+     *
+     * @return
+     */
+    public static Api getSocketConfig() {
+        return Api.get("/api/gateway/tcp/websocket.do");
+    }
+
+    /**
+     * 获取服务器系统时间
+     *
+     * @return
+     */
+    public static Api getSystemTime() {
+        return Api.get("/user/user/getSystemTime.do");
+    }
+
+
     public interface url {
     }
 }

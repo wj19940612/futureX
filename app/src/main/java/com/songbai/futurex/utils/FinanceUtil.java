@@ -14,48 +14,8 @@ public class FinanceUtil {
 
     private static final int DEFAULT_SCALE = 2;
 
-    private static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.DOWN;
-
-    public static final int TEN_THOUSAND = 10000;
-    public static final int ONE_HUNDRED_MILLION = 10000_0000;
-
-
     /**
-     * 整数百分化后直接舍去小数. eg 0.9956 -> 99%
-     *
-     * @param number
-     * @return
-     */
-    public static String downToIntegerPercentage(double number) {
-        return downToPercentage(number, 0);
-    }
-
-    /**
-     * 百分化后直接舍去小数. eg 0.99545 -> 99.54% with scale is 2
-     *
-     * @param number
-     * @param scale
-     * @return
-     */
-    public static String downToPercentage(double number, int scale) {
-        BigDecimal bigDecimal = multiply(number, 100d);
-        return formatWithScale(bigDecimal.doubleValue(), scale, RoundingMode.DOWN) + "%";
-    }
-
-    /**
-     * 百分化后直接舍去小数. eg 0.99545 -> 99.54% with scale is 2 (99.00% -> 99%)
-     *
-     * @param number
-     * @param scale
-     * @return
-     */
-    public static String downToPercentageRemoveTailZero(double number, int scale) {
-        BigDecimal bigDecimal = multiply(number, 100d);
-        return removeTailZero(formatWithScale(bigDecimal.doubleValue(), scale, RoundingMode.DOWN) + "%");
-    }
-
-    /**
-     * 格式化 double 数据成百分数格式，并使用‘银行家算法’精确（保留）到小数点后两位
+     * 格式化 double 数据成百分数格式
      *
      * @param value
      * @return
@@ -66,7 +26,7 @@ public class FinanceUtil {
     }
 
     /**
-     * 格式化 double 数据成百分数格式，并使用‘银行家算法’精确（保留）到小数点后 scale 位
+     * 格式化 double 数据成百分数格式
      *
      * @param value
      * @param scale
@@ -78,19 +38,32 @@ public class FinanceUtil {
     }
 
     /**
-     * 格式化 double 数据成百分数格式，不精确（保留）到小数
+     * 格式化 double 数据成百分数格式
      *
      * @param value
-     * @param scale
+     * @param roundingMode
      * @return
      */
-    public static String formatToPercentageRemoveTailZero(double value, int scale) {
+    public static String formatToPercentage(double value, RoundingMode roundingMode) {
         BigDecimal bigDecimal = multiply(value, 100d);
-        return removeTailZero(formatWithScale(bigDecimal.doubleValue(), scale) + "%");
+        return formatWithScale(bigDecimal.doubleValue(), DEFAULT_SCALE, roundingMode) + "%";
     }
 
     /**
-     * 添加大额单位，使用 roundingMode 是 down
+     * 格式化 double 数据成百分数格式
+     *
+     * @param value
+     * @param scale
+     * @param roundingMode
+     * @return
+     */
+    public static String formatToPercentage(double value, int scale, RoundingMode roundingMode) {
+        BigDecimal bigDecimal = multiply(value, 100d);
+        return formatWithScale(bigDecimal.doubleValue(), scale, roundingMode) + "%";
+    }
+
+    /**
+     * 添加大额单位，默认 roundingMode 是 down
      *
      * @param value
      * @return
@@ -100,7 +73,7 @@ public class FinanceUtil {
     }
 
     /**
-     * 添加大额单位，使用 roundingMode 是 down
+     * 添加大额单位，默认 roundingMode 是 down
      *
      * @param value
      * @return
@@ -115,7 +88,7 @@ public class FinanceUtil {
     }
 
     /**
-     * 添加大额单位，使用 roundingMode 是 down
+     * 添加大额单位，默认 roundingMode 是 down
      *
      * @param value
      * @return
@@ -125,18 +98,18 @@ public class FinanceUtil {
     }
 
     /**
-     * 添加大额单位，使用 roundingMode 是 down
+     * 添加大额单位，默认 roundingMode 是 down
      *
      * @param value
      * @return
      */
     public static String unitize(double value, int unitizeScale) {
         if (value >= 100000000 || value <= -100000000) {
-            return unitizeWithScale(value, unitizeScale, UNIT_YI, DEFAULT_SCALE);
+            return unitizeWithScale(value, unitizeScale, UNIT_YI);
         } else if (value >= 10000 || value <= -10000) {
-            return unitizeWithScale(value, unitizeScale, UNIT_WANG, DEFAULT_SCALE);
+            return unitizeWithScale(value, unitizeScale, UNIT_WANG);
         }
-        return unitizeWithScale(value, unitizeScale, "", DEFAULT_SCALE);
+        return unitizeWithScale(value, unitizeScale, "");
     }
 
     /**
@@ -148,14 +121,19 @@ public class FinanceUtil {
      * @return
      */
     private static String unitizeWithScale(int value, int unitizeScale, String unit) {
-        if (unit == UNIT_WANG) {
-            BigDecimal newValue = divide(value, 10000.000, unitizeScale, RoundingMode.DOWN);
-            return newValue.toString() + unit;
-        } else if (unit == UNIT_YI) {
-            BigDecimal newValue = divide(value, 100000000.000, unitizeScale, RoundingMode.DOWN);
-            return newValue.toString() + unit;
-        }
-        return String.valueOf(value);
+        return unitizeWithScale(value, unitizeScale, unit, 0);
+    }
+
+    /**
+     * 单位化数字，使用 roundingMode 是 down，不满足格式化条件的数据直接用 scale 格式数据小数位数
+     *
+     * @param value
+     * @param unitizeScale 单位化后的数据小数位数
+     * @param unit
+     * @return
+     */
+    private static String unitizeWithScale(double value, int unitizeScale, String unit) {
+        return unitizeWithScale(value, unitizeScale, unit, unitizeScale);
     }
 
     /**
@@ -175,22 +153,11 @@ public class FinanceUtil {
             BigDecimal newValue = divide(value, 100000000.000, unitizeScale, RoundingMode.DOWN);
             return newValue.toString() + unit;
         }
-        return formatWithScale(value, unitizeScale);
+        return formatWithScale(value, scale, RoundingMode.DOWN);
     }
 
     /**
-     * 使用‘银行家算法’精确（保留）到小数点后 2 位
-     *
-     * @param value
-     * @return 处理后的字符串
-     */
-    public static String formatWithScaleRemoveTailZero(double value) {
-        return removeTailZero(formatWithScale(value));
-    }
-
-
-    /**
-     * 格式化 String 数据, 并使用‘银行家算法’精确（保留）到小数点后两位
+     * 格式化 String 数据, 精确（保留）到小数点后两位
      *
      * @param value
      * @return
@@ -218,7 +185,7 @@ public class FinanceUtil {
     }
 
     /**
-     * 使用‘银行家算法’精确（保留）到小数点后 2 位
+     * 精确（保留）到小数点后 2 位，默认 roundingMode: half_even
      *
      * @param value
      * @return 处理后的字符串
@@ -228,18 +195,18 @@ public class FinanceUtil {
     }
 
     /**
-     * 使用‘银行家算法’精确（保留）到小数点后 scale 位
+     * 精确（保留）到小数点后 scale 位，默认 roundingMode: half_even
      *
      * @param value
      * @param scale 小数位数
      * @return 处理后的字符串
      */
     public static String formatWithScale(double value, int scale) {
-        return formatWithScale(value, scale, DEFAULT_ROUNDING_MODE);
+        return formatWithScale(value, scale, RoundingMode.HALF_EVEN);
     }
 
     /**
-     * 使用‘银行家算法’精确（保留）到小数点后 scale 位, 使用 roundingMode
+     * 精确（保留）到小数点后 scale 位, 使用 roundingMode
      *
      * @param value
      * @param scale
@@ -269,20 +236,19 @@ public class FinanceUtil {
      * @param unit
      * @return 处理后的字符串
      */
-    private static String formatWithThousandsSeparatorAndUnit(double value, int scale, String unit) {
-        if (unit == UNIT_WANG) {
-            BigDecimal newValue = divide(value, 10000.000, scale, RoundingMode.DOWN);
-            return formatWithThousandsSeparator(newValue.doubleValue(), scale, RoundingMode.DOWN) + unit;
-        } else if (unit == UNIT_YI) {
-            BigDecimal newValue = divide(value, 100000000.000, scale, RoundingMode.DOWN);
-            return formatWithThousandsSeparator(newValue.doubleValue(), scale, RoundingMode.DOWN) + unit;
-        }
-        return String.valueOf(value);
-    }
-
+//    private static String formatWithThousandsSeparatorAndUnit(double value, int scale, String unit) {
+//        if (unit == UNIT_WANG) {
+//            BigDecimal newValue = divide(value, 10000.000, scale, RoundingMode.DOWN);
+//            return formatWithThousandsSeparator(newValue.doubleValue(), scale, RoundingMode.DOWN) + unit;
+//        } else if (unit == UNIT_YI) {
+//            BigDecimal newValue = divide(value, 100000000.000, scale, RoundingMode.DOWN);
+//            return formatWithThousandsSeparator(newValue.doubleValue(), scale, RoundingMode.DOWN) + unit;
+//        }
+//        return String.valueOf(value);
+//    }
 
     /**
-     * 使用千位分隔符分割 double 数据，并使用‘银行家算法’精确（保留）到小数点后两位
+     * 使用千位分隔符分割 double 数据，默认 roundingMode 是 half_even
      *
      * @param value
      * @return 处理后的字符串
@@ -292,7 +258,7 @@ public class FinanceUtil {
     }
 
     /**
-     * 使用千位分隔符分割 double 数据，并使用‘银行家算法’精确（保留）到小数点后两位
+     * 使用千位分隔符分割 double 数据，默认 roundingMode 是 half_even
      *
      * @param value
      * @return 处理后的字符串
@@ -302,22 +268,23 @@ public class FinanceUtil {
     }
 
     /**
-     * 使用千位分隔符分割 double，并使用‘银行家算法’精确（保留）到小数点后 scale 位
+     * 使用千位分隔符分割 double 数据，默认 roundingMode 是 half_even
      *
      * @param value
-     * @param scale
+     * @param scale 小数位数
      * @return 处理后的字符串
      */
     public static String formatWithThousandsSeparator(double value, int scale) {
-        return formatWithThousandsSeparator(value, scale, DEFAULT_ROUNDING_MODE);
+        return formatWithThousandsSeparator(value, scale, RoundingMode.HALF_EVEN);
     }
 
     /**
-     * 使用千位分隔符分割 double，并使用‘银行家算法’精确（保留）到小数点后 scale 位
+     * 使用千位分隔符分割 double 数据
      *
      * @param value
-     * @param scale
-     * @return 处理后的字符串
+     * @param scale        小数位数
+     * @param roundingMode
+     * @return
      */
     public static String formatWithThousandsSeparator(double value, int scale, RoundingMode roundingMode) {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
@@ -326,10 +293,20 @@ public class FinanceUtil {
         decimalFormat.setMinimumIntegerDigits(1);
         decimalFormat.setRoundingMode(roundingMode);
         decimalFormat.setGroupingSize(3);
-
         return decimalFormat.format(value);
     }
 
+    /**
+     * 格式化 double 数据，去除末尾的小数后多余的 0
+     *
+     * @param value
+     * @return
+     */
+    public static String trimTrailingZero(double value) {
+        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+        decimalFormat.applyPattern("#.#");
+        return decimalFormat.format(value);
+    }
 
     /**
      * 处理 Double 的大数据减法
@@ -399,7 +376,7 @@ public class FinanceUtil {
      * @return 除法结果
      */
     public static BigDecimal divide(double dividend, double divisor, int scale) {
-        return divide(dividend, divisor, scale, DEFAULT_ROUNDING_MODE);
+        return divide(dividend, divisor, scale, RoundingMode.HALF_EVEN);
     }
 
     /**
@@ -411,7 +388,7 @@ public class FinanceUtil {
      * @return 除法结果
      */
     public static BigDecimal divide(Double dividend, Double divisor, int scale) {
-        return divide(dividend, divisor, scale, DEFAULT_ROUNDING_MODE);
+        return divide(dividend, divisor, scale, RoundingMode.HALF_EVEN);
     }
 
     /**
@@ -422,7 +399,7 @@ public class FinanceUtil {
      * @return 除法结果
      */
     public static BigDecimal divide(double dividend, double divisor) {
-        return divide(dividend, divisor, DEFAULT_SCALE, DEFAULT_ROUNDING_MODE);
+        return divide(dividend, divisor, DEFAULT_SCALE, RoundingMode.HALF_EVEN);
     }
 
     /**
@@ -433,7 +410,7 @@ public class FinanceUtil {
      * @return 除法结果
      */
     public static BigDecimal divide(Double dividend, Double divisor) {
-        return divide(dividend, divisor, DEFAULT_SCALE, DEFAULT_ROUNDING_MODE);
+        return divide(dividend, divisor, DEFAULT_SCALE, RoundingMode.HALF_EVEN);
     }
 
     /**
@@ -520,15 +497,4 @@ public class FinanceUtil {
         }
         return add(summand.doubleValue(), addend.doubleValue());
     }
-
-    /**
-     * 去除两位小数点后多余的.00 Fixme 这个方法只能处理两位小数，缺陷太大
-     *
-     * @param number
-     * @return
-     */
-    private static String removeTailZero(String number) {
-        return number.replace(".00", "");
-    }
-
 }
