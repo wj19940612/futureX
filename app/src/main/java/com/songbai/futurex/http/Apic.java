@@ -247,11 +247,33 @@ public class Apic {
      * GET
      * 资产明细（叶海啸）
      */
-    public static Api getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData,int page,int pageSize) {
+    public static Api getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
         return Api.get("/api/user/wallet/getUserFinanceFlow.do",
                 new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
-                        .put("page",page)
-                        .put("pageSize",pageSize));
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * /api/user/wallet/getDepositWalletAddrByCoinType.do
+     * GET
+     * 获取充值地址（叶海啸）
+     */
+    public static Api getDepositWalletAddrByCoinType(String coinType) {
+        return Api.get("/api/user/wallet/getDepositWalletAddrByCoinType.do",
+                new ReqParams()
+                        .put("coinType", coinType));
+    }
+
+    /**
+     * /api/user/wallet/getCoinTypeDrawLimit.do
+     * GET
+     * 获取提现限制（叶海啸）
+     */
+    public static Api getCoinTypeDrawLimit(String coinType) {
+        return Api.get("/api/user/wallet/getCoinTypeDrawLimit.do",
+                new ReqParams()
+                        .put("coinType", coinType));
     }
 
     /**

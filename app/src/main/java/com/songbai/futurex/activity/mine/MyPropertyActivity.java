@@ -1,6 +1,7 @@
 package com.songbai.futurex.activity.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -51,14 +52,15 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class MyPropertyActivity extends BaseActivity {
+    private static int REQUEST_TRANSFER = 1223;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.propertyCardPager)
     ViewPager mPropertyCardPager;
     @BindView(R.id.propertyListPager)
     ViewPager mPropertyListPager;
-    @BindView(R.id.indicatorContiner)
-    LinearLayout mIndicatorContiner;
+    @BindView(R.id.indicatorContainer)
+    LinearLayout mIndicatorContainer;
     @BindView(R.id.indicator)
     View mIndicator;
     private Unbinder mBind;
@@ -68,6 +70,7 @@ public class MyPropertyActivity extends BaseActivity {
     int size = 3;
     private int mScrollWidth;
     private SparseArray<AccountList> mAccountLists = new SparseArray<>(3);
+    private ArrayList<PropertyListFragment> mFragments;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,20 +85,21 @@ public class MyPropertyActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(MyPropertyActivity.this, PropertyFlowActivity.class).execute();
+                Launcher.with(MyPropertyActivity.this, PropertyFlowActivity.class)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, true).execute();
             }
         });
         mPagerTranslationX = Display.dp2Px(20, getResources());
-        mIndicatorContiner.post(new Runnable() {
+        mIndicatorContainer.post(new Runnable() {
             @Override
             public void run() {
-                int measuredWidth = mIndicatorContiner.getMeasuredWidth();
+                int measuredWidth = mIndicatorContainer.getMeasuredWidth();
                 mScrollWidth = (int) (measuredWidth / size + 0.5);
                 ViewGroup.LayoutParams layoutParams = mIndicator.getLayoutParams();
                 layoutParams.width = mScrollWidth;
             }
         });
-        mPropertyCardAdapter = new PropertyCardAdapter();
+        mPropertyCardAdapter = new PropertyCardAdapter(this);
         mPropertyCardAdapter.setData(mAccountLists);
         mPropertyCardPager.setOffscreenPageLimit(2);
         mPropertyCardPager.setAdapter(mPropertyCardAdapter);
@@ -109,6 +113,8 @@ public class MyPropertyActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
+                setCardPagerTranslationX(position, 0);
+                mPropertyListPager.setCurrentItem(position, false);
             }
 
             @Override
@@ -119,23 +125,30 @@ public class MyPropertyActivity extends BaseActivity {
         mPropertyCardPager.setCurrentItem(0);
         mCardPagePadding = (int) Display.dp2Px(12, getResources());
         mPropertyCardPager.setPageMargin(mCardPagePadding);
-        mPropertyListPager.setAdapter(new PropertyListAdapter(getSupportFragmentManager()));
+        mFragments = new ArrayList<>();
+        mFragments.add(PropertyListFragment.newInstance(0));
+        mFragments.add(PropertyListFragment.newInstance(1));
+        mFragments.add(PropertyListFragment.newInstance(2));
+        PropertyListAdapter adapter = new PropertyListAdapter(getSupportFragmentManager());
+        adapter.setList(mFragments);
+        mPropertyListPager.setAdapter(adapter);
         mPropertyListPager.setOffscreenPageLimit(2);
         mPropertyListPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                mPropertyCardPager.scrollTo((int) ((position + positionOffset) * (mPropertyCardPager.getMeasuredWidth() + mCardPagePadding)), 0);
                 setCardPagerTranslationX(position, positionOffset);
+                mPropertyCardPager.scrollTo((int) ((position + positionOffset) * (mPropertyCardPager.getMeasuredWidth() + mCardPagePadding)), 0);
                 mIndicator.setTranslationX(mIndicator.getMeasuredWidth() * (position + positionOffset));
             }
 
             @Override
             public void onPageSelected(int position) {
+                setCardPagerTranslationX(position, 0);
+                mPropertyCardPager.setCurrentItem(position, false);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
@@ -180,7 +193,23 @@ public class MyPropertyActivity extends BaseActivity {
         mPropertyCardAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_TRANSFER) {
+            if (data != null) {
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, false);
+                if (shouldRefresh) {
+                    for (PropertyListFragment fragment : mFragments) {
+                        fragment.requestData();
+                    }
+                }
+            }
+        }
+    }
+
     static class PropertyCardAdapter extends PagerAdapter {
+        private final Context mContext;
         @BindView(R.id.accountType)
         TextView mAccountType;
         @BindView(R.id.totalPropertyType)
@@ -194,6 +223,10 @@ public class MyPropertyActivity extends BaseActivity {
         private SparseArray<AccountList> mData;
         private int mInviteCount;
 
+        PropertyCardAdapter(Context context) {
+            mContext = context;
+        }
+
         @Override
         public int getCount() {
             return 3;
@@ -206,8 +239,9 @@ public class MyPropertyActivity extends BaseActivity {
 
         @Override
         public int getItemPosition(@NonNull Object object) {
-            // 最简单解决 notifyDataSetChanged() 页面不刷新问题的方法
-            return POSITION_NONE;
+            int position = (int) ((View) object).getTag();
+            setData(position, mContext, (View) object);
+            return super.getItemPosition(object);
         }
 
         @NonNull
@@ -216,13 +250,7 @@ public class MyPropertyActivity extends BaseActivity {
             final Context context = container.getContext();
             View view = LayoutInflater.from(context).inflate(R.layout.row_account_property, container, false);
             ButterKnife.bind(this, view);
-            final AccountList accountList = mData.get(position);
-            if (accountList != null) {
-                String balance = accountList.getBalance();
-                if (!TextUtils.isEmpty(balance)) {
-                    mPropertyAmount.setText(balance);
-                }
-            }
+            view.setTag(position);
             switch (position) {
                 case 0:
                     view.setBackgroundResource(R.drawable.property_bg_purple);
@@ -242,41 +270,65 @@ public class MyPropertyActivity extends BaseActivity {
                     view.setBackgroundResource(R.drawable.property_bg_green);
                     mAccountType.setText(R.string.promoted_account);
                     mTotalPropertyType.setText(R.string.promoted_property_equivalent);
-                    String string = context.getString(R.string.invite_num_x, mInviteCount);
-                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(string);
-                    spannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.sixtyPercentWhite)),
-                            0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannableStringBuilder.setSpan(new AbsoluteSizeSpan(11, true),
-                            0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    mInviteNum.setText(spannableStringBuilder);
-                    mTransfer.setText(R.string.fast_transfer);
                     mInviteNum.setVisibility(View.VISIBLE);
+                    mTransfer.setText(R.string.fast_transfer);
                     break;
                 default:
             }
-            mTransfer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (position < 2) {
-                        List<AccountList.AccountBean> accountBeans = accountList.getAccount();
-                        if (accountBeans.size() < 1) {
-                            return;
-                        }
-                        UniqueActivity.launcher(context, FundsTransferFragment.class)
-                                .putExtra(ExtraKeys.TRANSFER_TYPE, position)
-                                .putExtra(ExtraKeys.ACCOUNT_BEANS, (ArrayList<? extends Parcelable>) accountBeans)
-                                .execute();
-                    } else {
-                        showTransferPop();
-                    }
-                }
-            });
+            setData(position, context, view);
             container.addView(view);
             return view;
         }
 
-        private void showTransferPop() {
+        private void setData(final int position, final Context context, View view) {
+            TextView mPropertyAmount = view.findViewById(R.id.propertyAmount);
+            TextView mInviteNum = view.findViewById(R.id.inviteNum);
+            TextView mTransfer = view.findViewById(R.id.transfer);
+            final AccountList accountList = mData.get(position);
+            if (accountList != null) {
+                String balance = accountList.getBalance();
+                if (!TextUtils.isEmpty(balance)) {
+                    mPropertyAmount.setText(balance);
+                }
+            }
+            if (position == 2) {
+                String string = context.getString(R.string.invite_num_x, mInviteCount);
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(string);
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.sixtyPercentWhite)),
+                        0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new AbsoluteSizeSpan(11, true),
+                        0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mInviteNum.setText(spannableStringBuilder);
+            }
+            mTransfer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<AccountList.AccountBean> accountBeans = accountList.getAccount();
+                    switch (position) {
+                        case 0:
+                            ArrayList<AccountList.AccountBean> list = new ArrayList<>();
+                            for (AccountList.AccountBean accountBean : accountBeans) {
+                                if (accountBean.getLegal() == AccountList.AccountBean.IS_LEGAL) {
+                                    list.add(accountBean);
+                                }
+                            }
+                            if (list.size() > 0) {
+                                openTransfer(list, context, position);
+                            }
+                            break;
+                        case 1:
+                            openTransfer((ArrayList<? extends Parcelable>) accountBeans, context, position);
+                            break;
+                        case 2:
+                            showTransferPop();
+                            break;
+                        default:
+                    }
+                }
+            });
+        }
 
+        private void showTransferPop() {
         }
 
         @Override
@@ -293,19 +345,32 @@ public class MyPropertyActivity extends BaseActivity {
         }
     }
 
+    private static void openTransfer(ArrayList<? extends Parcelable> accountBeans, Context context, int position) {
+        UniqueActivity.launcher(context, FundsTransferFragment.class)
+                .putExtra(ExtraKeys.TRANSFER_TYPE, position)
+                .putExtra(ExtraKeys.ACCOUNT_BEANS, accountBeans)
+                .execute(REQUEST_TRANSFER);
+    }
+
     static class PropertyListAdapter extends FragmentPagerAdapter {
+        private ArrayList<PropertyListFragment> mList;
+
         PropertyListAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PropertyListFragment.newInstance(position);
+            return mList.get(position);
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return mList.size();
+        }
+
+        public void setList(ArrayList<PropertyListFragment> list) {
+            mList = list;
         }
     }
 }

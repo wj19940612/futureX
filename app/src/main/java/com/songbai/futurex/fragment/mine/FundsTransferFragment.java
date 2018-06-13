@@ -1,8 +1,10 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -37,6 +39,7 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class FundsTransferFragment extends UniqueActivity.UniFragment {
+    public static final int FUNDS_TRANSFER_RESULT = 112;
     @BindView(R.id.fromAccount)
     TextView mFromAccount;
     @BindView(R.id.ivArrow)
@@ -73,14 +76,18 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        mFromAccount.setText(mTransferType == 0 ? R.string.coin_coin_account : R.string.legal_currency_account);
+        mToAccount.setText(mTransferType == 1 ? R.string.coin_coin_account : R.string.legal_currency_account);
         setSelectedItem(0);
     }
 
     private void setSelectedItem(int options1) {
         mSelectedAccountBean = mAccountBeans.get(options1);
+        String ableCoin = mSelectedAccountBean.getAbleCoin();
+        mConfirmTransfer.setEnabled(Double.valueOf(ableCoin) > 0);
         mCoinType.setText(mSelectedAccountBean.getCoinType().toUpperCase());
         mTransferAmount.setHint(getString(R.string.most_transfer_amount_type_x,
-                mSelectedAccountBean.getAbleCoin(),
+                ableCoin,
                 mSelectedAccountBean.getCoinType().toUpperCase()));
         fixAmount();
     }
@@ -100,7 +107,10 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-
+                        FragmentActivity activity = FundsTransferFragment.this.getActivity();
+                        activity.setResult(FundsTransferFragment.FUNDS_TRANSFER_RESULT,
+                                new Intent().putExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, true));
+                        activity.finish();
                     }
                 })
                 .fire();

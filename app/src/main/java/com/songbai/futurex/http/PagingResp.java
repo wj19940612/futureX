@@ -39,7 +39,7 @@ public class PagingResp<T> {
         return getData().getData();
     }
 
-    private class Data<T> {
+    public static class Data<T> {
         private List<T> data;
         private int pageSize;
         private int resultCount;//总共多少行

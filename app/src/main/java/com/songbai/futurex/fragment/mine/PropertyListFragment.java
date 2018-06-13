@@ -1,6 +1,7 @@
 package com.songbai.futurex.fragment.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,7 @@ import butterknife.Unbinder;
  */
 public class PropertyListFragment extends BaseFragment {
     private static final String PROPERTY_TYPE = "property_type";
+    private static final int REQUEST_COIN_PROPERTY = 12322;
 
     @BindView(R.id.searchProperty)
     EditText mSearchProperty;
@@ -88,14 +91,7 @@ public class PropertyListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyListAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        if (mPropertyType == 0) {
-            getAccountByUser();
-        }
-        if (mPropertyType == 1) {
-            accountList();
-        } else if (mPropertyType == 2) {
-            userAccount();
-        }
+        requestData();
         mSearchProperty.addTextChangedListener(new ValidationWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -190,7 +186,34 @@ public class PropertyListFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    static class PropertyListAdapter extends RecyclerView.Adapter {
+    public void requestData() {
+        if (mPropertyType == 0) {
+            getAccountByUser();
+        }
+        if (mPropertyType == 1) {
+            accountList();
+        } else if (mPropertyType == 2) {
+            userAccount();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("wtf","aaaaa");
+        if (requestCode == REQUEST_COIN_PROPERTY) {
+            Log.e("wtf","aa");
+            if (data != null) {
+                Log.e("tag","bb");
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, false);
+                if (shouldRefresh) {
+                    requestData();
+                }
+            }
+        }
+    }
+
+    class PropertyListAdapter extends RecyclerView.Adapter {
         private List<AccountList.AccountBean> mList;
         private Context mContext;
         private int mType;
@@ -226,7 +249,7 @@ public class PropertyListFragment extends BaseFragment {
             mType = type;
         }
 
-        static class PropertyListHolder extends RecyclerView.ViewHolder {
+        class PropertyListHolder extends RecyclerView.ViewHolder {
             private final View mRootView;
             @BindView(R.id.coinType)
             TextView mCoinType;
@@ -247,25 +270,27 @@ public class PropertyListFragment extends BaseFragment {
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
                 String ableCoin = accountBean.getAbleCoin();
                 SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_available_x, ableCoin));
-                ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
-                        0, ableCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ableCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
-                        0, ableCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (!TextUtils.isEmpty(ableCoin)) {
+                    ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
+                            0, ableCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ableCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
+                            0, ableCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
                 mAvailableAmount.setText(ableCoinStr);
                 String freezeCoin = accountBean.getFreezeCoin();
                 SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_freeze_x, freezeCoin));
-                freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
-                        0, freezeCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                freezeCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
-                        0, freezeCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (!TextUtils.isEmpty(freezeCoin)) {
+                    freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
+                            0, freezeCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    freezeCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
+                            0, freezeCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
                 mFreezeAmount.setText(freezeCoinStr);
                 mTransfer.setVisibility(type < 2 ? View.GONE : View.VISIBLE);
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (accountBean.getIsCanDraw() == AccountList.AccountBean.CAN_DRAW) {
-                            UniqueActivity.launcher(context,CoinPropertyFragment.class).putExtra(ExtraKeys.ACCOUNT_BEAN,accountBean).execute();
-                        }
+                        UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class).putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean).execute(PropertyListFragment.REQUEST_COIN_PROPERTY);
                     }
                 });
             }

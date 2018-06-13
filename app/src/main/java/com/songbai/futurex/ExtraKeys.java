@@ -63,5 +63,8 @@ public interface ExtraKeys {
     String COIN_INFO = "coin_info";
     String TRANSFER_TYPE = "transfer_type";
     String ACCOUNT_BEANS = "account_beans";
-    String ACCOUNT_BEAN= "account_bean";
+    String ACCOUNT_BEAN = "account_bean";
+    String MODIFIDE_SHOULD_REFRESH = "modified_should_refresh";
+    String COIN_TYPE = "coin_type";
+    String PROPERTY_FLOW_FILTER_TYPE_ALL = "property_flow_filter_type_all";
 }

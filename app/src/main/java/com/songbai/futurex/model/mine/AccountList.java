@@ -3,6 +3,8 @@ package com.songbai.futurex.model.mine;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class AccountList implements Parcelable {
         public static final int CAN_RECHAREGE = 1;
         public static final int CANT_DRAW = 0;
         public static final int CAN_DRAW = 1;
+        public static final int IS_LEGAL = 1;
 
         /**
          * ableCoin : 999999999
@@ -50,14 +53,18 @@ public class AccountList implements Parcelable {
          * isCanDraw : 1 //0：不可提币 1可提
          * pairs : ["etc_usdt","etc_eth"]
          * recharge : 1 //0：不可充值币1：可充币
+         * legal : 1 //0：否1：是
          */
-
+        @SerializedName(value = "ableCoin", alternate = {"usable"})
         private String ableCoin;
         private String coinType;
+        @SerializedName(value = "estimateBtc", alternate = {"estimate"})
         private String estimateBtc;
+        @SerializedName(value = "freezeCoin", alternate = {"freeze"})
         private String freezeCoin;
         private int isCanDraw;
         private int recharge;
+        private int legal;
         private List<String> pairs;
 
         public String getAbleCoin() {
@@ -108,12 +115,23 @@ public class AccountList implements Parcelable {
             this.recharge = recharge;
         }
 
+        public int getLegal() {
+            return legal;
+        }
+
+        public void setLegal(int legal) {
+            this.legal = legal;
+        }
+
         public List<String> getPairs() {
             return pairs;
         }
 
         public void setPairs(List<String> pairs) {
             this.pairs = pairs;
+        }
+
+        public AccountBean() {
         }
 
         @Override
@@ -129,10 +147,8 @@ public class AccountList implements Parcelable {
             dest.writeString(this.freezeCoin);
             dest.writeInt(this.isCanDraw);
             dest.writeInt(this.recharge);
+            dest.writeInt(this.legal);
             dest.writeStringList(this.pairs);
-        }
-
-        public AccountBean() {
         }
 
         protected AccountBean(Parcel in) {
@@ -142,6 +158,7 @@ public class AccountList implements Parcelable {
             this.freezeCoin = in.readString();
             this.isCanDraw = in.readInt();
             this.recharge = in.readInt();
+            this.legal = in.readInt();
             this.pairs = in.createStringArrayList();
         }
 
