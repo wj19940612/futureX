@@ -14,6 +14,7 @@ import android.view.View;
 public class EmptyRecycleView extends RecyclerView {
 
     private View mEmptyView;
+    private boolean mHideAll;
 
     public EmptyRecycleView(Context context) {
         super(context);
@@ -68,10 +69,20 @@ public class EmptyRecycleView extends RecyclerView {
     }
 
     private void checkIfEmpty() {
-        if (mEmptyView != null && getAdapter() != null) {
+        if (mEmptyView != null && getAdapter() != null && !mHideAll) {
             boolean emptyViewVisible = getAdapter().getItemCount() == 0;
             mEmptyView.setVisibility(emptyViewVisible ? VISIBLE : GONE);
             setVisibility(emptyViewVisible ? GONE : VISIBLE);
+        }
+    }
+
+    public void hideAll(boolean hideAll) {
+        mHideAll = hideAll;
+        if (hideAll) {
+            mEmptyView.setVisibility(GONE);
+            setVisibility(GONE);
+        } else {
+            checkIfEmpty();
         }
     }
 }

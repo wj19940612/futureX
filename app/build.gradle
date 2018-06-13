@@ -20,6 +20,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"ex.bitfutu.re\"')
+        buildConfigField('boolean', 'IS_PROD', 'true')
 
         manifestPlaceholders = [
                 GETUI_APP_ID    : "APP_ID",
@@ -42,6 +43,7 @@ android {
             versionName "1.0"
             minSdkVersion 21
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
+            buildConfigField('boolean', 'IS_PROD', 'false')
             manifestPlaceholders = [
                     GETUI_APP_ID    : "APP_ID",
                     GETUI_APP_KEY   : "APP_KEY",
@@ -52,6 +54,7 @@ android {
             versionCode alphaVersionCode as Integer
             versionName alphaVersionName
             buildConfigField('String', 'HOST', '\"ex.esongbai.xyz\"')
+            buildConfigField('boolean', 'IS_PROD', 'false')
             manifestPlaceholders = [
                     GETUI_APP_ID    : "APP_ID",
                     GETUI_APP_KEY   : "APP_KEY",
@@ -77,6 +80,8 @@ android {
         implementation 'com.getui:sdk-for-google-play:4.3.0.0'
         implementation 'com.github.chrisbanes:PhotoView:1.3.1'
         implementation 'com.contrarywind:Android-PickerView:4.1.3'
+        implementation 'com.koushikdutta.async:androidasync:2.+'
+
         implementation project(path: ':httplib')
         implementation project(path: ':glide')
         implementation project(path: ':swipeloadlayout')

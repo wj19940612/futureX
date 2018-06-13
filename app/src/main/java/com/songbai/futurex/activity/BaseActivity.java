@@ -20,6 +20,7 @@ import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
 import com.songbai.futurex.view.RequestProgress;
 import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.websocket.MessageProcessor;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -64,7 +65,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         });
         //MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
-        //SimpleConnector.get().connect();
+        MessageProcessor.get().connect();
     }
 
     private void scrollToTop(View view) {
