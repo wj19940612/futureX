@@ -47,7 +47,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/indicatorContiner"
+        android:id="@+id/indicatorContainer"
         android:layout_width="40dp"
         android:layout_height="2dp"
         android:background="@color/bgDD"
@@ -57,7 +57,7 @@
 
         <View
             android:id="@+id/indicator"
-            android:layout_width="20dp"
+            android:layout_width="13dp"
             android:layout_height="match_parent"
             android:background="@color/text99"/>
     </LinearLayout>
@@ -71,6 +71,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/indicatorContiner"/>
+        app:layout_constraintTop_toBottomOf="@+id/indicatorContainer"/>
 
 </android.support.constraint.ConstraintLayout>

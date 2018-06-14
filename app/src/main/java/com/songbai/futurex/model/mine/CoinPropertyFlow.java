@@ -4,12 +4,12 @@ package com.songbai.futurex.model.mine;
  * @author yangguangda
  * @date 2018/6/12
  */
-public class CoinProperty {
+public class CoinPropertyFlow {
     private String coinType;
-    private String createTime;
-    private String flowType;
-    private String status;
-    private String value;
+    private long createTime;
+    private int flowType;
+    private int status;
+    private double value;
 
     public String getCoinType() {
         return coinType;
@@ -19,35 +19,35 @@ public class CoinProperty {
         this.coinType = coinType;
     }
 
-    public String getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
-    public String getFlowType() {
+    public int getFlowType() {
         return flowType;
     }
 
-    public void setFlowType(String flowType) {
+    public void setFlowType(int flowType) {
         this.flowType = flowType;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    public String getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         this.value = value;
     }
 }

@@ -255,6 +255,28 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/getDepositWalletAddrByCoinType.do
+     * GET
+     * 获取充值地址（叶海啸）
+     */
+    public static Api getDepositWalletAddrByCoinType(String coinType) {
+        return Api.get("/api/user/wallet/getDepositWalletAddrByCoinType.do",
+                new ReqParams()
+                        .put("coinType", coinType));
+    }
+
+    /**
+     * /api/user/wallet/getCoinTypeDrawLimit.do
+     * GET
+     * 获取提现限制（叶海啸）
+     */
+    public static Api getCoinTypeDrawLimit(String coinType) {
+        return Api.get("/api/user/wallet/getCoinTypeDrawLimit.do",
+                new ReqParams()
+                        .put("coinType", coinType));
+    }
+
+    /**
      * /user/userSafe/updatePhone.do
      * POST
      * 绑定、修改手机号--薛松

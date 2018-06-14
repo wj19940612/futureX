@@ -1,8 +1,10 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,12 +19,14 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.mine.PropertyFlowActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingResp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.AccountList;
-import com.songbai.futurex.model.mine.CoinProperty;
+import com.songbai.futurex.model.mine.CoinPropertyFlow;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.TitleBar;
 
 import java.util.ArrayList;
@@ -38,6 +42,7 @@ import butterknife.Unbinder;
  * @date 2018/6/12
  */
 public class CoinPropertyFragment extends UniqueActivity.UniFragment {
+    public static final int COIN_PROPERTY_RESULT = 12532;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.ableCoin)
@@ -50,6 +55,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     private AccountList.AccountBean mAccountBean;
     private int mTransferType;
     private CoinPropertyAdapter mAdapter;
+    private boolean modified = true;
 
     @Nullable
     @Override
@@ -67,6 +73,15 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        getActivity().setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, modified));
+
+        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
+            @Override
+            public void onClick() {
+                FragmentActivity activity = CoinPropertyFragment.this.getActivity();
+                activity.finish();
+            }
+        });
         mTitleBar.setTitle(mAccountBean.getCoinType().toUpperCase());
         SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(getString(R.string.available_amount_x, mAccountBean.getAbleCoin()));
         ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text99)),
@@ -83,7 +98,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
         GetUserFinanceFlowData getUserFinanceFlowData = new GetUserFinanceFlowData();
         getUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
-        getUserFinanceFlowData.setFlowType(0);
+        getUserFinanceFlowData.setFlowType(String.valueOf(0));
         getUserFinanceFlowData.setStartTime("");
         getUserFinanceFlowData.setEndTime("");
         getUserFinanceFlow(getUserFinanceFlowData);
@@ -91,9 +106,9 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
     private void getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData) {
         Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5)
-                .callback(new Callback<PagingResp<CoinProperty>>() {
+                .callback(new Callback<PagingResp<CoinPropertyFlow>>() {
                     @Override
-                    protected void onRespSuccess(PagingResp<CoinProperty> resp) {
+                    protected void onRespSuccess(PagingResp<CoinPropertyFlow> resp) {
                         mAdapter.setList(resp.getList());
                     }
                 })
@@ -110,18 +125,33 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.history:
+                Launcher.with(getContext(), PropertyFlowActivity.class)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, false)
+                        .putExtra(ExtraKeys.COIN_TYPE,mAccountBean.getCoinType()).execute();
                 break;
             case R.id.transfer:
-                ArrayList<AccountList.AccountBean> accountBeans = new ArrayList<>();
-                accountBeans.add(mAccountBean);
-                UniqueActivity.launcher(getContext(), FundsTransferFragment.class)
-                        .putExtra(ExtraKeys.TRANSFER_TYPE, mTransferType)
-                        .putExtra(ExtraKeys.ACCOUNT_BEANS, accountBeans)
-                        .execute();
+                if (mAccountBean.getLegal() == AccountList.AccountBean.IS_LEGAL) {
+                    ArrayList<AccountList.AccountBean> accountBeans = new ArrayList<>();
+                    accountBeans.add(mAccountBean);
+                    UniqueActivity.launcher(getContext(), FundsTransferFragment.class)
+                            .putExtra(ExtraKeys.TRANSFER_TYPE, mTransferType)
+                            .putExtra(ExtraKeys.ACCOUNT_BEANS, accountBeans)
+                            .execute();
+                }
                 break;
             case R.id.recharge:
+                if (mAccountBean.getRecharge() == AccountList.AccountBean.CAN_RECHAREGE) {
+                    UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
+                            .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType())
+                            .execute();
+                }
                 break;
             case R.id.withDraw:
+                if (mAccountBean.getIsCanDraw() == AccountList.AccountBean.CAN_DRAW) {
+                    UniqueActivity.launcher(getContext(), DrawCoinFragment.class)
+                            .putExtra(ExtraKeys.ACCOUNT_BEAN, mAccountBean)
+                            .execute();
+                }
                 break;
             default:
         }
@@ -129,7 +159,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
     private class CoinPropertyAdapter extends RecyclerView.Adapter {
 
-        private List<CoinProperty> mList = new ArrayList<>();
+        private List<CoinPropertyFlow> mList = new ArrayList<>();
 
         @NonNull
         @Override
@@ -148,7 +178,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             return mList.size();
         }
 
-        public void setList(List<CoinProperty> list) {
+        public void setList(List<CoinPropertyFlow> list) {
             mList.clear();
             mList.addAll(list);
         }

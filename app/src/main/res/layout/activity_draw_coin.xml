@@ -17,43 +17,13 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@drawable/bg_white_has_under_line"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_weight="1"
-                    android:text="@string/select_coin_type"
-                    android:textColor="@color/text66"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:textColor="@color/text22"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="BTC"/>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -72,14 +42,15 @@
                     android:textSize="12sp"/>
 
                 <TextView
+                    android:id="@+id/usableAmount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
-                    android:text="1.00964521551 BTC"
                     android:textColor="@color/text22"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    tools:text="1.00964521551 BTC"/>
             </LinearLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -126,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_withdraw_icon_scan"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/view"
                     app:layout_constraintEnd_toStartOf="@+id/view"
                     app:layout_constraintTop_toTopOf="@+id/view"/>
@@ -182,6 +154,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:hint="@string/with_draw_amount_hint"
+                    android:inputType="numberDecimal"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -207,14 +180,15 @@
                     android:textSize="12sp"/>
 
                 <TextView
+                    android:id="@+id/fee"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
-                    android:text="0.01 BTC"
                     android:textColor="@color/text22"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    tools:text="0.01 BTC"/>
             </LinearLayout>
 
             <LinearLayout
@@ -244,6 +218,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/withDrawRules"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
@@ -251,7 +226,7 @@
                 android:layout_marginTop="21dp"
                 android:background="@drawable/bg_f5_r2"
                 android:padding="12dp"
-                android:text="@string/with_draw_rules"
+                android:text="@string/with_draw_rules_x"
                 android:textColor="@color/text99"
                 android:textSize="12sp"/>
 
@@ -272,6 +247,7 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
+                    android:id="@+id/resultAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="14dp"

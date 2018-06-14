@@ -222,6 +222,9 @@
     <string name="available_amount_x">可用 %1$s</string>
     <string name="freeze_amount_x">冻结 %1$s</string>
     <string name="recharge_history">历史充值</string>
+    <string name="recharge_amount_coin_x">充值%1$d %2$s</string>
+    <string name="long_press_to_save_qr_code">长按保存二维码</string>
+    <string name="copy_success">复制成功</string>
     <string name="save_qr_code">保存二维码</string>
     <string name="copy_address">复制地址</string>
     <string name="recharge_coin_rules">请勿向上述地址充值任何非USDT资产，否则资产将不可找回。\n
@@ -231,6 +234,8 @@
         请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="select_coin_type">选择币种</string>
     <string name="draw_coin">提币</string>
+    <string name="min_draw_amount_coin_x">最小提币数量 %1$s %2$s</string>
+    <string name="amount_space_coin_x">%1$s %2$s</string>
     <string name="property_flow">资产流水</string>
     <string name="hide_zero_amount_coin">隐藏金额为0币种</string>
     <string name="promoted_account">推广账户</string>
@@ -245,7 +250,7 @@
     <string name="cash_pwd">资金密码</string>
     <string name="set_cash_pwd_rules">注意：您的资金密码是用来交易和提现和账户安全设置，建议您不要设置与登录密码一致，由此产生的账户被盗，本站概不负责。</string>
     <string name="confirm_with_draw">确认提币</string>
-    <string name="with_draw_rules">1.最小提币数量为：XX\n
+    <string name="with_draw_rules_x">1.最小提币数量为：%1$s\n
         2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n
         3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n
         4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n

@@ -6,7 +6,7 @@ package com.songbai.futurex.model.local;
  */
 public class GetUserFinanceFlowData {
     String coinType;//币种
-    int flowType;//类型
+    String flowType;//类型
     String startTime;//开始时间
     String endTime;//结束时间
 
@@ -18,11 +18,11 @@ public class GetUserFinanceFlowData {
         this.coinType = coinType;
     }
 
-    public int getFlowType() {
+    public String getFlowType() {
         return flowType;
     }
 
-    public void setFlowType(int flowType) {
+    public void setFlowType(String flowType) {
         this.flowType = flowType;
     }
 
