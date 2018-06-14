@@ -7,12 +7,11 @@ import android.content.SharedPreferences;
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
 
-
     interface Key {
         String USER_JSON = "userJson";
-        String ACCOUNT_TYPE = "account_type";
         String LOCALE_JSON = "locale_json";
         String SERVER_TIME = "server_time";
+        String SEARCH_RECORDS = "search_record";
     }
 
     private static Preference sInstance;
@@ -70,14 +69,6 @@ public class Preference {
         return mPrefs.getString(Key.LOCALE_JSON, null);
     }
 
-    public int getUserAccountType(String phone) {
-        return mPrefs.getInt(phone + Key.ACCOUNT_TYPE, 0);
-    }
-
-    public void setUserAccountType(String phone, int accountType) {
-        getEditor().putInt(phone + Key.ACCOUNT_TYPE, accountType);
-    }
-
     public void setTimestamp(String key, long timestamp) {
         apply(key, timestamp);
     }
@@ -93,5 +84,13 @@ public class Preference {
 
     public long getServerTime() {
         return mPrefs.getLong(Key.SERVER_TIME, 0);
+    }
+
+    public void setSearchRecordsForUserOrDeviceId(String userOrDeviceId, String json) {
+        apply(Key.SEARCH_RECORDS + userOrDeviceId, json);
+    }
+
+    public String getSearchRecordsByUserOrDeviceId(String userOrDeviceId) {
+        return mPrefs.getString(Key.SEARCH_RECORDS + userOrDeviceId, null);
     }
 }

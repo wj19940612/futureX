@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/searchBox"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_f5_r16"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="6dp"
+            android:hint="@string/search_currency"
+            android:maxLines="1"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textColor="@color/text99"
+            android:textCursorDrawable="@drawable/cursor_primary"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="14dp"
+            android:text="@string/cancel"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+    <com.songbai.futurex.view.EmptyRecyclerView
+        android:id="@+id/currencyPairList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="24dp"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="170dp"
+            android:drawableTop="@drawable/ic_none"
+            android:text="@string/nothing_for_now"
+            android:textColor="#56636B"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</LinearLayout>

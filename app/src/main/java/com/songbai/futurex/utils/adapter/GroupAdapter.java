@@ -2,8 +2,6 @@ package com.songbai.futurex.utils.adapter;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.songbai.futurex.utils.OnRVItemClickListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +14,12 @@ import java.util.List;
  */
 public abstract class GroupAdapter<T extends GroupAdapter.Groupable> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private OnRVItemClickListener mOnRVItemClickListener;
     private List<Group<T>> mGroupList;
 
     protected static final int HEAD = 0;
     protected static final int ITEM = 1;
 
-    public GroupAdapter(OnRVItemClickListener onRVItemClickListener) {
-        mOnRVItemClickListener = onRVItemClickListener;
+    public GroupAdapter() {
         mGroupList = new ArrayList<>();
     }
 

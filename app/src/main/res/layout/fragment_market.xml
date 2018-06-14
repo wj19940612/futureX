@@ -27,7 +27,7 @@
         app:tabArray="@array/market_radio_header"
         app:tabInterval="10dp"/>
 
-    <com.songbai.futurex.view.EmptyRecycleView
+    <com.songbai.futurex.view.EmptyRecyclerView
         android:id="@+id/currencyPairList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/radioHeader"/>
 
-    <com.songbai.futurex.view.EmptyRecycleView
+    <com.songbai.futurex.view.EmptyRecyclerView
         android:id="@+id/optionalList"
         android:layout_width="match_parent"
         android:layout_height="0dp"

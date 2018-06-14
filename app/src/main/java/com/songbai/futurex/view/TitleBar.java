@@ -70,10 +70,6 @@ public class TitleBar extends RelativeLayout {
         mBackClickListener = onBackClickListener;
     }
 
-    public void setOnTitleBarClickListener(OnClickListener listener) {
-        setOnClickListener(listener);
-    }
-
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TitleBar);
 

@@ -64,4 +64,7 @@ public interface ExtraKeys {
     String TRANSFER_TYPE = "transfer_type";
     String ACCOUNT_BEANS = "account_beans";
     String ACCOUNT_BEAN= "account_bean";
+
+    String OPTIONAL_LIST = "optional_list";
+    String CURRENCY_PAIR = "currency_pair";
 }
