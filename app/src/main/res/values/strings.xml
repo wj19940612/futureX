@@ -112,7 +112,7 @@
     <string name="set_nick">设置昵称</string>
     <string name="please_input_nick_name">请输入昵称</string>
     <string name="save">保存</string>
-    <string name="update_success">更新成功</string>draw_coin
+    <string name="update_success">更新成功</string>
     <string name="bind_phone">绑定手机</string>
     <string name="please_input_phone_num">请输入手机号码</string>
     <string name="send_auth_code">发送验证码</string>
@@ -214,15 +214,15 @@
     <string name="fast_transfer">一键划转</string>
     <string name="funds_transfer">资金划转</string>
     <string name="transfer_amount">划转数量</string>
-    <string name="most_transfer_amount_type_x">最多可转%1$s %2$s</string>
+    <string name="most_transfer_amount_type_x">最多可转%1$s&#160;%2$s</string>
     <string name="transfer_all">全部划转</string>
     <string name="confirm_transfer">确认划转</string>
     <string name="recharge_coin">充币</string>
     <string name="history">历史记录</string>
-    <string name="available_amount_x">可用 %1$s</string>
-    <string name="freeze_amount_x">冻结 %1$s</string>
+    <string name="available_amount_x">可用&#160;%1$s</string>
+    <string name="freeze_amount_x">冻结&#160;%1$s</string>
     <string name="recharge_history">历史充值</string>
-    <string name="recharge_amount_coin_x">充值%1$d %2$s</string>
+    <string name="recharge_amount_coin_x">充值%1$d&#160;%2$s</string>
     <string name="long_press_to_save_qr_code">长按保存二维码</string>
     <string name="copy_success">复制成功</string>
     <string name="save_qr_code">保存二维码</string>
@@ -234,15 +234,15 @@
         请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="select_coin_type">选择币种</string>
     <string name="draw_coin">提币</string>
-    <string name="min_draw_amount_coin_x">最小提币数量 %1$s %2$s</string>
-    <string name="amount_space_coin_x">%1$s %2$s</string>
+    <string name="min_draw_amount_coin_x">最小提币数量&#160;%1$s&#160;%2$s</string>
+    <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
     <string name="property_flow">资产流水</string>
     <string name="hide_zero_amount_coin">隐藏金额为0币种</string>
     <string name="promoted_account">推广账户</string>
     <string name="search_property">搜索资产</string>
     <string name="available">可用</string>
     <string name="input_or_long_press_paste_address">输入或长按粘贴地址</string>
-    <string name="with_draw_amount_hint">最小提币数量 200 BTC</string>
+    <string name="with_draw_amount_hint">最小提币数量&#160;200&#160;BTC</string>
     <string name="please_input_cash_pwd">请输入资金密码</string>
     <string name="amount">数量</string>
     <string name="all">全部</string>
@@ -264,6 +264,24 @@
     <string name="time">时间</string>
     <string name="reset">重置</string>
 
+    <string name="withdraw_cash">提现</string>
+    <string name="buy_order">委托买入</string>
+    <string name="sell_order">委托卖出</string>
+    <string name="otc_transfer_out">OTC交易转出</string>
+    <string name="withdraw_fee">提币手续费</string>
+    <string name="deal_fee">交易手续费</string>
+    <string name="promoter_account_transfer_into">推广账户转入</string>
+
+    <string name="completed">已完成</string>
+    <string name="freeze">冻结</string>
+    <string name="withdraw_coin_rejected">提币驳回</string>
+    <string name="sys_withdraw">系统撤单</string>
+
+    <string name="detail">详情</string>
+    <string name="address_two_space">地&#8195;&#8195;址</string>
+    <string name="status_two_space">状&#8195;&#8195;态</string>
+    <string name="fee_two_half_space">手&#8194;续&#8194;费</string>
+    <string name="time_two_space">时&#8195;&#8195;间</string>
 
     <string-array name="messageCenterTabTexts">
         <item>消息通知</item>

@@ -73,6 +73,7 @@
         <activity
             android:name=".activity.mine.SetGesturePwdActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".fragment.mine.MessageCenterActivity"/>
 
         <service android:name=".service.PushIntentService"/>
         <service

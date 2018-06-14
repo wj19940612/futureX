@@ -1,5 +1,6 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -18,7 +20,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinAddress;
-import com.songbai.futurex.model.mine.CoinInfo;
+import com.songbai.futurex.model.mine.CoinAddressCount;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.CopyDeleteController;
@@ -34,14 +36,20 @@ import butterknife.Unbinder;
  * @author yangguangda
  * @date 2018/5/30
  */
-public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment implements CopyDeleteController.OnItemClickListener {
+public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment implements
+        CopyDeleteController.OnItemClickListener {
+    public static final int REQUEST_ADD_ADDRESS = 11233;
+    public static final int DRAW_COIN_ADDRESS_RESULT = 11234;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
     private Unbinder mBind;
-    private CoinInfo mCoinInfo;
+    private CoinAddressCount mCoinAddressCount;
     private DrawCoinAddressListAdapter mAdapter;
+    private boolean mModified;
 
     @Nullable
     @Override
@@ -53,12 +61,12 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-        mCoinInfo = extras.getParcelable(ExtraKeys.COIN_INFO);
+        mCoinAddressCount = extras.getParcelable(ExtraKeys.COIN_ADDRESS_INFO);
     }
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mTitleBar.setTitle(mCoinInfo.getSymbol().toUpperCase());
+        mTitleBar.setTitle(mCoinAddressCount.getCoinType().toUpperCase());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new DrawCoinAddressListAdapter();
         mAdapter.setOnItemClickListener(new DrawCoinAddressListAdapter.OnItemClickListener() {
@@ -68,7 +76,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-        getDrawWalletAddrByCoinType(mCoinInfo.getSymbol());
+        getDrawWalletAddrByCoinType(mCoinAddressCount.getCoinType());
     }
 
     private void showDeleteView(CoinAddress coinAddress) {
@@ -89,8 +97,16 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
                 .callback(new Callback<Resp<ArrayList<CoinAddress>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CoinAddress>> resp) {
-                        mAdapter.setList(resp.getData());
-                        mAdapter.notifyDataSetChanged();
+                        ArrayList<CoinAddress> data = resp.getData();
+                        if (data.size() < 1) {
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.GONE);
+                        } else {
+                            mEmptyView.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            mAdapter.setList(data);
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }
                 })
                 .fire();
@@ -104,7 +120,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
 
     @OnClick(R.id.addAddress)
     public void onViewClicked() {
-        UniqueActivity.launcher(this, AddAddressFragment.class).putExtra(ExtraKeys.COIN_INFO, mCoinInfo).execute();
+        UniqueActivity.launcher(this, AddAddressFragment.class).putExtra(ExtraKeys.COIN_ADDRESS_INFO, mCoinAddressCount).execute(this, REQUEST_ADD_ADDRESS);
     }
 
     @Override
@@ -116,6 +132,25 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
     public void onDeleteClick(CoinAddress coinAddress) {
         mAdapter.removeItem(coinAddress);
         mAdapter.notifyDataSetChanged();
+        mModified = true;
+        getActivity().setResult(DRAW_COIN_ADDRESS_RESULT,
+                new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, mModified));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADD_ADDRESS) {
+            if (data != null) {
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
+                if (shouldRefresh) {
+                    getDrawWalletAddrByCoinType(mCoinAddressCount.getCoinType());
+                    mModified = shouldRefresh;
+                    getActivity().setResult(DRAW_COIN_ADDRESS_RESULT,
+                            new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, mModified));
+                }
+            }
+        }
     }
 
     static class DrawCoinAddressListAdapter extends RecyclerView.Adapter {

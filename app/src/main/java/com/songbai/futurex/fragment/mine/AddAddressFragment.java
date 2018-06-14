@@ -1,8 +1,10 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,7 +19,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.mine.CoinInfo;
+import com.songbai.futurex.model.mine.CoinAddressCount;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -30,6 +32,7 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class AddAddressFragment extends UniqueActivity.UniFragment {
+    public static final int ADD_ADDRESS_RESULT = 12342;
     @BindView(R.id.address)
     EditText mAddress;
     @BindView(R.id.remark)
@@ -37,7 +40,7 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.confirm)
     TextView mConfirm;
     private Unbinder mBind;
-    private CoinInfo mCoinInfo;
+    private CoinAddressCount mCoinAddressCount;
     private String mAddressText;
     private String mRemakText;
 
@@ -51,7 +54,7 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-        mCoinInfo = extras.getParcelable(ExtraKeys.COIN_INFO);
+        mCoinAddressCount = extras.getParcelable(ExtraKeys.COIN_ADDRESS_INFO);
     }
 
     @Override
@@ -78,7 +81,7 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
 
     @OnClick(R.id.confirm)
     public void onViewClicked() {
-        addDrawWalletAddrByCoinType(mCoinInfo.getSymbol(), mAddressText, mRemakText);
+        addDrawWalletAddrByCoinType(mCoinAddressCount.getCoinType(), mAddressText, mRemakText);
     }
 
     private void addDrawWalletAddrByCoinType(String coinType, String toAddr, String remark) {
@@ -86,7 +89,10 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        AddAddressFragment.this.getActivity().finish();
+                        FragmentActivity activity = AddAddressFragment.this.getActivity();
+                        activity.setResult(ADD_ADDRESS_RESULT,
+                                new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        activity.finish();
                     }
                 })
                 .fire();

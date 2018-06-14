@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
@@ -24,7 +26,7 @@
         app:titleText="@string/property"/>
 
     <RelativeLayout
-        android:id="@+id/propertyCardPagerContiner"
+        android:id="@+id/propertyCardPagerContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipChildren="false"
@@ -53,7 +55,7 @@
         android:background="@color/bgDD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/propertyCardPagerContiner">
+        app:layout_constraintTop_toBottomOf="@+id/propertyCardPagerContainer">
 
         <View
             android:id="@+id/indicator"

@@ -213,6 +213,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/please_input_cash_pwd"
+                    android:inputType="textPassword"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/googleAuthCodeGroup"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/bg_white_has_under_line"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="15dp"
+                    android:includeFontPadding="false"
+                    android:text="@string/google_authenticator_code"
+                    android:textColor="@color/text22"
+                    android:textSize="12sp"/>
+
+                <EditText
+                    android:id="@+id/googleAuthCode"
+                    style="@style/SingleEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/please_input_google_authenticator_code"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"/>
             </LinearLayout>
@@ -275,6 +304,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView4"/>
             </android.support.constraint.ConstraintLayout>
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

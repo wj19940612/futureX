@@ -18,7 +18,7 @@ import com.songbai.futurex.activity.mine.InviteActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
 import com.songbai.futurex.fragment.mine.CustomerServiceFragment;
-import com.songbai.futurex.fragment.mine.MessageCenterFragment;
+import com.songbai.futurex.fragment.mine.MessageCenterActivity;
 import com.songbai.futurex.fragment.mine.SafetyCenterFragment;
 import com.songbai.futurex.fragment.mine.SettingsFragment;
 import com.songbai.futurex.http.Apic;
@@ -167,7 +167,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(this, InviteActivity.class).execute();
                 break;
             case R.id.msgCenter:
-                UniqueActivity.launcher(getActivity(), MessageCenterFragment.class).execute();
+                Launcher.with(getActivity(), MessageCenterActivity.class).execute();
                 break;
             case R.id.safetyCenter:
                 UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();

@@ -1,13 +1,10 @@
 package com.songbai.futurex.model.mine;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * @author yangguangda
- * @date 2018/6/11
+ * @date 2018/6/14
  */
-public class CoinInfo implements Parcelable {
+public class CoinInfo {
 
     /**
      * balancePoint : 8
@@ -72,43 +69,4 @@ public class CoinInfo implements Parcelable {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.balancePoint);
-        dest.writeLong(this.createTime);
-        dest.writeInt(this.id);
-        dest.writeLong(this.supply);
-        dest.writeString(this.symbol);
-        dest.writeLong(this.updateTime);
-    }
-
-    public CoinInfo() {
-    }
-
-    protected CoinInfo(Parcel in) {
-        this.balancePoint = in.readInt();
-        this.createTime = in.readLong();
-        this.id = in.readInt();
-        this.supply = in.readLong();
-        this.symbol = in.readString();
-        this.updateTime = in.readLong();
-    }
-
-    public static final Parcelable.Creator<CoinInfo> CREATOR = new Parcelable.Creator<CoinInfo>() {
-        @Override
-        public CoinInfo createFromParcel(Parcel source) {
-            return new CoinInfo(source);
-        }
-
-        @Override
-        public CoinInfo[] newArray(int size) {
-            return new CoinInfo[size];
-        }
-    };
 }
