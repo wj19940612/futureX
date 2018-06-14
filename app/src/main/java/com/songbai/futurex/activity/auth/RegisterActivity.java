@@ -533,9 +533,15 @@ public class RegisterActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull AreaCodeAdapter.ViewHolder holder, int position) {
-            AreaCode areaCode = mAreaCodeList.get(position);
-            holder.bind(areaCode, position, mOnRVItemClickListener);
+        public void onBindViewHolder(@NonNull AreaCodeAdapter.ViewHolder holder, final int position) {
+            final AreaCode areaCode = mAreaCodeList.get(position);
+            holder.bind(areaCode);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnRVItemClickListener.onItemClick(v, position, areaCode);
+                }
+            });
         }
 
         @Override
@@ -554,15 +560,9 @@ public class RegisterActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(final AreaCode areaCode, final int position, final OnRVItemClickListener onRVItemClickListener) {
+            public void bind(final AreaCode areaCode) {
                 mCountryName.setText(areaCode.getName());
                 mAreaCode.setText("+" + areaCode.getTeleCode());
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onRVItemClickListener.onItemClick(v, position, areaCode);
-                    }
-                });
             }
         }
     }

@@ -1,20 +1,24 @@
 package com.songbai.futurex.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
@@ -22,7 +26,7 @@ import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
-import com.songbai.futurex.view.EmptyRecycleView;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.websocket.DataParser;
@@ -51,15 +55,17 @@ import butterknife.Unbinder;
  */
 public class MarketFragment extends BaseFragment {
 
+    private static final int REQ_CODE_SEARCH = 94;
+
     Unbinder unbinder;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.radioHeader)
     RadioHeader mRadioHeader;
     @BindView(R.id.currencyPairList)
-    EmptyRecycleView mCurrencyPairList;
+    EmptyRecyclerView mCurrencyPairList;
     @BindView(R.id.optionalList)
-    EmptyRecycleView mOptionalList;
+    EmptyRecyclerView mOptionalList;
     @BindView(R.id.addOptional)
     TextView mAddOptional;
     @BindView(R.id.emptyView)
@@ -122,7 +128,6 @@ public class MarketFragment extends BaseFragment {
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code) {
-                Log.d("Temp", "onDataReceive: " + data); // todo remove later
                 new DataParser<Response<Map<String, MarketData>>>(data) {
                     @Override
                     public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
@@ -132,6 +137,28 @@ public class MarketFragment extends BaseFragment {
                 }.parse();
             }
         });
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSearchPage();
+            }
+        });
+    }
+
+    private void openSearchPage() {
+        List<CurrencyPair> optionalPairList = mOptionalAdapter.getPairList();
+        UniqueActivity.launcher(getActivity(), SearchCurrencyFragment.class)
+                .putExtra(ExtraKeys.OPTIONAL_LIST, new ArrayList<Parcelable>(optionalPairList))
+                .execute(this, REQ_CODE_SEARCH);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) {
+            requestOptionalList(mRadioHeader.getSelectTab());
+        }
     }
 
     @Override
@@ -208,7 +235,7 @@ public class MarketFragment extends BaseFragment {
 
     @OnClick(R.id.addOptional)
     public void onViewClicked() {
-
+        openSearchPage();
     }
 
     static class OptionalAdapter extends RecyclerView.Adapter<OptionalAdapter.ViewHolder> {
@@ -229,6 +256,10 @@ public class MarketFragment extends BaseFragment {
             notifyDataSetChanged();
         }
 
+        public List<CurrencyPair> getPairList() {
+            return mPairList;
+        }
+
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
             mMarketDataList = marketDataList;
             notifyDataSetChanged();
@@ -242,8 +273,15 @@ public class MarketFragment extends BaseFragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.bind(mPairList.get(position));
+        public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+            final CurrencyPair pair = mPairList.get(position);
+            holder.bind(pair, mMarketDataList, mContext);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnRVItemClickListener.onItemClick(v, position, pair);
+                }
+            });
         }
 
         @Override
@@ -268,9 +306,21 @@ public class MarketFragment extends BaseFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair pair) {
+            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
+                if (marketDataList != null) {
+                    MarketData marketData = marketDataList.get(pair.getPairs());
+                    if (marketData == null) return;
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
+                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+                    mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+                    if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                    }
+                }
             }
         }
     }
@@ -279,11 +329,13 @@ public class MarketFragment extends BaseFragment {
 
         private Map<String, MarketData> mMarketDataList;
         private Context mContext;
+        private OnRVItemClickListener mOnRVItemClickListener;
 
         public CurrencyPairAdapter(Context context, OnRVItemClickListener onRVItemClickListener) {
-            super(onRVItemClickListener);
+            super();
             mMarketDataList = new HashMap<>();
             mContext = context;
+            mOnRVItemClickListener = onRVItemClickListener;
         }
 
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
@@ -304,11 +356,21 @@ public class MarketFragment extends BaseFragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof GroupHeaderHolder) {
                 ((GroupHeaderHolder) holder).bind(getItem(position));
             } else {
-                ((ViewHolder) holder).bind(getItem(position), mMarketDataList, mContext);
+                final Groupable item = getItem(position);
+                if (item instanceof CurrencyPair) {
+                    final CurrencyPair pair = (CurrencyPair) item;
+                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext);
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mOnRVItemClickListener.onItemClick(v, position, pair);
+                        }
+                    });
+                }
             }
         }
 
@@ -330,22 +392,19 @@ public class MarketFragment extends BaseFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(Groupable item, Map<String, MarketData> marketDataList, Context context) {
-                if (item instanceof CurrencyPair) {
-                    CurrencyPair pair = (CurrencyPair) item;
-                    mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
-                    mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
-                    if (marketDataList != null) {
-                        MarketData marketData = marketDataList.get(pair.getPairs());
-                        if (marketData == null) return;
-                        mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
-                        mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
-                        mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
-                        if (marketData.getUpDropSpeed() < 0) {
-                            mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
-                        } else {
-                            mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
-                        }
+            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
+                mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
+                mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
+                if (marketDataList != null) {
+                    MarketData marketData = marketDataList.get(pair.getPairs());
+                    if (marketData == null) return;
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
+                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+                    mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+                    if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
                     }
                 }
             }

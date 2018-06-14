@@ -1,5 +1,7 @@
 package com.songbai.futurex.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.songbai.futurex.R;
@@ -10,7 +12,7 @@ import com.songbai.futurex.utils.adapter.GroupAdapter;
  * <p>
  * Description: 货币对数据结构
  */
-public class CurrencyPair implements GroupAdapter.Groupable, Comparable<CurrencyPair> {
+public class CurrencyPair implements GroupAdapter.Groupable, Comparable<CurrencyPair>,Parcelable {
 
     public static final int CATE_MAIN = 1; // 主区
     public static final int CATE_CREATIVE = 2; // 创新
@@ -90,6 +92,10 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         this.suffixSymbol = suffixSymbol;
     }
 
+    public String getUpperCasePairName() {
+        return prefixSymbol.toUpperCase() + "/" + suffixSymbol.toUpperCase();
+    }
+
     @Override
     public int getGroupNameRes() {
         if (category == CATE_MAIN) {
@@ -115,5 +121,59 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         } else {
             return this.sort - o.sort;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.category);
+        dest.writeInt(this.id);
+        dest.writeInt(this.option);
+        dest.writeString(this.pairs);
+        dest.writeString(this.prefixSymbol);
+        dest.writeInt(this.sort);
+        dest.writeString(this.suffixSymbol);
+    }
+
+    public CurrencyPair() {
+    }
+
+    protected CurrencyPair(Parcel in) {
+        this.category = in.readInt();
+        this.id = in.readInt();
+        this.option = in.readInt();
+        this.pairs = in.readString();
+        this.prefixSymbol = in.readString();
+        this.sort = in.readInt();
+        this.suffixSymbol = in.readString();
+    }
+
+    public static final Parcelable.Creator<CurrencyPair> CREATOR = new Parcelable.Creator<CurrencyPair>() {
+        @Override
+        public CurrencyPair createFromParcel(Parcel source) {
+            return new CurrencyPair(source);
+        }
+
+        @Override
+        public CurrencyPair[] newArray(int size) {
+            return new CurrencyPair[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "CurrencyPair{" +
+                "category=" + category +
+                ", id=" + id +
+                ", option=" + option +
+                ", pairs='" + pairs + '\'' +
+                ", prefixSymbol='" + prefixSymbol + '\'' +
+                ", sort=" + sort +
+                ", suffixSymbol='" + suffixSymbol + '\'' +
+                '}';
     }
 }

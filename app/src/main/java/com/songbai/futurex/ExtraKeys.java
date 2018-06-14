@@ -65,6 +65,9 @@ public interface ExtraKeys {
     String ACCOUNT_BEANS = "account_beans";
     String ACCOUNT_BEAN = "account_bean";
     String MODIFIED_SHOULD_REFRESH = "modified_should_refresh";
+
+    String OPTIONAL_LIST = "optional_list";
+    String CURRENCY_PAIR = "currency_pair";
     String COIN_TYPE = "coin_type";
     String PROPERTY_FLOW_FILTER_TYPE_ALL = "property_flow_filter_type_all";
 }

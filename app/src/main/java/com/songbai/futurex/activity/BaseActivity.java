@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 
 import com.sbai.httplib.ReqIndeterminate;
 import com.songbai.futurex.http.Api;
+import com.songbai.futurex.model.local.SysTime;
 import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
 import com.songbai.futurex.view.RequestProgress;
@@ -65,6 +66,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         });
         //MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
+        SysTime.getSysTime().sync();
         MessageProcessor.get().connect();
     }
 

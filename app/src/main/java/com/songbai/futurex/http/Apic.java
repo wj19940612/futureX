@@ -497,7 +497,9 @@ public class Apic {
      * @return
      */
     public static Api getUserInfo() {
-        return Api.get("/api/user/user/findUserInfo.do");
+        return Api.get("/api/user/user/findUserInfo.do",
+                new ReqParams()
+                        .put("logsize", 1));
     }
 
     /**
@@ -574,6 +576,44 @@ public class Apic {
      */
     public static Api getSystemTime() {
         return Api.get("/user/user/getSystemTime.do");
+    }
+
+    /**
+     * 搜索货币对
+     *
+     * @param keyword
+     * @return
+     */
+    public static Api searchCurrencyPairs(String keyword) {
+        return Api.get("/api/entrust/pairs/search",
+                new ReqParams()
+                        .put("symbol", keyword));
+    }
+
+    /**
+     * 添加自选
+     *
+     * @param pairs
+     * @return
+     */
+    public static Api addOptional(String pairs) {
+        return Api.post("/api/entrust/pairs/option.do",
+                new ReqParams()
+                        .put("pairs", pairs)
+                        .put("type", 1));
+    }
+
+    /**
+     * 取消自选
+     *
+     * @param pairs
+     * @return
+     */
+    public static Api cancelOptional(String pairs) {
+        return Api.post("/api/entrust/pairs/option.do",
+                new ReqParams()
+                        .put("pairs", pairs)
+                        .put("type", 0));
     }
 
 

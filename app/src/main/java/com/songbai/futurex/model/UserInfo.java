@@ -1,5 +1,7 @@
 package com.songbai.futurex.model;
 
+import java.util.List;
+
 /**
  * Modified by john on 2018/6/5
  * <p>
@@ -39,6 +41,25 @@ public class UserInfo {
     private String userPhone; // 手机号
     private String userEmail;
     private String userPortrait; // 用户头像
+    private List<Log> listLog;
+
+    public static class Log {
+        private String browserAgent;
+        private String createTime;
+        private String  ip;
+        private String userId;
+
+        public String getUserId() {
+            return userId;
+        }
+    }
+
+    public String getUserId() {
+        if (listLog != null && listLog.size() > 0) {
+            return listLog.get(0).getUserId();
+        }
+        return null;
+    }
 
     public String getUserEmail() {
         return userEmail;

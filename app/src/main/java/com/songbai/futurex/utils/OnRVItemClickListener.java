@@ -10,5 +10,10 @@ import android.view.View;
  * APIs:
  */
 public interface OnRVItemClickListener {
+    /**
+     * @param view itemView
+     * @param position thie position of itemView in RV
+     * @param obj ths related data of this item
+     */
     void onItemClick(View view, int position, Object obj);
 }
