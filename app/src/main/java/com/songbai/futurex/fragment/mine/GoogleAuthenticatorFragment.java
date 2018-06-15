@@ -1,8 +1,13 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +21,15 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CreateGoogleKey;
+import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.ValidationWatcher;
+import com.songbai.futurex.utils.ZXingUtils;
+import com.songbai.futurex.utils.image.ImageUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -34,6 +42,8 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
     TextView mSecretKey;
     @BindView(R.id.googleAuthCode)
     EditText mGoogleAuthCode;
+    @BindView(R.id.confirm)
+    TextView mConfirm;
     private Unbinder mBind;
 
     @Nullable
@@ -51,6 +61,12 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        mGoogleAuthCode.addTextChangedListener(new ValidationWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                mConfirm.setEnabled(s.length() > 0);
+            }
+        });
         createGoogleKey();
     }
 
@@ -65,11 +81,29 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
                 .fire();
     }
 
+    private void bindGoogleKey(String googleCode, String drawPass, String googleKey) {
+        Apic.bindGoogleKey(googleCode, drawPass, googleKey)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(R.string.bind_google_authenticator_success);
+                        getActivity().finish();
+                        UniqueActivity.launcher(getContext(), GoogleAuthenticatorSettingsFragment.class).execute();
+                    }
+                })
+                .fire();
+    }
+
     private void setGoogleKey(CreateGoogleKey data) {
-        GlideApp
-                .with(this)
-                .load(data.getQrCode())
-                .into(mQcCode);
+        final Bitmap bitmap = ZXingUtils.createQRImage(data.getQrCode(), mQcCode.getMeasuredWidth(), mQcCode.getMeasuredHeight());
+        mQcCode.setImageBitmap(bitmap);
+        mQcCode.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ImageUtils.saveImageToGallery(getContext(), bitmap);
+                return true;
+            }
+        });
         mSecretKey.setText(data.getGoogleKey());
     }
 
@@ -79,14 +113,17 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.saveQcCode, R.id.copy, R.id.confirm})
+    @OnClick({R.id.copy, R.id.confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.saveQcCode:
-                break;
             case R.id.copy:
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                // 将文本内容放到系统剪贴板里。
+                cm.setPrimaryClip(ClipData.newPlainText(null, mSecretKey.getText()));
+                ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.confirm:
+                bindGoogleKey(mGoogleAuthCode.getText().toString(), "", mSecretKey.getText().toString());
                 break;
             default:
         }

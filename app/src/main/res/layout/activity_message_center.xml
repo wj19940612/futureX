@@ -8,10 +8,15 @@
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:hasBottomSplitLine="true"
+        app:rightText="@string/set_read"
+        app:rightTextColor="@color/colorPrimary"
+        app:rightTextSize="14sp"
+        app:rightVisible="true"
         app:titleText="@string/message_center"/>
 
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
@@ -27,7 +32,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/swipe_target"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="12dp"/>
 
         <com.zcmrr.swipelayout.foot.LoadMoreFooterView
             android:id="@+id/swipe_load_more_footer"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,16 +9,52 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:text="关于xxx的上线通知"
-        android:textColor="@color/text22"
-        android:textSize="16sp"/>
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="14dp"
+        android:textColor="@color/text99"
+        android:textSize="11dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="11:32:58"/>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/text22_disabled_text66"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/hint"
+        app:layout_constraintTop_toBottomOf="@+id/timestamp"
+        tools:text="关于xxx的上线通知"/>
+
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="42dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="14dp"
+        android:background="@drawable/bg_red_round_rect_border"
+        android:gravity="center"
+        android:text="@string/important"
+        android:textColor="@color/red"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/content"
+        app:layout_constraintLeft_toRightOf="@id/content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/content"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_marginLeft="14dp"
-        android:background="@color/bgF5"/>
-</LinearLayout>
+        android:background="@color/bgF5"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</android.support.constraint.ConstraintLayout>

@@ -138,6 +138,17 @@ public class MineFragment extends BaseFragment {
                 .fire();
     }
 
+    private void toBePromoter() {
+        Apic.toBePromoter()
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        Launcher.with(MineFragment.this, InviteActivity.class).execute();
+                    }
+                })
+                .fire();
+    }
+
     private void setUnreadMessageCount(Integer count) {
         mMsgCenter.getSubTextView().setVisibility(count == 0 ? View.INVISIBLE : View.VISIBLE);
         mMsgCenter.setSubText(String.valueOf(count));
@@ -152,6 +163,7 @@ public class MineFragment extends BaseFragment {
     @OnClick({R.id.userInfoGroup, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
             R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
+        LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
             case R.id.userInfoGroup:
                 Launcher.with(this, PersonalDataActivity.class).execute();
@@ -164,7 +176,13 @@ public class MineFragment extends BaseFragment {
             case R.id.legalCurrencyTradeOrder:
                 break;
             case R.id.invite:
-                Launcher.with(this, InviteActivity.class).execute();
+                if (user.isLogin()) {
+                    if (user.getUserInfo().getPromoter() != 1) {
+                        toBePromoter();
+                        return;
+                    }
+                    Launcher.with(this, InviteActivity.class).execute();
+                }
                 break;
             case R.id.msgCenter:
                 Launcher.with(getActivity(), MessageCenterActivity.class).execute();

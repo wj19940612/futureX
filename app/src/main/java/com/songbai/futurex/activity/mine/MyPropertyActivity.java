@@ -89,7 +89,6 @@ public class MyPropertyActivity extends BaseActivity {
             public void onClick(View v) {
                 Launcher.with(MyPropertyActivity.this, PropertyFlowActivity.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, true)
-//                        .putExtra(,)
                         .execute();
             }
         });

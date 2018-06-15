@@ -382,11 +382,53 @@ public class Apic {
     }
 
     /**
+     * /api/user/userSafe/bindGoogleKey.do
+     * POST
+     * 绑定谷歌验证--薛松
+     */
+    public static Api bindGoogleKey(String googleCode, String drawPass, String googleKey) {
+        return Api.post("/api/user/userSafe/bindGoogleKey.do",
+                new ReqParams()
+                        .put("googleCode", googleCode)
+                        .put("drawPass", drawPass)
+                        .put("googleKey", googleKey));
+    }
+
+    /**
+     * /api/user/userSafe/setAuthVerify.do
+     * POST
+     * 设置google验证码使用场景--薛松(新增谷歌验证码一定要输入(邵文星))
+     */
+    public static Api setAuthVerify(String authCode, String googleCode) {
+        return Api.post("/api/user/userSafe/setAuthVerify.do",
+                new ReqParams()
+                        .put("authCode", authCode)
+                        .put("googleCode", googleCode));
+    }
+
+    /**
+     * /api/user/user/toBePromoter.do
+     * GET
+     * 申请成为推广员(陈作衡)
+     */
+    public static Api toBePromoter() {
+        return Api.get("/api/user/user/toBePromoter.do");
+    }
+
+    /**
+     * /api/user/user/getCurrentPromoterMsg.do
+     * GET
+     * 获取推广员信息
+     */
+    public static Api getCurrentPromoterMsg() {
+        return Api.get("/api/user/user/getCurrentPromoterMsg.do");
+    }
+
+    /**
      * /api/user/upload/image.do
      * POST
      * 上传图片-单个图片
      */
-
     public static Api uploadImage(String picture) {
         return Api.post("/api/user/upload/image.do",
                 new ReqParams()
@@ -414,6 +456,26 @@ public class Apic {
                 new ReqParams()
                         .put("page", page)
                         .put("size", size));
+    }
+
+    /**
+     * /api/user/msg/readAll
+     * POST
+     * 标记全部已读
+     */
+    public static Api msgReadAll() {
+        return Api.post("/api/user/msg/list");
+    }
+
+    /**
+     * /api/user/msg/read
+     * POST
+     * 标记已读
+     */
+    public static Api msgRead(int msgId) {
+        return Api.post("/api/user/msg/list",
+                new ReqParams()
+                        .put("msgId", msgId));
     }
 
     /**

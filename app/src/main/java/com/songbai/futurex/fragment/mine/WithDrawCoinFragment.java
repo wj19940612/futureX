@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.model.mine.CoinAddress;
 import com.songbai.futurex.model.mine.DrawLimit;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import java.util.ArrayList;
@@ -181,8 +183,11 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        getActivity().setResult(FundsTransferFragment.FUNDS_TRANSFER_RESULT,
+                        FragmentActivity activity = getActivity();
+                        activity.setResult(FundsTransferFragment.FUNDS_TRANSFER_RESULT,
                                 new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        ToastUtil.show(R.string.draw_coin_success);
+                        activity.finish();
                     }
                 })
                 .fire();

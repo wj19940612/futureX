@@ -9,13 +9,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingResp;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.SysMessage;
+import com.songbai.futurex.model.status.MessageType;
 import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
+import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.view.TitleBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +37,11 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
     RecyclerView mSwipeTarget;
     @BindView(R.id.rootView)
     LinearLayout mRootView;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+    private MessageListAdapter mAdapter;
+    private int mPage;
+    private int mSize = 20;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,16 +53,54 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
     }
 
     private void initView() {
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readAll();
+            }
+        });
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
-        mSwipeTarget.setAdapter(new MessageListAdapter());
+        mAdapter = new MessageListAdapter();
+        mAdapter.setOnItemClickListener(new MessageListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(SysMessage sysMessage) {
+                msgRead(sysMessage.getId());
+            }
+        });
+        mSwipeTarget.setAdapter(mAdapter);
+    }
+
+    private void msgRead(int id) {
+        Apic.msgRead(id)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                    }
+                })
+                .fire();
+    }
+
+    private void readAll() {
+        Apic.msgReadAll()
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                    }
+                })
+                .fire();
     }
 
     private void getMessageList() {
-        Apic.msgList(0, 20)
+        Apic.msgList(mPage, mSize)
                 .callback(new Callback<PagingResp<SysMessage>>() {
                     @Override
                     protected void onRespSuccess(PagingResp<SysMessage> resp) {
-
+                        mAdapter.setList(resp);
+                        mAdapter.notifyDataSetChanged();
+                        stopFreshOrLoadAnimation();
+                        if (resp.getData().getTotal() > mPage) {
+                            mPage++;
+                        }
                     }
                 })
                 .fire();
@@ -62,15 +113,19 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
 
     @Override
     public void onLoadMore() {
-
+        getMessageList();
     }
 
     @Override
     public void onRefresh() {
-
+        mPage = 0;
+        getMessageList();
     }
 
-    private class MessageListAdapter extends RecyclerView.Adapter {
+    static class MessageListAdapter extends RecyclerView.Adapter {
+        private List<SysMessage> mList = new ArrayList<>();
+        private OnItemClickListener mOnItemClickListener;
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -81,21 +136,83 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof MessageViewHolder) {
-                ((MessageViewHolder) holder).bindData();
+                ((MessageViewHolder) holder).bindData(mList.get(position));
             }
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mList.size();
         }
 
-        private class MessageViewHolder extends RecyclerView.ViewHolder {
-            public MessageViewHolder(View view) {
+        public void setList(PagingResp<SysMessage> resp) {
+            if (resp.getData().getStart() == 0) {
+                mList.clear();
+            }
+            mList.addAll(resp.getList());
+        }
+
+        public interface OnItemClickListener {
+            void onItemClick(SysMessage sysMessage);
+        }
+
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+            mOnItemClickListener = onItemClickListener;
+        }
+
+        class MessageViewHolder extends RecyclerView.ViewHolder {
+            private View mRootView;
+            @BindView(R.id.timestamp)
+            TextView mTimestamp;
+            @BindView(R.id.content)
+            TextView mContent;
+            @BindView(R.id.hint)
+            TextView mHint;
+
+            MessageViewHolder(View view) {
                 super(view);
+                ButterKnife.bind(this, view);
+                mRootView = view;
             }
 
-            public void bindData() {
+            void bindData(final SysMessage sysMessage) {
+                mRootView.setSelected(sysMessage.getStatus() == SysMessage.READ);
+                mTimestamp.setText(DateUtil.format(sysMessage.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE_SECOND));
+                int textId = 0;
+                switch (sysMessage.getType()) {
+                    case MessageType.PAY_ADDR_CHANGE:
+                        textId = R.string.pay_addr_change;
+                        break;
+                    case MessageType.OTC_BUY_ORDER:
+                        textId = R.string.otc_buy_order;
+                        break;
+                    case MessageType.OTC_SELL_ORDER:
+                        textId = R.string.otc_sell_order;
+                        break;
+                    case MessageType.OTC_BUY_PAY:
+                        textId = R.string.otc_buy_pay;
+                        break;
+                    case MessageType.OTC_SELL_PAY:
+                        textId = R.string.otc_sell_pay;
+                        break;
+                    case MessageType.OTC_ORDER_MSG:
+                        textId = R.string.otc_order_msg;
+                        break;
+                    case MessageType.USER_AUTH_FAIL:
+                        textId = R.string.user_auth_fail;
+                        break;
+                    default:
+                }
+                mContent.setText(textId);
+                mHint.setVisibility(View.GONE);
+                mRootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            mOnItemClickListener.onItemClick(sysMessage);
+                        }
+                    }
+                });
             }
         }
     }

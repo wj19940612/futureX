@@ -14,6 +14,8 @@ import com.songbai.futurex.activity.mine.SetGesturePwdActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -27,6 +29,7 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class SafetyCenterFragment extends UniqueActivity.UniFragment {
+    private static final int AUTH = 1;
     @BindView(R.id.setCashPwd)
     IconTextRow mSetCashPwd;
     @BindView(R.id.changeLoginPwd)
@@ -48,12 +51,18 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
     }
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         isDrawPass();
+        LocalUser user = LocalUser.getUser();
+        if (user.isLogin()) {
+            UserInfo userInfo = user.getUserInfo();
+            if (userInfo.getGoogleAuth() == AUTH) {
+                mGoogleAuthenticator.setSubText(userInfo.getGoogleAuth() == AUTH ? R.string.certificated : R.string.uncertificated);
+            }
+        }
     }
 
     private void isDrawPass() {
@@ -85,7 +94,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.setCashPwd:
-                UniqueActivity.launcher(this, CashPwdFragment.class).putExtra(ExtraKeys.HAS_WITH_DRAW_PASS,hasWithDrawPass).execute();
+                UniqueActivity.launcher(this, CashPwdFragment.class).putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, hasWithDrawPass).execute();
                 break;
             case R.id.changeLoginPwd:
                 UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();
@@ -94,7 +103,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
                 UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
                 break;
             case R.id.googleAuthenticatorSettings:
-                UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
+                UniqueActivity.launcher(this, GoogleAuthenticatorSettingsFragment.class).execute();
                 break;
             case R.id.gesturePwd:
                 Launcher.with(this, SetGesturePwdActivity.class).execute();
