@@ -12,6 +12,7 @@ import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +32,8 @@ public class RadioHeader extends LinearLayout {
     private int mTabInterval;
     private int mPointColor;
     private int mSelectedPosition;
+    private boolean mHasMore;
+    private CharSequence mTextOfMore;
 
     private float mRadius;
     private float mRadiusWithNum;
@@ -65,6 +68,8 @@ public class RadioHeader extends LinearLayout {
         mTabInterval = typedArray.getDimensionPixelOffset(R.styleable.RadioHeader_tabInterval, 0);
         mPointColor = typedArray.getColor(R.styleable.RadioHeader_pointColor,
                 ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
+        mHasMore = typedArray.getBoolean(R.styleable.RadioHeader_hasMore, false);
+        mTextOfMore = typedArray.getText(R.styleable.RadioHeader_textOfMore);
 
         typedArray.recycle();
     }
@@ -107,6 +112,16 @@ public class RadioHeader extends LinearLayout {
             });
         }
 
+        if (mHasMore) {
+            View view = createTab(mTextOfMore, true);
+            LinearLayout.LayoutParams params = (LayoutParams) view.getLayoutParams();
+            if (params == null) {
+                params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            }
+            params.setMargins(mTabInterval, 0, 0, 0);
+            addView(view, params);
+        }
+
         if (mTabArray.length > 0) {
             mSelectedPosition = 0;
             getChildAt(0).setSelected(true);
@@ -131,9 +146,15 @@ public class RadioHeader extends LinearLayout {
     }
 
     private View createTab(CharSequence sequence) {
-        View tab = LayoutInflater.from(getContext()).inflate(R.layout.radio_header_tab, null);
-        TextView text = (TextView) tab.findViewById(R.id.text);
+        return createTab(sequence, false);
+    }
+
+    private View createTab(CharSequence sequence, boolean triangleVisible) {
+        View tab = LayoutInflater.from(getContext()).inflate(R.layout.radio_header_tab, this, false);
+        TextView text = tab.findViewById(R.id.text);
         text.setText(sequence);
+        ImageView triangle = tab.findViewById(R.id.triangle);
+        triangle.setVisibility(triangleVisible ? VISIBLE : INVISIBLE);
         return tab;
     }
 

@@ -56,6 +56,7 @@ import butterknife.Unbinder;
 public class MarketFragment extends BaseFragment {
 
     private static final int REQ_CODE_SEARCH = 94;
+    private static final int REQ_CODE_MARKET_DETAIL = 95;
 
     Unbinder unbinder;
     @BindView(R.id.titleBar)
@@ -159,6 +160,9 @@ public class MarketFragment extends BaseFragment {
         if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) {
             requestOptionalList(mRadioHeader.getSelectTab());
         }
+        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) {
+
+        }
     }
 
     @Override
@@ -182,7 +186,9 @@ public class MarketFragment extends BaseFragment {
         mOptionalAdapter = new OptionalAdapter(getActivity(), new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
-
+                if (obj instanceof CurrencyPair) {
+                    openMarketDetailPage((CurrencyPair) obj);
+                }
             }
         });
         mOptionalList.setAdapter(mOptionalAdapter);
@@ -196,11 +202,19 @@ public class MarketFragment extends BaseFragment {
         mCurrencyPairAdapter = new CurrencyPairAdapter(getActivity(), new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
-
+                if (obj instanceof CurrencyPair) {
+                    openMarketDetailPage((CurrencyPair) obj);
+                }
             }
         });
         mCurrencyPairList.setAdapter(mCurrencyPairAdapter);
         mCurrencyPairList.setEmptyView(mEmptyView);
+    }
+
+    private void openMarketDetailPage(CurrencyPair currencyPair) {
+        UniqueActivity.launcher(this, MarketDetailFragment.class)
+                .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
+                .execute(this, REQ_CODE_MARKET_DETAIL);
     }
 
     private void requestOptionalList(String content) {
