@@ -24,6 +24,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
@@ -174,7 +175,11 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     }
 
     private void requestPhoneAuthCode(String imageAuthCode) {
-        Apic.sendOld(imageAuthCode, AuthCodeGet.TYPE_SAFE_PSD).tag(TAG)
+        AuthSendOld authSendOld = new AuthSendOld();
+        authSendOld.setImgCode(imageAuthCode);
+        authSendOld.setSendType(AuthCodeGet.TYPE_SAFE_PSD);
+        authSendOld.setSendType(AuthSendOld.TYPE_DEFAULT);
+        Apic.sendOld(authSendOld).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {

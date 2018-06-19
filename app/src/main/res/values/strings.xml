@@ -33,6 +33,7 @@
     <string name="trade_order_log">币币交易历史</string>
     <string name="legal_currency_trade_order">法币交易订单</string>
     <string name="invite">邀请返佣</string>
+    <string name="invite_friends_can_get">邀请好友可获佣</string>
     <string name="message_center">消息中心</string>
     <string name="safety_center">安全中心</string>
     <string name="custom_service">聊天客服</string>
@@ -63,11 +64,7 @@
     <string name="please_add_certification_back_pic">请添加证件背面照片</string>
     <string name="please_add_handle_certification_pic">请添加手持证件照片</string>
     <string name="example">示例</string>
-    <string name="upload_pic_rules">照片要求：\n
-        1. 照片文件大小不能超过4M！文件格式须为jpg或者png！\n
-        2. 请确保照片无水印，无污渍，身份信息清晰，头像完整且非文字反向照片！\n
-        3. 需您提供本人双手手持证件照的照片，请确保照片上证件照清晰可见，无妆容完整露出双手手臂，手持位置未遮挡证件信息，且证件未遮挡您的脸部！\n
-        点击添加可查看示例，请提交您本人的身份材料照片。照片请勿进行PS处理！</string>
+    <string name="upload_pic_rules">照片要求：\n1. 照片文件大小不能超过4M！文件格式须为jpg或者png！\n2. 请确保照片无水印，无污渍，身份信息清晰，头像完整且非文字反向照片！\n3. 需您提供本人双手手持证件照的照片，请确保照片上证件照清晰可见，无妆容完整露出双手手臂，手持位置未遮挡证件信息，且证件未遮挡您的脸部！\n点击添加可查看示例，请提交您本人的身份材料照片。照片请勿进行PS处理！</string>
     <string name="legal_currency_pay_management">法币支付管理</string>
     <string name="legal_currency_pay">法币支付</string>
     <string name="delete">删除</string>
@@ -114,6 +111,7 @@
     <string name="save">保存</string>
     <string name="update_success">更新成功</string>
     <string name="bind_phone">绑定手机</string>
+    <string name="edit_phone">修改手机</string>
     <string name="please_input_phone_num">请输入手机号码</string>
     <string name="send_auth_code">发送验证码</string>
     <string name="message_auth_code">短信验证码</string>
@@ -161,11 +159,7 @@
     <string name="confirm_submit">确认提交</string>
     <string name="customer_service_title">客服小三</string>
     <string name="input_hint">输入信息，按Enter发送</string>
-    <string name="invite_activity_rules">1.最小提币数量为：XX\n
-        2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n
-        3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n
-        4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n
-        5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
+    <string name="invite_activity_rules">1.最小提币数量为：XX\n2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="check_activity_rules">查看活动规则</string>
     <string name="join_now">马上入群</string>
     <string name="invite_code">邀请码</string>
@@ -192,9 +186,7 @@
     <string name="google_authenticator_settings">谷歌验证设置</string>
     <string name="google_authenticator_code">谷歌验证码</string>
     <string name="please_input_google_authenticator_code">请输入谷歌验证码</string>
-    <string name="google_authenticator_hint">1.安装在“Google Authenticator”应用程序中，点击右上角“+”号，然后选择“手动输入验证码”或“扫描条形码”。\n
-        2.扫描下方二维码或手动输入下述密钥添加验证令牌。\n
-        3.密钥用于手机更换或遗失时找回谷歌验证器，绑定前请务必将下述密钥备份保存。</string>
+    <string name="google_authenticator_hint">1.安装在“Google Authenticator”应用程序中，点击右上角“+”号，然后选择“手动输入验证码”或“扫描条形码”。\n2.扫描下方二维码或手动输入下述密钥添加验证令牌。\n3.密钥用于手机更换或遗失时找回谷歌验证器，绑定前请务必将下述密钥备份保存。</string>
     <string name="use_google_authenticator_by">将Google验证应用于：</string>
     <string name="reset_draw_cash_pwd">重置资金密码</string>
     <string name="confirm_otc_tread">法币交易确认</string>
@@ -231,11 +223,7 @@
     <string name="copy_success">复制成功</string>
     <string name="save_qr_code">保存二维码</string>
     <string name="copy_address">复制地址</string>
-    <string name="recharge_coin_rules">请勿向上述地址充值任何非USDT资产，否则资产将不可找回。\n
-        您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。\n
-        最小充值金额：100 USDT ，小于最小金额的充值将不会上账。\n
-        您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。\n
-        请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
+    <string name="recharge_coin_rules">请勿向上述地址充值任何非USDT资产，否则资产将不可找回。\n您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。\n最小充值金额：100 USDT ，小于最小金额的充值将不会上账。\n您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。\n请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="select_coin_type">选择币种</string>
     <string name="draw_coin">提币</string>
     <string name="draw_coin_success">提币成功</string>
@@ -255,11 +243,7 @@
     <string name="cash_pwd">资金密码</string>
     <string name="set_cash_pwd_rules">注意：您的资金密码是用来交易和提现和账户安全设置，建议您不要设置与登录密码一致，由此产生的账户被盗，本站概不负责。</string>
     <string name="confirm_with_draw">确认提币</string>
-    <string name="with_draw_rules_x">1.最小提币数量为：%1$s\n
-        2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n
-        3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n
-        4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n
-        5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
+    <string name="with_draw_rules_x">1.最小提币数量为：%1$s\n2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="filtrate">筛选</string>
     <string name="coin_type">币种</string>
     <string name="flow_type">流水类型</string>

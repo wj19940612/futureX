@@ -23,9 +23,8 @@ android {
         buildConfigField('boolean', 'IS_PROD', 'true')
 
         manifestPlaceholders = [
-                GETUI_APP_ID    : "APP_ID",
-                GETUI_APP_KEY   : "APP_KEY",
-                GETUI_APP_SECRET: "APP_SECRET"
+                UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
+                UMENG_CHANNEL: "android"
         ]
     }
     buildTypes {
@@ -45,9 +44,8 @@ android {
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
             manifestPlaceholders = [
-                    GETUI_APP_ID    : "APP_ID",
-                    GETUI_APP_KEY   : "APP_KEY",
-                    GETUI_APP_SECRET: "APP_SECRET"
+                    UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
+                    UMENG_CHANNEL: "android"
             ]
         }
         alpha {
@@ -56,9 +54,8 @@ android {
             buildConfigField('String', 'HOST', '\"ex.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
             manifestPlaceholders = [
-                    GETUI_APP_ID    : "APP_ID",
-                    GETUI_APP_KEY   : "APP_KEY",
-                    GETUI_APP_SECRET: "APP_SECRET"
+                    UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
+                    UMENG_CHANNEL: "android"
             ]
         }
     }
@@ -77,11 +74,13 @@ android {
         // third
         implementation 'com.jakewharton:butterknife:8.8.1'
         annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-        implementation 'com.getui:sdk-for-google-play:4.3.0.0'
         implementation 'com.github.chrisbanes:PhotoView:1.3.1'
         implementation 'com.contrarywind:Android-PickerView:4.1.3'
         implementation 'com.google.zxing:core:3.2.1'
         implementation 'com.koushikdutta.async:androidasync:2.+'
+        implementation 'com.umeng.sdk:common:latest.integration'
+        compile 'com.umeng.sdk:utdid:1.1.5.3'
+        implementation 'com.umeng.sdk:push:4.2.0'
         implementation project(path: ':httplib')
         implementation project(path: ':glide')
         implementation project(path: ':swipeloadlayout')

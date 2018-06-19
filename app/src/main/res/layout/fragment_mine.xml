@@ -73,6 +73,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/click_login"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
                     android:visibility="gone"/>
             </FrameLayout>
 
@@ -176,9 +178,9 @@
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/customService"
-            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/bg_white_pressed_f5"
             android:visibility="visible"
             app:hasBottomSplitLine="true"
