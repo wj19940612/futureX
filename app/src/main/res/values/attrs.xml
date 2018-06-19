@@ -81,6 +81,7 @@
         <attr name="tabInterval" format="dimension|reference"/>
         <attr name="pointColor" format="color|reference"/>
         <attr name="hasMore" format="boolean"/>
+        <attr name="textOfMore" format="reference|string" />
     </declare-styleable>
 
     <!--密码输入控件-->
@@ -105,5 +106,15 @@
         <attr name="sizeToFit" format="boolean"/>
         <!-- Max view width that cannot beyond this -->
         <attr name="maxViewWidth" format="dimension"/>
+    </declare-styleable>
+
+    <!--用于显示 MA 数据的控件-->
+    <declare-styleable name="MAView">
+        <attr name="ma" format="integer"/>
+        <attr name="maColor" format="color|reference"/>
+        <attr name="maValue" format="string|reference"/>
+        <attr name="android:textSize"/>
+        <attr name="android:textColor"/>
+        <attr name="marginLeft" format="dimension"/>
     </declare-styleable>
 </resources>

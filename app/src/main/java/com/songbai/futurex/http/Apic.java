@@ -455,6 +455,8 @@ public class Apic {
 
     /**
      * 获取图片验证码
+     * <p>
+     * /api/user/validate/download/codeImg.do
      *
      * @param msgType
      * @return
@@ -467,6 +469,8 @@ public class Apic {
 
     /**
      * 登录
+     * <p>
+     * /api/user/user/login.do
      *
      * @param loginData
      * @return
@@ -478,6 +482,8 @@ public class Apic {
 
     /**
      * 设置新的登录密码
+     * <p>
+     * /api/user/user/forgetUserPass.do
      *
      * @param findPsdData
      * @return
@@ -489,6 +495,8 @@ public class Apic {
 
     /**
      * 获取自选列表
+     * <p>
+     * /api/entrust/pairs/pairsSimpleList.do
      *
      * @return
      */
@@ -500,6 +508,8 @@ public class Apic {
 
     /**
      * 根据计价货币获取货币对
+     * <p>
+     * /api/entrust/pairs/pairsSimpleList.do
      *
      * @param suffixSymbol
      * @return
@@ -513,6 +523,8 @@ public class Apic {
 
     /**
      * 获取 socket 配置，host & port
+     * <p>
+     * /api/gateway/tcp/websocket.do
      *
      * @return
      */
@@ -522,15 +534,19 @@ public class Apic {
 
     /**
      * 获取服务器系统时间
+     * <p>
+     * /user/user/getSystemTime.do
      *
      * @return
      */
     public static Api getSystemTime() {
-        return Api.get("/user/user/getSystemTime.do");
+        return Api.get("/api/user/user/getSystemTime.do");
     }
 
     /**
      * 搜索货币对
+     * <p>
+     * /api/entrust/pairs/search
      *
      * @param keyword
      * @return
@@ -543,6 +559,8 @@ public class Apic {
 
     /**
      * 添加自选
+     * <p>
+     * /api/entrust/pairs/option.do
      *
      * @param pairs
      * @return
@@ -556,6 +574,8 @@ public class Apic {
 
     /**
      * 取消自选
+     * <p>
+     * /api/entrust/pairs/option.do
      *
      * @param pairs
      * @return
@@ -565,6 +585,43 @@ public class Apic {
                 new ReqParams()
                         .put("pairs", pairs)
                         .put("type", 0));
+    }
+
+    /**
+     * 获取 k 线数据
+     * <p>
+     * /api/quota/quota/{code}/k
+     *
+     * @param code
+     * @param type
+     * @param endTime
+     * @return
+     */
+    public static Api getKlineData(String code, String type, String endTime) {
+        return Api.get("/api/quota/quota/{code}/k",
+                new ReqParams()
+                        .put("code", code)
+                        .put("type", type)
+                        .put("endTime", endTime)
+                        .put("limit", 200));
+    }
+
+    /**
+     * 获取 分时图数据
+     * <p>
+     * /api/quota/quota/{code}/trend
+     *
+     * @param code
+     * @param endTime
+     * @return
+     */
+    public static Api getTrendData(String code, String endTime) {
+        return Api.get("/api/quota/quota/{code}/k",
+                new ReqParams()
+                        .put("code", code)
+                        .put("type", 60)
+                        .put("endTime", endTime)
+                        .put("limit", 200));
     }
 
 
