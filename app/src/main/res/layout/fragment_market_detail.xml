@@ -16,151 +16,201 @@
         app:titleTextColor="@color/text22"
         tools:titleText="BTC/USDT"/>
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/lastPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/green"
-            android:textSize="34sp"
-            tools:text="9230.00"/>
-
-        <TextView
-            android:id="@+id/priceChange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/lastPrice"
-            android:layout_below="@id/lastPrice"
-            android:textColor="@color/green"
-            android:textSize="15sp"
-            tools:text="+0.75%"/>
-
-        <TextView
-            android:id="@+id/highestPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="8dp"
-            android:text="9300.77"
-            android:textColor="@color/text66"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/highText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/highestPrice"
-            android:layout_marginRight="38dp"
-            android:layout_toLeftOf="@id/highestPrice"
-            android:text="@string/high"
-            android:textColor="@color/text66"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/lowestPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/highestPrice"
-            android:layout_below="@id/highestPrice"
-            android:layout_marginTop="2dp"
-            android:text="9300.77"
-            android:textColor="@color/text66"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/lowText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/highText"
-            android:layout_below="@id/highText"
-            android:layout_marginTop="2dp"
-            android:text="@string/low"
-            android:textColor="@color/text66"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/tradeVolume"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/lowestPrice"
-            android:layout_below="@id/lowestPrice"
-            android:layout_marginTop="2dp"
-            android:text="14957"
-            android:textColor="@color/text66"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/highText"
-            android:layout_below="@id/lowText"
-            android:layout_marginTop="2dp"
-            android:text="@string/volume_24h"
-            android:textColor="@color/text66"
-            android:textSize="12sp"/>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/priceChange"
-            android:layout_marginTop="15dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical">
 
-            <com.songbai.futurex.view.ChartsRadio
-                android:id="@+id/chartRadio"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabInterval="10dp"/>
+                android:background="@color/white">
 
-            <com.songbai.futurex.view.chart.KlineDataDetailView
-                android:id="@+id/klineDataDetailView"
+                <TextView
+                    android:id="@+id/lastPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/green"
+                    android:textSize="34sp"
+                    tools:text="9230.00"/>
+
+                <TextView
+                    android:id="@+id/priceChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/lastPrice"
+                    android:layout_below="@id/lastPrice"
+                    android:textColor="@color/green"
+                    android:textSize="15sp"
+                    tools:text="+0.75%"/>
+
+                <TextView
+                    android:id="@+id/highestPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp"
+                    android:text="9300.77"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/highText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/highestPrice"
+                    android:layout_marginRight="38dp"
+                    android:layout_toLeftOf="@id/highestPrice"
+                    android:text="@string/high"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/lowestPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/highestPrice"
+                    android:layout_below="@id/highestPrice"
+                    android:layout_marginTop="2dp"
+                    android:text="9300.77"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/lowText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/highText"
+                    android:layout_below="@id/highText"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/low"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/tradeVolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/lowestPrice"
+                    android:layout_below="@id/lowestPrice"
+                    android:layout_marginTop="2dp"
+                    android:text="14957"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/highText"
+                    android:layout_below="@id/lowText"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/volume_24h"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/priceChange"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical">
+
+                    <com.songbai.futurex.view.ChartsRadio
+                        android:id="@+id/chartRadio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:tabInterval="10dp"/>
+
+                    <com.songbai.futurex.view.chart.KlineDataDetailView
+                        android:id="@+id/klineDataDetailView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/white"
+                android:paddingTop="4dp">
+
+                <com.songbai.futurex.view.chart.KlineView
+                    android:id="@+id/kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+                <com.songbai.futurex.view.chart.TrendV
+                    android:id="@+id/trend"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </FrameLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
-        </RelativeLayout>
-    </RelativeLayout>
+                android:background="@color/white"
+                android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/white"
-        android:paddingTop="4dp">
+                <com.songbai.futurex.view.RadioHeader
+                    android:id="@+id/tradeDetailRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/priceChange"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="6dp"
+                    app:tabArray="@array/trade_detail_radio"
+                    app:tabInterval="18dp"/>
+            </LinearLayout>
 
-        <com.songbai.futurex.view.chart.KlineView
-            android:id="@+id/kline"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"/>
-
-        <com.songbai.futurex.view.chart.TrendV
-            android:id="@+id/trend"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </FrameLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <com.songbai.futurex.view.RadioHeader
-            android:id="@+id/tradeDetailRadio"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/buyIn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/priceChange"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="6dp"
-            app:tabArray="@array/trade_detail_radio"
-            app:tabInterval="18dp"/>
+            android:background="@color/green"
+            android:gravity="center"
+            android:text="@string/buy_in"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/sellOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:gravity="center"
+            android:text="@string/sell_out"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/optional"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/btn_optional_status"
+            android:gravity="center"
+            android:text="@string/add_optional_no_plus"
+            android:textColor="@color/text66"
+            android:textSize="10sp"/>
     </LinearLayout>
 </LinearLayout>

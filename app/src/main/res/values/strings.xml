@@ -389,4 +389,7 @@
     <string name="price_change_percent">幅</string>
     <string name="trade_volume_x">量&#160;$1$s</string>
     <string name="no_more_data">没有更多数据了</string>
+    <string name="buy_in">买入</string>
+    <string name="sell_out">卖出</string>
+    <string name="add_optional_no_plus">添加自选</string>
 </resources>
