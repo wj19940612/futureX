@@ -107,20 +107,16 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/priceChange"
-            android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
             android:gravity="center_vertical">
 
-            <com.songbai.futurex.view.RadioHeader
+            <com.songbai.futurex.view.ChartsRadio
                 android:id="@+id/chartRadio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hasMore="true"
-                app:tabArray="@array/chart_radio"
-                app:tabInterval="10dp"
-                app:textOfMore="@string/more"/>
+                app:tabInterval="10dp"/>
 
             <com.songbai.futurex.view.chart.KlineDataDetailView
                 android:id="@+id/klineDataDetailView"
