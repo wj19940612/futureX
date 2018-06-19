@@ -148,6 +148,7 @@ public class PersonalDataActivity extends BaseActivity {
             R.id.mailCertification, R.id.primaryCertification, R.id.seniorCertification,
             R.id.legalCurrencyPayManagement, R.id.addressManagement})
     public void onViewClicked(View view) {
+        UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
             case R.id.headImageLayout:
 //                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
@@ -164,31 +165,41 @@ public class PersonalDataActivity extends BaseActivity {
 //                        .forResult();
                 break;
             case R.id.nickName:
-                Launcher.with(this, ModifyNickNameActivity.class).putExtra(ExtraKeys.NICK_NAME, LocalUser.getUser().getUserInfo().getUserName()).execute(MODIFY_PERSONAL_DATA);
+                Launcher.with(this, ModifyNickNameActivity.class)
+                        .putExtra(ExtraKeys.NICK_NAME, userInfo.getUserName())
+                        .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.realName:
                 break;
             case R.id.phoneCertification:
-                UniqueActivity.launcher(this, BindPhoneFragment.class).execute(MODIFY_PERSONAL_DATA);
+                UniqueActivity.launcher(this, BindPhoneFragment.class)
+                        .putExtra(ExtraKeys.HAS_BIND_PHONE, TextUtils.isEmpty(userInfo.getUserPhone()))
+                        .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.mailCertification:
-                UniqueActivity.launcher(this, BindMailFragment.class).putExtra(ExtraKeys.HAS_BIND_EMAIL, mHasEmail).execute(MODIFY_PERSONAL_DATA);
+                UniqueActivity.launcher(this, BindMailFragment.class)
+                        .putExtra(ExtraKeys.HAS_BIND_EMAIL, mHasEmail)
+                        .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.primaryCertification:
                 if (mAuthenticationStatus > 0) {
                     return;
                 }
-                UniqueActivity.launcher(this, PrimaryCertificationFragment.class).execute(MODIFY_PERSONAL_DATA);
+                UniqueActivity.launcher(this, PrimaryCertificationFragment.class)
+                        .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.seniorCertification:
                 UniqueActivity.launcher(this, SeniorCertificationFragment.class)
-                        .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus).execute(MODIFY_PERSONAL_DATA);
+                        .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus)
+                        .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.legalCurrencyPayManagement:
-                UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class).execute(MODIFY_PERSONAL_DATA);
+                UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
+                        .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.addressManagement:
-                UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class).execute(MODIFY_PERSONAL_DATA);
+                UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class)
+                        .execute(MODIFY_PERSONAL_DATA);
                 break;
             default:
         }

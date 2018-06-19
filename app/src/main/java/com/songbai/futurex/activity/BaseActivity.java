@@ -15,13 +15,17 @@ import android.widget.AbsListView;
 import android.widget.ScrollView;
 
 import com.sbai.httplib.ReqIndeterminate;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Api;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.SysTime;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
 import com.songbai.futurex.view.RequestProgress;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.websocket.MessageProcessor;
+import com.umeng.message.PushAgent;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -46,10 +50,10 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_TOKEN_EXPIRED.equalsIgnoreCase(intent.getAction())) {
-                //LocalUser.getUser().logout();
+                LocalUser.getUser().logout();
 //                SimpleConnector.get().disconnect();
 //                SimpleConnector.get().connect();
-//                Launcher.with(getActivity(), LoginActivity.class).execute();
+                Launcher.with(getActivity(), LoginActivity.class).execute();
             }
         }
     };
@@ -65,7 +69,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
             }
         });
         //MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-
+        PushAgent.getInstance(this).onAppStart();
         SysTime.getSysTime().sync();
         MessageProcessor.get().connect();
     }

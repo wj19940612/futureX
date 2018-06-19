@@ -1,14 +1,18 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -21,6 +25,7 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class SettingsFragment extends UniqueActivity.UniFragment {
+    private static final int SETTINGS_RESULT = 12354;
     @BindView(R.id.language)
     IconTextRow mLanguage;
     private Unbinder mBind;
@@ -62,6 +67,10 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 UniqueActivity.launcher(getActivity(), FeedbackFragment.class).execute();
                 break;
             case R.id.logout:
+                LocalUser.getUser().logout();
+                FragmentActivity activity = getActivity();
+                activity.setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                activity.finish();
                 break;
             default:
         }

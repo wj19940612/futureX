@@ -2,6 +2,7 @@ package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
@@ -533,9 +534,9 @@ public class Apic {
      * POST
      * 发送验证码(需要原有的手机号或者短信校验使用)--薛松
      */
-    public static Api sendOld(String imgCode, int smsType) {
+    public static Api sendOld(AuthSendOld authSendOld) {
         return Api.post("/api/user/userSafe/sendOld.do",
-                new ReqParams().put("imgCode", imgCode).put("smsType", smsType));
+                new ReqParams(AuthSendOld.class,authSendOld));
     }
 
     /**

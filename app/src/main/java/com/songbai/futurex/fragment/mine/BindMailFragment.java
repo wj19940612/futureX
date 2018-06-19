@@ -23,6 +23,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.AuthCodeGet;
+import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -151,6 +152,42 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
         mGetSmsAuthCode.setText(getString(R.string.x_seconds, 60));
     }
 
+    @Override
+    public void onTimeUp(int count) {
+        boolean timeUp = false;
+        if (mFreezeGetPhoneAuthCode) {
+            Integer tag = (Integer) mGetSmsAuthCode.getTag();
+            int authCodeCounter = tag != null ? tag.intValue() : 0;
+            authCodeCounter--;
+            if (authCodeCounter <= 0) {
+                mGetSmsAuthCode.setEnabled(true);
+                mGetSmsAuthCode.setText(R.string.regain);
+                mGetSmsAuthCode.setTag(null);
+                timeUp = true;
+            } else {
+                mGetSmsAuthCode.setTag(authCodeCounter);
+                mGetSmsAuthCode.setText(getString(R.string.x_seconds, authCodeCounter));
+            }
+        }
+        if (mFreezeGetEmailAuthCode) {
+            Integer tag = (Integer) mGetMailAuthCode.getTag();
+            int authCodeCounter = tag != null ? tag.intValue() : 0;
+            authCodeCounter--;
+            if (authCodeCounter <= 0) {
+                mGetMailAuthCode.setEnabled(true);
+                mGetMailAuthCode.setText(R.string.regain);
+                mGetMailAuthCode.setTag(null);
+                timeUp = true;
+            } else {
+                mGetMailAuthCode.setTag(authCodeCounter);
+                mGetMailAuthCode.setText(getString(R.string.x_seconds, authCodeCounter));
+            }
+        }
+        if (timeUp) {
+            stopScheduleJob();
+        }
+    }
+
     private void showImageAuthCodeDialog() {
         mAuthCodeViewController = new AuthCodeViewController(getContext(), new AuthCodeViewController.OnClickListener() {
             @Override
@@ -174,7 +211,12 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
     }
 
     private void requestPhoneAuthCode(String imageAuthCode) {
-        Apic.sendOld(imageAuthCode, AuthCodeGet.BINDING_EMAIL).tag(TAG)
+        AuthSendOld authSendOld = new AuthSendOld();
+        authSendOld.setImgCode(imageAuthCode);
+        authSendOld.setSendType(AuthCodeGet.BINDING_EMAIL);
+        authSendOld.setSendType(AuthSendOld.TYPE_SMS);
+
+        Apic.sendOld(authSendOld).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {

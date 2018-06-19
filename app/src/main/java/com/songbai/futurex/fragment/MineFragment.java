@@ -1,5 +1,6 @@
 package com.songbai.futurex.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,9 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.activity.mine.InviteActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
@@ -41,6 +44,8 @@ import sbai.com.glide.GlideApp;
  * @date 2018/5/29
  */
 public class MineFragment extends BaseFragment {
+    private static final int REQUEST_LOGIN = 12343;
+    private static final int REQUEST_SETTINGS = 12344;
 
     @BindView(R.id.headLayout)
     ConstraintLayout mHeadLayout;
@@ -90,7 +95,6 @@ public class MineFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            getMessageCount();
             setUserInfo();
         }
     }
@@ -98,6 +102,7 @@ public class MineFragment extends BaseFragment {
     private void setUserInfo() {
         LocalUser localUser = LocalUser.getUser();
         if (localUser.isLogin()) {
+            getMessageCount();
             UserInfo userInfo = localUser.getUserInfo();
             GlideApp
                     .with(this)
@@ -114,6 +119,11 @@ public class MineFragment extends BaseFragment {
             mUserInfoGroup.setVisibility(View.VISIBLE);
             mLogin.setVisibility(View.GONE);
         } else {
+            GlideApp
+                    .with(this)
+                    .load(R.drawable.ic_default_avatar_big)
+                    .circleCrop()
+                    .into(mHeadPortrait);
             mLogin.setVisibility(View.VISIBLE);
             mUserInfoGroup.setVisibility(View.GONE);
         }
@@ -155,16 +165,31 @@ public class MineFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LOGIN) {
+            setUserInfo();
+        } else if (requestCode == REQUEST_SETTINGS) {
+            if (data != null && data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false)) {
+                setUserInfo();
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
     }
 
-    @OnClick({R.id.userInfoGroup, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
+    @OnClick({R.id.login, R.id.userInfoGroup, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
             R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
         LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
+            case R.id.login:
+                Launcher.with(getActivity(), LoginActivity.class).execute(this, REQUEST_LOGIN);
+                break;
             case R.id.userInfoGroup:
                 Launcher.with(this, PersonalDataActivity.class).execute();
                 break;
@@ -194,7 +219,7 @@ public class MineFragment extends BaseFragment {
                 UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();
                 break;
             case R.id.settings:
-                UniqueActivity.launcher(getActivity(), SettingsFragment.class).execute();
+                UniqueActivity.launcher(getActivity(), SettingsFragment.class).execute(this, REQUEST_SETTINGS);
                 break;
             default:
         }

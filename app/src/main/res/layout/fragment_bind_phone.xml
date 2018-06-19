@@ -29,6 +29,7 @@
             style="@style/SignEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
             android:drawablePadding="4dp"
             android:drawableRight="@drawable/ic_area_code_arrow"
             tools:text="0086"/>
@@ -67,7 +68,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:enabled="false"
             android:gravity="center"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
@@ -100,7 +100,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:enabled="false"
             android:gravity="center"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
