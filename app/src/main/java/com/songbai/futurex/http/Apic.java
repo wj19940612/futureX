@@ -168,6 +168,15 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/countDrawWalletAddrByCoinType.do
+     * POST
+     * 获取提现地址的个数
+     */
+    public static Api countDrawWalletAddrByCoinType(String coinType) {
+        return Api.get("/api/user/wallet/countDrawWalletAddrByCoinType.do", new ReqParams().put("coinType", coinType));
+    }
+
+    /**
      * /api/user/wallet/addDrawWalletAddrByCoinType.do
      * POST
      * 添加提现地址（叶海啸）
@@ -243,6 +252,19 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/getAccountByUserForMuti.do
+     * GET
+     * 获取多个品种账户可用资金
+     *
+     * @param coinType usdt,btc 多个品种用逗号隔开
+     */
+    public static Api getAccountByUserForMuti(String coinType) {
+        return Api.get("/api/user/wallet/getAccountByUserForMuti.do",
+                new ReqParams()
+                        .put("coinType", coinType));
+    }
+
+    /**
      * /api/user/wallet/getUserFinanceFlow.do
      * GET
      * 资产明细（叶海啸）
@@ -274,6 +296,21 @@ public class Apic {
         return Api.get("/api/user/wallet/getCoinTypeDrawLimit.do",
                 new ReqParams()
                         .put("coinType", coinType));
+    }
+
+    /**
+     * /api/user/wallet/drawCoin.do
+     * POST
+     * 提币（叶海啸）
+     */
+    public static Api drawCoin(String coinType, String toAddr, double withdrawAmount, String googleCode, String drawPassword) {
+        return Api.post("/api/user/wallet/drawCoin.do",
+                new ReqParams()
+                        .put("coinType", coinType)
+                        .put("toAddr", toAddr)
+                        .put("withdrawAmount", withdrawAmount)
+                        .put("googleCode", googleCode)
+                        .put("drawPassword", drawPassword));
     }
 
     /**
@@ -345,11 +382,53 @@ public class Apic {
     }
 
     /**
+     * /api/user/userSafe/bindGoogleKey.do
+     * POST
+     * 绑定谷歌验证--薛松
+     */
+    public static Api bindGoogleKey(String googleCode, String drawPass, String googleKey) {
+        return Api.post("/api/user/userSafe/bindGoogleKey.do",
+                new ReqParams()
+                        .put("googleCode", googleCode)
+                        .put("drawPass", drawPass)
+                        .put("googleKey", googleKey));
+    }
+
+    /**
+     * /api/user/userSafe/setAuthVerify.do
+     * POST
+     * 设置google验证码使用场景--薛松(新增谷歌验证码一定要输入(邵文星))
+     */
+    public static Api setAuthVerify(String authCode, String googleCode) {
+        return Api.post("/api/user/userSafe/setAuthVerify.do",
+                new ReqParams()
+                        .put("authCode", authCode)
+                        .put("googleCode", googleCode));
+    }
+
+    /**
+     * /api/user/user/toBePromoter.do
+     * GET
+     * 申请成为推广员(陈作衡)
+     */
+    public static Api toBePromoter() {
+        return Api.get("/api/user/user/toBePromoter.do");
+    }
+
+    /**
+     * /api/user/user/getCurrentPromoterMsg.do
+     * GET
+     * 获取推广员信息
+     */
+    public static Api getCurrentPromoterMsg() {
+        return Api.get("/api/user/user/getCurrentPromoterMsg.do");
+    }
+
+    /**
      * /api/user/upload/image.do
      * POST
      * 上传图片-单个图片
      */
-
     public static Api uploadImage(String picture) {
         return Api.post("/api/user/upload/image.do",
                 new ReqParams()
@@ -365,6 +444,38 @@ public class Apic {
         return Api.post("/api/user/upload/images.do",
                 new ReqParams()
                         .put("picture", picture));
+    }
+
+    /**
+     * /api/user/msg/list
+     * GET
+     * 消息列表
+     */
+    public static Api msgList(int page, int size) {
+        return Api.get("/api/user/msg/list",
+                new ReqParams()
+                        .put("page", page)
+                        .put("size", size));
+    }
+
+    /**
+     * /api/user/msg/readAll
+     * POST
+     * 标记全部已读
+     */
+    public static Api msgReadAll() {
+        return Api.post("/api/user/msg/list");
+    }
+
+    /**
+     * /api/user/msg/read
+     * POST
+     * 标记已读
+     */
+    public static Api msgRead(int msgId) {
+        return Api.post("/api/user/msg/list",
+                new ReqParams()
+                        .put("msgId", msgId));
     }
 
     /**

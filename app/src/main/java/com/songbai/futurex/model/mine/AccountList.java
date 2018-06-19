@@ -19,14 +19,14 @@ public class AccountList implements Parcelable {
      * account : [{"ableCoin":999999999,"coinType":"etc","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["etc_usdt","etc_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"btc","estimateBtc":999999999,"freezeCoin":0,"isCanDraw":1,"pairs":["btc_usdt"],"recharge":1},{"ableCoin":999999999,"coinType":"usdt","estimateBtc":146094.17215737264,"freezeCoin":0,"isCanDraw":1,"pairs":["btc_usdt","eth_usdt","ltc_usdt","neo_usdt","bch_usdt","qtum_usdt","etc_usdt","eos_usdt"],"recharge":1},{"ableCoin":999999999,"coinType":"eth","estimateBtc":333333333,"freezeCoin":0,"isCanDraw":1,"pairs":["eth_btc","eth_usdt"],"recharge":1},{"ableCoin":999999999,"coinType":"ltc","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["ltc_usdt","ltc_eth","ltc_btc"],"recharge":1},{"ableCoin":999999999,"coinType":"bch","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["bch_usdt","bch_btc","bch_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"qtum","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["qtum_usdt","qtum_btc","qtum_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"bcx","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":[],"recharge":1},{"ableCoin":999999999,"coinType":"neo","estimateBtc":0,"freezeCoin":0,"isCanDraw":1,"pairs":["neo_usdt","neo_btc","neo_eth"],"recharge":1},{"ableCoin":999999999,"coinType":"eos","estimateBtc":0,"freezeCoin":0,"isCanDraw":0,"pairs":["eos_usdt"],"recharge":0}]
      */
 
-    private String balance;
+    private double balance;
     private List<AccountBean> account;
 
-    public String getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
@@ -56,22 +56,22 @@ public class AccountList implements Parcelable {
          * legal : 1 //0：否1：是
          */
         @SerializedName(value = "ableCoin", alternate = {"usable"})
-        private String ableCoin;
+        private double ableCoin;
         private String coinType;
         @SerializedName(value = "estimateBtc", alternate = {"estimate"})
-        private String estimateBtc;
+        private double estimateBtc;
         @SerializedName(value = "freezeCoin", alternate = {"freeze"})
-        private String freezeCoin;
+        private double freezeCoin;
         private int isCanDraw;
         private int recharge;
         private int legal;
         private List<String> pairs;
 
-        public String getAbleCoin() {
+        public double getAbleCoin() {
             return ableCoin;
         }
 
-        public void setAbleCoin(String ableCoin) {
+        public void setAbleCoin(double ableCoin) {
             this.ableCoin = ableCoin;
         }
 
@@ -83,19 +83,19 @@ public class AccountList implements Parcelable {
             this.coinType = coinType;
         }
 
-        public String getEstimateBtc() {
+        public double getEstimateBtc() {
             return estimateBtc;
         }
 
-        public void setEstimateBtc(String estimateBtc) {
+        public void setEstimateBtc(double estimateBtc) {
             this.estimateBtc = estimateBtc;
         }
 
-        public String getFreezeCoin() {
+        public double getFreezeCoin() {
             return freezeCoin;
         }
 
-        public void setFreezeCoin(String freezeCoin) {
+        public void setFreezeCoin(double freezeCoin) {
             this.freezeCoin = freezeCoin;
         }
 
@@ -141,10 +141,10 @@ public class AccountList implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.ableCoin);
+            dest.writeDouble(this.ableCoin);
             dest.writeString(this.coinType);
-            dest.writeString(this.estimateBtc);
-            dest.writeString(this.freezeCoin);
+            dest.writeDouble(this.estimateBtc);
+            dest.writeDouble(this.freezeCoin);
             dest.writeInt(this.isCanDraw);
             dest.writeInt(this.recharge);
             dest.writeInt(this.legal);
@@ -152,10 +152,10 @@ public class AccountList implements Parcelable {
         }
 
         protected AccountBean(Parcel in) {
-            this.ableCoin = in.readString();
+            this.ableCoin = in.readDouble();
             this.coinType = in.readString();
-            this.estimateBtc = in.readString();
-            this.freezeCoin = in.readString();
+            this.estimateBtc = in.readDouble();
+            this.freezeCoin = in.readDouble();
             this.isCanDraw = in.readInt();
             this.recharge = in.readInt();
             this.legal = in.readInt();
@@ -175,6 +175,9 @@ public class AccountList implements Parcelable {
         };
     }
 
+    public AccountList() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -182,20 +185,17 @@ public class AccountList implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.balance);
+        dest.writeDouble(this.balance);
         dest.writeList(this.account);
     }
 
-    public AccountList() {
-    }
-
     protected AccountList(Parcel in) {
-        this.balance = in.readString();
+        this.balance = in.readDouble();
         this.account = new ArrayList<AccountBean>();
         in.readList(this.account, AccountBean.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<AccountList> CREATOR = new Parcelable.Creator<AccountList>() {
+    public static final Creator<AccountList> CREATOR = new Creator<AccountList>() {
         @Override
         public AccountList createFromParcel(Parcel source) {
             return new AccountList(source);

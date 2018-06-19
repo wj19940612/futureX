@@ -20,17 +20,20 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.PropertyFlowActivity;
+import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingResp;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.AccountList;
+import com.songbai.futurex.model.mine.CoinAbleAmount;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.TitleBar;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +46,9 @@ import butterknife.Unbinder;
  */
 public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     public static final int COIN_PROPERTY_RESULT = 12532;
+    public static final int REQUEST_FUNDS_TRANSFER = 12533;
+    public static final int REQUEST_RECHARGE_COIN = 12534;
+    public static final int REQUEST_WITHDRAW_COIN = 12535;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.ableCoin)
@@ -54,8 +60,8 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     private Unbinder mBind;
     private AccountList.AccountBean mAccountBean;
     private int mTransferType;
-    private CoinPropertyAdapter mAdapter;
-    private boolean modified = true;
+    private PropertyFlowAdapter mAdapter;
+    private GetUserFinanceFlowData mGetUserFinanceFlowData;
 
     @Nullable
     @Override
@@ -73,8 +79,6 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        getActivity().setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, modified));
-
         mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
             @Override
             public void onClick() {
@@ -83,25 +87,50 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             }
         });
         mTitleBar.setTitle(mAccountBean.getCoinType().toUpperCase());
-        SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(getString(R.string.available_amount_x, mAccountBean.getAbleCoin()));
-        ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text99)),
-                0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(getString(R.string.freeze_amount_x, mAccountBean.getFreezeCoin()));
+        setAbleCoin(mAccountBean.getAbleCoin());
+        SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(getString(R.string.freeze_amount_x,
+                FinanceUtil.formatWithScale(mAccountBean.getFreezeCoin(), 8)));
         freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text99)),
                 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mAbleCoin.setText(ableCoinStr);
         mFreezeCoin.setText(freezeCoinStr);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new CoinPropertyAdapter();
+        mAdapter = new PropertyFlowAdapter();
+        mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
+            @Override
+            public void onItemClick() {
+                UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowFragment.class).execute();
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
 
-        GetUserFinanceFlowData getUserFinanceFlowData = new GetUserFinanceFlowData();
-        getUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
-        getUserFinanceFlowData.setFlowType(String.valueOf(0));
-        getUserFinanceFlowData.setStartTime("");
-        getUserFinanceFlowData.setEndTime("");
-        getUserFinanceFlow(getUserFinanceFlowData);
+        mGetUserFinanceFlowData = new GetUserFinanceFlowData();
+        mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
+        getAccountByUserForMuti(mAccountBean.getCoinType());
+        getUserFinanceFlow(mGetUserFinanceFlowData);
+    }
+
+    private void setAbleCoin(double ableCoin) {
+        SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(getString(R.string.available_amount_x,
+                FinanceUtil.formatWithScale(ableCoin, 8)));
+        ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text99)),
+                0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mAbleCoin.setText(ableCoinStr);
+    }
+
+    private void getAccountByUserForMuti(String coinType) {
+        Apic.getAccountByUserForMuti(coinType)
+                .callback(new Callback<Resp<ArrayList<CoinAbleAmount>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<ArrayList<CoinAbleAmount>> resp) {
+                        ArrayList<CoinAbleAmount> data = resp.getData();
+                        if (data.size() > 0) {
+                            CoinAbleAmount coinAbleAmount = data.get(0);
+                            setAbleCoin(coinAbleAmount.getAbleCoin());
+                        }
+                    }
+                })
+                .fire();
     }
 
     private void getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData) {
@@ -109,10 +138,24 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<PagingResp<CoinPropertyFlow>>() {
                     @Override
                     protected void onRespSuccess(PagingResp<CoinPropertyFlow> resp) {
-                        mAdapter.setList(resp.getList());
+                        mAdapter.setList(resp);
+                        mAdapter.notifyDataSetChanged();
                     }
                 })
                 .fire();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
+            if (shouldRefresh) {
+                getUserFinanceFlow(mGetUserFinanceFlowData);
+                getAccountByUserForMuti(mAccountBean.getCoinType());
+                getActivity().setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+            }
+        }
     }
 
     @Override
@@ -127,7 +170,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             case R.id.history:
                 Launcher.with(getContext(), PropertyFlowActivity.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, false)
-                        .putExtra(ExtraKeys.COIN_TYPE,mAccountBean.getCoinType()).execute();
+                        .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType()).execute();
                 break;
             case R.id.transfer:
                 if (mAccountBean.getLegal() == AccountList.AccountBean.IS_LEGAL) {
@@ -136,70 +179,24 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                     UniqueActivity.launcher(getContext(), FundsTransferFragment.class)
                             .putExtra(ExtraKeys.TRANSFER_TYPE, mTransferType)
                             .putExtra(ExtraKeys.ACCOUNT_BEANS, accountBeans)
-                            .execute();
+                            .execute(this, REQUEST_FUNDS_TRANSFER);
                 }
                 break;
             case R.id.recharge:
                 if (mAccountBean.getRecharge() == AccountList.AccountBean.CAN_RECHAREGE) {
                     UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
                             .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType())
-                            .execute();
+                            .execute(this, REQUEST_RECHARGE_COIN);
                 }
                 break;
             case R.id.withDraw:
                 if (mAccountBean.getIsCanDraw() == AccountList.AccountBean.CAN_DRAW) {
-                    UniqueActivity.launcher(getContext(), DrawCoinFragment.class)
+                    UniqueActivity.launcher(getContext(), WithDrawCoinFragment.class)
                             .putExtra(ExtraKeys.ACCOUNT_BEAN, mAccountBean)
-                            .execute();
+                            .execute(this, REQUEST_WITHDRAW_COIN);
                 }
                 break;
             default:
-        }
-    }
-
-    private class CoinPropertyAdapter extends RecyclerView.Adapter {
-
-        private List<CoinPropertyFlow> mList = new ArrayList<>();
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_coin_property, parent, false);
-            return new CoinPropertyHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mList.size();
-        }
-
-        public void setList(List<CoinPropertyFlow> list) {
-            mList.clear();
-            mList.addAll(list);
-        }
-    }
-
-    class CoinPropertyHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.type)
-        TextView mType;
-        @BindView(R.id.amount)
-        TextView mAmount;
-        @BindView(R.id.status)
-        TextView mStatus;
-        @BindView(R.id.timestamp)
-        TextView mTimestamp;
-
-        CoinPropertyHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-
-        public void bindData() {
         }
     }
 }

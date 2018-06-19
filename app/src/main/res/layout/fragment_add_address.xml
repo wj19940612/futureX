@@ -36,7 +36,7 @@
         <EditText
             android:id="@+id/address"
             style="@style/SingleEditText"
-            android:hint="@string/remark"
+            android:hint="@string/input_or_paste_address"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

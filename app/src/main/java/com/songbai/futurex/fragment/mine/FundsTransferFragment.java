@@ -25,6 +25,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountList;
+import com.songbai.futurex.utils.FinanceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,11 +84,11 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
 
     private void setSelectedItem(int options1) {
         mSelectedAccountBean = mAccountBeans.get(options1);
-        String ableCoin = mSelectedAccountBean.getAbleCoin();
-        mConfirmTransfer.setEnabled(Double.valueOf(ableCoin) > 0);
+        double ableCoin = mSelectedAccountBean.getAbleCoin();
+        mConfirmTransfer.setEnabled(ableCoin > 0);
         mCoinType.setText(mSelectedAccountBean.getCoinType().toUpperCase());
         mTransferAmount.setHint(getString(R.string.most_transfer_amount_type_x,
-                ableCoin,
+                FinanceUtil.formatWithScale(ableCoin),
                 mSelectedAccountBean.getCoinType().toUpperCase()));
         fixAmount();
     }
@@ -109,7 +110,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                     protected void onRespSuccess(Resp<Object> resp) {
                         FragmentActivity activity = FundsTransferFragment.this.getActivity();
                         activity.setResult(FundsTransferFragment.FUNDS_TRANSFER_RESULT,
-                                new Intent().putExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, true));
+                                new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
                         activity.finish();
                     }
                 })
@@ -131,7 +132,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.transferAll:
-                mTransferAmount.setText(mSelectedAccountBean.getAbleCoin());
+                mTransferAmount.setText(FinanceUtil.formatWithScale(mSelectedAccountBean.getAbleCoin(), 8));
                 mTransferAmount.setSelection(mTransferAmount.getText().length());
                 break;
             case R.id.confirmTransfer:

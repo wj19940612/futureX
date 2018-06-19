@@ -14,11 +14,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -37,6 +37,8 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.model.mine.InviteSubordinate;
 import com.songbai.futurex.utils.Display;
+import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.TitleBar;
 
@@ -86,7 +88,8 @@ public class MyPropertyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Launcher.with(MyPropertyActivity.this, PropertyFlowActivity.class)
-                        .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, true).execute();
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, true)
+                        .execute();
             }
         });
         mPagerTranslationX = Display.dp2Px(20, getResources());
@@ -198,7 +201,7 @@ public class MyPropertyActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TRANSFER) {
             if (data != null) {
-                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, false);
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
                 if (shouldRefresh) {
                     for (PropertyListFragment fragment : mFragments) {
                         fragment.requestData();
@@ -206,6 +209,19 @@ public class MyPropertyActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
+                KeyBoardUtils.closeOrOpenKeyBoard();
+                v.clearFocus();
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
     }
 
     static class PropertyCardAdapter extends PagerAdapter {
@@ -286,10 +302,8 @@ public class MyPropertyActivity extends BaseActivity {
             TextView mTransfer = view.findViewById(R.id.transfer);
             final AccountList accountList = mData.get(position);
             if (accountList != null) {
-                String balance = accountList.getBalance();
-                if (!TextUtils.isEmpty(balance)) {
-                    mPropertyAmount.setText(balance);
-                }
+                double balance = accountList.getBalance();
+                mPropertyAmount.setText(FinanceUtil.formatWithScale(balance, 8));
             }
             if (position == 2) {
                 String string = context.getString(R.string.invite_num_x, mInviteCount);

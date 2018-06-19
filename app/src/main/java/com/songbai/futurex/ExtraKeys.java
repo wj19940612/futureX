@@ -60,14 +60,14 @@ public interface ExtraKeys {
     String AUTHENTICATION_STATUS = "authentication_status";
     String HAS_WITH_DRAW_PASS = "has_with_draw_pass";
     String BIND_BANK_LIST = "bind_bank_list";
-    String COIN_INFO = "coin_info";
+    String COIN_ADDRESS_INFO = "coin_address_info";
     String TRANSFER_TYPE = "transfer_type";
     String ACCOUNT_BEANS = "account_beans";
-    String ACCOUNT_BEAN= "account_bean";
+    String ACCOUNT_BEAN = "account_bean";
+    String MODIFIED_SHOULD_REFRESH = "modified_should_refresh";
 
     String OPTIONAL_LIST = "optional_list";
     String CURRENCY_PAIR = "currency_pair";
-    String MODIFIDE_SHOULD_REFRESH = "modified_should_refresh";
     String COIN_TYPE = "coin_type";
     String PROPERTY_FLOW_FILTER_TYPE_ALL = "property_flow_filter_type_all";
 }

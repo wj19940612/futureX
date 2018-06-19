@@ -13,6 +13,7 @@ public class UserInfo {
      * authenticationStatus : 1
      * certificationLevel : 0
      * googleAuth : 0
+     * googleAuthString: "{\"DRAW\":1,\"SET_DRAW_PASS\":0,\"CNY_TRADE\":0}",
      * lastLoginTime : 1524794314000
      * loginIp : 127.0.0.1
      * promoter : 0
@@ -30,6 +31,7 @@ public class UserInfo {
     private int certificationLevel;
     private int googleAuth; // 是否设置谷歌验证 yes or no
     private long lastLoginTime; //最后登录时间
+    private String googleAuthString; //谷歌验证开启情况
     private String loginIp;
     private int promoter; // 是否是推广员 yes or no
     private String realName; // 真实姓名
@@ -46,7 +48,7 @@ public class UserInfo {
     public static class Log {
         private String browserAgent;
         private String createTime;
-        private String  ip;
+        private String ip;
         private String userId;
 
         public String getUserId() {
@@ -87,6 +89,14 @@ public class UserInfo {
 
     public void setGoogleAuth(int googleAuth) {
         this.googleAuth = googleAuth;
+    }
+
+    public String getGoogleAuthString() {
+        return googleAuthString;
+    }
+
+    public void setGoogleAuthString(String googleAuthString) {
+        this.googleAuthString = googleAuthString;
     }
 
     public long getLastLoginTime() {

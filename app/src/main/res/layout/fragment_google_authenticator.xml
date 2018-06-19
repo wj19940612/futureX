@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="41dp"
-            android:hint="@string/please_google_authenticator_code"
+            android:hint="@string/please_input_google_authenticator_code"
             android:paddingLeft="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

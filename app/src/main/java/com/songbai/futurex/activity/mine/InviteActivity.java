@@ -1,15 +1,22 @@
 package com.songbai.futurex.activity.mine;
 
 import android.animation.ValueAnimator;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.PromoterInfo;
+import com.songbai.futurex.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +39,15 @@ public class InviteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite);
         ButterKnife.bind(this);
+        Apic.getCurrentPromoterMsg()
+                .callback(new Callback<Resp<PromoterInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<PromoterInfo> resp) {
+                        PromoterInfo promoterInfo = resp.getData();
+                        mInviteCode.setText(promoterInfo.getCode());
+                    }
+                })
+                .fire();
     }
 
     @OnClick({R.id.checkDetail, R.id.joinNow, R.id.copy, R.id.inviteBuddies, R.id.createPoster})
@@ -39,7 +55,6 @@ public class InviteActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.checkDetail:
                 boolean b = mRules.getVisibility() == View.GONE;
-                Log.e("wtf", b + "aaa");
                 if (b) {
                     expand(mRules);
                 } else {
@@ -49,6 +64,10 @@ public class InviteActivity extends BaseActivity {
             case R.id.joinNow:
                 break;
             case R.id.copy:
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                // 将文本内容放到系统剪贴板里。
+                cm.setPrimaryClip(ClipData.newPlainText(null, mInviteCode.getText()));
+                ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.inviteBuddies:
                 break;
@@ -100,7 +119,7 @@ public class InviteActivity extends BaseActivity {
                 float precent = animation.getAnimatedFraction();
                 int height = (int) (measuredHeight - measuredHeight * precent);
                 setHeight(view, height);
-//                动画执行结束的时候，设置View为View.GONE，同时移除监听器
+                //动画执行结束的时候，设置View为View.GONE，同时移除监听器
                 if (precent == 1) {
                     view.setVisibility(View.GONE);
                     mCheckDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_invitation_angle_down, 0);

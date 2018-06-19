@@ -14,7 +14,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountList;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import java.util.ArrayList;
@@ -200,12 +200,9 @@ public class PropertyListFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("wtf","aaaaa");
         if (requestCode == REQUEST_COIN_PROPERTY) {
-            Log.e("wtf","aa");
             if (data != null) {
-                Log.e("tag","bb");
-                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIDE_SHOULD_REFRESH, false);
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
                 if (shouldRefresh) {
                     requestData();
                 }
@@ -268,29 +265,29 @@ public class PropertyListFragment extends BaseFragment {
 
             private void bindData(int type, final Context context, final AccountList.AccountBean accountBean) {
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
-                String ableCoin = accountBean.getAbleCoin();
-                SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_available_x, ableCoin));
-                if (!TextUtils.isEmpty(ableCoin)) {
-                    ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
-                            0, ableCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    ableCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
-                            0, ableCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
+                double ableCoin = accountBean.getAbleCoin();
+                String formattedAbleCoin = FinanceUtil.formatWithScale(ableCoin, 8);
+                SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_available_x, formattedAbleCoin));
+                ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
+                        0, formattedAbleCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ableCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
+                        0, formattedAbleCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mAvailableAmount.setText(ableCoinStr);
-                String freezeCoin = accountBean.getFreezeCoin();
-                SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_freeze_x, freezeCoin));
-                if (!TextUtils.isEmpty(freezeCoin)) {
-                    freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
-                            0, freezeCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    freezeCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
-                            0, freezeCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
+                double freezeCoin = accountBean.getFreezeCoin();
+                String formattedFreeze = FinanceUtil.formatWithScale(freezeCoin, 8);
+                SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_freeze_x, formattedFreeze));
+                freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
+                        0, formattedFreeze.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                freezeCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
+                        0, formattedFreeze.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mFreezeAmount.setText(freezeCoinStr);
                 mTransfer.setVisibility(type < 2 ? View.GONE : View.VISIBLE);
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class).putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean).execute(PropertyListFragment.REQUEST_COIN_PROPERTY);
+                        UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class)
+                                .putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean)
+                                .execute(PropertyListFragment.this, PropertyListFragment.REQUEST_COIN_PROPERTY);
                     }
                 });
             }
