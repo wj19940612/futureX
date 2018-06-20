@@ -556,6 +556,53 @@ public class Apic {
     }
 
     /**
+     * /api/user/banner/findBannerList
+     * GET
+     * 查询banner列表
+     */
+    public static Api findBannerList(String locale) {
+        return Api.get("/api/user/banner/findBannerList.do",
+                new ReqParams()
+                        .put("locale", locale));
+    }
+
+    /**
+     * /api/user/news/findNewsList.do
+     * GET
+     * 查询资讯列表
+     */
+    public static Api findNewsList(int type, String lang, int offset, int size) {
+        return Api.get("/api/user/news/findNewsList.do",
+                new ReqParams()
+                        .put("type", type)
+                        .put("lang", lang)
+                        .put("offset", offset)
+                        .put("size", size));
+    }
+
+    /**
+     * /api/entrust/pairs/list
+     * GET
+     * 首页交易对列表
+     */
+    public static Api entrustPairsList(int page, int pageSize, String suffixSymbol) {
+        return Api.get("/api/entrust/pairs/list",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("suffixSymbol", suffixSymbol));
+    }
+
+    /**
+     * /api/entrust/selfPairs/indexRiseList
+     * GET
+     * 首页涨幅榜排名
+     */
+    public static Api indexRiseList() {
+        return Api.get("/api/entrust/selfPairs/indexRiseList");
+    }
+
+    /**
      * 获取（phone/email）验证码
      * <p>
      * /api/user/validate/sendMsgCode.do
