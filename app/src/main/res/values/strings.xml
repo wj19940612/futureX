@@ -152,9 +152,11 @@
     <string name="company_introduction">公司介绍</string>
     <string name="connect_customer_service">联系客服</string>
     <string name="version_updating">版本更新</string>
+    <string name="version_x">V%1$s</string>
     <string name="feedback_content">反馈内容</string>
     <string name="feedback_image_hint">图片（选填，提供问题的截图）</string>
     <string name="x_faction_x">%1$d/%2$d</string>
+    <string name="x_faction_str_x">%1$s/%2$s</string>
     <string name="feedback_hint">请描述问题发生的具体场景，最好附上截图说明</string>
     <string name="confirm_submit">确认提交</string>
     <string name="customer_service_title">客服小三</string>

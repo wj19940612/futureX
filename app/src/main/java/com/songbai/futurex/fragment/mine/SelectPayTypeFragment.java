@@ -1,8 +1,10 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,8 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
+    public static final int REQUEST_ADD_PAY = 12432;
+    public static final int SELECT_PAY_RESULT = 12532;
     @BindView(R.id.bankCard)
     IconTextRow mBankCard;
     @BindView(R.id.aliPay)
@@ -55,6 +59,21 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADD_PAY) {
+            if (data != null) {
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
+                if (shouldRefresh) {
+                    FragmentActivity activity = getActivity();
+                    activity.setResult(SELECT_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                    activity.finish();
+                }
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
@@ -64,13 +83,21 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bankCard:
-                UniqueActivity.launcher(this, AddBankingCardFragment.class).putExtra(ExtraKeys.BIND_BANK_LIST,mBindBankList).execute();
+                UniqueActivity.launcher(this, AddBankingCardFragment.class)
+                        .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
+                        .execute(this, REQUEST_ADD_PAY);
                 break;
             case R.id.aliPay:
-                UniqueActivity.launcher(this, AddPayFragment.class).putExtra(ExtraKeys.IS_ALIPAY,true).putExtra(ExtraKeys.BIND_BANK_LIST,mBindBankList).execute();
+                UniqueActivity.launcher(this, AddPayFragment.class)
+                        .putExtra(ExtraKeys.IS_ALIPAY, true)
+                        .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
+                        .execute(this, REQUEST_ADD_PAY);
                 break;
             case R.id.wechatPay:
-                UniqueActivity.launcher(this, AddPayFragment.class).putExtra(ExtraKeys.IS_ALIPAY,false).putExtra(ExtraKeys.BIND_BANK_LIST,mBindBankList).execute();
+                UniqueActivity.launcher(this, AddPayFragment.class)
+                        .putExtra(ExtraKeys.IS_ALIPAY, false)
+                        .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
+                        .execute(this, REQUEST_ADD_PAY);
                 break;
             default:
         }

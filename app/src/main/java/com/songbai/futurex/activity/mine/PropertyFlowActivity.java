@@ -26,12 +26,13 @@ import com.songbai.futurex.fragment.mine.PropertyFlowFragment;
 import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingResp;
+import com.songbai.futurex.http.PagingBean;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinInfo;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.view.TitleBar;
 
@@ -95,7 +96,8 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
             public void onClick(View v) {
                 if (mAllType) {
                     // TODO: 2018/6/4 动画
-                    mFiltrateGroup.setVisibility(mFiltrateGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    AnimatorUtil.expandVertical(mFiltrateGroup);
+//                    mFiltrateGroup.setVisibility(mFiltrateGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                 } else {
 
                 }
@@ -132,10 +134,10 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
 
     private void getUserFinanceFlow() {
         Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize)
-                .callback(new Callback<PagingResp<CoinPropertyFlow>>() {
+                .callback(new Callback<Resp<PagingBean<CoinPropertyFlow>>>() {
                     @Override
-                    protected void onRespSuccess(PagingResp<CoinPropertyFlow> resp) {
-                        mAdapter.setList(resp);
+                    protected void onRespSuccess(Resp<PagingBean<CoinPropertyFlow>> resp) {
+                        mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
                         if (resp.getData().getTotal() > mPage + 1) {

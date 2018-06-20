@@ -43,6 +43,19 @@ public class Apic {
     }
 
     /**
+     * /api/user/appVersion/queryForceVersion.do
+     * GET
+     * 查询当前平台版本信息
+     */
+    public static Api queryForceVersion(String pCode, String sign) {
+        return Api.get("/api/user/appVersion/queryForceVersion.do",
+                new ReqParams()
+                        .put("platform", 2)
+                        .put("pCode", pCode)
+                        .put("sign", sign));
+    }
+
+    /**
      * /user/msg/count
      * GET
      * 消息未读数量
@@ -133,12 +146,38 @@ public class Apic {
     }
 
     /**
+     * /api/otc/bank/untie
+     * POST
+     * 解绑银行卡
+     */
+    public static Api bindUntie(int id, String withDrawPass) {
+        return Api.post("/api/otc/bank/untie",
+                new ReqParams()
+                        .put("id", id)
+                        .put("withDrawPass", withDrawPass));
+    }
+
+    /**
      * /api/otc/bank/bind
      * POST
      * 绑定卡号--(v1.1)
      */
     public static Api bankBind(BankBindData bankBindData) {
         return Api.post("/api/otc/bank/bind", new ReqParams(BankBindData.class, bankBindData));
+    }
+
+    /**
+     * /api/otc/bank/updateBankAccount
+     * POST
+     * 修改微信/支付宝账户
+     */
+    public static Api updateBankAccount(String type, String account, String name, String withDrawPass) {
+        return Api.post("/api/otc/bank/updateBankAccount",
+                new ReqParams()
+                        .put("type", type)
+                        .put("account", account)
+                        .put("name", name)
+                        .put("withDrawPass", withDrawPass));
     }
 
     /**
@@ -514,6 +553,53 @@ public class Apic {
                         .put("waresOrderId", waresOrderId)
                         .put("startTime", startTime)
                         .put("size", size));
+    }
+
+    /**
+     * /api/user/banner/findBannerList
+     * GET
+     * 查询banner列表
+     */
+    public static Api findBannerList(String locale) {
+        return Api.get("/api/user/banner/findBannerList.do",
+                new ReqParams()
+                        .put("locale", locale));
+    }
+
+    /**
+     * /api/user/news/findNewsList.do
+     * GET
+     * 查询资讯列表
+     */
+    public static Api findNewsList(int type, String lang, int offset, int size) {
+        return Api.get("/api/user/news/findNewsList.do",
+                new ReqParams()
+                        .put("type", type)
+                        .put("lang", lang)
+                        .put("offset", offset)
+                        .put("size", size));
+    }
+
+    /**
+     * /api/entrust/pairs/list
+     * GET
+     * 首页交易对列表
+     */
+    public static Api entrustPairsList(int page, int pageSize, String suffixSymbol) {
+        return Api.get("/api/entrust/pairs/list",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("suffixSymbol", suffixSymbol));
+    }
+
+    /**
+     * /api/entrust/selfPairs/indexRiseList
+     * GET
+     * 首页涨幅榜排名
+     */
+    public static Api indexRiseList() {
+        return Api.get("/api/entrust/selfPairs/indexRiseList");
     }
 
     /**

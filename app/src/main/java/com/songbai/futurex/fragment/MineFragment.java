@@ -45,6 +45,7 @@ import sbai.com.glide.GlideApp;
  */
 public class MineFragment extends BaseFragment {
     private static final int REQUEST_LOGIN = 12343;
+    private static final int REQUEST_PERSONAL_DATA = 12345;
     private static final int REQUEST_SETTINGS = 12344;
 
     @BindView(R.id.headLayout)
@@ -89,6 +90,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        setUserInfo();
     }
 
     @Override
@@ -173,6 +175,10 @@ public class MineFragment extends BaseFragment {
             if (data != null && data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false)) {
                 setUserInfo();
             }
+        } else if (requestCode == REQUEST_PERSONAL_DATA) {
+            if (data != null && data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false)) {
+                setUserInfo();
+            }
         }
     }
 
@@ -191,7 +197,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), LoginActivity.class).execute(this, REQUEST_LOGIN);
                 break;
             case R.id.userInfoGroup:
-                Launcher.with(this, PersonalDataActivity.class).execute();
+                Launcher.with(this, PersonalDataActivity.class).execute(this,REQUEST_PERSONAL_DATA);
                 break;
             case R.id.property:
                 Launcher.with(this, MyPropertyActivity.class).execute();

@@ -1,11 +1,16 @@
 package com.songbai.futurex.http;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.sbai.httplib.NullResponseError;
 import com.sbai.httplib.ReqCallback;
 import com.sbai.httplib.ReqError;
+import com.songbai.futurex.App;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.utils.ToastUtil;
 
 /**
@@ -74,9 +79,9 @@ public abstract class Callback<T> extends ReqCallback<T> {
     }
 
     private void sendTokenExpiredBroadcast(String msg) {
-//        Intent intent = new Intent(BaseActivity.ACTION_TOKEN_EXPIRED);
-//        intent.putExtra(BaseActivity.EX_TOKEN_EXPIRED_MESSAGE, msg);
-//        LocalBroadcastManager.getInstance(App.getAppContext()).sendBroadcast(intent);
+        Intent intent = new Intent(BaseActivity.ACTION_TOKEN_EXPIRED);
+        intent.putExtra(BaseActivity.EX_TOKEN_EXPIRED_MESSAGE, msg);
+        LocalBroadcastManager.getInstance(App.getAppContext()).sendBroadcast(intent);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class Resp<T> {
     }
 
     public boolean isTokenExpired() {
-        return code == 503;
+        return code == 211;
     }
 
     @Override

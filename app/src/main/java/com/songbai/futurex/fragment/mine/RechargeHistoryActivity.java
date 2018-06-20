@@ -17,7 +17,8 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingResp;
+import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
@@ -68,10 +69,10 @@ public class RechargeHistoryActivity extends RecycleViewSwipeLoadActivity {
 
     private void getRechargeFlow(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
         Apic.getUserFinanceFlow(getUserFinanceFlowData, page, pageSize)
-                .callback(new Callback<PagingResp<CoinPropertyFlow>>() {
+                .callback(new Callback<Resp<PagingBean<CoinPropertyFlow>>>() {
                     @Override
-                    protected void onRespSuccess(PagingResp<CoinPropertyFlow> resp) {
-                        mAdapter.setList(resp.getList());
+                    protected void onRespSuccess(Resp<PagingBean<CoinPropertyFlow>> resp) {
+                        mAdapter.setList(resp.getData().getData());
                     }
                 })
                 .fire();

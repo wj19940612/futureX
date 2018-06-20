@@ -115,4 +115,16 @@
         <attr name="android:textColor"/>
         <attr name="marginLeft" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="PageIndicator">
+        <attr name="indicators" format="integer"/>
+        <attr name="indicatorsInterval" format="dimension"/>
+        <attr name="indicatorColor" format="color"/>
+        <attr name="selectedColor" format="color"/>
+        <attr name="pointRadius" format="dimension"/>
+        <attr name="rectWidth" format="dimension"/>
+        <attr name="rectHeight" format="dimension"/>
+        <attr name="infinite" format="boolean"/>
+        <attr name="rectIndicators" format="boolean"/>
+    </declare-styleable>
 </resources>

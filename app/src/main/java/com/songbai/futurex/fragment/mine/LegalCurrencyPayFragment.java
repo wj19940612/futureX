@@ -1,10 +1,12 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.BindBankList;
+import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +37,7 @@ import butterknife.Unbinder;
  * @date 2018/6/4
  */
 public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
+    public static final int REQUEST_SELECT_PAY = 16524;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -41,6 +46,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     Unbinder unbinder;
     private LegalCurrencyPayAdapter mLegalCurrencyPayAdapter;
     private BindBankList mBindBankList;
+    private SmartDialog mSmartDialog;
 
     @Nullable
     @Override
@@ -67,12 +73,33 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
             }
 
             @Override
-            public void onDeleteClick() {
-
+            public void onDeleteClick(Object obj) {
+                int id = 0;
+                if (obj instanceof BindBankList.AliPayBean) {
+                    id = ((BindBankList.AliPayBean) obj).getId();
+                } else if (obj instanceof BindBankList.WechatBean) {
+                    id = ((BindBankList.WechatBean) obj).getId();
+                } else if (obj instanceof BindBankList.BankCardBean) {
+                    id = ((BindBankList.BankCardBean) obj).getId();
+                }
+                showDrawPass(id);
             }
         });
         mRecyclerView.setAdapter(mLegalCurrencyPayAdapter);
         getBindListData();
+    }
+
+    private void showDrawPass(final int id) {
+        WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(), new WithDrawPsdViewController.OnClickListener() {
+            @Override
+            public void onConfirmClick(String authCode) {
+                bindUntie(id, md5Encrypt(authCode));
+            }
+        });
+
+        mSmartDialog = SmartDialog.solo(getActivity());
+        mSmartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
     }
 
     private void getBindListData() {
@@ -81,6 +108,18 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<BindBankList> resp) {
                         setBindBankList(resp.getData());
+                    }
+                })
+                .fire();
+    }
+
+    private void bindUntie(int id, String withDrawPass) {
+        Apic.bindUntie(id, withDrawPass)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        mSmartDialog.dismiss();
+                        getBindListData();
                     }
                 })
                 .fire();
@@ -106,6 +145,19 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SELECT_PAY) {
+            if (data != null) {
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
+                if (shouldRefresh) {
+                    getBindListData();
+                }
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -113,7 +165,9 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
     @OnClick(R.id.addGathering)
     public void onViewClicked() {
-        UniqueActivity.launcher(this, SelectPayTypeFragment.class).putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList).execute();
+        UniqueActivity.launcher(this, SelectPayTypeFragment.class)
+                .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
+                .execute(this, REQUEST_SELECT_PAY);
     }
 
     static class LegalCurrencyPayAdapter extends RecyclerView.Adapter {
@@ -148,11 +202,11 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         interface OnItemClickListener {
             void onItemClick();
 
-            void onDeleteClick();
+            void onDeleteClick(Object obj);
         }
 
-        void setmOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-            mOnItemClickListener = mOnItemClickListener;
+        void setmOnItemClickListener(OnItemClickListener onItemClickListener) {
+            mOnItemClickListener = onItemClickListener;
         }
 
         static class LegalCurrencyHolder extends RecyclerView.ViewHolder {
@@ -172,7 +226,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                 mRootView = view;
             }
 
-            void bindData(Object obj) {
+            void bindData(final Object obj) {
                 if (obj instanceof BindBankList.AliPayBean) {
                     mIcon.setImageResource(R.drawable.ic_legaltender_icon_alipay);
                     mAccountName.setText(R.string.alipay);
@@ -191,6 +245,15 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
                             mOnItemClickListener.onItemClick();
+                        }
+                    }
+                });
+                mDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            Log.e("wtf", "onClick: aaaaaaaaaa" );
+                            mOnItemClickListener.onDeleteClick(obj);
                         }
                     }
                 });
