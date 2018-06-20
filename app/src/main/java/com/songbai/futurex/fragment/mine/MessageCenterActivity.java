@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingResp;
+import com.songbai.futurex.http.PagingBean;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.MessageType;
@@ -92,10 +92,10 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
 
     private void getMessageList() {
         Apic.msgList(mPage, mSize)
-                .callback(new Callback<PagingResp<SysMessage>>() {
+                .callback(new Callback<Resp<PagingBean<SysMessage>>>() {
                     @Override
-                    protected void onRespSuccess(PagingResp<SysMessage> resp) {
-                        mAdapter.setList(resp);
+                    protected void onRespSuccess(Resp<PagingBean<SysMessage>> resp) {
+                        mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
                         if (resp.getData().getTotal() > mPage) {
@@ -145,11 +145,11 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
             return mList.size();
         }
 
-        public void setList(PagingResp<SysMessage> resp) {
-            if (resp.getData().getStart() == 0) {
+        public void setList(PagingBean<SysMessage> resp) {
+            if (resp.getStart() == 0) {
                 mList.clear();
             }
-            mList.addAll(resp.getList());
+            mList.addAll(resp.getData());
         }
 
         public interface OnItemClickListener {
