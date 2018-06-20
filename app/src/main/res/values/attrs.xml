@@ -80,8 +80,6 @@
         <attr name="tabArray" format="reference"/>
         <attr name="tabInterval" format="dimension|reference"/>
         <attr name="pointColor" format="color|reference"/>
-        <attr name="hasMore" format="boolean"/>
-        <attr name="textOfMore" format="reference|string" />
     </declare-styleable>
 
     <!--密码输入控件-->

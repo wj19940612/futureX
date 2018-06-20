@@ -770,7 +770,7 @@ public class Apic {
         return Api.get("/api/quota/quota/{code}/k",
                 new ReqParams()
                         .put("code", code)
-                        .put("type", 60)
+                        .put("type", 1)
                         .put("endTime", endTime)
                         .put("limit", 200));
     }

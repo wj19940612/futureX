@@ -365,13 +365,16 @@
     <string name="clear_record">清空记录</string>
     <string name="optional_added">已添加自选</string>
     <string name="optional_cancel">已取消自选</string>
-    <string-array name="chart_radio">
-        <item>分时</item>
-        <item>15分</item>
-        <item>1小时</item>
-        <item>4小时</item>
-        <item>日线</item>
-    </string-array>
+    <string name="trend">分时</string>
+    <string name="fifteen">15分</string>
+    <string name="one_hour">1小时</string>
+    <string name="four_hour">4小时</string>
+    <string name="day_line">日线</string>
+    <string name="one_min">1分</string>
+    <string name="five_min">5分</string>
+    <string name="thirty_min">30分</string>
+    <string name="week_line">周线</string>
+    <string name="month_line">月线</string>
     <string name="high">高</string>
     <string name="low">低</string>
     <string name="more">更多</string>
@@ -387,4 +390,7 @@
     <string name="price_change_percent">幅</string>
     <string name="trade_volume_x">量&#160;$1$s</string>
     <string name="no_more_data">没有更多数据了</string>
+    <string name="buy_in">买入</string>
+    <string name="sell_out">卖出</string>
+    <string name="add_optional_no_plus">添加自选</string>
 </resources>

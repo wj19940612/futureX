@@ -19,6 +19,7 @@ import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.view.ChartsRadio;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.chart.ChartCfg;
@@ -63,7 +64,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.tradeVolume)
     TextView mTradeVolume;
     @BindView(R.id.chartRadio)
-    RadioHeader mChartRadio;
+    ChartsRadio mChartRadio;
     @BindView(R.id.kline)
     KlineView mKline;
     @BindView(R.id.tradeDetailRadio)
@@ -91,9 +92,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mCurrencyPair.getUpperCasePairName());
-        mChartRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
+        mChartRadio.setOnTabSelectedListener(new ChartsRadio.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(int position, String content) {
+            public void onTabSelected(int position) {
                 if (position == 0) {
                     showTrendView();
                     requestTrendData();
