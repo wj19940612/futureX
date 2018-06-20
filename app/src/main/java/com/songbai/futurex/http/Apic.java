@@ -43,6 +43,19 @@ public class Apic {
     }
 
     /**
+     * /api/user/appVersion/queryForceVersion.do
+     * GET
+     * 查询当前平台版本信息
+     */
+    public static Api queryForceVersion(String pCode, String sign) {
+        return Api.get("/api/user/appVersion/queryForceVersion.do",
+                new ReqParams()
+                        .put("platform", 2)
+                        .put("pCode", pCode)
+                        .put("sign", sign));
+    }
+
+    /**
      * /user/msg/count
      * GET
      * 消息未读数量
@@ -133,12 +146,38 @@ public class Apic {
     }
 
     /**
+     * /api/otc/bank/untie
+     * POST
+     * 解绑银行卡
+     */
+    public static Api bindUntie(int id, String withDrawPass) {
+        return Api.post("/api/otc/bank/untie",
+                new ReqParams()
+                        .put("id", id)
+                        .put("withDrawPass", withDrawPass));
+    }
+
+    /**
      * /api/otc/bank/bind
      * POST
      * 绑定卡号--(v1.1)
      */
     public static Api bankBind(BankBindData bankBindData) {
         return Api.post("/api/otc/bank/bind", new ReqParams(BankBindData.class, bankBindData));
+    }
+
+    /**
+     * /api/otc/bank/updateBankAccount
+     * POST
+     * 修改微信/支付宝账户
+     */
+    public static Api updateBankAccount(String type, String account, String name, String withDrawPass) {
+        return Api.post("/api/otc/bank/updateBankAccount",
+                new ReqParams()
+                        .put("type", type)
+                        .put("account", account)
+                        .put("name", name)
+                        .put("withDrawPass", withDrawPass));
     }
 
     /**
@@ -536,7 +575,7 @@ public class Apic {
      */
     public static Api sendOld(AuthSendOld authSendOld) {
         return Api.post("/api/user/userSafe/sendOld.do",
-                new ReqParams(AuthSendOld.class,authSendOld));
+                new ReqParams(AuthSendOld.class, authSendOld));
     }
 
     /**

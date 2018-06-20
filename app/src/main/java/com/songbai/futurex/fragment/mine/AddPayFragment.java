@@ -1,8 +1,10 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,8 @@ import butterknife.Unbinder;
  * @date 2018/6/4
  */
 public class AddPayFragment extends UniqueActivity.UniFragment {
+    public static final int ADD_PAY_RESULT = 12343;
+
     @BindView(R.id.accountName)
     TextView mAccountName;
     @BindView(R.id.accountNum)
@@ -49,6 +53,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     private boolean mIsAlipay;
     private String mName;
     private BindBankList mBindBankList;
+    private boolean mHasBind;
 
     @Nullable
     @Override
@@ -83,6 +88,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 String cardNumber = mBindBankList.getAliPay().getCardNumber();
                 if (!TextUtils.isEmpty(cardNumber)) {
                     mTitleBar.setTitle(R.string.edit);
+                    mHasBind = true;
                 }
                 mAccountNum.setText(mBindBankList.getAliPay().getCardNumber());
             }
@@ -94,6 +100,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 String cardNumber = mBindBankList.getWechat().getCardNumber();
                 if (!TextUtils.isEmpty(cardNumber)) {
                     mTitleBar.setTitle(R.string.edit);
+                    mHasBind = true;
                 }
                 mAccountNum.setText(cardNumber);
             }
@@ -119,10 +126,25 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
 
     private void bankBand(BankBindData bankBindData) {
         Apic.bankBind(bankBindData)
-                .callback(new Callback<Object>() {
+                .callback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespSuccess(Object resp) {
-                        AddPayFragment.this.getActivity().finish();
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        FragmentActivity activity = AddPayFragment.this.getActivity();
+                        activity.setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        activity.finish();
+                    }
+                })
+                .fire();
+    }
+
+    private void updateBankAccount(String type, String account, String name, String withDrawPass) {
+        Apic.updateBankAccount(type, account, name, withDrawPass)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        FragmentActivity activity = AddPayFragment.this.getActivity();
+                        activity.setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        activity.finish();
                     }
                 })
                 .fire();
@@ -138,13 +160,20 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     public void onViewClicked() {
         String account = mAccountNum.getText().toString();
         String realName = mRealName.getText().toString();
-        BankBindData bankBindData = BankBindData.Builder
-                .aBankBindData()
-                .payType(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY)
-                .cardNumber(account)
-                .realName(mName)
-                .withDrawPass(md5Encrypt(mWithDrawPass.getPassword()))
-                .build();
-        bankBand(bankBindData);
+        if (mHasBind) {
+            updateBankAccount(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY,
+                    account,
+                    mName,
+                    md5Encrypt(mWithDrawPass.getPassword()));
+        } else {
+            BankBindData bankBindData = BankBindData.Builder
+                    .aBankBindData()
+                    .payType(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY)
+                    .cardNumber(account)
+                    .realName(mName)
+                    .withDrawPass(md5Encrypt(mWithDrawPass.getPassword()))
+                    .build();
+            bankBand(bankBindData);
+        }
     }
 }

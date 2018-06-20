@@ -43,6 +43,7 @@ import sbai.com.glide.GlideApp;
 public class PersonalDataActivity extends BaseActivity {
 
     private static final int MODIFY_PERSONAL_DATA = 12313;
+    private static final int PERSONAL_DATA_RESULT = 12314;
 
     @BindView(R.id.userHeadImage)
     ImageView mUserHeadImage;
@@ -256,6 +257,7 @@ public class PersonalDataActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<UserInfo> resp) {
                         LocalUser.getUser().setUserInfo(resp.getData());
                         setUserInfo();
+                        setResult(PERSONAL_DATA_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
                     }
                 })
                 .fire();

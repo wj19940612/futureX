@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -59,8 +60,8 @@
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/version_updating"
         app:rowTextSize="16sp"
-        app:subText="V1.0"
         app:subTextColor="@color/text99"
-        app:subTextSize="14sp"/>
+        app:subTextSize="14sp"
+        tools:subText="V1.0"/>
 
 </LinearLayout>

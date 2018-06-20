@@ -32,6 +32,7 @@ import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinInfo;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.view.TitleBar;
 
@@ -95,7 +96,8 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
             public void onClick(View v) {
                 if (mAllType) {
                     // TODO: 2018/6/4 动画
-                    mFiltrateGroup.setVisibility(mFiltrateGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    AnimatorUtil.expandVertical(mFiltrateGroup);
+//                    mFiltrateGroup.setVisibility(mFiltrateGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                 } else {
 
                 }

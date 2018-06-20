@@ -9,7 +9,7 @@ import android.view.ViewGroup;
  * @author yangguangda
  * @date 2018/6/19
  */
-public class AnimalUtil {
+public class AnimatorUtil {
     /**
      * 展开一个view
      * 需要监听进度可以使用重载方法{@link #expandVertical(View, OnAnimatorFactionListener)}
@@ -45,7 +45,7 @@ public class AnimalUtil {
      * https://stackoverflow.com/questions/4946295/android-expand-collapse-animation/33049412#33049412
      *
      * @param view     被展开的控件
-     * @param listener {@link AnimalUtil.OnAnimatorFactionListener}
+     * @param listener {@link AnimatorUtil.OnAnimatorFactionListener}
      */
     public static void expandVertical(final View view, @Nullable final OnAnimatorFactionListener listener) {
         int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) view.getParent()).getWidth(), View.MeasureSpec.EXACTLY);
@@ -78,7 +78,7 @@ public class AnimalUtil {
      * 折叠一个view
      *
      * @param view     被折叠的控件
-     * @param listener {@link AnimalUtil.OnAnimatorFactionListener}
+     * @param listener {@link AnimatorUtil.OnAnimatorFactionListener}
      */
     public static void collapseVertical(final View view, @Nullable final OnAnimatorFactionListener listener) {
         final int measuredHeight = view.getMeasuredHeight();

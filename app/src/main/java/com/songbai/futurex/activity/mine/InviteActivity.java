@@ -14,7 +14,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.PromoterInfo;
-import com.songbai.futurex.utils.AnimalUtil;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -78,7 +78,7 @@ public class InviteActivity extends BaseActivity {
 
     // 展开
     private void expand(final View view) {
-        AnimalUtil.expandVertical(view, new AnimalUtil.OnAnimatorFactionListener() {
+        AnimatorUtil.expandVertical(view, new AnimatorUtil.OnAnimatorFactionListener() {
             @Override
             public void onFaction(float fraction) {
                 if (fraction == 1) {
@@ -90,7 +90,7 @@ public class InviteActivity extends BaseActivity {
 
     // 折叠
     private void collapse(final View view) {
-        AnimalUtil.collapseVertical(view, new AnimalUtil.OnAnimatorFactionListener() {
+        AnimatorUtil.collapseVertical(view, new AnimatorUtil.OnAnimatorFactionListener() {
             @Override
             public void onFaction(float fraction) {
                 if (fraction == 1) {
