@@ -78,6 +78,7 @@ public class TrendV extends Kline {
         paint.setStrokeWidth(mTrendLineWidth);
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
+        paint.setShader(null);
     }
 
     private void setTrendLineFillPaint(Paint paint) {

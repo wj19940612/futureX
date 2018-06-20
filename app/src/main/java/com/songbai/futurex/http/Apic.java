@@ -536,7 +536,7 @@ public class Apic {
      */
     public static Api sendOld(AuthSendOld authSendOld) {
         return Api.post("/api/user/userSafe/sendOld.do",
-                new ReqParams(AuthSendOld.class,authSendOld));
+                new ReqParams(AuthSendOld.class, authSendOld));
     }
 
     /**
@@ -734,6 +734,20 @@ public class Apic {
                         .put("type", 1)
                         .put("endTime", endTime)
                         .put("limit", 200));
+    }
+
+    /**
+     * 交易对每个币种的详情
+     * <p>
+     * /api/entrust/pairs/pairsDescription
+     *
+     * @param pair
+     * @return
+     */
+    public static Api getPairDescription(String pair) {
+        return Api.get("/api/entrust/pairs/pairsDescription",
+                new ReqParams()
+                        .put("pairs", pair));
     }
 
 

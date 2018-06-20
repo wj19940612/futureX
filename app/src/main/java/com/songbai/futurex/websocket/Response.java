@@ -14,7 +14,7 @@ public class Response<T> implements ResponseCode {
     private String dest;
     private long timestamp;
     private String uuid;
-    private String msgId;
+    private String msgId; // 推送的消息id Long 类型 如果存在msgId 说明这个消息会重发 客户端需要做重发的过滤（同时发送收到的确认消息）暂无
     private String message;
 
     public Response(int code) {

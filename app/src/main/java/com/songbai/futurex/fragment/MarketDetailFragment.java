@@ -1,6 +1,7 @@
 package com.songbai.futurex.fragment;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,18 +19,29 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.model.PairDesc;
+import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.ChartsRadio;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.chart.ChartCfg;
 import com.songbai.futurex.view.chart.ChartColor;
+import com.songbai.futurex.view.chart.DeepView;
 import com.songbai.futurex.view.chart.Kline;
 import com.songbai.futurex.view.chart.KlineDataDetailView;
 import com.songbai.futurex.view.chart.KlineUtils;
 import com.songbai.futurex.view.chart.KlineView;
 import com.songbai.futurex.view.chart.TrendV;
+import com.songbai.futurex.websocket.DataParser;
+import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.Response;
+import com.songbai.futurex.websocket.market.MarketSubscriber;
+import com.songbai.futurex.websocket.model.DeepData;
+import com.songbai.futurex.websocket.model.MarketData;
+import com.songbai.futurex.websocket.model.PairMarket;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,8 +85,19 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     KlineDataDetailView mKlineDataDetailView;
     @BindView(R.id.trend)
     TrendV mTrend;
+    @BindView(R.id.deepView)
+    DeepView mDeepView;
+    @BindView(R.id.minBidPrice)
+    TextView mMinBidPrice;
+    @BindView(R.id.maxAskPrice)
+    TextView mMaxAskPrice;
 
     private CurrencyPair mCurrencyPair;
+    private MarketSubscriber mMarketSubscriber;
+    private PairDesc mPairDesc;
+
+    private List<DeepData> mBuyDeepList;
+    private List<DeepData> mSellDeepList;
 
     @Nullable
     @Override
@@ -105,9 +128,112 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             }
         });
 
-        initCharts();
+        mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(String data, int code) {
+                new DataParser<Response<PairMarket>>(data) {
+                    @Override
+                    public void onSuccess(Response<PairMarket> pairMarketResponse) {
+                        updateMarketDataView(pairMarketResponse.getContent().getQuota());
+                        updateDeepDataView(pairMarketResponse.getContent().getDeep());
+                    }
+                }.parse();
+            }
+        });
 
-        requestTrendData();
+        requestPairDescription();
+    }
+
+    private void updateDeepDataView(PairMarket.Deep deep) {
+        mBuyDeepList = deep.getBuyDeep();
+        mSellDeepList = deep.getSellDeep();
+        new CalcDeepTask(mBuyDeepList, mSellDeepList, this).execute();
+    }
+
+    private void updateDeepDataView() {
+        mDeepView.setDeepList(mBuyDeepList, mSellDeepList);
+        mMinBidPrice.setText(NumUtils.getPrice(mBuyDeepList.get(mBuyDeepList.size() - 1).getPrice()));
+        mMaxAskPrice.setText(NumUtils.getPrice(mSellDeepList.get(mSellDeepList.size() - 1).getPrice()));
+    }
+
+    static class CalcDeepTask extends AsyncTask<Void, Void, Void> {
+
+        private List<DeepData> mBuyDeepList;
+        private List<DeepData> mSellDeepList;
+        private WeakReference<MarketDetailFragment> mReference;
+
+        public CalcDeepTask(List<DeepData> buyDeepList, List<DeepData> sellDeepList, MarketDetailFragment fragment) {
+            mBuyDeepList = buyDeepList;
+            mSellDeepList = sellDeepList;
+            mReference = new WeakReference<>(fragment);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for (int i = 0; i < mBuyDeepList.size(); i++) {
+                DeepData deepData = mBuyDeepList.get(i);
+                if (i == 0) {
+                    deepData.setTotalCount(deepData.getCount());
+                } else {
+                    deepData.setTotalCount(deepData.getCount() + mBuyDeepList.get(i - 1).getTotalCount());
+                }
+            }
+
+            for (int i = 0; i < mSellDeepList.size(); i++) {
+                DeepData deepData = mSellDeepList.get(i);
+                if (i == 0) {
+                    deepData.setTotalCount(deepData.getCount());
+                } else {
+                    deepData.setTotalCount(deepData.getCount() + mSellDeepList.get(i - 1).getTotalCount());
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mReference != null && mReference.get() != null) {
+                mReference.get().updateDeepDataView();
+            }
+        }
+    }
+
+
+    private void requestPairDescription() {
+        Apic.getPairDescription(mCurrencyPair.getPairs()).tag(TAG)
+                .callback(new Callback4Resp<Resp<PairDesc>, PairDesc>() {
+                    @Override
+                    protected void onRespData(PairDesc data) {
+                        mPairDesc = data;
+                        initCharts();
+                        requestTrendData();
+                    }
+                }).fireFreely();
+    }
+
+    private void updateMarketDataView(MarketData marketData) {
+        if (marketData == null) return;
+        mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+        mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+        mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice()));
+        mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice()));
+        mTradeVolume.setText(NumUtils.getVolume(marketData.getVolume()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMarketSubscriber.resume();
+        mMarketSubscriber.subscribe(mCurrencyPair.getPairs());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMarketSubscriber.unSubscribe(mCurrencyPair.getPairs());
+        mMarketSubscriber.pause();
     }
 
     private void requestTrendData() {
@@ -118,16 +244,16 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         String code = mCurrencyPair.getPairs();
         Apic.getTrendData(code, endTime).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<TrendV.Data>>, List<TrendV.Data>>() {
-            @Override
-            protected void onRespData(List<TrendV.Data> data) {
-                Collections.sort(data);
-                if (TextUtils.isEmpty(endTime)) {
-                    mTrend.setDataList(data);
-                } else {
+                    @Override
+                    protected void onRespData(List<TrendV.Data> data) {
+                        Collections.sort(data);
+                        if (TextUtils.isEmpty(endTime)) {
+                            mTrend.setDataList(data);
+                        } else {
 
-                }
-            }
-        }).fire();
+                        }
+                    }
+                }).fire();
     }
 
     private void requestKlineData() {
@@ -169,7 +295,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         klineCfg.setBaseLines(6);
         klineCfg.setIndexesBaseLines(2);
         klineCfg.setXAxis(45);
-        klineCfg.setNumberScale(2);
+        klineCfg.setNumberScale(mPairDesc.getPairs().getPricePoint());
         klineCfg.setEnableCrossLine(true);
         klineCfg.setEnableDrag(true);
         klineCfg.setIndexesEnable(true);
