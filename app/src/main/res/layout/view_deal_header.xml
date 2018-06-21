@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="32dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_weight="0.6"
+        android:text="@string/time"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/direction"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/headerPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:text="@string/price_x"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/headerVolume"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:text="@string/volume_x"
+        android:textColor="@color/text99"
+        android:textSize="12sp"/>
+</LinearLayout>

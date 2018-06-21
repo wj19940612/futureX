@@ -24,7 +24,9 @@ import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.ChartsRadio;
 import com.songbai.futurex.view.RadioHeader;
+import com.songbai.futurex.view.RealtimeDealView;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.TradeVolumeView;
 import com.songbai.futurex.view.chart.ChartCfg;
 import com.songbai.futurex.view.chart.ChartColor;
 import com.songbai.futurex.view.chart.DeepView;
@@ -89,14 +91,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     TrendView mTrend;
     @BindView(R.id.deepView)
     DeepView mDeepView;
-    @BindView(R.id.minBidPrice)
-    TextView mMinBidPrice;
-    @BindView(R.id.maxAskPrice)
-    TextView mMaxAskPrice;
-    @BindView(R.id.midLastPrice)
-    TextView mMidLastPrice;
     @BindView(R.id.optional)
     TextView mOptional;
+    @BindView(R.id.tradeVolumeView)
+    TradeVolumeView mTradeVolumeView;
+    @BindView(R.id.tradeDealView)
+    RealtimeDealView mTradeDealView;
 
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
@@ -121,6 +121,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mCurrencyPair.getUpperCasePairName());
+        mTradeVolumeView.setCurrencyPair(mCurrencyPair);
+        mTradeDealView.setCurrencyPair(mCurrencyPair);
+
         mChartRadio.setOnTabSelectedListener(new ChartsRadio.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
@@ -130,6 +133,20 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 } else {
                     showKlineView();
                     requestKlineData();
+                }
+            }
+        });
+        mTradeDetailRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position, String content) {
+                if (position == 0) {
+                    mDeepView.setVisibility(View.VISIBLE);
+                    mTradeVolumeView.setVisibility(View.VISIBLE);
+                    mTradeDealView.setVisibility(View.GONE);
+                } else {
+                    mDeepView.setVisibility(View.GONE);
+                    mTradeVolumeView.setVisibility(View.GONE);
+                    mTradeDealView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -160,8 +177,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         if (mBuyDeepList != null && !mBuyDeepList.isEmpty()
                 && mSellDeepList != null && !mSellDeepList.isEmpty()) {
             mDeepView.setDeepList(mBuyDeepList, mSellDeepList);
-            mMinBidPrice.setText(NumUtils.getPrice(mBuyDeepList.get(mBuyDeepList.size() - 1).getPrice()));
-            mMaxAskPrice.setText(NumUtils.getPrice(mSellDeepList.get(mSellDeepList.size() - 1).getPrice()));
+            mTradeVolumeView.setDeepList(mBuyDeepList, mSellDeepList);
         }
     }
 
@@ -235,8 +251,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     private void updateMarketDataView(MarketData marketData) {
         if (marketData == null) return;
         mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
-        mMidLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
-        
+        mDeepView.setLastPrice(marketData.getLastPrice());
+
         mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
         mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice()));
         mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice()));
@@ -383,6 +399,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
             }
         });
+
+        mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }
 
     @Override

@@ -179,44 +179,18 @@
                 <com.songbai.futurex.view.chart.DeepView
                     android:id="@+id/deepView"
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"/>
+                    android:layout_height="wrap_content"/>
 
-                <LinearLayout
+                <com.songbai.futurex.view.TradeVolumeView
+                    android:id="@+id/tradeVolumeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <com.songbai.futurex.view.RealtimeDealView
+                    android:id="@+id/tradeDealView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/minBidPrice"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:layout_weight="1"
-                        android:textColor="@color/text99"
-                        android:textSize="10sp"
-                        tools:text="8348.76"/>
-
-                    <TextView
-                        android:id="@+id/midLastPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text99"
-                        android:textSize="10sp"
-                        tools:text="8348.76"/>
-
-                    <TextView
-                        android:id="@+id/maxAskPrice"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="12dp"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:textColor="@color/text99"
-                        android:textSize="10sp"
-                        tools:text="8348.76"/>
-                </LinearLayout>
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
