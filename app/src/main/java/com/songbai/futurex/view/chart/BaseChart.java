@@ -33,7 +33,7 @@ public abstract class BaseChart extends View {
     private static final int FONT_SIZE_DP = 9;
     private static final int FONT_BIG_SIZE_DP = 10;
     private static final int TEXT_MARGIN_WITH_LINE_DP = 4;
-    private static final int RECT_PADDING_DP = 4;
+    private static final int RECT_PADDING_DP = 6;
     private static final int MIDDLE_EXTRA_SPACE_DP = 2;
     private static final int HEIGHT_TIME_LINE_DP = 30;
     private static final float RATIO_OF_TOP = 0.73f;
@@ -120,7 +120,7 @@ public abstract class BaseChart extends View {
         // constant
         mTextMargin = (int) dp2Px(TEXT_MARGIN_WITH_LINE_DP);
         mXRectPadding = (int) dp2Px(RECT_PADDING_DP);
-        mYRectPadding = mXRectPadding / 4;
+        mYRectPadding = mXRectPadding / 5;
         mMiddleExtraSpace = (int) dp2Px(MIDDLE_EXTRA_SPACE_DP);
         mTimeLineHeight = (int) dp2Px(HEIGHT_TIME_LINE_DP);
         mCenterPartHeight = mMiddleExtraSpace + mTimeLineHeight;

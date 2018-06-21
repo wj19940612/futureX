@@ -153,7 +153,7 @@
                     android:layout_height="match_parent"
                     android:visibility="gone"/>
 
-                <com.songbai.futurex.view.chart.TrendV
+                <com.songbai.futurex.view.chart.TrendView
                     android:id="@+id/trend"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
@@ -194,16 +194,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
                         android:layout_weight="1"
-                        android:text="8348.76"
                         android:textColor="@color/text99"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp"
+                        tools:text="8348.76"/>
 
                     <TextView
+                        android:id="@+id/midLastPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8348.76"
                         android:textColor="@color/text99"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp"
+                        tools:text="8348.76"/>
 
                     <TextView
                         android:id="@+id/maxAskPrice"
@@ -212,9 +213,9 @@
                         android:layout_marginRight="12dp"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="8348.76"
                         android:textColor="@color/text99"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp"
+                        tools:text="8348.76"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

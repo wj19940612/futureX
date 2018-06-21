@@ -33,6 +33,7 @@ import com.songbai.futurex.view.chart.KlineDataDetailView;
 import com.songbai.futurex.view.chart.KlineUtils;
 import com.songbai.futurex.view.chart.KlineView;
 import com.songbai.futurex.view.chart.TrendV;
+import com.songbai.futurex.view.chart.TrendView;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Response;
@@ -47,6 +48,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -84,13 +86,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.klineDataDetailView)
     KlineDataDetailView mKlineDataDetailView;
     @BindView(R.id.trend)
-    TrendV mTrend;
+    TrendView mTrend;
     @BindView(R.id.deepView)
     DeepView mDeepView;
     @BindView(R.id.minBidPrice)
     TextView mMinBidPrice;
     @BindView(R.id.maxAskPrice)
     TextView mMaxAskPrice;
+    @BindView(R.id.midLastPrice)
+    TextView mMidLastPrice;
+    @BindView(R.id.optional)
+    TextView mOptional;
 
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
@@ -151,9 +157,22 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     }
 
     private void updateDeepDataView() {
-        mDeepView.setDeepList(mBuyDeepList, mSellDeepList);
-        mMinBidPrice.setText(NumUtils.getPrice(mBuyDeepList.get(mBuyDeepList.size() - 1).getPrice()));
-        mMaxAskPrice.setText(NumUtils.getPrice(mSellDeepList.get(mSellDeepList.size() - 1).getPrice()));
+        if (mBuyDeepList != null && !mBuyDeepList.isEmpty()
+                && mSellDeepList != null && !mSellDeepList.isEmpty()) {
+            mDeepView.setDeepList(mBuyDeepList, mSellDeepList);
+            mMinBidPrice.setText(NumUtils.getPrice(mBuyDeepList.get(mBuyDeepList.size() - 1).getPrice()));
+            mMaxAskPrice.setText(NumUtils.getPrice(mSellDeepList.get(mSellDeepList.size() - 1).getPrice()));
+        }
+    }
+
+    @OnClick({R.id.buyIn, R.id.sellOut})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.buyIn:
+                break;
+            case R.id.sellOut:
+                break;
+        }
     }
 
     static class CalcDeepTask extends AsyncTask<Void, Void, Void> {
@@ -216,6 +235,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     private void updateMarketDataView(MarketData marketData) {
         if (marketData == null) return;
         mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+        mMidLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+        
         mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
         mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice()));
         mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice()));
