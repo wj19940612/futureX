@@ -105,6 +105,6 @@ public class TrendView extends RelativeLayout {
     }
 
     public void addHistoryData(List<Kline.Data> data) {
-
+        mTrendV.addHistoryData(data);
     }
 }

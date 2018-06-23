@@ -438,7 +438,7 @@
     <string name="close_price_x">收&#160;%1$s</string>
     <string name="price_change_amt">额</string>
     <string name="price_change_percent">幅</string>
-    <string name="trade_volume_x">量&#160;$1$s</string>
+    <string name="trade_volume_x">量&#160;%1$s</string>
     <string name="no_more_data">没有更多数据了</string>
     <string name="buy_in">买入</string>
     <string name="sell_out">卖出</string>

@@ -1,6 +1,7 @@
 package com.songbai.futurex.fragment;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -249,16 +250,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     protected void onRespData(PairDesc data) {
                         mPairDesc = data;
                         initCharts();
-                        initTradeViews();
+                        initMarketViews();
                         requestTrendData();
                     }
                 }).fireFreely();
     }
 
-    private void initTradeViews() {
+    private void initMarketViews() {
         mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeDealView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mKlineDataDetailView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }
 
     private void updateMarketDataView(MarketData marketData) {
@@ -300,7 +302,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         if (TextUtils.isEmpty(endTime)) {
                             mTrend.setDataList(data);
                         } else {
-
+                            if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
+                            mTrend.addHistoryData(data);
                         }
                     }
                 }).fire();
@@ -366,12 +369,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             public void onAppear(Kline.Data data) {
                 mChartRadio.setVisibility(View.GONE);
                 mKlineDataDetailView.setVisibility(View.VISIBLE);
-//                mDataDetail.setText(getString(R.string.open_x_close_x_max_x_min_x,
-//                        FinanceUtil.formatWithScale(data.getOpenPrice(), mScale),
-//                        FinanceUtil.formatWithScale(data.getClosePrice(), mScale),
-//                        FinanceUtil.formatWithScale(data.getMaxPrice(), mScale),
-//                        FinanceUtil.formatWithScale(data.getMinPrice(), mScale),
-//                        DateUtil.format(data.getTimestamp(), "yyyy/MM/dd HH:mm:ss")));
+                mKlineDataDetailView.setKlineData(data);
             }
 
             @Override
@@ -383,7 +381,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mKline.setOnSidesReachedListener(new Kline.OnSidesReachedListener() {
             @Override
             public void onStartSideReached(Kline.Data data) {
-
+                requestKlineData(Uri.encode(data.getTime()));
             }
 
             @Override
@@ -404,7 +402,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mTrend.setOnSidesReachedListener(new Kline.OnSidesReachedListener() {
             @Override
             public void onStartSideReached(Kline.Data data) {
-
+                requestTrendData(Uri.encode(data.getTime()));
             }
 
             @Override
