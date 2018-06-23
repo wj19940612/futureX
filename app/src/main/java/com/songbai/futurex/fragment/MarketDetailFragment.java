@@ -40,6 +40,7 @@ import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
+import com.songbai.futurex.websocket.model.DealData;
 import com.songbai.futurex.websocket.model.DeepData;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.PairMarket;
@@ -159,12 +160,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     public void onSuccess(Response<PairMarket> pairMarketResponse) {
                         updateMarketDataView(pairMarketResponse.getContent().getQuota());
                         updateDeepDataView(pairMarketResponse.getContent().getDeep());
+                        updateTradeDealView(pairMarketResponse.getContent().getDetail());
                     }
                 }.parse();
             }
         });
 
         requestPairDescription();
+    }
+
+    private void updateTradeDealView(List<DealData> dealDataList) {
+        mTradeDealView.addDealData(dealDataList);
     }
 
     private void updateDeepDataView(PairMarket.Deep deep) {
@@ -243,9 +249,16 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     protected void onRespData(PairDesc data) {
                         mPairDesc = data;
                         initCharts();
+                        initTradeViews();
                         requestTrendData();
                     }
                 }).fireFreely();
+    }
+
+    private void initTradeViews() {
+        mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mTradeDealView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }
 
     private void updateMarketDataView(MarketData marketData) {
@@ -399,8 +412,6 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
             }
         });
-
-        mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }
 
     @Override

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.utils.Display;
-import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.websocket.model.DeepData;
 
 import java.util.List;
@@ -96,7 +96,7 @@ public class DeepView extends LinearLayout {
     public void setDeepList(List<DeepData> buyDeepList, List<DeepData> sellDeepList) {
         mDeepV.setDeepList(buyDeepList, sellDeepList);
         mMinPrice.setText(formatPrice(buyDeepList.get(buyDeepList.size() - 1).getPrice()));
-        mMinPrice.setText(formatPrice(sellDeepList.get(sellDeepList.size() - 1).getPrice()));
+        mMaxPrice.setText(formatPrice(sellDeepList.get(sellDeepList.size() - 1).getPrice()));
     }
 
     public void setLastPrice(double lastPrice) {
@@ -104,7 +104,7 @@ public class DeepView extends LinearLayout {
     }
 
     private String formatPrice(double price) {
-        return FinanceUtil.formatWithScale(price, mPriceScale);
+        return NumUtils.getPrice(price, mPriceScale);
     }
 
     public void setPriceScale(int pricePoint) {
