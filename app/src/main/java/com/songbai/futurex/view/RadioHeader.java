@@ -113,7 +113,7 @@ public class RadioHeader extends LinearLayout {
         }
     }
 
-    private void selectTab(int position) {
+    public void selectTab(int position) {
         if (position == mSelectedPosition) return;
 
         for (int i = 0; i < getChildCount(); i++) {

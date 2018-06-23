@@ -6,6 +6,13 @@ package com.songbai.futurex.model;
  */
 public class OtcWarePoster {
 
+    public static final int DEAL_TYPE_BUY = 1;
+    public static final int DEAL_TYPE_SELL = 2;
+    public static final int FIXED_PRICE = 1;
+    public static final int FLOATING_PRICE = 2;
+    public static final int ON_SHELF = 1;
+    public static final int OFF_SHELF = 0;
+
     /**
      * coinSymbol : btc
      * conditionType : auth,trade
@@ -38,6 +45,7 @@ public class OtcWarePoster {
     private long createTime;
     private double dealCount;
     private int dealType;
+    private double fixedPrice;
     private int deleted;
     private double frozenCount;
     private int id;
@@ -108,6 +116,14 @@ public class OtcWarePoster {
 
     public void setDealType(int dealType) {
         this.dealType = dealType;
+    }
+
+    public double getFixedPrice() {
+        return fixedPrice;
+    }
+
+    public void setFixedPrice(double fixedPrice) {
+        this.fixedPrice = fixedPrice;
     }
 
     public int getDeleted() {

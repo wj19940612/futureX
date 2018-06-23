@@ -48,7 +48,7 @@
         android:id="@+id/radioHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_has_under_line"
+        android:background="@drawable/bg_white_with_under_line"
         android:gravity="center_vertical"
         android:minHeight="36dp"
         android:paddingLeft="12dp"

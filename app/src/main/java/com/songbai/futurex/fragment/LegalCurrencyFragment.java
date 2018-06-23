@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,9 +69,28 @@ public class LegalCurrencyFragment extends BaseFragment {
         mAdapter = new LegalCurrencyPager(getChildFragmentManager(), fragments);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
-        for (BaseFragment fragment : fragments) {
-            Log.e("wtf", "onViewCreated: " + fragment.toString());
-        }
+        mRadioHeader.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position, String content) {
+                mViewPager.setCurrentItem(position, false);
+            }
+        });
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mRadioHeader.selectTab(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override

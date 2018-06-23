@@ -3,6 +3,7 @@ package com.songbai.futurex.fragment.legalcurrency;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import com.songbai.futurex.http.PagingBean;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcWarePoster;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
+import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -210,7 +213,45 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindData(OtcWarePoster legalCurrencyTrade) {
+            public void bindData(OtcWarePoster otcWarePoster) {
+                switch (otcWarePoster.getDealType()) {
+                    case OtcWarePoster.DEAL_TYPE_BUY:
+                        mPosterType.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                        mPosterType.setText(getString(R.string.buy_symbol_x, otcWarePoster.getCoinSymbol().toUpperCase()));
+                        break;
+                    case OtcWarePoster.DEAL_TYPE_SELL:
+                        mPosterType.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                        mPosterType.setText(getString(R.string.sell_symbol_x, otcWarePoster.getCoinSymbol().toUpperCase()));
+                        break;
+                    default:
+                }
+
+                switch (otcWarePoster.getPriceType()) {
+                    case OtcWarePoster.FIXED_PRICE:
+                        mPrice.setText(getString(R.string.fixed_price_x, String.valueOf(otcWarePoster.getFixedPrice())));
+                        break;
+                    case OtcWarePoster.FLOATING_PRICE:
+                        mPrice.setText(getString(R.string.floating_price_x, FinanceUtil.formatToPercentage(otcWarePoster.getPercent())));
+                        break;
+                    default:
+                }
+                mLegalAmount.setText(FinanceUtil.formatWithScale(otcWarePoster.getTradeCount(), 4));
+                mLimit.setText(getString(R.string.limit_range_x, otcWarePoster.getMinTurnover(), otcWarePoster.getMaxTurnover()));
+                switch (otcWarePoster.getStatus()) {
+                    case OtcWarePoster.OFF_SHELF:
+                        mEdit.setEnabled(true);
+                        mOperateArea.setText(R.string.on_shelf);
+                        mStatus.setText(R.string.off_shelf);
+                        break;
+                    case OtcWarePoster.ON_SHELF:
+                        mEdit.setEnabled(false);
+                        mOperateArea.setText(R.string.off_shelf);
+                        mStatus.setText(R.string.on_shelf);
+                        break;
+                    default:
+                }
+                mCreateTime.setText(DateUtil.format(otcWarePoster.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
+                mUpdateTime.setText(DateUtil.format(otcWarePoster.getUpdateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
             }
         }
     }

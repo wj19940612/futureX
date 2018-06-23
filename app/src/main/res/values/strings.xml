@@ -325,6 +325,13 @@
     <string name="limit">限制</string>
     <string name="create_time">创建时间</string>
     <string name="update_time">更新时间</string>
+    <string name="fixed_price_x">固定价格 %1$s</string>
+    <string name="floating_price_x">溢价 %1$s</string>
+    <string name="limit_range_x">%1$f_%2$f</string>
+    <string name="buy_symbol_x">买入&#160;%1$s</string>
+    <string name="sell_symbol_x">卖出&#160;%1$s</string>
+    <string name="on_shelf">上架</string>
+    <string name="off_shelf">下架</string>
 
     <!-- bottom tabs -->
     <string name="home">首页</string>

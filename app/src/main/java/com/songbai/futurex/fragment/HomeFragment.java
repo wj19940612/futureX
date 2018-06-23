@@ -23,10 +23,13 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.home.Banner;
 import com.songbai.futurex.model.home.EntrustPair;
 import com.songbai.futurex.model.home.HomeNews;
@@ -188,8 +191,6 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 mNotice.setTag(++index);
             }
         }
-//        entrustPairsList(0, 9, "");
-//        indexRiseList();
     }
 
     @Override
@@ -200,12 +201,27 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onEntrustPairItemClick(EntrustPair.LatelyBean latelyBean) {
-
+            CurrencyPair currencyPair = new CurrencyPair();
+            currencyPair.setPairs(latelyBean.getPairs());
+            currencyPair.setPrefixSymbol(latelyBean.getPrefixSymbol());
+            currencyPair.setSuffixSymbol(latelyBean.getSuffixSymbol());
+            currencyPair.setCategory(latelyBean.getCategory());
+            currencyPair.setOption(latelyBean.getOption());
+            currencyPair.setSort(latelyBean.getSort());
+            UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
+                    .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
+                    .execute();
         }
 
         @Override
         public void onIncreaseRankItemClick(PairRiseListBean pairRiseListBean) {
-
+            CurrencyPair currencyPair = new CurrencyPair();
+            currencyPair.setPairs(pairRiseListBean.getPairs());
+            currencyPair.setPrefixSymbol(pairRiseListBean.getPrefixSymbol());
+            currencyPair.setSuffixSymbol(pairRiseListBean.getSuffixSymbol());
+            UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
+                    .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
+                    .execute();
         }
     };
 
