@@ -450,4 +450,5 @@
     <string name="volume_x">数量(%1$s)</string>
     <string name="price_x">价格 (%1$s)</string>
     <string name="direction">方向</string>
+    <string name="already_added">已添加</string>
 </resources>

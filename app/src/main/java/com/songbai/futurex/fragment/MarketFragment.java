@@ -34,6 +34,7 @@ import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.MarketData;
+import com.songbai.futurex.websocket.model.TradeDir;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -157,11 +158,21 @@ public class MarketFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
             requestOptionalList(mRadioHeader.getSelectTab());
         }
-        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
+            if (mRadioHeader.getSelectedPosition() == mRadioHeader.getTabCount() - 1) {
+                requestOptionalList(mRadioHeader.getSelectTab());
+            }
+        }
+        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_FIRST_USER) {
+            int tradeDir = data.getIntExtra(ExtraKeys.RESULT_USER_DEFINE, TradeDir.DIR_BUY_IN);
+            if (tradeDir == TradeDir.DIR_BUY_IN) {
+                
+            } else {
 
+            }
         }
     }
 

@@ -72,4 +72,6 @@ public interface ExtraKeys {
     String PROPERTY_FLOW_FILTER_TYPE_ALL = "property_flow_filter_type_all";
 
     String  HAS_BIND_PHONE= "has_bind_phone";
+
+    String RESULT_USER_DEFINE = "result_user_define";
 }

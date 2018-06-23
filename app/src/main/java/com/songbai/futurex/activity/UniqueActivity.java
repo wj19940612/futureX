@@ -40,7 +40,6 @@ public class UniqueActivity extends BaseActivity {
     }
 
 
-
     private void initData(Intent intent) {
         mFragmentName = intent.getStringExtra("frag");
         mExtras = intent.getExtras();
@@ -73,5 +72,17 @@ public class UniqueActivity extends BaseActivity {
         protected abstract void onCreateWithExtras(Bundle savedInstanceState, Bundle extras);
 
         protected abstract void onPostActivityCreated(Bundle savedInstanceState);
+
+        protected void finish() {
+            getActivity().finish();
+        }
+
+        protected void setResult(int resultCode) {
+            getActivity().setResult(resultCode);
+        }
+
+        protected void setResult(int resultCode, Intent data) {
+            getActivity().setResult(resultCode, data);
+        }
     }
 }

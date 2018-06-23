@@ -67,7 +67,7 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
 
     @OnClick(R.id.cancel)
     public void onViewClicked() {
-        getActivity().finish();
+        finish();
     }
 
     static class OptionalWrap {
@@ -187,10 +187,10 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
         }
         if (operatedCurrencyPair != null && !wrap.added) {
             mOptionalList.remove(operatedCurrencyPair);
-            getActivity().setResult(Activity.RESULT_OK); // update optional page
+            setResult(Activity.RESULT_OK); // update optional page
         } else if (wrap.added) {
             mOptionalList.add(wrap.pair);
-            getActivity().setResult(Activity.RESULT_OK);
+            setResult(Activity.RESULT_OK);
         }
     }
 

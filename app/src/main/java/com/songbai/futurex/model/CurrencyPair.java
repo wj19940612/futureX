@@ -11,12 +11,16 @@ import com.songbai.futurex.utils.adapter.GroupAdapter;
  * Modified by john on 2018/6/8
  * <p>
  * Description: 货币对数据结构
+ * Api: {@link com.songbai.futurex.http.Apic#getCurrencyPairList(String)}
  */
 public class CurrencyPair implements GroupAdapter.Groupable, Comparable<CurrencyPair>,Parcelable {
 
     public static final int CATE_MAIN = 1; // 主区
     public static final int CATE_CREATIVE = 2; // 创新
     public static final int CATE_NEW = 3; // 新币种
+
+    public static final int OPTIONAL_ADDED = 1;
+    public static final int OPTIONAL_NOT = 0;
 
     /**
      * category : 1
