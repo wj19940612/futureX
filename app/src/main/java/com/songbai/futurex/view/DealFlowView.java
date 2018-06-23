@@ -10,6 +10,10 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.utils.Display;
+import com.songbai.futurex.websocket.model.DealData;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Modified by john on 2018/6/21
@@ -27,6 +31,9 @@ public class DealFlowView extends LinearLayout {
 
     private float mMargin12;
     private int mHeight;
+    private Date mDate;
+    private SimpleDateFormat mSimpleDateFormat;
+
 
     public DealFlowView(Context context) {
         super(context);
@@ -41,6 +48,9 @@ public class DealFlowView extends LinearLayout {
     private void init() {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
+
+        mDate = new Date();
+        mSimpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
         mMargin12 = Display.dp2Px(12, getResources());
         mHeight = (int) Display.dp2Px(32, getResources());
@@ -89,5 +99,28 @@ public class DealFlowView extends LinearLayout {
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text66));
 
         return textView;
+    }
+
+    public void setTime(long time) {
+        mDate.setTime(time);
+        mTime.setText(mSimpleDateFormat.format(mDate));
+    }
+
+    public void setPrice(String price) {
+        mPrice.setText(price);
+    }
+
+    public void setVolume(String volume) {
+        mVolume.setText(volume);
+    }
+
+    public void setDirection(int direction) {
+        if (direction == DealData.DIR_BUY_IN) {
+            mDirection.setText(R.string.buy_in);
+            mDirection.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+        } else {
+            mDirection.setText(R.string.sell_out);
+            mDirection.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+        }
     }
 }

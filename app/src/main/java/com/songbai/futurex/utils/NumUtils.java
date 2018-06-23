@@ -29,6 +29,10 @@ public class NumUtils {
         return String.valueOf(price);
     }
 
+    public static String getPrice(double price, int scale) {
+        return FinanceUtil.formatWithScale(price, scale);
+    }
+
     /**
      * 涨跌幅
      * @param percent

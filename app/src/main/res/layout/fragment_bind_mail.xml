@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_white_has_under_line"
+        android:background="@drawable/bg_white_with_under_line"
         android:hint="@string/please_input_mail"
         android:inputType="textEmailAddress"/>
 
@@ -30,7 +30,7 @@
         android:id="@+id/authMailCodeArea"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@drawable/bg_white_has_under_line"
+        android:background="@drawable/bg_white_with_under_line"
         android:gravity="center_vertical"
         android:minHeight="45dp"
         android:visibility="visible">

@@ -33,6 +33,8 @@ public class TradeVolumeView extends LinearLayout {
     private TextView mPrice;
     private TextView mQuantityAsk;
 
+    private int mScale;
+
     public TradeVolumeView(Context context) {
         super(context);
         init();
@@ -92,6 +94,10 @@ public class TradeVolumeView extends LinearLayout {
                 currencyPair.getSuffixSymbol().toUpperCase()));
         mQuantityAsk.setText(getContext().getString(R.string.volume_x_ask,
                 currencyPair.getPrefixSymbol().toUpperCase()));
+    }
+
+    public void setPriceScale(int scale) {
+        mScale = scale;
     }
 
     public void setDeepList(List<DeepData> buyDeepList, List<DeepData> sellDeepList) {

@@ -15,6 +15,12 @@ public class PairMarket {
 
     private Deep deep;
 
+    private List<DealData> mDetail;
+
+    public List<DealData> getDetail() {
+        return mDetail;
+    }
+
     public MarketData getQuota() {
         return quota;
     }

@@ -28,7 +28,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@drawable/bg_white_has_under_line"
+                android:background="@drawable/bg_white_with_under_line"
                 android:orientation="vertical">
 
                 <TextView
@@ -56,7 +56,7 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@drawable/bg_white_has_under_line">
+                android:background="@drawable/bg_white_with_under_line">
 
                 <TextView
                     android:id="@+id/textView"
@@ -119,7 +119,7 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@drawable/bg_white_has_under_line">
+                android:background="@drawable/bg_white_with_under_line">
 
                 <TextView
                     android:id="@+id/textView2"
@@ -166,7 +166,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@drawable/bg_white_has_under_line"
+                android:background="@drawable/bg_white_with_under_line"
                 android:orientation="vertical">
 
                 <TextView
@@ -194,7 +194,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@drawable/bg_white_has_under_line"
+                android:background="@drawable/bg_white_with_under_line"
                 android:orientation="vertical">
 
                 <TextView
@@ -222,7 +222,7 @@
                 android:id="@+id/googleAuthCodeGroup"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@drawable/bg_white_has_under_line"
+                android:background="@drawable/bg_white_with_under_line"
                 android:orientation="vertical"
                 android:visibility="gone">
 
