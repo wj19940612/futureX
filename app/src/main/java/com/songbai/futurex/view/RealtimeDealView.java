@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -84,8 +83,6 @@ public class RealtimeDealView extends LinearLayout {
     public void addDealData(List<DealData> dealDataList) {
         if (dealDataList == null) return;
 
-        Log.d("Temp", "addDealData: " + mDealDataList.size()); // todo remove later
-
         int removeCount = Math.max(dealDataList.size() + mDealDataList.size() - MAX_CAPACITY, 0);
         if (removeCount > 0) {
             int removeIndex = mDealDataList.size() - removeCount;
@@ -95,8 +92,6 @@ public class RealtimeDealView extends LinearLayout {
             }
         }
         mDealDataList.addAll(0, dealDataList);
-
-        Log.d("Temp", "after addDealData: " + mDealDataList.size()); // todo remove later
 
         updateView();
     }

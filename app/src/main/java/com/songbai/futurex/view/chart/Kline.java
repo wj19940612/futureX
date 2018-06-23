@@ -737,6 +737,11 @@ public class Kline extends BaseChart {
         redraw();
     }
 
+    public void addHistoryData(List<Data> data) {
+        mDataList.addAll(0, data);
+        redraw();
+    }
+
     public void setLastPrice(float lastPrice) {
         if (mLastPrice != lastPrice) {
             mLastPrice = lastPrice;

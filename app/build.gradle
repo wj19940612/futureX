@@ -23,7 +23,7 @@ android {
         buildConfigField('boolean', 'IS_PROD', 'true')
 
         manifestPlaceholders = [
-                UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
+                UMENG_APP_KEY: "",
                 UMENG_CHANNEL: "android"
         ]
     }
@@ -58,6 +58,7 @@ android {
                     UMENG_CHANNEL: "android"
             ]
         }
+        prod {}
     }
 
     dependencies {

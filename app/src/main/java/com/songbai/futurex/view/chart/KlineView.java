@@ -106,6 +106,6 @@ public class KlineView extends RelativeLayout {
     }
 
     public void addHistoryData(List<Kline.Data> data) {
-
+        mKline.addHistoryData(data);
     }
 }
