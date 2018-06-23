@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
@@ -16,6 +17,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -124,6 +126,7 @@ public class Kline extends BaseChart {
 
     protected SparseArray<Data> mVisibleList;
     protected List<Data> mDataList;
+    protected List<Data> mBufferDataList;
     protected int mTouchIndex;
     protected int[] mMas;
     protected int mStart;
@@ -152,6 +155,7 @@ public class Kline extends BaseChart {
     protected void init() {
         super.init();
         mDataList = new ArrayList<>();
+        mBufferDataList = new LinkedList<>();
         mVisibleList = new SparseArray<>();
         mMas = new int[]{5, 10, 30};
         mChartColor = new ChartColor();
@@ -733,8 +737,28 @@ public class Kline extends BaseChart {
     }
 
     public void setDataList(List<Data> dataList) {
-        mDataList = dataList;
-        redraw();
+        mBufferDataList.clear();
+        mBufferDataList.addAll(dataList);
+        if (getDragTransX() == 0) {
+            flush();
+        }
+    }
+
+    public void flush() {
+        if (mBufferDataList.isEmpty()) return;
+
+        if (mDataList.isEmpty()) {
+            mDataList.addAll(mBufferDataList);
+            redraw();
+        } else {
+            Data bufferLast = mBufferDataList.get(mBufferDataList.size() - 1);
+            Data last = mDataList.get(mDataList.size() - 1);
+            if (bufferLast.getTimestamp() != last.getTimestamp()) {
+                mDataList.clear();
+                mDataList.addAll(mBufferDataList);
+                redraw();
+            }
+        }
     }
 
     public void addHistoryData(List<Data> data) {

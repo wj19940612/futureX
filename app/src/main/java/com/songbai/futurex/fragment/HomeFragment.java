@@ -114,14 +114,14 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(1000);
+        startScheduleJobRightNow(1000);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            startScheduleJob(1000);
+            startScheduleJobRightNow(1000);
         } else {
             stopScheduleJob();
         }

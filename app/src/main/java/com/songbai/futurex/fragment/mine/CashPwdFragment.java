@@ -138,7 +138,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
 
     private void freezeGetPhoneAuthCodeButton() {
         mFreezeGetPhoneAuthCode = true;
-        startScheduleJob(1000);
+        startScheduleJobRightNow(1000);
         mSendAuthCode.setTag(60);
         mSendAuthCode.setEnabled(false);
         mSendAuthCode.setText(getString(R.string.x_seconds, 60));
