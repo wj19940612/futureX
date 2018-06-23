@@ -57,6 +57,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="8dp"
+                    android:maxLines="1"
                     android:text="9300.77"
                     android:textColor="@color/text66"
                     android:textSize="12sp"/>
@@ -79,6 +80,7 @@
                     android:layout_alignRight="@id/highestPrice"
                     android:layout_below="@id/highestPrice"
                     android:layout_marginTop="2dp"
+                    android:maxLines="1"
                     android:text="9300.77"
                     android:textColor="@color/text66"
                     android:textSize="12sp"/>
@@ -101,6 +103,7 @@
                     android:layout_alignRight="@id/lowestPrice"
                     android:layout_below="@id/lowestPrice"
                     android:layout_marginTop="2dp"
+                    android:maxLines="1"
                     android:text="14957"
                     android:textColor="@color/text66"
                     android:textSize="12sp"/>
@@ -150,7 +153,7 @@
                     android:layout_height="match_parent"
                     android:visibility="gone"/>
 
-                <com.songbai.futurex.view.chart.TrendV
+                <com.songbai.futurex.view.chart.TrendView
                     android:id="@+id/trend"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
@@ -172,8 +175,23 @@
                     android:layout_marginTop="6dp"
                     app:tabArray="@array/trade_detail_radio"
                     app:tabInterval="18dp"/>
-            </LinearLayout>
 
+                <com.songbai.futurex.view.chart.DeepView
+                    android:id="@+id/deepView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <com.songbai.futurex.view.TradeVolumeView
+                    android:id="@+id/tradeVolumeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <com.songbai.futurex.view.RealtimeDealView
+                    android:id="@+id/tradeDealView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

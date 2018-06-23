@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -19,7 +18,6 @@ import com.songbai.futurex.http.PagingBean;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcWarePoster;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
-import com.songbai.futurex.utils.FinanceUtil;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -29,7 +27,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -189,26 +186,24 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
         }
 
         class MyAdHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.headPortrait)
-            ImageView mHeadPortrait;
-            @BindView(R.id.certification)
-            ImageView mCertification;
-            @BindView(R.id.userName)
-            TextView mUserName;
-            @BindView(R.id.countDealRate)
-            TextView mCountDealRate;
+            @BindView(R.id.posterType)
+            TextView mPosterType;
+            @BindView(R.id.edit)
+            TextView mEdit;
+            @BindView(R.id.operateArea)
+            TextView mOperateArea;
             @BindView(R.id.price)
             TextView mPrice;
-            @BindView(R.id.sumSection)
-            TextView mSumSection;
-            @BindView(R.id.ownCount)
-            TextView mOwnCount;
-            @BindView(R.id.wechatPayIcon)
-            ImageView mWechatPayIcon;
-            @BindView(R.id.unionPayIcon)
-            ImageView mUnionPayIcon;
-            @BindView(R.id.aliPayIcon)
-            ImageView mAliPayIcon;
+            @BindView(R.id.legalAmount)
+            TextView mLegalAmount;
+            @BindView(R.id.limit)
+            TextView mLimit;
+            @BindView(R.id.createTime)
+            TextView mCreateTime;
+            @BindView(R.id.updateTime)
+            TextView mUpdateTime;
+            @BindView(R.id.status)
+            TextView mStatus;
 
             MyAdHolder(View itemView) {
                 super(itemView);
@@ -216,27 +211,6 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
             }
 
             public void bindData(OtcWarePoster legalCurrencyTrade) {
-                GlideApp
-                        .with(getContext())
-                        .load(legalCurrencyTrade.getUserPortrait())
-                        .circleCrop()
-                        .into(mHeadPortrait);
-                int authStatus = legalCurrencyTrade.getAuthStatus();
-                mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
-                mCertification.setImageResource(authStatus == 1 || authStatus == 2 ? R.drawable.ic_primary_star : R.drawable.ic_senior_star);
-                mUserName.setText(legalCurrencyTrade.getUsername());
-                mPrice.setText(getString(R.string.x_space_x,
-                        FinanceUtil.formatWithScale(legalCurrencyTrade.getFixedPrice()),
-                        legalCurrencyTrade.getPayCurrency()));
-                mSumSection.setText(getString(R.string.amount_limit, String.valueOf(legalCurrencyTrade.getMinTurnover()), String.valueOf(legalCurrencyTrade.getMaxTurnover())));
-                mOwnCount.setText(getString(R.string.own_amount, legalCurrencyTrade.getChangeCount()));
-                mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,
-                        legalCurrencyTrade.getCountDeal(),
-                        FinanceUtil.formatToPercentage(legalCurrencyTrade.getDoneRate())));
-                String payInfo = legalCurrencyTrade.getPayInfo();
-                mWechatPayIcon.setVisibility(payInfo.contains("wxPay") ? View.VISIBLE : View.GONE);
-                mAliPayIcon.setVisibility(payInfo.contains("aliPay") ? View.VISIBLE : View.GONE);
-                mUnionPayIcon.setVisibility(payInfo.contains("bankPay") ? View.VISIBLE : View.GONE);
             }
         }
     }

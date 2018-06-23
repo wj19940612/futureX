@@ -117,17 +117,18 @@ public class Kline extends BaseChart {
     private OnMADataChangedListener mOnMADataChangedListener;
     private OnCrossLineAppearListener mOnCrossLineAppearListener;
     private OnSidesReachedListener mOnSidesReachedListener;
-    private int[] mMas;
     private float mBaseLineWidth;
-    private SparseArray<Data> mVisibleList;
     private SimpleDateFormat mDateFormat;
     private Date mDate;
     private float mLastPrice;
 
-    // visible points index range
+    protected SparseArray<Data> mVisibleList;
     protected List<Data> mDataList;
+    protected int mTouchIndex;
+    protected int[] mMas;
     protected int mStart;
     protected int mEnd;
+    // visible points index range
     private int mFirstVisibleIndex;
     private int mLastVisibleIndex;
 
@@ -136,7 +137,6 @@ public class Kline extends BaseChart {
     private float mPriceAreaWidth;
     private float mRightPadding;
     private float mMALineWidth;
-    private int mTouchIndex;
 
     private ChartColor mChartColor;
 
@@ -304,6 +304,9 @@ public class Kline extends BaseChart {
                 }
             }
         }
+
+        // draw ma60 text
+
 
         // draw last price line
 //        float[] baseLines = mChartCfg.getBaseLineArray();

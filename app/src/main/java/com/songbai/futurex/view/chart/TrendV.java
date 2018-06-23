@@ -19,6 +19,7 @@ import android.util.AttributeSet;
 public class TrendV extends Kline {
 
     private float mTrendLineWidth;
+    private float mMALineWidth;
 
     public TrendV(Context context) {
         super(context);
@@ -32,6 +33,8 @@ public class TrendV extends Kline {
     protected void init() {
         super.init();
         mTrendLineWidth = dp2Px(2);
+        mMas = new int[]{60};
+        mMALineWidth = dp2Px(1);
     }
 
     @Override
@@ -71,6 +74,34 @@ public class TrendV extends Kline {
                 drawIndexes(chartX, mDataList.get(i), canvas);
             }
         }
+
+        // draw MAs
+        for (int ma : mMas) {
+            setMovingAveragesPaint(sPaint);
+            float startX = -1;
+            float startY = -1;
+            for (int i = mStart; i < mEnd; i++) {
+                Float movingAverageValue = mDataList.get(i).getMas(ma);
+                if (movingAverageValue == null) continue;
+                chartX = getChartXOfScreen(i);
+                chartY = getChartY(movingAverageValue.floatValue());
+                if (startX == -1 && startY == -1) { // start
+                    startX = chartX;
+                    startY = chartY;
+                } else {
+                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+                    startX = chartX;
+                    startY = chartY;
+                }
+            }
+        }
+    }
+
+    private void setMovingAveragesPaint(Paint paint) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(mMALineWidth);
+        paint.setPathEffect(null);
+        paint.setColor(Color.parseColor("#FFB405"));
     }
 
     private void setTrendLinePaint(Paint paint) {
@@ -78,6 +109,7 @@ public class TrendV extends Kline {
         paint.setStrokeWidth(mTrendLineWidth);
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
+        paint.setShader(null);
     }
 
     private void setTrendLineFillPaint(Paint paint) {

@@ -856,6 +856,20 @@ public class Apic {
                         .put("limit", 200));
     }
 
+    /**
+     * 交易对每个币种的详情
+     * <p>
+     * /api/entrust/pairs/pairsDescription
+     *
+     * @param pair
+     * @return
+     */
+    public static Api getPairDescription(String pair) {
+        return Api.get("/api/entrust/pairs/pairsDescription",
+                new ReqParams()
+                        .put("pairs", pair));
+    }
+
 
     public interface url {
     }

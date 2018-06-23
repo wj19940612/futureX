@@ -2,19 +2,21 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/posterType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:text="买入 USDT"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/operateArea"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/operateArea"/>
+        app:layout_constraintTop_toTopOf="@id/operateArea"
+        tools:text="买入 USDT"/>
 
     <TextView
         android:id="@+id/edit"
@@ -85,43 +87,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="固定价格 6.45"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintLeft_toLeftOf="@id/priceText"
-        app:layout_constraintTop_toBottomOf="@id/priceText"/>
+        app:layout_constraintTop_toBottomOf="@id/priceText"
+        tools:text="固定价格 6.45"/>
 
     <TextView
         android:id="@+id/legalAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10.2014"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintBaseline_toBaselineOf="@id/price"
-        app:layout_constraintRight_toRightOf="@id/legalCurrencyText"/>
+        app:layout_constraintRight_toRightOf="@id/legalCurrencyText"
+        tools:text="10.2014"/>
 
     <TextView
         android:id="@+id/limit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1000-20000"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintBaseline_toBaselineOf="@id/price"
-        app:layout_constraintRight_toRightOf="@id/limitText"/>
+        app:layout_constraintRight_toRightOf="@id/limitText"
+        tools:text="1000-20000"/>
 
     <TextView
         android:id="@+id/createTimeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="13dp"
         android:layout_marginTop="20dp"
         android:text="@string/create_time"
         android:textColor="@color/text99"
         android:textSize="13sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/updateTimeText"
+        app:layout_constraintLeft_toLeftOf="@id/priceText"
         app:layout_constraintTop_toBottomOf="@id/price"/>
 
     <TextView
@@ -133,18 +133,59 @@
         android:textColor="@color/text99"
         android:textSize="13sp"
         app:layout_constraintBaseline_toBaselineOf="@id/createTimeText"
-        app:layout_constraintLeft_toRightOf="@id/createTimeText"
-        app:layout_constraintRight_toLeftOf="@id/limitText"/>
+        app:layout_constraintRight_toRightOf="@id/legalCurrencyText"/>
 
     <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="12dp"
         android:text="@string/status"
         android:textColor="@color/text99"
         android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/updateTimeText"
-        app:layout_constraintLeft_toRightOf="@id/updateTimeText"
+        app:layout_constraintBaseline_toBaselineOf="@id/createTimeText"
+        app:layout_constraintRight_toRightOf="@id/limitText"/>
+
+    <TextView
+        android:id="@+id/createTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/createTimeText"
+        app:layout_constraintTop_toBottomOf="@id/createTimeText"
+        tools:text="09:56 05/04"/>
+
+    <TextView
+        android:id="@+id/updateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/createTime"
+        app:layout_constraintRight_toRightOf="@id/updateTimeText"
+        tools:text="09:56 05/04"/>
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/createTime"
+        app:layout_constraintRight_toRightOf="@id/statusText"
+        tools:text="上架"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="12sp"
+        android:layout_marginRight="12dp"
+        android:background="@color/bgF5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
+
 </android.support.constraint.ConstraintLayout>

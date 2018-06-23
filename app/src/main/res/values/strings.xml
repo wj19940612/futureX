@@ -436,4 +436,11 @@
     <string name="buy_in">买入</string>
     <string name="sell_out">卖出</string>
     <string name="add_optional_no_plus">添加自选</string>
+    <string name="bid">买盘</string>
+    <string name="ask">卖盘</string>
+    <string name="bid_volume_x">买盘&#160;数量(%1$s)</string>
+    <string name="volume_x_ask">数量(%1$s)&#160;卖盘</string>
+    <string name="volume_x">数量(%1$s)</string>
+    <string name="price_x">价格 (%1$s)</string>
+    <string name="direction">方向</string>
 </resources>

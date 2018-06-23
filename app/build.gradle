@@ -78,7 +78,7 @@ android {
         implementation 'com.contrarywind:Android-PickerView:4.1.3'
         implementation 'com.google.zxing:core:3.2.1'
         implementation 'com.koushikdutta.async:androidasync:2.+'
-        compile 'com.umeng.sdk:utdid:1.1.5.3'
+        implementation 'com.umeng.sdk:utdid:1.1.5.3'
         implementation 'com.umeng.sdk:push:4.2.0'
         implementation project(path: ':httplib')
         implementation project(path: ':glide')
