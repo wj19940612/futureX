@@ -118,6 +118,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:id="@+id/priceText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
@@ -125,18 +126,21 @@
                     android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
-                <TextView
+                <EditText
                     android:id="@+id/premiumRate"
+                    style="@style/SingleEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
                     android:gravity="end"
+                    android:inputType="numberDecimal"
                     android:text="0.5"
                     android:textColor="@color/text49"
                     android:textSize="15sp"/>
 
                 <TextView
+                    android:id="@+id/priceSymbol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
@@ -209,13 +213,15 @@
                     android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
-                <TextView
+                <EditText
                     android:id="@+id/tradeAmount"
+                    style="@style/SingleEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
                     android:gravity="end"
+                    android:inputType="numberDecimal"
                     android:textColor="@color/text99"
                     android:textSize="15sp"
                     tools:text="1"/>

@@ -236,7 +236,7 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
                     default:
                 }
                 mLegalAmount.setText(FinanceUtil.formatWithScale(otcWarePoster.getTradeCount(), 4));
-                mLimit.setText(getString(R.string.limit_range_x, otcWarePoster.getMinTurnover(), otcWarePoster.getMaxTurnover()));
+                mLimit.setText(getString(R.string.limit_range_x, String.valueOf(otcWarePoster.getMinTurnover()), String.valueOf(otcWarePoster.getMaxTurnover())));
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:
                         mEdit.setEnabled(true);
