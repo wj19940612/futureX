@@ -83,21 +83,20 @@ public class RealtimeDealView extends LinearLayout {
     public void addDealData(List<DealData> dealDataList) {
         if (dealDataList == null) return;
 
-        int removeCount = Math.max(dealDataList.size() + mDealDataList.size() - MAX_CAPACITY, 0);
+        mDealDataList.addAll(0, dealDataList);
+        int removeCount = mDealDataList.size() - MAX_CAPACITY;
         if (removeCount > 0) {
-            int removeIndex = mDealDataList.size() - removeCount;
             while (removeCount > 0) {
-                mDealDataList.remove(removeIndex);
+                mDealDataList.remove(mDealDataList.size() - 1);
                 removeCount--;
             }
         }
-        mDealDataList.addAll(0, dealDataList);
 
         updateView();
     }
 
     private void updateView() {
-        for (int i = 0; i < mDealDataList.size(); i++) {
+        for (int i = 0; i < mDealDataList.size() && i < MAX_CAPACITY; i++) {
             View childAt = mDealFlowParent.getChildAt(i);
             if (childAt instanceof DealFlowView) {
                 childAt.setVisibility(VISIBLE);

@@ -73,14 +73,21 @@ public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHan
         });
     }
 
-    protected void startScheduleJob(int millisecond) {
+    protected void startScheduleJobNext(int millisecond) {
+        startScheduleJobRightNow(millisecond, millisecond);
+    }
+
+    protected void startScheduleJobRightNow(int millisecond) {
+        startScheduleJobRightNow(millisecond, 0);
+    }
+
+    protected void startScheduleJobRightNow(int millisecond, long delayMillis) {
         stopScheduleJob();
 
         if (mTimerHandler == null) {
             mTimerHandler = new TimerHandler(this);
         }
-
-        mTimerHandler.sendEmptyMessageDelayed(millisecond, 0);
+        mTimerHandler.sendEmptyMessageDelayed(millisecond, delayMillis);
     }
 
     protected void stopScheduleJob() {

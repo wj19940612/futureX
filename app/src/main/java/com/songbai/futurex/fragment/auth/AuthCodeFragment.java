@@ -123,7 +123,7 @@ public class AuthCodeFragment extends UniqueActivity.UniFragment {
     }
 
     private void freezeGetAuthCodeButton() {
-        startScheduleJob(1000);
+        startScheduleJobRightNow(1000);
         mGetAuthCode.setTag(60);
         mGetAuthCode.setEnabled(false);
         mGetAuthCode.setText(getString(R.string.x_seconds, 60));

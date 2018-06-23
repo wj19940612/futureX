@@ -92,10 +92,6 @@ public class TrendView extends RelativeLayout {
         mTrendV.setOnSidesReachedListener(onSidesReachedListener);
     }
 
-    public float getDragTransX() {
-        return mTrendV.getDragTransX();
-    }
-
     public void reset() {
         mTrendV.reset();
     }
@@ -106,5 +102,9 @@ public class TrendView extends RelativeLayout {
 
     public void addHistoryData(List<Kline.Data> data) {
         mTrendV.addHistoryData(data);
+    }
+
+    public void flush() {
+        mTrendV.flush();
     }
 }

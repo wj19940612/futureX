@@ -93,10 +93,6 @@ public class KlineView extends RelativeLayout {
         mKline.setOnSidesReachedListener(onSidesReachedListener);
     }
 
-    public float getDragTransX() {
-        return mKline.getDragTransX();
-    }
-
     public void reset() {
         mKline.reset();
     }
@@ -107,5 +103,9 @@ public class KlineView extends RelativeLayout {
 
     public void addHistoryData(List<Kline.Data> data) {
         mKline.addHistoryData(data);
+    }
+
+    public void flush() {
+        mKline.flush();
     }
 }

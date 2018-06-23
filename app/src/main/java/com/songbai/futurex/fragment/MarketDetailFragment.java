@@ -229,7 +229,6 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     deepData.setTotalCount(deepData.getCount() + mSellDeepList.get(i - 1).getTotalCount());
                 }
             }
-
             return null;
         }
 
@@ -241,7 +240,6 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             }
         }
     }
-
 
     private void requestPairDescription() {
         Apic.getPairDescription(mCurrencyPair.getPairs()).tag(TAG)
@@ -275,6 +273,15 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     }
 
     @Override
+    public void onTimeUp(int count) {
+        if (mChartRadio.getSelectedPosition() == 0) {
+            requestTrendData();
+        } else {
+            requestKlineData();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mMarketSubscriber.resume();
@@ -301,6 +308,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         Collections.sort(data);
                         if (TextUtils.isEmpty(endTime)) {
                             mTrend.setDataList(data);
+
+                            startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
                         } else {
                             if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
                             mTrend.addHistoryData(data);
@@ -324,6 +333,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         if (TextUtils.isEmpty(endTime)) {
                             mKline.setDataList(data);
                             mKline.setDateFormatStr(KlineUtils.getDateFormat(mChartRadio.getSelectedPosition()));
+
+                            startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
                         } else {
                             if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
                             mKline.addHistoryData(data);
@@ -386,9 +397,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
             @Override
             public void onEndSideReached(Kline.Data data) {
-//                if (mRefreshKlineLater) {
-//                    requestKline();
-//                }
+                mKline.flush();
             }
         });
 
@@ -407,7 +416,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
             @Override
             public void onEndSideReached(Kline.Data data) {
-
+                mTrend.flush();
             }
         });
     }

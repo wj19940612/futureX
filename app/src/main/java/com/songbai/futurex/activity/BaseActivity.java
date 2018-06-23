@@ -164,7 +164,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         }
     }
 
-    protected void startScheduleJob(int millisecond, long delayMillis) {
+    protected void startScheduleJobRightNow(int millisecond, long delayMillis) {
         stopScheduleJob();
 
         if (mTimerHandler == null) {
@@ -173,8 +173,8 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         mTimerHandler.sendEmptyMessageDelayed(millisecond, delayMillis);
     }
 
-    protected void startScheduleJob(int millisecond) {
-        startScheduleJob(millisecond, 0);
+    protected void startScheduleJobRightNow(int millisecond) {
+        startScheduleJobRightNow(millisecond, 0);
     }
 
     protected void stopScheduleJob() {

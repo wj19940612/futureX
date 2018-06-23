@@ -138,7 +138,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
 
     private void freezeGetEmailAuthCodeButton() {
         mFreezeGetEmailAuthCode = true;
-        startScheduleJob(1000);
+        startScheduleJobRightNow(1000);
         mGetMailAuthCode.setTag(60);
         mGetMailAuthCode.setEnabled(false);
         mGetMailAuthCode.setText(getString(R.string.x_seconds, 60));
@@ -146,7 +146,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
 
     private void freezeGetPhoneAuthCodeButton() {
         mFreezeGetPhoneAuthCode = true;
-        startScheduleJob(1000);
+        startScheduleJobRightNow(1000);
         mGetSmsAuthCode.setTag(60);
         mGetSmsAuthCode.setEnabled(false);
         mGetSmsAuthCode.setText(getString(R.string.x_seconds, 60));

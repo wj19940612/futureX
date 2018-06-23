@@ -386,7 +386,7 @@ public class RegisterActivity extends BaseActivity {
 
     private void freezeGetEmailAuthCodeButton() {
         mFreezeGetEmailAuthCode = true;
-        startScheduleJob(1000);
+        startScheduleJobRightNow(1000);
         mGetEmailAuthCode.setTag(60);
         mGetEmailAuthCode.setEnabled(false);
         mGetEmailAuthCode.setText(getString(R.string.x_seconds, 60));
@@ -394,7 +394,7 @@ public class RegisterActivity extends BaseActivity {
 
     private void freezeGetPhoneAuthCodeButton() {
         mFreezeGetPhoneAuthCode = true;
-        startScheduleJob(1000);
+        startScheduleJobRightNow(1000);
         mGetPhoneAuthCode.setTag(60);
         mGetPhoneAuthCode.setEnabled(false);
         mGetPhoneAuthCode.setText(getString(R.string.x_seconds, 60));
