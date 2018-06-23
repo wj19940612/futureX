@@ -58,7 +58,6 @@ android {
                     UMENG_CHANNEL: "android"
             ]
         }
-        prod {}
     }
 
     dependencies {
