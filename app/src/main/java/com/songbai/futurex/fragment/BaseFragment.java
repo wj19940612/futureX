@@ -14,6 +14,7 @@ import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
+import com.umeng.analytics.MobclickAgent;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -26,19 +27,19 @@ public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHan
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.openActivityDurationTrack(false);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        MobclickAgent.onPageEnd(TAG);
+        MobclickAgent.onPageEnd(TAG);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        MobclickAgent.onPageStart(TAG);
+        MobclickAgent.onPageStart(TAG);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHan
      * @param eventKey
      */
     protected void umengEventCount(String eventKey) {
-//        MobclickAgent.onEvent(getActivity(), eventKey);
+        MobclickAgent.onEvent(getActivity(), eventKey);
     }
 
     @Override

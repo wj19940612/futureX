@@ -83,46 +83,67 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
 
             int flowType = coinPropertyFlow.getFlowType();
             switch (flowType) {
-                case FlowType.DRAW_CASH:
+                case FlowType.DRAW:
                     mType.setText(R.string.withdraw_cash);
                     break;
-                case FlowType.RECHARGE:
+                case FlowType.DEPOSITE:
                     mType.setText(R.string.recharge_coin);
                     break;
-                case FlowType.BUY_ORDER:
+                case FlowType.ENTRUST_BUY:
                     mType.setText(R.string.buy_order);
                     break;
-                case FlowType.SELL_ORDER:
+                case FlowType.ENTRUST_SELL:
                     mType.setText(R.string.sell_order);
                     break;
-                case FlowType.OTC_TRANSFER_OUT:
+                case FlowType.OTC_TRADE_OUT:
                     mType.setText(R.string.otc_transfer_out);
                     break;
-                case FlowType.DRAW_COIN_FEE:
+                case FlowType.DRAW_FEE:
                     mType.setText(R.string.withdraw_fee);
                     break;
-                case FlowType.DEAL_FEE:
+                case FlowType.TRADE_FEE:
                     mType.setText(R.string.deal_fee);
                     break;
-                case FlowType.PROMOTER_ACCOUNT_TRANSFER_INTO:
+                case FlowType.PROMOTER_TO:
                     mType.setText(R.string.promoter_account_transfer_into);
+                    break;
+                case FlowType.OTC_TRADE_IN:
+                    mType.setText(R.string.otc_trade_in);
+                    break;
+                case FlowType.AGENCY_TO:
+                    mType.setText(R.string.agency_to);
+                    break;
+                case FlowType.LEGAL_ACCOUNT_IN:
+                    mType.setText(R.string.legal_account_in);
+                    break;
+                case FlowType.COIN_ACCOUNT_OUT:
+                    mType.setText(R.string.coin_account_out);
                     break;
                 default:
             }
             mAmount.setText(String.valueOf(coinPropertyFlow.getValue()));
             int status = coinPropertyFlow.getStatus();
             switch (status) {
-                case FlowStatus.COMPLATED:
+                case FlowStatus.SUCCESS:
                     mStatus.setText(R.string.completed);
                     break;
                 case FlowStatus.FREEZE:
                     mStatus.setText(R.string.freeze);
                     break;
-                case FlowStatus.WITHDRAW_COIN_REJECT:
+                case FlowStatus.DRAW_REJECT:
                     mStatus.setText(R.string.withdraw_coin_rejected);
                     break;
-                case FlowStatus.SYS_WITHDRAW:
+                case FlowStatus.ENTRUS_RETURN:
+                    mStatus.setText(R.string.entrust_return);
+                    break;
+                case FlowStatus.FREEZE_DEDUCT:
+                    mStatus.setText(R.string.freeze_deduct);
+                    break;
+                case FlowStatus.ENTRUSE_RETURN_SYS:
                     mStatus.setText(R.string.sys_withdraw);
+                    break;
+                case FlowStatus.FREEZE_RETURN:
+                    mStatus.setText(R.string.freeze_return);
                     break;
                 default:
             }

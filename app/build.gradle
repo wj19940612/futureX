@@ -44,7 +44,7 @@ android {
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
             manifestPlaceholders = [
-                    UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
+                    UMENG_APP_KEY: "5b2ba7b0f43e4873cf000052",
                     UMENG_CHANNEL: "android"
             ]
         }
@@ -54,7 +54,7 @@ android {
             buildConfigField('String', 'HOST', '\"ex.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
             manifestPlaceholders = [
-                    UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
+                    UMENG_APP_KEY: "5b2ba7b0f43e4873cf000052",
                     UMENG_CHANNEL: "android"
             ]
         }
@@ -78,7 +78,6 @@ android {
         implementation 'com.contrarywind:Android-PickerView:4.1.3'
         implementation 'com.google.zxing:core:3.2.1'
         implementation 'com.koushikdutta.async:androidasync:2.+'
-        implementation 'com.umeng.sdk:common:latest.integration'
         compile 'com.umeng.sdk:utdid:1.1.5.3'
         implementation 'com.umeng.sdk:push:4.2.0'
         implementation project(path: ':httplib')

@@ -8,7 +8,7 @@ public interface FlowStatus {
     /**
      * 已完成
      */
-    int COMPLATED = 1;
+    int SUCCESS = 1;
     /**
      * 冻结
      */
@@ -16,9 +16,21 @@ public interface FlowStatus {
     /**
      * 提币驳回
      */
-    int WITHDRAW_COIN_REJECT = 3;
+    int DRAW_REJECT = 3;
     /**
      * 系统撤单
      */
-    int SYS_WITHDRAW = 4;
+    int ENTRUS_RETURN = 4;
+    /**
+     * 冻结扣除
+     */
+    int FREEZE_DEDUCT = 5;
+    /**
+     * 系统撤单
+     */
+    int ENTRUSE_RETURN_SYS = 6;
+    /**
+     * 冻结返还
+     */
+    int FREEZE_RETURN = 7;
 }

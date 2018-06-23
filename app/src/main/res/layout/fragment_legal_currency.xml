@@ -4,51 +4,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:backFeature="true"
-        app:hasBottomSplitLine="true"
-        app:titleText="@string/legal_currency_pay"/>
-
-    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants"
-            android:orientation="vertical">
+            android:layout_height="48dp"
+            android:clipChildren="false">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"/>
+                android:layout_centerInParent="true"
+                android:text="afdfasdf"
+                android:textColor="@color/text22"
+                android:textSize="18sp"/>
 
-            <FrameLayout
-                android:id="@+id/addGathering"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="27dp">
+            <com.songbai.futurex.view.BadgeTextView
+                android:id="@+id/order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="24dp"
+                android:drawablePadding="2dp"
+                android:drawableTop="@drawable/id_common_add"
+                android:gravity="center"
+                android:text="@string/order"
+                android:textColor="@color/text66"
+                android:textSize="9sp"
+                app:badgeTextNum="1"
+                app:badgeTextSize="9sp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/id_common_add"
-                    android:drawablePadding="7dp"
-                    android:gravity="center"
-                    android:text="@string/add_gathering_account"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"/>
-            </FrameLayout>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+        </RelativeLayout>
+    </com.songbai.futurex.view.TitleBar>
 
+    <com.songbai.futurex.view.RadioHeader
+        android:id="@+id/radioHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_has_under_line"
+        android:gravity="center_vertical"
+        android:minHeight="36dp"
+        android:paddingLeft="12dp"
+        app:layout_constraintTop_toBottomOf="@id/titleBar"
+        app:tabArray="@array/legal_currency_header"
+        app:tabInterval="10dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

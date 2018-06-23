@@ -127,4 +127,30 @@
         <attr name="infinite" format="boolean"/>
         <attr name="rectIndicators" format="boolean"/>
     </declare-styleable>
+
+    <!-- 带红点的 textview -->
+    <declare-styleable name="BadgeTextView">
+        <attr name="badgeBgColor" format="color"/>
+        <attr name="badgeTextColor" format="color"/>
+        <attr name="badgeTextSize" format="dimension|reference"/>
+        <attr name="badgeText" format="string"/>
+        <attr name="badgeTextNum" format="integer"/>
+        <attr name="badgeStyle" format="enum">
+            <enum name="round" value="0"/>
+            <enum name="circular" value="1"/>
+        </attr>
+        <attr name="radius" format="dimension|reference"/>
+    </declare-styleable>
+
+    <!-- 红点头部 TextView -->
+    <declare-styleable name="RedPointTipTextView">
+        <attr name="redPointTipVisibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
+        <attr name="redPointRadius" format="dimension|reference"/>
+        <attr name="pointVerticalPadding" format="dimension|reference"/>
+        <attr name="pointHorizontalPadding" format="dimension|reference"/>
+    </declare-styleable>
 </resources>

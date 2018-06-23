@@ -49,16 +49,16 @@ import butterknife.Unbinder;
  */
 public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerClickListener {
 
+    @BindView(R.id.homeBanner)
+    HomeBanner mHomeBanner;
+    @BindView(R.id.notice)
+    TextSwitcher mNotice;
     @BindView(R.id.noticeWrapper)
     LinearLayout mNoticeWrapper;
     @BindView(R.id.entrustPairs)
     RecyclerView mEntrustPairs;
     @BindView(R.id.increaseRank)
     RecyclerView mIncreaseRank;
-    @BindView(R.id.homeBanner)
-    HomeBanner mHomeBanner;
-    @BindView(R.id.notice)
-    TextSwitcher mNotice;
 
     private Unbinder mBind;
     private EntrustPairAdapter mAdapter;

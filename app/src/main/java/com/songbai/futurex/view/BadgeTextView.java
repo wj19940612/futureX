@@ -1,17 +1,27 @@
 package com.songbai.futurex.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 
-public class BadgeTextView extends AppCompatTextView {
+import com.songbai.futurex.R;
 
+public class BadgeTextView extends AppCompatTextView {
+    Rect mTextBounds = new Rect();
+    RectF mTextBorderRectF = new RectF();
     private Paint mBgPaint;
     private Paint mTextPaint;
     private int mNum;
-
+    float verticalSpacing = 3;
+    float horizontalSpacing = 3;
     /**
      * 需要绘制的数字大小
      * 默认大小为12sp
@@ -27,11 +37,8 @@ public class BadgeTextView extends AppCompatTextView {
      * 默认字体颜色
      */
     private int mTextColor = 0xffffffff;
-
-    //圆心坐标
-    private int mX = 0;
-    private int mY = 0;
-    private int mNormalRadius;
+    private int mMinRadius;
+    private String mCommentStr = "";
 
     public BadgeTextView(Context context) {
         this(context, null);
@@ -48,61 +55,95 @@ public class BadgeTextView extends AppCompatTextView {
 
     private void init(Context context, AttributeSet attrs) {
 
-//        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BadgeTextView);
-//        mTextColor = typedArray.getColor(R.styleable.BadgeTextView_badge_txt_color, 0xffffffff);
-//        mBgColor = typedArray.getColor(R.styleable.RedPointTextView_badge_bg_color, 0xffff0000);
-//        mTextSize = typedArray.getDimensionPixelSize(R.styleable.BadgeTextView_badge_txt_size, (int) sp2px(10));
-//        mNum = typedArray.getInteger(R.styleable.BadgeTextView_badge_txt_num, -1);
-//
-//        //画背景圆形
-//        mBgPaint = new Paint();
-//        mBgPaint.setAntiAlias(true);
-//
-//        //绘制数字
-//        mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-//
-//        typedArray.recycle();
-//        mNormalRadius = dp2px(4);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BadgeTextView);
+        mTextColor = typedArray.getColor(R.styleable.BadgeTextView_badgeTextColor, 0xffffffff);
+        mBgColor = typedArray.getColor(R.styleable.BadgeTextView_badgeBgColor, ContextCompat.getColor(getContext(), R.color.red));
+        mTextSize = typedArray.getDimensionPixelSize(R.styleable.BadgeTextView_badgeTextSize, (int) sp2px(10));
+        mNum = typedArray.getInteger(R.styleable.BadgeTextView_badgeTextNum, -1);
+        mNum = typedArray.getInteger(R.styleable.BadgeTextView_badgeTextNum, -1);
+
+        //画背景圆形
+        mBgPaint = new Paint();
+        mBgPaint.setAntiAlias(true);
+
+        //绘制数字
+        mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+
+        typedArray.recycle();
+        mMinRadius = dp2px(14);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mX = getWidth() * 32 / 50;
-        mY = getHeight() * 2 / 11;
         mTextPaint.setTextSize(mTextSize);
-
         if (mNum > 0) {
-
-            mBgPaint.setColor(mBgColor);
-
-            String str = null;
-//			if (mNum > 999) {
-//				str = "999+";
-//			} else {
-//				str = String.valueOf(mNum);
-//			}
-//			float textWidth = mTextPaint.measureText(str);
-//			int padding = dp2px(2);
-//			if (mNormalRadius * 2 - textWidth < padding) {
-//				RectF rectF = new RectF(mX - textWidth / 2 - padding, mY - mNormalRadius, mX + textWidth / 2 + padding, mY + mNormalRadius);
-//				canvas.drawRoundRect(rectF, mNormalRadius, mNormalRadius, mBgPaint);
-//			} else {
-//				canvas.drawCircle(mX, mY, mNormalRadius, mBgPaint);
-//			}
-            canvas.drawCircle(mX, mY, mNormalRadius, mBgPaint);
-
-            //绘制的文本
-            mTextPaint.setColor(mTextColor);
-//			canvas.drawText(str, mX - textWidth / 2, mY + mTextPaint.getFontMetrics().bottom * 1.2f, mTextPaint);
-        } else {
-            mBgPaint.setColor(0x00000000);
-            canvas.drawCircle(mX, mY, mNormalRadius, mBgPaint);
-//			String str = "";
-//			//颜色
-//			mTextPaint.setColor(0x00ffffff);
-//			canvas.drawText(str, mX - mTextPaint.measureText(str) / 2, mY + mTextPaint.getFontMetrics().bottom * 1.2f, mTextPaint);
+            mCommentStr = getCommentStr(mNum);
+            mTextPaint.getTextBounds(mCommentStr, 0, mCommentStr.length(), mTextBounds);
+            int textWidth = mTextBounds.width();
+            int textHeight = mTextBounds.height();
+            verticalSpacing = (mMinRadius - textHeight) / 2;
+            int toFixSpace = (mMinRadius - textWidth) / 2;
+            this.horizontalSpacing = toFixSpace > 0 ?
+                    Math.min(toFixSpace, dp2px(3)) : dp2px(3);
+            calculateTextContainer(textWidth, textHeight);
+            drawBackground(canvas);
+            drawText(canvas, textWidth, textHeight);
         }
+    }
+
+    private void calculateTextContainer(int textWidth, int textHeight) {
+        Drawable drawable = getCompoundDrawables()[1];
+        RectF contentRect = new RectF();
+        if (drawable != null) {
+            Paint.FontMetrics fontMetrics = getPaint().getFontMetrics();
+            float contentHeight = (drawable.getMinimumHeight() + getCompoundDrawablePadding() - fontMetrics.top + fontMetrics.bottom);
+            contentRect.set(
+                    getWidth() / 2 - drawable.getMinimumWidth() / 2,
+                    getHeight() / 2 - contentHeight / 2,
+                    getWidth() / 2 + drawable.getMinimumWidth() / 2,
+                    getHeight() / 2 + contentHeight / 2);
+        }
+        int textContainerWidth = (int) (textWidth + 2 * horizontalSpacing);
+        int textContainerHeight = (int) (textHeight + 2 * verticalSpacing);
+        if (textContainerWidth < textContainerHeight) {
+            textContainerWidth = textContainerHeight;
+        }
+        mTextBorderRectF.set(
+                contentRect.right - textContainerWidth / 2,
+                contentRect.top - textContainerHeight * 0.312f,
+                contentRect.right + textContainerWidth / 2,
+                contentRect.top + textContainerHeight * 0.618f);
+    }
+
+    private void drawBackground(Canvas canvas) {
+        mBgPaint.reset();
+        mBgPaint.setAntiAlias(true);
+//        mBgPaint.setColor(Color.WHITE);
+//        float borderWidth = dip2px(1);
+//        RectF borderRect = new RectF(
+//                mTextBorderRectF.left - borderWidth,
+//                mTextBorderRectF.top - borderWidth,
+//                mTextBorderRectF.right + borderWidth,
+//                mTextBorderRectF.bottom + borderWidth);
+//        canvas.drawRoundRect(borderRect, borderRect.height() / 2, borderRect.height() / 2, mBgPaint);
+        mBgPaint.setColor(mBgColor);
+        canvas.drawRoundRect(mTextBorderRectF, mTextBorderRectF.height() / 2, mTextBorderRectF.height() / 2, mBgPaint);
+    }
+
+    private void drawText(Canvas canvas, int textWidth, int textHeight) {
+        mTextPaint.reset();
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setColor(mTextColor);
+        mTextPaint.setTextSize(mTextSize);
+        float extra = (mTextPaint.measureText(mCommentStr) - textWidth) / 2;
+        canvas.drawText(mCommentStr, mTextBorderRectF.centerX() - textWidth / 2 - extra,
+                mTextBorderRectF.centerY() + textHeight / 2, mTextPaint);
+    }
+
+    private int dip2px(float dp) {
+        float density = getContext().getResources().getDisplayMetrics().density;
+        return (int) (dp * density + 0.5f);
     }
 
     /**
@@ -113,6 +154,16 @@ public class BadgeTextView extends AppCompatTextView {
     public void setNum(int mNum) {
         this.mNum = mNum;
         invalidate();
+    }
+
+    public String getCommentStr(int commentNum) {
+        if (commentNum < 1) {
+            return "";
+        }
+        if (commentNum > 999) {
+            return "999+";
+        }
+        return String.valueOf(commentNum);
     }
 
     /**
@@ -128,7 +179,7 @@ public class BadgeTextView extends AppCompatTextView {
      *
      * @param textColor
      */
-    public void setTextColor(int textColor) {
+    public void setBadgeTextColor(int textColor) {
         this.mTextColor = textColor;
     }
 
@@ -137,7 +188,7 @@ public class BadgeTextView extends AppCompatTextView {
      *
      * @param bgColor
      */
-    public void setBgColor(int bgColor) {
+    public void setBadgeBgColor(int bgColor) {
         this.mBgColor = bgColor;
     }
 
@@ -146,7 +197,7 @@ public class BadgeTextView extends AppCompatTextView {
      *
      * @param textSize
      */
-    public void setTextSize(int textSize) {
+    public void setBadgeTextSize(int textSize) {
         this.mTextSize = textSize;
     }
 
