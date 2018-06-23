@@ -25,6 +25,7 @@ import com.songbai.futurex.utils.TimerHandler;
 import com.songbai.futurex.view.RequestProgress;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.websocket.MessageProcessor;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
 import java.security.NoSuchAlgorithmException;
@@ -68,7 +69,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
                 //Api.cancel(TAG);
             }
         });
-        //MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         PushAgent.getInstance(this).onAppStart();
         SysTime.getSysTime().sync();
         MessageProcessor.get().connect();
@@ -105,21 +106,21 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
      * @param eventKey
      */
     protected void umengEventCount(String eventKey) {
-        //MobclickAgent.onEvent(getActivity(), eventKey);
+        MobclickAgent.onEvent(getActivity(), eventKey);
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        //MobclickAgent.onPageStart(TAG);
-        //MobclickAgent.onResume(this);
+        MobclickAgent.onPageStart(TAG);
+        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //MobclickAgent.onPageEnd(TAG);
-        //MobclickAgent.onPause(this);
+        MobclickAgent.onPageEnd(TAG);
+        MobclickAgent.onPause(this);
     }
 
     @Override

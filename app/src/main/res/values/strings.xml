@@ -262,11 +262,18 @@
     <string name="withdraw_fee">提币手续费</string>
     <string name="deal_fee">交易手续费</string>
     <string name="promoter_account_transfer_into">推广账户转入</string>
+    <string name="otc_trade_in">OTC交易转入</string>
+    <string name="agency_to">代理账户转入</string>
+    <string name="legal_account_in">法币账户转入</string>
+    <string name="coin_account_out">币币账户转入</string>
 
     <string name="completed">已完成</string>
     <string name="freeze">冻结</string>
     <string name="withdraw_coin_rejected">提币驳回</string>
+    <string name="entrust_return">用户撤单</string>
+    <string name="freeze_deduct">冻结扣除</string>
     <string name="sys_withdraw">系统撤单</string>
+    <string name="freeze_return">冻结返还</string>
 
     <string name="detail">详情</string>
     <string name="address_two_space">地&#8195;&#8195;址</string>
@@ -283,6 +290,48 @@
     <string name="otc_sell_pay">您的法币交易订单，卖家已确认收款，并转币，请查收>></string>
     <string name="otc_order_msg">您的订单已经回复,赶紧去看看吧>></string>
     <string name="user_auth_fail">您提交的认证信息审核失败，点击查看详情</string>
+
+    <!--LEGAL_CURRENCY-->
+    <string-array name="legal_currency_header">
+        <item>我想买</item>
+        <item>我要卖</item>
+        <item>我的广告</item>
+    </string-array>
+    <string name="order">订单</string>
+    <string name="x_space_x">%1$s&#160;%2$s</string>
+    <string name="amount_limit">限制金额：&#160;%1$s-%2$s</string>
+    <string name="own_amount">拥有数量：&#160;%1$s</string>
+    <string name="x_done_count_done_rate_x">%1$d单&#8194;完成率%2$s</string>
+    <string name="publish_ad">发布广告</string>
+    <string name="buy_x">买入%1$s</string>
+    <string name="sell_x">卖出%1$s</string>
+    <string name="price_type">价格类型</string>
+    <string name="premium_rate">溢价比例</string>
+    <string name="trade_limit">交易限制</string>
+    <string name="trade_amount">交易数量</string>
+    <string name="pay_type">支付方式</string>
+    <string name="optional">（选填）</string>
+    <string name="buyer_limit">对方限制</string>
+    <string name="authentication">认证：</string>
+    <string name="trade_count_more_than">交易成功次数大于：</string>
+    <string name="contract_info">联系方式</string>
+    <string name="read_and_agree">我已阅读并同意</string>
+    <string name="coin_trade_protocol">《发币交易协议》</string>
+    <string name="attention_rules">注意事项</string>
+    <string name="attention_rules_text">1.交易过程中，请先确认款项入账后再释放数字货币。\n\n2.交易过程中，不要透漏与您账户安全有关的敏感信息。\n\n3.请不要将您的电子邮箱直接透漏给买家，否则可能会收到诈骗信件及对账户安全造成危害。\n\n4.请将平台网站记录在书签上，确保您在正确的网站上进行交易，避免误闯钓鱼网站。\n\n5.平台员工禁止以官方名义与您交易，故请不要与自称是本平台员工的投资者交易，避免您的利益损失。</string>
+    <string name="attention_hint">特别提醒</string>
+    <string name="attention_hint_text">为了保证投资者的交易安全，平台将采用数字货币托管系统，任何投资者严禁绕过平台私下交易，违者自行承担损失。\n请在交易说明及交易备注中，详细写下您所希望的交易条件，以及与您交易所需注意的事项，明确的信息将提升您的交易成功率及评价。\n请勿在平台尝试欺诈行为，违者将会导致账号被冻结，并承担法律责任。\n发布广告后请旅行契约精神，恶意抬价或者是反悔，被投诉将冻结账户3-14天不等。</string>
+    <string name="price">单价</string>
+    <string name="limit">限制</string>
+    <string name="create_time">创建时间</string>
+    <string name="update_time">更新时间</string>
+    <string name="fixed_price_x">固定价格 %1$s</string>
+    <string name="floating_price_x">溢价 %1$s</string>
+    <string name="limit_range_x">%1$f_%2$f</string>
+    <string name="buy_symbol_x">买入&#160;%1$s</string>
+    <string name="sell_symbol_x">卖出&#160;%1$s</string>
+    <string name="on_shelf">上架</string>
+    <string name="off_shelf">下架</string>
 
     <!-- bottom tabs -->
     <string name="home">首页</string>

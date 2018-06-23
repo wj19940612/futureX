@@ -37,8 +37,7 @@ public class App extends Application {
             }
         });
         UMConfigure.setLogEnabled(true);
-//        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "1fe6a20054bcef865eeb0991ee84525b");
-        UMConfigure.init(this, "5b16535cb27b0a5f1e000017", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "a1eddf08c530b6109ffed1b516e3934e");
+        UMConfigure.init(this,  UMConfigure.DEVICE_TYPE_PHONE, "a1eddf08c530b6109ffed1b516e3934e");
         PushAgent mPushAgent = PushAgent.getInstance(this);
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
@@ -47,13 +46,11 @@ public class App extends Application {
             public void onSuccess(String deviceToken) {
                 //注册成功会返回device token
                 Log.e("wtf", "onSuccess: " + deviceToken);
-                Log.i("wtf", "device token: " + deviceToken);
             }
 
             @Override
             public void onFailure(String s, String s1) {
                 Log.e("wtf", "onSuccess: " + s + "======" + s1);
-                Log.i("wtf", "device token: " + s1);
             }
         });
         processCaughtException();

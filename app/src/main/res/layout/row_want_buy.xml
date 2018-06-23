@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginTop="6dp"
+    android:background="@drawable/bg_white_r10"
+    android:paddingLeft="10dp"
+    android:paddingRight="12dp">
+
+    <ImageView
+        android:id="@+id/headPortrait"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@id/price"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/userName"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/certification"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/ic_senior_star"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/headPortrait"
+        app:layout_constraintTop_toTopOf="@id/headPortrait"/>
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:textColor="@color/text22"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@id/headPortrait"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toRightOf="@id/headPortrait"
+        app:layout_constraintRight_toLeftOf="@id/countDealRate"
+        app:layout_constraintTop_toTopOf="@id/headPortrait"
+        tools:text="用户306"/>
+
+    <TextView
+        android:id="@+id/countDealRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@id/headPortrait"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toRightOf="@id/userName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/headPortrait"
+        tools:text="20001单  完成率98.6%"/>
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/text22"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/sumSection"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headPortrait"
+        tools:text="6.31 CNY"/>
+
+    <TextView
+        android:id="@+id/sumSection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@id/ownCount"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/price"
+        tools:text="6.31 CNY"/>
+
+    <TextView
+        android:id="@+id/ownCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sumSection"
+        tools:text="6.31 CNY"/>
+
+    <ImageView
+        android:id="@+id/wechatPayIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_pay_wechat_s"
+        app:layout_constraintBottom_toBottomOf="@id/ownCount"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toRightOf="@id/unionPayIcon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ownCount"/>
+
+    <ImageView
+        android:id="@+id/unionPayIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_pay_unionpay_s"
+        app:layout_constraintBottom_toBottomOf="@id/ownCount"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toRightOf="@id/aliPayIcon"
+        app:layout_constraintRight_toLeftOf="@id/wechatPayIcon"
+        app:layout_constraintTop_toTopOf="@id/ownCount"/>
+
+    <ImageView
+        android:id="@+id/aliPayIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_pay_alipay_s"
+        app:layout_constraintBottom_toBottomOf="@id/ownCount"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/unionPayIcon"
+        app:layout_constraintTop_toTopOf="@id/ownCount"/>
+
+</android.support.constraint.ConstraintLayout>

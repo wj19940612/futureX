@@ -21,10 +21,10 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5b16535cb27b0a5f1e000017"/>
+            android:value="${UMENG_APP_KEY}"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Channel ID"/>
+            android:value="${UMENG_CHANNEL}"/>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
             android:value="a1eddf08c530b6109ffed1b516e3934e"/>

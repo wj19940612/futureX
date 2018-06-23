@@ -5,8 +5,10 @@ import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.FindPsdData;
+import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LoginData;
+import com.songbai.futurex.model.local.OtcWaresAdd;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
 
@@ -600,6 +602,38 @@ public class Apic {
      */
     public static Api indexRiseList() {
         return Api.get("/api/entrust/selfPairs/indexRiseList");
+    }
+
+    /**
+     * /api/otc/wares/home
+     * GET
+     * (改)首页列表/个人广告页--(v1.1)
+     */
+    public static Api otcWaresHome(GetOtcWaresHome getOtcWaresHome) {
+        return Api.get("/api/otc/wares/home",
+                new ReqParams(GetOtcWaresHome.class, getOtcWaresHome));
+    }
+
+    /**
+     * /api/otc/wares/list
+     * GET
+     * 广告管理--(v1.2)
+     */
+    public static Api otcWaresList(int page, int pageSize) {
+        return Api.get("/api/otc/wares/list",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * /api/otc/wares/add
+     * POST
+     * 发布广告--(v1.1)(v1.2)
+     */
+    public static Api otcWaresAdd(OtcWaresAdd otcWaresAdd) {
+        return Api.get("/api/otc/wares/add",
+                new ReqParams(OtcWaresAdd.class, otcWaresAdd));
     }
 
     /**
