@@ -67,7 +67,7 @@ public class KlineUtils {
             case 1:
                 return 15 * 60 * 1000;
             case 5:
-                return 30 * 1000;
+                return 60 * 1000;
             case 6:
                 return 5 * 60 * 1000;
             default:

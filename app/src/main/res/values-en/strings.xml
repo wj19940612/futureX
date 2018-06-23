@@ -247,7 +247,6 @@
     <string name="legal_currency">Legalurrency</string>
     <string name="coin_coin">coin2coin</string>
     <string name="mine">mine</string>
-
     <string-array name="tabTexts">
         <item>@string/home</item>
         <item>@string/market</item>
@@ -255,7 +254,6 @@
         <item>@string/coin_coin</item>
         <item>@string/mine</item>
     </string-array>
-
     <integer-array name="tabIcons">
         <item>@drawable/tab_home</item>
         <item>@drawable/tab_market</item>
