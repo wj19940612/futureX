@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:background="@drawable/bg_f5_r4"
+    android:gravity="center_vertical">
+
+    <EditText
+        android:id="@+id/price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:inputType="numberDecimal"
+        android:maxLines="1"
+        android:text="9248.36"
+        android:textColor="@color/text22"
+        android:textSize="15sp"/>
+
+    <LinearLayout
+        android:id="@+id/minus"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/btn_change_price"
+        android:gravity="center">
+
+        <View
+            android:layout_width="12dp"
+            android:layout_height="2dp"
+            android:background="@drawable/bg_49_r2"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/plus"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/btn_change_price">
+
+        <View
+            android:layout_width="14dp"
+            android:layout_height="2dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_49_r2"/>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="14dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_49_r2"/>
+    </RelativeLayout>
+</LinearLayout>

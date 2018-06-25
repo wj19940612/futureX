@@ -151,6 +151,28 @@ public class PairDesc {
         private String suffixSymbol;
         private long updateTime;
 
+        @Override
+        public String toString() {
+            return "Pairs{" +
+                    "category=" + category +
+                    ", createTime=" + createTime +
+                    ", dealRate=" + dealRate +
+                    ", deep='" + deep + '\'' +
+                    ", deleted=" + deleted +
+                    ", entrustRate=" + entrustRate +
+                    ", maxEntrustPrice=" + maxEntrustPrice +
+                    ", minEntrustPrice=" + minEntrustPrice +
+                    ", option=" + option +
+                    ", pairs='" + pairs + '\'' +
+                    ", prefixSymbol='" + prefixSymbol + '\'' +
+                    ", pricePoint=" + pricePoint +
+                    ", sort=" + sort +
+                    ", status=" + status +
+                    ", suffixSymbol='" + suffixSymbol + '\'' +
+                    ", updateTime=" + updateTime +
+                    '}';
+        }
+
         public int getCategory() {
             return category;
         }
@@ -214,5 +236,14 @@ public class PairDesc {
         public long getUpdateTime() {
             return updateTime;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "PairDesc{" +
+                "suffixSymbol=" + suffixSymbol +
+                ", prefixSymbol=" + prefixSymbol +
+                ", pairs=" + pairs +
+                '}';
     }
 }

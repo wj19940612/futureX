@@ -153,4 +153,8 @@
         <attr name="pointVerticalPadding" format="dimension|reference"/>
         <attr name="pointHorizontalPadding" format="dimension|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="TradeVolumeView">
+        <attr name="maxRows" format="integer"/>
+    </declare-styleable>
 </resources>
