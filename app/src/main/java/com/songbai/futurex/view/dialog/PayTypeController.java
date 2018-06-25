@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -17,9 +18,10 @@ import java.util.ArrayList;
  */
 public class PayTypeController extends SmartDialog.CustomViewController {
     private Context mContext;
-    private String[] payType = new String[]{"bankPay", "aliPay", "wxPay"};
+    private String[] payType = new String[]{PayType.BANK_PAY, PayType.ALIPAY, PayType.WXPAY};
     private ArrayList<String> selectedPayType = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
+    private String mPayInfo;
 
     public PayTypeController(Context context) {
         mContext = context;
@@ -32,6 +34,14 @@ public class PayTypeController extends SmartDialog.CustomViewController {
 
     @Override
     protected void onInitView(final View view, final SmartDialog dialog) {
+        if (mPayInfo != null) {
+            String[] split = mPayInfo.split(",");
+            for (String s : split) {
+                if (!selectedPayType.contains(s)) {
+                    selectedPayType.add(s);
+                }
+            }
+        }
         RelativeLayout unionPay = view.findViewById(R.id.unionPay);
         RelativeLayout aliPay = view.findViewById(R.id.aliPay);
         RelativeLayout wechatPay = view.findViewById(R.id.wechatPay);
@@ -89,15 +99,26 @@ public class PayTypeController extends SmartDialog.CustomViewController {
             @Override
             public void onClick(View v) {
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onConfirmClick();
+                    if (selectedPayType.size() > 0) {
+                        StringBuilder payInfo = new StringBuilder();
+                        for (String s : selectedPayType) {
+                            payInfo.append(s);
+                            payInfo.append(",");
+                        }
+                        mOnItemClickListener.onConfirmClick(payInfo.subSequence(0, payInfo.length() - 1).toString());
+                    }
                     dialog.dismiss();
                 }
             }
         });
     }
 
+    public void setPayInfo(String payInfo) {
+        mPayInfo = payInfo;
+    }
+
     public interface OnItemClickListener {
-        void onConfirmClick();
+        void onConfirmClick(String payInfo);
     }
 
     public PayTypeController setOnItemClickListener(OnItemClickListener onItemClickListener) {

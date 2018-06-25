@@ -312,7 +312,7 @@
     <string name="pay_type">支付方式</string>
     <string name="optional">（选填）</string>
     <string name="buyer_limit">对方限制</string>
-    <string name="authentication">认证：</string>
+    <string name="authentication_with_symbol">认证：</string>
     <string name="trade_count_more_than">交易成功次数大于：</string>
     <string name="contract_info">联系方式</string>
     <string name="read_and_agree">我已阅读并同意</string>
@@ -330,8 +330,8 @@
     <string name="fixed_price">固定价格</string>
     <string name="floating_price">浮动价格</string>
     <string name="limit_range_x">%1$s-%2$s</string>
-    <string name="buy_symbol_x">买入&#160;%1$s</string>
-    <string name="sell_symbol_x">卖出&#160;%1$s</string>
+    <string name="buy_blank_symbol_x">买入&#160;%1$s</string>
+    <string name="sell_blank_symbol_x">卖出&#160;%1$s</string>
     <string name="on_shelf">上架</string>
     <string name="off_shelf">下架</string>
     <string name="please_select_price_type">请选择价格类型</string>
@@ -341,6 +341,24 @@
     <string name="minLimit">最小限制</string>
     <string name="maxLimit">最大限制</string>
     <string name="please_select_pay_type">请选择支付方式</string>
+    <string name="remark_will_send_to_buy_default">备注内容会默认发送给对方</string>
+    <string name="preview_poster_with_symbol">预览广告：</string>
+    <string name="tread_type_with_symbol">买卖方式：</string>
+    <string name="single_price_with_symbol">单价：</string>
+    <string name="tread_limit_with_symbol">交易限制：</string>
+    <string name="tread_amount_with_symbol">交易数量：</string>
+    <string name="pay_type_with_symbol">交易方式：</string>
+    <string name="remark_with_symbol">备注：</string>
+    <string name="demand_with_symbol">要求对方：</string>
+    <string name="publish_poster">发布广告</string>
+    <string name="buy_symbol_x">买入%1$s</string>
+    <string name="sell_symbol_x">卖出%1$s</string>
+    <string name="please_select_tread_limit_condition">请选择限制条件</string>
+    <string name="authentication">认证</string>
+    <string name="deal_success_count">交易成功次数</string>
+    <string name="please_select_edit_type">请选择编辑类型</string>
+    <string name="edit_content">编辑内容</string>
+    <string name="delete_poster">删除广告</string>
 
     <!-- bottom tabs -->
     <string name="home">首页</string>

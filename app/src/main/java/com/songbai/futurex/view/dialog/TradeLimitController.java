@@ -19,6 +19,8 @@ public class TradeLimitController extends SmartDialog.CustomViewController {
     private OnItemClickListener mOnItemClickListener;
     private EditText mMinTurnover;
     private EditText mMaxTurnover;
+    private double mMinTurnoverNum;
+    private double mMaxTurnoverNum;
 
     public TradeLimitController(Context context) {
         mContext = context;
@@ -33,6 +35,7 @@ public class TradeLimitController extends SmartDialog.CustomViewController {
     protected void onInitView(View view, final SmartDialog dialog) {
         mMinTurnover = view.findViewById(R.id.minTurnover);
         mMaxTurnover = view.findViewById(R.id.maxTurnover);
+        restoreLimit(mMinTurnoverNum, mMaxTurnoverNum);
         TextView confirm = view.findViewById(R.id.confirm);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +54,19 @@ public class TradeLimitController extends SmartDialog.CustomViewController {
                 }
             }
         });
+    }
+
+    public void restoreLimit(double minTurnover, double maxTurnover) {
+        mMinTurnoverNum = minTurnover;
+        mMaxTurnoverNum = maxTurnover;
+        if (mMinTurnover != null) {
+            mMinTurnover.setText(String.valueOf(minTurnover));
+            mMinTurnover.setSelection(mMinTurnover.getText().length());
+        }
+        if (mMinTurnover != null) {
+            mMaxTurnover.setText(String.valueOf(maxTurnover));
+            mMaxTurnover.setSelection(mMaxTurnover.getText().length());
+        }
     }
 
     public interface OnItemClickListener {

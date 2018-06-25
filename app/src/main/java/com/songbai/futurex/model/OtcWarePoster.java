@@ -1,10 +1,13 @@
 package com.songbai.futurex.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author yangguangda
  * @date 2018/6/22
  */
-public class OtcWarePoster {
+public class OtcWarePoster implements Parcelable {
 
     public static final int DEAL_TYPE_BUY = 1;
     public static final int DEAL_TYPE_SELL = 2;
@@ -12,6 +15,8 @@ public class OtcWarePoster {
     public static final int FLOATING_PRICE = 2;
     public static final int ON_SHELF = 1;
     public static final int OFF_SHELF = 0;
+    public static final String CONDITION_AUTH = "auth";
+    public static final String CONDITION_TRADE = "trade";
 
     /**
      * coinSymbol : btc
@@ -245,4 +250,77 @@ public class OtcWarePoster {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.coinSymbol);
+        dest.writeString(this.conditionType);
+        dest.writeString(this.conditionValue);
+        dest.writeInt(this.counterUserId);
+        dest.writeLong(this.createTime);
+        dest.writeDouble(this.dealCount);
+        dest.writeInt(this.dealType);
+        dest.writeDouble(this.fixedPrice);
+        dest.writeInt(this.deleted);
+        dest.writeDouble(this.frozenCount);
+        dest.writeInt(this.id);
+        dest.writeDouble(this.maxTurnover);
+        dest.writeDouble(this.minTurnover);
+        dest.writeString(this.payCurrency);
+        dest.writeString(this.payIds);
+        dest.writeString(this.payInfo);
+        dest.writeDouble(this.percent);
+        dest.writeInt(this.priceType);
+        dest.writeString(this.remark);
+        dest.writeInt(this.status);
+        dest.writeDouble(this.totalCount);
+        dest.writeDouble(this.tradeCount);
+        dest.writeLong(this.updateTime);
+    }
+
+    public OtcWarePoster() {
+    }
+
+    protected OtcWarePoster(Parcel in) {
+        this.coinSymbol = in.readString();
+        this.conditionType = in.readString();
+        this.conditionValue = in.readString();
+        this.counterUserId = in.readInt();
+        this.createTime = in.readLong();
+        this.dealCount = in.readDouble();
+        this.dealType = in.readInt();
+        this.fixedPrice = in.readDouble();
+        this.deleted = in.readInt();
+        this.frozenCount = in.readDouble();
+        this.id = in.readInt();
+        this.maxTurnover = in.readDouble();
+        this.minTurnover = in.readDouble();
+        this.payCurrency = in.readString();
+        this.payIds = in.readString();
+        this.payInfo = in.readString();
+        this.percent = in.readDouble();
+        this.priceType = in.readInt();
+        this.remark = in.readString();
+        this.status = in.readInt();
+        this.totalCount = in.readDouble();
+        this.tradeCount = in.readDouble();
+        this.updateTime = in.readLong();
+    }
+
+    public static final Parcelable.Creator<OtcWarePoster> CREATOR = new Parcelable.Creator<OtcWarePoster>() {
+        @Override
+        public OtcWarePoster createFromParcel(Parcel source) {
+            return new OtcWarePoster(source);
+        }
+
+        @Override
+        public OtcWarePoster[] newArray(int size) {
+            return new OtcWarePoster[size];
+        }
+    };
 }

@@ -11,46 +11,14 @@ public interface ExtraKeys {
 
     String CRASH_INFO = "crash_info";
 
-    String APP_VERSION = "app_version";
-    String IS_CANCELED_ON_TOUCH_OUTSIDE = "is_canceled_on_touch_outside";
-
-    String NEWS_FLASH = "news_flash";
     String PORTRAIT = "portrait";
     String PIC_DELETE = "pic_delete";
     String MISS_AVATAR = "miss_avatar";
-    String PHONE = "phone";
-    String NEWS_ID = "news_id";
 
-    String DIGITAL_CURRENCY = "digital_currency";
-    String HEADER_COUNT = "header_count";
-    String CHANNEL = "channel";
     String TAG = "tag";
-    String HAS_BANNER = "has_banner";
 
-    String BITMAP_PATH = "bitmap_path";
-
-    String PERSONAL_INTRODUCE = "personal_introduce ";
     String NICK_NAME = "nick_name";
     String IMAGE_PATH = "image_path";
-
-    String WEB_URL = "web_url";
-    String PAGE_INDEX = "page_index";
-    String We_CHAT = "we_chat";
-    String WE_CHAT_OPENID = "we_chat_open_id";
-
-    String DATA = "data";
-    String NEWS_DETAIL = "news_detail";
-    String ID = "id";
-
-    String BINDING_TYPE = "binding_type";
-    String BINDING_ADDRESS = "binding_address";
-    String BINDING_USER_NAME = "binding_user_name";
-
-    String CONVERSION_NAME = "conversion_name";
-    String CONVERSION_PRICE = "conversion_price";
-    String CONVERSION_TYPE = "conversion_type";
-
-    String CONVERSION_HISTORY = "conversion_history";
 
     String REGISTER_DATA = "register_data";
     String FIND_PSD_DATA = "find_psd_data";
@@ -71,5 +39,6 @@ public interface ExtraKeys {
     String COIN_TYPE = "coin_type";
     String PROPERTY_FLOW_FILTER_TYPE_ALL = "property_flow_filter_type_all";
 
-    String  HAS_BIND_PHONE= "has_bind_phone";
+    String HAS_BIND_PHONE = "has_bind_phone";
+    String OTC_WARE_POSTER = "otc_ware_poster";
 }

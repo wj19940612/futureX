@@ -16,22 +16,27 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:gravity="center_vertical">
+        android:layout_height="36dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_common_coin_list"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
             android:text="USDT/CNY"
             android:textColor="@color/text22"
-            android:textSize="12sp"/>
+            android:textSize="13sp"/>
 
         <TextView
+            android:id="@+id/preview"
             android:layout_width="50dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
             android:layout_marginRight="20dp"
             android:background="@drawable/btn_primary_r100"
             android:gravity="center"
@@ -53,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/bg_f5_r16"
                 android:gravity="center_vertical">
 
@@ -101,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="18dp"
                     android:layout_weight="1"
-                    android:drawableRight="@drawable/ic_common_pop_arrow_down"
+                    android:drawableRight="@drawable/ic_common_s_triangle"
                     android:gravity="end"
                     android:text="价格类型"
                     android:textColor="@color/text22"
@@ -135,7 +141,6 @@
                     android:layout_weight="1"
                     android:gravity="end"
                     android:inputType="numberDecimal"
-                    android:text="0.5"
                     android:textColor="@color/text49"
                     android:textSize="15sp"/>
 
@@ -259,7 +264,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="18dp"
                     android:layout_weight="1"
-                    android:drawableRight="@drawable/ic_common_pop_arrow_down"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@drawable/ic_common_s_add"
                     android:gravity="end"
                     android:textColor="@color/text22"
                     android:textSize="15sp"
@@ -329,11 +335,12 @@
                     android:textSize="15sp"/>
 
                 <TextView
-                    android:id="@+id/buyer_limit"
+                    android:id="@+id/buyerLimit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="18dp"
                     android:layout_weight="1"
+                    android:drawableRight="@drawable/ic_common_s_triangle"
                     android:ellipsize="end"
                     android:gravity="end"
                     android:singleLine="true"
@@ -342,70 +349,72 @@
                     tools:text="认证、交易成功次数"/>
             </LinearLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/buyerLimitGroup"
+            <LinearLayout
+                android:id="@+id/buyerAuthLimitGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/authenticationText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
-                    android:text="@string/authentication"
+                    android:layout_weight="1"
+                    android:text="@string/authentication_with_symbol"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="@id/primaryCertification"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/primaryCertification"/>
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/primaryCertification"
-                    android:layout_width="0dp"
+                    android:layout_width="90dp"
                     android:layout_height="36dp"
                     android:layout_marginRight="20dp"
-                    android:layout_toLeftOf="@id/seniorCertification"
+                    android:background="@drawable/wares_btn_primary_broad_f5_r2"
                     android:gravity="center"
-                    android:text="@string/primary_certification"
-                    app:layout_constraintLeft_toLeftOf="@id/tradeCountLimit"
-                    app:layout_constraintRight_toLeftOf="@id/seniorCertification"/>
+                    android:text="@string/primary_certification"/>
 
                 <TextView
                     android:id="@+id/seniorCertification"
-                    android:layout_width="0dp"
+                    android:layout_width="90dp"
                     android:layout_height="36dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/wares_btn_primary_broad_f5_r2"
                     android:gravity="center"
-                    android:text="@string/senior_certification"
-                    app:layout_constraintLeft_toRightOf="@id/primaryCertification"
-                    app:layout_constraintRight_toRightOf="@id/tradeCountLimit"/>
+                    android:text="@string/senior_certification"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/buyerCountLimitGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/hintText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:includeFontPadding="false"
                     android:text="@string/trade_count_more_than"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tradeCountLimit"
-                    app:layout_constraintLeft_toLeftOf="@id/authenticationText"
-                    app:layout_constraintRight_toLeftOf="@id/tradeCountLimit"
-                    app:layout_constraintTop_toBottomOf="@id/authenticationText"
-                    app:layout_constraintTop_toTopOf="@id/tradeCountLimit"/>
+                    android:textSize="15sp"/>
 
-                <TextView
+                <EditText
                     android:id="@+id/tradeCountLimit"
-                    android:layout_width="0dp"
+                    style="@style/SingleEditText"
+                    android:layout_width="200dp"
                     android:layout_height="36dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_f5_r2"
                     android:gravity="center"
-                    app:layout_constraintLeft_toRightOf="@id/hintText"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/seniorCertification"
+                    android:inputType="number"
                     tools:text="1"/>
-            </android.support.constraint.ConstraintLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -476,7 +485,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/coin_trade_protocol "
+                    android:text="@string/coin_trade_protocol"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp"/>
             </LinearLayout>
