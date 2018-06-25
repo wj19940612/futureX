@@ -7,10 +7,7 @@ package com.songbai.futurex.websocket.model;
  * <p>
  * APIs:
  */
-public class DealData {
-
-    public static final int DIR_BUY_IN = 1;
-    public static final int DIR_SELL_OUT = 0;
+public class DealData implements TradeDir {
 
     private String instrumentId;
     private double lastPrice;

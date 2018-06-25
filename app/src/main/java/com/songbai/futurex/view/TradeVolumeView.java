@@ -1,6 +1,7 @@
 package com.songbai.futurex.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import java.util.List;
  */
 public class TradeVolumeView extends LinearLayout {
 
+    private static final int DEFAULT_MAX_ROWS = 10;
+
     private View mTradeTitleView;
     private LinearLayout mBidPriceParent;
     private LinearLayout mAskPriceParent;
@@ -34,6 +37,7 @@ public class TradeVolumeView extends LinearLayout {
     private TextView mQuantityAsk;
 
     private int mScale;
+    private int mMaxRows;
 
     public TradeVolumeView(Context context) {
         super(context);
@@ -42,7 +46,16 @@ public class TradeVolumeView extends LinearLayout {
 
     public TradeVolumeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        processAttrs(attrs);
         init();
+    }
+
+    private void processAttrs(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TradeVolumeView);
+
+        mMaxRows = typedArray.getInt(R.styleable.TradeVolumeView_maxRows, DEFAULT_MAX_ROWS);
+
+        typedArray.recycle();
     }
 
     private void init() {
@@ -74,13 +87,13 @@ public class TradeVolumeView extends LinearLayout {
         layout.addView(mBidPriceParent, params);
         layout.addView(mAskPriceParent, params);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < mMaxRows; i++) {
             View view = new BidPriceView(getContext());
             view.setVisibility(GONE);
             mBidPriceParent.addView(view);
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < mMaxRows; i++) {
             View view = new AskPriceView(getContext());
             view.setVisibility(GONE);
             mAskPriceParent.addView(view);

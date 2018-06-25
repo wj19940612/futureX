@@ -1,5 +1,7 @@
 package com.songbai.futurex.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,11 +18,15 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
+import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.ChartsRadio;
@@ -45,6 +51,7 @@ import com.songbai.futurex.websocket.model.DealData;
 import com.songbai.futurex.websocket.model.DeepData;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.PairMarket;
+import com.songbai.futurex.websocket.model.TradeDir;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -99,6 +106,10 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     TradeVolumeView mTradeVolumeView;
     @BindView(R.id.tradeDealView)
     RealtimeDealView mTradeDealView;
+    @BindView(R.id.buyIn)
+    TextView mBuyIn;
+    @BindView(R.id.sellOut)
+    TextView mSellOut;
 
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
@@ -188,13 +199,54 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         }
     }
 
-    @OnClick({R.id.buyIn, R.id.sellOut})
+    @OnClick({R.id.buyIn, R.id.sellOut, R.id.optional})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.buyIn:
+                setResult(Activity.RESULT_FIRST_USER,
+                        new Intent().putExtra(ExtraKeys.RESULT_USER_DEFINE, TradeDir.DIR_BUY_IN));
+                finish();
                 break;
             case R.id.sellOut:
+                setResult(Activity.RESULT_FIRST_USER,
+                        new Intent().putExtra(ExtraKeys.RESULT_USER_DEFINE, TradeDir.DIR_SELL_OUT));
+                finish();
                 break;
+            case R.id.optional:
+                if (LocalUser.getUser().isLogin()) {
+                    toggleOptionalStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+        }
+    }
+
+    private void toggleOptionalStatus() {
+        if (mOptional.isSelected()) { // 已经添加自选
+            Apic.cancelOptional(mCurrencyPair.getPairs()).tag(TAG)
+                    .callback(new Callback<Resp>() {
+                        @Override
+                        protected void onRespSuccess(Resp resp) {
+                            mOptional.setSelected(false);
+                            mOptional.setText(R.string.add_optional_no_plus);
+                            ToastUtil.show(R.string.optional_cancel);
+
+                            setResult(Activity.RESULT_OK); // refresh optional page
+                        }
+                    }).fire();
+        } else {
+            Apic.addOptional(mCurrencyPair.getPairs()).tag(TAG)
+                    .callback(new Callback<Resp>() {
+                        @Override
+                        protected void onRespSuccess(Resp resp) {
+                            mOptional.setSelected(true);
+                            mOptional.setText(R.string.already_added);
+                            ToastUtil.show(R.string.optional_added);
+
+                            setResult(Activity.RESULT_OK);
+                        }
+                    }).fire();
         }
     }
 
@@ -250,8 +302,19 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         initCharts();
                         initMarketViews();
                         requestTrendData();
+                        updateOptionalStatus();
                     }
                 }).fireFreely();
+    }
+
+    private void updateOptionalStatus() {
+        if (mPairDesc.getPairs().getOption() == CurrencyPair.OPTIONAL_ADDED) {
+            mOptional.setSelected(true);
+            mOptional.setText(R.string.already_added);
+        } else {
+            mOptional.setSelected(false);
+            mOptional.setText(R.string.add_optional_no_plus);
+        }
     }
 
     private void initMarketViews() {
