@@ -6,13 +6,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingBean;
@@ -21,6 +24,8 @@ import com.songbai.futurex.model.OtcWarePoster;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.EditTypeController;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -78,8 +83,79 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new MyAdAdapter();
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onEditClick(OtcWarePoster otcWarePoster) {
+                showEditTypeSelector(otcWarePoster);
+            }
+
+            @Override
+            public void onShelfClick(OtcWarePoster otcWarePoster) {
+                switch (otcWarePoster.getStatus()) {
+                    case OtcWarePoster.OFF_SHELF:
+                        updateStatus(otcWarePoster, OtcWarePoster.ON_SHELF);
+                        break;
+                    case OtcWarePoster.ON_SHELF:
+                        updateStatus(otcWarePoster, OtcWarePoster.OFF_SHELF);
+                        break;
+                    default:
+                }
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
         lazyLoad();
+    }
+
+    private void showEditTypeSelector(final OtcWarePoster otcWarePoster) {
+        EditTypeController editTypeController = new EditTypeController(getContext());
+        editTypeController.setOnItemClickListener(new EditTypeController.OnItemClickListener() {
+            @Override
+            public void onEditClick() {
+                UniqueActivity.launcher(MyAdFragment.this, SendAdFragment.class)
+                        .putExtra(ExtraKeys.OTC_WARE_POSTER, otcWarePoster).execute();
+            }
+
+            @Override
+            public void onDeleteClick(final SmartDialog dialog) {
+                Apic.otcWaresDelete(otcWarePoster.getId())
+                        .callback(new Callback<Resp<Object>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Object> resp) {
+                                mAdapter.getList().remove(otcWarePoster);
+                                mAdapter.notifyDataSetChanged();
+                                dialog.dismiss();
+                            }
+                        })
+                        .fire();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog
+                .setWidthScale(1)
+                .setWindowGravity(Gravity.BOTTOM)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setCustomViewController(editTypeController)
+                .show();
+    }
+
+    private void updateStatus(final OtcWarePoster otcWarePoster, int onShelf) {
+        Apic.otcWaresUpdateStatus(otcWarePoster.getId(), onShelf)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        switch (otcWarePoster.getStatus()) {
+                            case OtcWarePoster.OFF_SHELF:
+                                otcWarePoster.setStatus(OtcWarePoster.ON_SHELF);
+                                break;
+                            case OtcWarePoster.ON_SHELF:
+                                otcWarePoster.setStatus(OtcWarePoster.OFF_SHELF);
+                                break;
+                            default:
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                })
+                .fire();
     }
 
     @Override
@@ -158,8 +234,14 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
         return mSwipeLoadMoreFooter;
     }
 
-    class MyAdAdapter extends RecyclerView.Adapter {
+    public interface OnItemClickListener {
+        void onEditClick(OtcWarePoster otcWarePoster);
 
+        void onShelfClick(OtcWarePoster otcWarePoster);
+    }
+
+    class MyAdAdapter extends RecyclerView.Adapter {
+        private OnItemClickListener mOnItemClickListener;
         private List<OtcWarePoster> mList = new ArrayList<>();
 
         @NonNull
@@ -188,6 +270,14 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
             mList.addAll(list);
         }
 
+        public List<OtcWarePoster> getList() {
+            return mList;
+        }
+
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+            mOnItemClickListener = onItemClickListener;
+        }
+
         class MyAdHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.posterType)
             TextView mPosterType;
@@ -213,15 +303,15 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindData(OtcWarePoster otcWarePoster) {
+            public void bindData(final OtcWarePoster otcWarePoster) {
                 switch (otcWarePoster.getDealType()) {
                     case OtcWarePoster.DEAL_TYPE_BUY:
                         mPosterType.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-                        mPosterType.setText(getString(R.string.buy_symbol_x, otcWarePoster.getCoinSymbol().toUpperCase()));
+                        mPosterType.setText(getString(R.string.buy_blank_symbol_x, otcWarePoster.getCoinSymbol().toUpperCase()));
                         break;
                     case OtcWarePoster.DEAL_TYPE_SELL:
                         mPosterType.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-                        mPosterType.setText(getString(R.string.sell_symbol_x, otcWarePoster.getCoinSymbol().toUpperCase()));
+                        mPosterType.setText(getString(R.string.sell_blank_symbol_x, otcWarePoster.getCoinSymbol().toUpperCase()));
                         break;
                     default:
                 }
@@ -236,7 +326,7 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
                     default:
                 }
                 mLegalAmount.setText(FinanceUtil.formatWithScale(otcWarePoster.getTradeCount(), 4));
-                mLimit.setText(getString(R.string.limit_range_x, otcWarePoster.getMinTurnover(), otcWarePoster.getMaxTurnover()));
+                mLimit.setText(getString(R.string.limit_range_x, String.valueOf(otcWarePoster.getMinTurnover()), String.valueOf(otcWarePoster.getMaxTurnover())));
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:
                         mEdit.setEnabled(true);
@@ -252,6 +342,22 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
                 }
                 mCreateTime.setText(DateUtil.format(otcWarePoster.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
                 mUpdateTime.setText(DateUtil.format(otcWarePoster.getUpdateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
+                mEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            mOnItemClickListener.onEditClick(otcWarePoster);
+                        }
+                    }
+                });
+                mOperateArea.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            mOnItemClickListener.onShelfClick(otcWarePoster);
+                        }
+                    }
+                });
             }
         }
     }

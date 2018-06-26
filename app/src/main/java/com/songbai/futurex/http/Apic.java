@@ -8,7 +8,7 @@ import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LoginData;
-import com.songbai.futurex.model.local.OtcWaresAdd;
+import com.songbai.futurex.model.local.WaresModel;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
 
@@ -627,13 +627,74 @@ public class Apic {
     }
 
     /**
+     * /api/otc/wares/updateStatus
+     * POST
+     * 上架/下架
+     */
+    public static Api otcWaresUpdateStatus(int id, int status) {
+        return Api.post("/api/otc/wares/updateStatus",
+                new ReqParams()
+                        .put("id", id)
+                        .put("status", status));
+    }
+
+    /**
+     * /api/otc/wares/delete
+     * POST
+     * 删除广告
+     */
+    public static Api otcWaresDelete(int id) {
+        return Api.post("/api/otc/wares/delete",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
      * /api/otc/wares/add
      * POST
      * 发布广告--(v1.1)(v1.2)
      */
-    public static Api otcWaresAdd(OtcWaresAdd otcWaresAdd) {
-        return Api.get("/api/otc/wares/add",
-                new ReqParams(OtcWaresAdd.class, otcWaresAdd));
+    public static Api otcWaresAdd(WaresModel otcWaresAdd) {
+        return Api.post("/api/otc/wares/add",
+                new ReqParams(WaresModel.class, otcWaresAdd));
+    }
+
+    /**
+     * /api/otc/wares/update
+     * POST
+     * 编辑广告
+     */
+    public static Api otcWaresUpdate(WaresModel otcWaresAdd) {
+        return Api.post("/api/otc/wares/update",
+                new ReqParams(WaresModel.class, otcWaresAdd));
+    }
+
+    /**
+     * /api/otc/wares/get
+     * GET
+     * (新)预览广告
+     */
+    public static Api otcWaresGet(String id) {
+        return Api.get("/api/otc/wares/get",
+                new ReqParams().put("id", id));
+    }
+
+    /**
+     * http://ex.esongbai.abc/api/entrust/coin/legalCoin
+     * GET
+     * 查询可以用法币购买的币种
+     */
+    public static Api getLegalCoin() {
+        return Api.get("/api/entrust/coin/legalCoin");
+    }
+
+    /**
+     * /api/user/country/currency.do
+     * GET
+     * 查询法币 币种
+     */
+    public static Api getCountryCurrency() {
+        return Api.get("/api/user/country/currency.do");
     }
 
     /**

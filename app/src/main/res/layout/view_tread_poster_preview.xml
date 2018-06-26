@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_top_r10"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/previewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/preview_poster_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_black_close"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/treadText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:includeFontPadding="false"
+        android:text="@string/tread_type_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/previewText"
+        app:layout_constraintTop_toBottomOf="@id/previewText"/>
+
+    <TextView
+        android:id="@+id/treadContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/treadText"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/previewText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="买入USDT"/>
+
+    <TextView
+        android:id="@+id/singlePriceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:text="@string/single_price_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/previewText"
+        app:layout_constraintTop_toBottomOf="@id/treadContent"/>
+
+    <TextView
+        android:id="@+id/priceContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/singlePriceText"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/previewText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="固定价格 6.38 CNY"/>
+
+    <TextView
+        android:id="@+id/treadLimitText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:text="@string/tread_limit_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/previewText"
+        app:layout_constraintTop_toBottomOf="@id/priceContent"/>
+
+    <TextView
+        android:id="@+id/treadLimit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/treadLimitText"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/previewText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="2000-10000 CNY"/>
+
+    <TextView
+        android:id="@+id/treadAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:text="@string/tread_amount_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/previewText"
+        app:layout_constraintTop_toBottomOf="@id/treadLimit"/>
+
+    <TextView
+        android:id="@+id/treadAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/treadAmountText"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/previewText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="1688007.0047 USDT"/>
+
+    <TextView
+        android:id="@+id/payTypeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:text="@string/pay_type_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/previewText"
+        app:layout_constraintTop_toBottomOf="@id/treadAmount"/>
+
+    <TextView
+        android:id="@+id/payType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/payTypeText"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/previewText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="1688007.0047 USDT"/>
+
+    <TextView
+        android:id="@+id/remarkText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        android:includeFontPadding="false"
+        android:text="@string/remark_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toLeftOf="@id/previewText"
+        app:layout_constraintTop_toBottomOf="@id/payType"/>
+
+    <TextView
+        android:id="@+id/remark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/remarkText"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/previewText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="请勿在汇款备注内填写比特币、BTC、LTC等任何数字币有关字眼，防止您的汇款被银行拦截 银行卡号：XXXX XXXX XXXX XXXX 支付宝账号：XXXX XXXX 微信账号：XXXX（根据国家常用的聊天工具而定） 下单后可以直接加我xx跟我联系，我会尽快回复"/>
+
+    <TextView
+        android:id="@+id/demandText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:text="@string/demand_with_symbol"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/previewText"
+        app:layout_constraintTop_toBottomOf="@id/remark"/>
+
+    <TextView
+        android:id="@+id/demand"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/demandText"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/previewText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="1.必须通过实名认证 2.交易成功次数大于1"/>
+
+    <TextView
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="27dp"
+        android:background="@drawable/btn_primary"
+        android:gravity="center"
+        android:text="@string/publish_poster"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/demand"/>
+</android.support.constraint.ConstraintLayout>
