@@ -15,7 +15,6 @@
         android:background="@null"
         android:inputType="numberDecimal"
         android:maxLines="1"
-        android:text="9248.36"
         android:textColor="@color/text22"
         android:textSize="15sp"/>
 
