@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -34,7 +41,6 @@ import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.MarketData;
-import com.songbai.futurex.websocket.model.TradeDir;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +62,7 @@ import butterknife.Unbinder;
  */
 public class MarketFragment extends BaseFragment {
 
+    private static final int REQ_CODE_LOGIN = 91;
     private static final int REQ_CODE_SEARCH = 94;
     private static final int REQ_CODE_MARKET_DETAIL = 95;
 
@@ -80,6 +87,15 @@ public class MarketFragment extends BaseFragment {
 
     private Map<String, List<CurrencyPair>> mListMap; // memory cache
     private MarketSubscriber mMarketSubscriber;
+    private OnNavigationListener mOnNavigationListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnNavigationListener) {
+            mOnNavigationListener = (OnNavigationListener) context;
+        }
+    }
 
     @Nullable
     @Override
@@ -161,17 +177,19 @@ public class MarketFragment extends BaseFragment {
         if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
             requestOptionalList(mRadioHeader.getSelectTab());
         }
+        if (requestCode == REQ_CODE_LOGIN && resultCode == Activity.RESULT_OK) { // 登录，刷新自选列表
+            if (mRadioHeader.getSelectedPosition() == mRadioHeader.getTabCount() - 1) {
+                requestOptionalList(mRadioHeader.getSelectTab());
+            }
+        }
         if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
             if (mRadioHeader.getSelectedPosition() == mRadioHeader.getTabCount() - 1) {
                 requestOptionalList(mRadioHeader.getSelectTab());
             }
         }
-        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_FIRST_USER) {
-            int tradeDir = data.getIntExtra(ExtraKeys.RESULT_USER_DEFINE, TradeDir.DIR_BUY_IN);
-            if (tradeDir == TradeDir.DIR_BUY_IN) {
-                
-            } else {
-
+        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_FIRST_USER) { // 行情详情选择交易
+            if (mOnNavigationListener != null) {
+                mOnNavigationListener.onNavigation(MainActivity.PAGE_TRADE, data);
             }
         }
     }
@@ -253,6 +271,11 @@ public class MarketFragment extends BaseFragment {
                             Collections.sort(data);
                             mListMap.put(getId(), data);
                             mCurrencyPairAdapter.setGroupableList(data);
+
+                            if (TextUtils.isEmpty(Preference.get().getDefaultTradePair())) {
+                                if (data.isEmpty()) return;
+                                Preference.get().setDefaultTradePair(data.get(0).getPairs());
+                            } // Save the default trade pair
                         }
                     }
                 }).fireFreely();
@@ -260,8 +283,15 @@ public class MarketFragment extends BaseFragment {
 
     @OnClick(R.id.addOptional)
     public void onViewClicked() {
-        openSearchPage();
+        if (LocalUser.getUser().isLogin()) {
+            openSearchPage();
+        } else {
+            Launcher.with(this, LoginActivity.class)
+                    .execute(this, REQ_CODE_LOGIN);
+        }
     }
+
+
 
     static class OptionalAdapter extends RecyclerView.Adapter<OptionalAdapter.ViewHolder> {
 

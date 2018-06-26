@@ -151,6 +151,17 @@ public class PairDesc {
         private String suffixSymbol;
         private long updateTime;
 
+        public CurrencyPair getCurrencyPair() {
+            CurrencyPair currencyPair = new CurrencyPair();
+            currencyPair.setCategory(category);
+            currencyPair.setPairs(pairs);
+            currencyPair.setOption(option);
+            currencyPair.setPrefixSymbol(prefixSymbol);
+            currencyPair.setSort(sort);
+            currencyPair.setSuffixSymbol(suffixSymbol);
+            return currencyPair;
+        }
+
         @Override
         public String toString() {
             return "Pairs{" +

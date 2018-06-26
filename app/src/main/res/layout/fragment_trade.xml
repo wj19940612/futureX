@@ -49,6 +49,7 @@
     </RelativeLayout>
 
     <com.songbai.futurex.view.RadioHeader
+        android:id="@+id/tradeDirRadio"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginLeft="12dp"
@@ -91,6 +92,7 @@
         app:maxRows="5"/>
 
     <View
+        android:id="@+id/tradeDirSplitLine"
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@color/green"/>
@@ -98,8 +100,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        >
+        android:layout_marginTop="25dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -118,8 +119,20 @@
                 android:textSize="15sp"
                 tools:text="@string/buy_limit"/>
 
+            <TextView
+                android:id="@+id/marketPriceView"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_f5_r4"
+                android:gravity="center"
+                android:text="@string/trade_with_market_price"
+                android:textColor="@color/text99"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+
             <com.songbai.futurex.view.ChangePriceView
                 android:id="@+id/changePriceView"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -146,7 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:text="@string/recharge_coin"
+                    android:text="@string/recharge"
                     android:textColor="@color/colorPrimary"
                     android:textSize="13sp"/>
             </LinearLayout>
@@ -189,13 +202,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:text="+0.75%"
                     android:textColor="@color/green"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    tools:text="+0.75%"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/availableAmount"
+                android:id="@+id/availableCoins"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -205,13 +218,13 @@
                 android:textSize="10sp"/>
 
             <TextView
-                android:id="@+id/availableCoins"
+                android:id="@+id/obtainableCoins"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:maxLines="1"
-                android:text="可买 0.03990052 BTC"
+                android:text="获得 0.03990052 BTC"
                 android:textColor="@color/text99"
                 android:textSize="10sp"/>
 

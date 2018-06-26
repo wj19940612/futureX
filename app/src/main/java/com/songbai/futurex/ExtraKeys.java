@@ -42,5 +42,5 @@ public interface ExtraKeys {
     String HAS_BIND_PHONE = "has_bind_phone";
     String OTC_WARE_POSTER = "otc_ware_poster";
 
-    String RESULT_USER_DEFINE = "result_user_define";
+    String TRADE_DIRECTION = "trade_direction";
 }

@@ -116,12 +116,12 @@ public class TradeVolumeView extends LinearLayout {
     public void setDeepList(List<DeepData> buyDeepList, List<DeepData> sellDeepList) {
         if (mBidPriceParent != null && mBidPriceParent.getChildCount() > 0) {
             double maxVolume = 0;
-            for (int i = 0; i < buyDeepList.size() && i < 10; i++) {
+            for (int i = 0; i < buyDeepList.size() && i < mMaxRows; i++) {
                 DeepData deepData = buyDeepList.get(i);
                 maxVolume = Math.max(maxVolume, deepData.getCount());
             }
 
-            for (int i = 0; i < buyDeepList.size() && i < 10; i++) {
+            for (int i = 0; i < buyDeepList.size() && i < mMaxRows; i++) {
                 DeepData deepData = buyDeepList.get(i);
                 BidPriceView view = (BidPriceView) mBidPriceParent.getChildAt(i);
                 if (view.getVisibility() == GONE) {
@@ -133,7 +133,7 @@ public class TradeVolumeView extends LinearLayout {
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 
-            for (int i = buyDeepList.size(); i < 10; i++) {
+            for (int i = buyDeepList.size(); i < mMaxRows; i++) {
                 BidPriceView view = (BidPriceView) mBidPriceParent.getChildAt(i);
                 if (view.getVisibility() == VISIBLE) {
                     view.setVisibility(GONE);
@@ -143,12 +143,12 @@ public class TradeVolumeView extends LinearLayout {
 
         if (mAskPriceParent != null && mAskPriceParent.getChildCount() > 0) {
             double maxVolume = 0;
-            for (int i = 0; i < sellDeepList.size() && i < 10; i++) {
+            for (int i = 0; i < sellDeepList.size() && i < mMaxRows; i++) {
                 DeepData deepData = sellDeepList.get(i);
                 maxVolume = Math.max(maxVolume, deepData.getCount());
             }
 
-            for (int i = 0; i < sellDeepList.size() && i < 10; i++) {
+            for (int i = 0; i < sellDeepList.size() && i < mMaxRows; i++) {
                 DeepData deepData = sellDeepList.get(i);
                 AskPriceView view = (AskPriceView) mAskPriceParent.getChildAt(i);
                 if (view.getVisibility() == GONE) {
@@ -160,7 +160,7 @@ public class TradeVolumeView extends LinearLayout {
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 
-            for (int i = sellDeepList.size(); i < 10; i++) {
+            for (int i = sellDeepList.size(); i < mMaxRows; i++) {
                 AskPriceView view = (AskPriceView) mAskPriceParent.getChildAt(i);
                 if (view.getVisibility() == VISIBLE) {
                     view.setVisibility(GONE);

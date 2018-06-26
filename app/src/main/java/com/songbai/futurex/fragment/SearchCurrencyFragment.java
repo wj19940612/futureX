@@ -42,7 +42,7 @@ import butterknife.Unbinder;
 /**
  * Modified by john on 2018/6/13
  * <p>
- * Description:
+ * Description: 搜索货币对页面
  * <p>
  * APIs:
  */
@@ -245,7 +245,6 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mSearchBox.removeTextChangedListener(mSearchWatcher);
-
         unbinder.unbind();
     }
 
