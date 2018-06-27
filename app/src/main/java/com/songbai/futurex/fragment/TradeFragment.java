@@ -1,33 +1,56 @@
 package com.songbai.futurex.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
+import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.CoinAbleAmount;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.OnRVItemClickListener;
+import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
 import com.songbai.futurex.view.ChangePriceView;
 import com.songbai.futurex.view.RadioHeader;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TradeVolumeView;
+import com.songbai.futurex.view.dialog.ItemSelectController;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
+import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.PairMarket;
 import com.songbai.futurex.websocket.model.TradeDir;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,14 +97,20 @@ public class TradeFragment extends BaseFragment {
     TextView mLastPrice;
     @BindView(R.id.priceChange)
     TextView mPriceChange;
-    @BindView(R.id.availableCoins)
-    TextView mAvailableCoins;
-    @BindView(R.id.obtainableCoins)
-    TextView mObtainableCoins;
+    @BindView(R.id.availableCurrency)
+    TextView mAvailableCurrency;
+    @BindView(R.id.obtainableCurrency)
+    TextView mObtainableCurrency;
     @BindView(R.id.tradeButton)
     TextView mTradeButton;
     @BindView(R.id.marketPriceView)
     TextView mMarketPriceView;
+    @BindView(R.id.obtainableCurrencyRange)
+    TextView mObtainableCurrencyRange;
+    @BindView(R.id.orderListRadio)
+    RadioHeader mOrderListRadio;
+    @BindView(R.id.orderListView)
+    RecyclerView mOrderListView;
 
     Unbinder unbinder;
 
@@ -92,6 +121,20 @@ public class TradeFragment extends BaseFragment {
     private int mTradeTypeValue;
 
     private MarketSubscriber mMarketSubscriber;
+    private OnOptionalClickListener mOnOptionalClickListener;
+    private OptionsPickerView mPickerView;
+
+    public interface OnOptionalClickListener {
+        void onOptionalClick();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnOptionalClickListener) {
+            mOnOptionalClickListener = (OnOptionalClickListener) context;
+        }
+    }
 
     @Nullable
     @Override
@@ -124,7 +167,10 @@ public class TradeFragment extends BaseFragment {
                 new DataParser<Response<PairMarket>>(data) {
                     @Override
                     public void onSuccess(Response<PairMarket> pairMarketResponse) {
-                        updateMarketView(pairMarketResponse.getContent());
+                        PairMarket pairMarket = pairMarketResponse.getContent();
+                        if (pairMarket != null && pairMarket.isVaild()) {
+                            updateMarketView(pairMarketResponse.getContent());
+                        }
                     }
                 }.parse();
             }
@@ -134,10 +180,13 @@ public class TradeFragment extends BaseFragment {
     private void updateMarketView(PairMarket pairMarket) {
         mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(),
                 pairMarket.getDeep().getSellDeep());
-        if (mPairDesc != null) {
-            mLastPrice.setText(NumUtils.getPrice(pairMarket.getQuota().getLastPrice(),
-                    mPairDesc.getPairs().getPricePoint()));
-            mPriceChange.setText(NumUtils.getPrefixPercent(pairMarket.getQuota().getUpDropSpeed()));
+        MarketData quota = pairMarket.getQuota();
+        if (mPairDesc != null && quota != null) {
+            mLastPrice.setText(NumUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
+            mPriceChange.setText(NumUtils.getPrefixPercent(quota.getUpDropSpeed()));
+            if (!mChangePriceView.isModifiedManually()) {
+                mChangePriceView.setPrice(quota.getLastPrice());
+            }
         }
     }
 
@@ -149,6 +198,72 @@ public class TradeFragment extends BaseFragment {
             requestPairDescription();
             updateTradeDirectionView();
         } else {
+            unsubscribeMarket();
+        }
+    }
+
+    private void requestUserAccount() {
+        if (LocalUser.getUser().isLogin()) {
+            Apic.getAccountByUserForMuti(mCurrencyPair.getSuffixSymbol())
+                    .callback(new Callback<Resp<List<CoinAbleAmount>>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<List<CoinAbleAmount>> resp) {
+                            List<CoinAbleAmount> data = resp.getData();
+                            if (data.size() > 0) {
+                                CoinAbleAmount coinAbleAmount = data.get(0);
+                                updateCurrencyView(coinAbleAmount.getAbleCoin());
+                            }
+                        }
+                    }).fireFreely();
+        } else {
+            mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
+                    "-", mCurrencyPair.getSuffixSymbol().toUpperCase()));
+            mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
+                    "-", mCurrencyPair.getPrefixSymbol().toUpperCase()));
+            mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
+                    "0", mCurrencyPair.getPrefixSymbol().toUpperCase()));
+        }
+    }
+
+    private void updateCurrencyView(double availableCounterCurrency) {
+        mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
+                NumUtils.getPrice(availableCounterCurrency),
+                mCurrencyPair.getSuffixSymbol().toUpperCase()));
+        double price = mChangePriceView.getPrice();
+        double obtainableBaseCurrency = calculateBaseCurrency(availableCounterCurrency, price);
+        mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
+                NumUtils.getPrice(obtainableBaseCurrency, mPairDesc.getPrefixSymbol().getBalancePoint()),
+                mCurrencyPair.getPrefixSymbol().toUpperCase()));
+        mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
+                NumUtils.getPrice(obtainableBaseCurrency, mPairDesc.getPrefixSymbol().getBalancePoint()),
+                mCurrencyPair.getPrefixSymbol().toUpperCase()));
+    }
+
+    private double calculateBaseCurrency(double availableCounterCurrency, double price) {
+        if (price != 0) {
+            return availableCounterCurrency / price;
+        }
+        return 0;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMarketSubscriber.resume();
+
+        if (getUserVisibleHint()) {
+            subscribeMarket();
+            requestPairDescription();
+            updateTradeDirectionView();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMarketSubscriber.pause();
+
+        if (getUserVisibleHint()) {
             unsubscribeMarket();
         }
     }
@@ -188,7 +303,9 @@ public class TradeFragment extends BaseFragment {
     }
 
     private void unsubscribeMarket() {
-
+        if (mMarketSubscriber != null) {
+            mMarketSubscriber.unSubscribe(mTradePair);
+        }
     }
 
     private void subscribeMarket() {
@@ -212,21 +329,22 @@ public class TradeFragment extends BaseFragment {
                     @Override
                     protected void onRespData(PairDesc data) {
                         mPairDesc = data;
-                        if (mCurrencyPair == null) {
-                            mCurrencyPair = mPairDesc.getPairs().getCurrencyPair();
-                        }
+                        mCurrencyPair = mPairDesc.getPairs().getCurrencyPair();
                         updateOptionalStatus();
                         initViews();
-//                        initMarketViews();
+
+                        requestUserAccount();
                     }
                 }).fireFreely();
     }
 
     private void initViews() {
-        mDecimalScale.setText(getString(R.string.x_scale_decimal, mPairDesc.getPairs().getPricePoint()));
+        mPairName.setText(mCurrencyPair.getPrefixSymbol().toUpperCase() +
+                "/" + mCurrencyPair.getSuffixSymbol().toUpperCase());
+        mDecimalScale.setText(getString(R.string.x_scale_decimal, String.valueOf(mPairDesc.getPairs().getPricePoint())));
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mChangePriceView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
-
     }
 
     private void updateOptionalStatus() {
@@ -235,18 +353,6 @@ public class TradeFragment extends BaseFragment {
         } else {
             mOptionalStatus.setSelected(false);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMarketSubscriber.resume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMarketSubscriber.pause();
     }
 
     public void setTradeDir(int tradeDir) {
@@ -264,26 +370,141 @@ public class TradeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
+    private void toggleOptionalStatus() {
+        if (mOptionalStatus.isSelected()) { // 已经添加自选
+            Apic.cancelOptional(mCurrencyPair.getPairs()).tag(TAG)
+                    .callback(new Callback<Resp>() {
+                        @Override
+                        protected void onRespSuccess(Resp resp) {
+                            mOptionalStatus.setSelected(false);
+                            ToastUtil.show(R.string.optional_cancel);
+                        }
+                    }).fire();
+        } else {
+            Apic.addOptional(mCurrencyPair.getPairs()).tag(TAG)
+                    .callback(new Callback<Resp>() {
+                        @Override
+                        protected void onRespSuccess(Resp resp) {
+                            mOptionalStatus.setSelected(true);
+                            ToastUtil.show(R.string.optional_added);
+                        }
+                    }).fire();
+        }
+        if (mOnOptionalClickListener != null) {
+            mOnOptionalClickListener.onOptionalClick();
+        }
+    }
+
+    private void openMarketDetailPage(CurrencyPair currencyPair) {
+        UniqueActivity.launcher(this, MarketDetailFragment.class)
+                .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
+                .execute();
+    }
+
     @OnClick({R.id.optionalStatus, R.id.pairName, R.id.pairArrow, R.id.switchToMarketPage,
             R.id.decimalScale, R.id.tradeType, R.id.recharge, R.id.tradeButton})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.optionalStatus:
+                if (LocalUser.getUser().isLogin()) {
+                    toggleOptionalStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.pairName:
-                break;
             case R.id.pairArrow:
+
                 break;
             case R.id.switchToMarketPage:
+                if (mCurrencyPair != null) {
+                    openMarketDetailPage(mCurrencyPair);
+                }
                 break;
             case R.id.decimalScale:
+                showDecimalScaleSelector();
                 break;
             case R.id.tradeType:
+                showTradeTypeSelector();
                 break;
             case R.id.recharge:
                 break;
             case R.id.tradeButton:
                 break;
         }
+    }
+
+    private void showTradeTypeSelector() {
+        final SmartDialog dialog = SmartDialog.solo(getActivity());
+
+        SimpleRVAdapter simpleRVAdapter = new SimpleRVAdapter(
+                new int[]{R.string.limit_price, R.string.market_price},
+                R.layout.row_select_text,
+                new OnRVItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, Object obj) {
+                        dialog.dismiss();
+                        if (position == 0) {
+                            mTradeTypeValue = LIMIT_TRADE;
+                        } else {
+                            mTradeTypeValue = MARKET_TRADE;
+                        }
+                        updateTradeDirectionView();
+                    }
+                });
+
+        ItemSelectController itemSelectController = new ItemSelectController(getContext());
+        itemSelectController.setHintText(getString(R.string.please_choose_limited_condition));
+        itemSelectController.setAdapter(simpleRVAdapter);
+
+        dialog.setCustomViewController(itemSelectController)
+                .setWindowGravity(Gravity.BOTTOM)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setWidthScale(1)
+                .show();
+    }
+
+    private void showDecimalScaleSelector() {
+        if (mPairDesc == null || mPairDesc.getPairs() == null ||
+                TextUtils.isEmpty(mPairDesc.getPairs().getDeep())) {
+            return;
+        }
+
+        String[] deeps = mPairDesc.getPairs().getDeep().split(",");
+        final List<String> deepList = new ArrayList<>();
+        for (String deep : deeps) {
+            deepList.add(getString(R.string.x_scale_decimal, deep));
+        }
+        mPickerView = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                mDecimalScale.setText(deepList.get(options1));
+            }
+        }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                TextView cancel = v.findViewById(R.id.cancel);
+                TextView confirm = v.findViewById(R.id.confirm);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPickerView.dismiss();
+                    }
+                });
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPickerView.returnData();
+                        mPickerView.dismiss();
+                    }
+                });
+            }
+        }).setCyclic(false, false, false)
+                .setTextColorCenter(ContextCompat.getColor(getContext(), R.color.text22))
+                .setTextColorOut(ContextCompat.getColor(getContext(), R.color.text99))
+                .setDividerColor(ContextCompat.getColor(getContext(), R.color.bgDD))
+                .build();
+        mPickerView.setPicker(deepList);
+        mPickerView.show();
     }
 }

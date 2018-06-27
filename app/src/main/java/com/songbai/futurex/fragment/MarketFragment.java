@@ -175,17 +175,13 @@ public class MarketFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
-            requestOptionalList(mRadioHeader.getSelectTab());
+            updateOptionalList();
         }
         if (requestCode == REQ_CODE_LOGIN && resultCode == Activity.RESULT_OK) { // 登录，刷新自选列表
-            if (mRadioHeader.getSelectedPosition() == mRadioHeader.getTabCount() - 1) {
-                requestOptionalList(mRadioHeader.getSelectTab());
-            }
+            updateOptionalList();
         }
         if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
-            if (mRadioHeader.getSelectedPosition() == mRadioHeader.getTabCount() - 1) {
-                requestOptionalList(mRadioHeader.getSelectTab());
-            }
+            updateOptionalList();
         }
         if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_FIRST_USER) { // 行情详情选择交易
             if (mOnNavigationListener != null) {
@@ -194,11 +190,10 @@ public class MarketFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMarketSubscriber.unSubscribeAll();
-        mMarketSubscriber.pause();
+    public void updateOptionalList() {
+        if (mRadioHeader.getSelectedPosition() == mRadioHeader.getTabCount() - 1) {
+            requestOptionalList(mRadioHeader.getSelectTab());
+        }
     }
 
     @Override
@@ -206,6 +201,13 @@ public class MarketFragment extends BaseFragment {
         super.onResume();
         mMarketSubscriber.resume();
         mMarketSubscriber.subscribeAll();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMarketSubscriber.pause();
+        mMarketSubscriber.unSubscribeAll();
     }
 
     private void initOptionalList() {

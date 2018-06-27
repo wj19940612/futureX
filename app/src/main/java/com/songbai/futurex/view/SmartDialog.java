@@ -265,7 +265,7 @@ public class SmartDialog {
             View view = mCustomViewController.onCreateView();
             mBuilder.setView(view);
             mCustomViewController.onInitView(view, this);
-            mCustomViewController.finishInitialize();
+            mCustomViewController.finishViewInit();
         } else {
             mBuilder.setMessage(mMessageText);
             mBuilder.setTitle(mTitleText);
@@ -343,18 +343,18 @@ public class SmartDialog {
     }
 
     public static abstract class CustomViewController {
-        private boolean mIsInitialized;
+        private boolean mIsViewInitialized;
 
         protected abstract View onCreateView();
 
         protected abstract void onInitView(View view, SmartDialog dialog);
 
-        public boolean isInitialized() {
-            return mIsInitialized;
+        public boolean isViewInitialized() {
+            return mIsViewInitialized;
         }
 
-        private void finishInitialize() {
-            mIsInitialized = true;
+        private void finishViewInit() {
+            mIsViewInitialized = true;
         }
     }
 }

@@ -23,7 +23,7 @@ import com.songbai.futurex.websocket.model.TradeDir;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements OnNavigationListener {
+public class MainActivity extends BaseActivity implements OnNavigationListener, TradeFragment.OnOptionalClickListener {
 
     public static final int PAGE_HOME = 0;
     public static final int PAGE_MARKET = 1;
@@ -72,7 +72,6 @@ public class MainActivity extends BaseActivity implements OnNavigationListener {
 //                umengClickStatistics(position);
             }
         });
-
     }
 
     @Override
@@ -84,6 +83,14 @@ public class MainActivity extends BaseActivity implements OnNavigationListener {
             CurrencyPair pair = exUserDefineData.getParcelableExtra(ExtraKeys.CURRENCY_PAIR);
             ((TradeFragment) fragment).setTradeDir(tradeDir);
             ((TradeFragment) fragment).setCurrencyPair(pair);
+        }
+    }
+
+    @Override
+    public void onOptionalClick() {
+        Fragment fragment = mMainFragmentsAdapter.getFragment(PAGE_MARKET);
+        if (fragment instanceof MarketFragment) {
+            ((MarketFragment) fragment).updateOptionalList();
         }
     }
 

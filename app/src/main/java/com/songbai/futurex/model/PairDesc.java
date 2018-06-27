@@ -69,6 +69,10 @@ public class PairDesc {
         private long supply;
         private String symbol;
         private double withdrawRate;
+
+        public int getBalancePoint() {
+            return balancePoint;
+        }
     }
 
     public static class PrefixSymbol {
@@ -109,6 +113,10 @@ public class PairDesc {
         private int supply;
         private String symbol;
         private double withdrawRate;
+
+        public int getBalancePoint() {
+            return balancePoint;
+        }
     }
 
     public static class Pairs {
