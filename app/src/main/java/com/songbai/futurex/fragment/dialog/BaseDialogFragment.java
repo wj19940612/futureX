@@ -69,7 +69,7 @@ public class BaseDialogFragment extends DialogFragment implements ReqIndetermina
         try {
             this.show(manager, this.getClass().getSimpleName());
         } catch (IllegalStateException e) {
-            Log.d(TAG, "show: " + e.toString());
+            Log.d(TAG, "showOrDismiss: " + e.toString());
         }
     }
 
