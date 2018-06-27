@@ -45,5 +45,5 @@ public interface ExtraKeys {
     String SELECTED_LEGAL_COIN_SYMBOL = "selected_legal_coin_symbol";
     String SELECTED_CURRENCY_SYMBOL = "selected_currency_symbol";
 
-    String RESULT_USER_DEFINE = "result_user_define";
+    String TRADE_DIRECTION = "trade_direction";
 }

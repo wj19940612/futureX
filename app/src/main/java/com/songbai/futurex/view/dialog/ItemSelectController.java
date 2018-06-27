@@ -42,20 +42,20 @@ public class ItemSelectController extends SmartDialog.CustomViewController {
                 dialog.dismiss();
             }
         });
-        setHintText(mHintText);
-        setAdapter(mAdapter);
+        mSelectHint.setText(mHintText);
+        mRecycleView.setAdapter(mAdapter);
     }
 
     public void setHintText(String hintText) {
         mHintText = hintText;
-        if (mSelectHint != null) {
+        if (isViewInitialized()) {
             mSelectHint.setText(hintText);
         }
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
         mAdapter = adapter;
-        if (mRecycleView != null) {
+        if (isViewInitialized()) {
             mRecycleView.setAdapter(adapter);
         }
     }

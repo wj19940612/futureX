@@ -216,7 +216,6 @@
     <string name="transfer_all">全部划转</string>
     <string name="confirm_transfer">确认划转</string>
     <string name="recharge_coin">充币</string>
-    <string name="history">历史记录</string>
     <string name="available_amount_x">可用&#160;%1$s</string>
     <string name="freeze_amount_x">冻结&#160;%1$s</string>
     <string name="recharge_history">历史充值</string>
@@ -488,13 +487,25 @@
     <string name="direction">方向</string>
     <string name="already_added">已添加</string>
     <string name="depth_merge">深度合并</string>
-    <string name="x_scale_decimal">%1$d位小数</string>
-    <string-array name="trade_dir">
+    <string name="x_scale_decimal">%1$s位小数</string>
+    <string-array name="trade_dir_radio">
         <item>@string/buy_in</item>
         <item>@string/sell_out</item>
     </string-array>
     <string name="buy_limit">限价买入</string>
     <string name="sell_limit">限价卖出</string>
     <string name="market_price">市价</string>
+    <string name="limit_price">限价</string>
     <string name="trade_amt">交易额</string>
+    <string name="trade_with_market_price">以当前最优价格交易</string>
+    <string name="entrust">委托</string>
+    <string name="history">历史</string>
+    <string-array name="order_list_radio">
+        <item>@string/entrust</item>
+        <item>@string/history</item>
+    </string-array>
+    <string name="available_currency_x_x">可用&#160;%1$s&#160;%2$s</string>
+    <string name="obtainable_currency_x_x">获得&#160;%1$s&#160;%2$s</string>
+    <string name="obtainable_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
+    <string name="please_choose_limited_condition">请选择限制条件</string>
 </resources>

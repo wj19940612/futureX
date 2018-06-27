@@ -203,13 +203,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.buyIn:
-                setResult(Activity.RESULT_FIRST_USER,
-                        new Intent().putExtra(ExtraKeys.RESULT_USER_DEFINE, TradeDir.DIR_BUY_IN));
+                Intent intent = new Intent()
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_BUY_IN)
+                        .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair);
+                setResult(Activity.RESULT_FIRST_USER, intent);
                 finish();
                 break;
             case R.id.sellOut:
-                setResult(Activity.RESULT_FIRST_USER,
-                        new Intent().putExtra(ExtraKeys.RESULT_USER_DEFINE, TradeDir.DIR_SELL_OUT));
+                Intent intent1 = new Intent()
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_SELL_OUT)
+                        .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair);
+                setResult(Activity.RESULT_FIRST_USER, intent1);
                 finish();
                 break;
             case R.id.optional:

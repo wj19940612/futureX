@@ -103,14 +103,14 @@ public class AuthCodeViewController extends SmartDialog.CustomViewController {
     }
 
     public void setTitle(int titleRes) {
-        if (isInitialized()) {
+        if (isViewInitialized()) {
             mTitle.setText(titleRes);
         }
     }
 
     public void setAuthCodeBitmap(Bitmap authCodeBitmap) {
         mAuthCodeBitmap = authCodeBitmap;
-        if (isInitialized() && mAuthCodeBitmap != null) {
+        if (isViewInitialized() && mAuthCodeBitmap != null) {
             mLoadImageFailure.setVisibility(View.GONE);
             mAuthCodeImage.setImageBitmap(mAuthCodeBitmap);
         }

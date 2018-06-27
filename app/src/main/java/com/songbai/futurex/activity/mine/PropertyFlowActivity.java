@@ -90,7 +90,7 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
     private void initView() {
         mAllType = getIntent().getBooleanExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, false);
         mCoinType = getIntent().getStringExtra(ExtraKeys.COIN_TYPE);
-        mTitleBar.setTitle(mAllType ? R.string.property_flow : R.string.history);
+        mTitleBar.setTitle(mAllType ? R.string.property_flow : R.string.history_record);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

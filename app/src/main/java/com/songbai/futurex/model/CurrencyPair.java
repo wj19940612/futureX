@@ -13,7 +13,7 @@ import com.songbai.futurex.utils.adapter.GroupAdapter;
  * Description: 货币对数据结构
  * Api: {@link com.songbai.futurex.http.Apic#getCurrencyPairList(String)}
  */
-public class CurrencyPair implements GroupAdapter.Groupable, Comparable<CurrencyPair>,Parcelable {
+public class CurrencyPair implements GroupAdapter.Groupable, Comparable<CurrencyPair>, Parcelable {
 
     public static final int CATE_MAIN = 1; // 主区
     public static final int CATE_CREATIVE = 2; // 创新

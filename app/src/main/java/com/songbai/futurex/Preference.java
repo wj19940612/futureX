@@ -12,6 +12,7 @@ public class Preference {
         String LOCALE_JSON = "locale_json";
         String SERVER_TIME = "server_time";
         String SEARCH_RECORDS = "search_record";
+        String DEFAULT_TRADE_PAIR = "default_trade_pair";
     }
 
     private static Preference sInstance;
@@ -92,5 +93,13 @@ public class Preference {
 
     public String getSearchRecordsByUserOrDeviceId(String userOrDeviceId) {
         return mPrefs.getString(Key.SEARCH_RECORDS + userOrDeviceId, null);
+    }
+
+    public String getDefaultTradePair() {
+        return mPrefs.getString(Key.DEFAULT_TRADE_PAIR, null);
+    }
+
+    public void setDefaultTradePair(String tradePair) {
+        apply(Key.DEFAULT_TRADE_PAIR, tradePair);
     }
 }

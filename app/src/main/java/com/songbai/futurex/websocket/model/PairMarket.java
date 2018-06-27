@@ -46,4 +46,8 @@ public class PairMarket {
             return paris;
         }
     }
+
+    public boolean isVaild() {
+        return quota != null && deep != null && detail != null;
+    }
 }

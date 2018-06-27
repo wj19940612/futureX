@@ -38,6 +38,7 @@ public class ChangePriceView extends FrameLayout {
     private int mScale;
     private boolean mTextWatcherDisable;
     private double mChangeSize;
+    private boolean mModifiedManually;
 
     public ChangePriceView(@NonNull Context context) {
         super(context);
@@ -66,6 +67,14 @@ public class ChangePriceView extends FrameLayout {
                 }
             }
         });
+        mPrice.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && !mModifiedManually) {
+                    mModifiedManually = true;
+                }
+            }
+        });
     }
 
     private boolean isValid(String number) {
@@ -86,8 +95,14 @@ public class ChangePriceView extends FrameLayout {
         mPrice.setText(formatPrice(price));
     }
 
-    public String getPrice() {
-        return mPrice.toString();
+    public double getPrice() {
+        String s = mPrice.toString();
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     private String formatPrice(double price) {
@@ -97,7 +112,8 @@ public class ChangePriceView extends FrameLayout {
     private String formatPrice(String price) {
         int pointIndex = price.indexOf('.');
         if (pointIndex > -1) {
-            return price.substring(0, pointIndex + mScale + 1);
+            int endIndex = Math.min(price.length(), pointIndex + mScale + 1);
+            return price.substring(0, endIndex);
         }
         return price;
     }
@@ -108,11 +124,13 @@ public class ChangePriceView extends FrameLayout {
             case R.id.minus:
                 mTextWatcherDisable = true;
                 minus();
+                mModifiedManually = true;
                 mTextWatcherDisable = false;
                 break;
             case R.id.plus:
                 mTextWatcherDisable = true;
                 plus();
+                mModifiedManually = true;
                 mTextWatcherDisable = false;
                 break;
         }
@@ -143,5 +161,13 @@ public class ChangePriceView extends FrameLayout {
         value = Math.max(0, value);
         mPrice.setText(NumUtils.getPrice(value, mScale));
         mPrice.setSelection(mPrice.getText().toString().length());
+    }
+
+    public void setModifiedManually(boolean modifiedManually) {
+        mModifiedManually = modifiedManually;
+    }
+
+    public boolean isModifiedManually() {
+        return mModifiedManually;
     }
 }

@@ -147,4 +147,9 @@ public class BottomTabs extends LinearLayout {
             getChildAt(i).setSelected(false);
         }
     }
+
+    public void performTabClick(int index) {
+        if (index < 0 || index >= mLength) return;
+        getChildAt(index).performClick();
+    }
 }
