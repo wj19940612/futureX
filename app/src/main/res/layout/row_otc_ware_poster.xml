@@ -116,11 +116,11 @@
         tools:text="1000-20000"/>
 
     <TextView
-        android:id="@+id/createTimeText"
+        android:id="@+id/tradeAmountText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/create_time"
+        android:text="@string/trade_amount"
         android:textColor="@color/text99"
         android:textSize="13sp"
         app:layout_constraintLeft_toLeftOf="@id/priceText"
@@ -134,7 +134,7 @@
         android:text="@string/update_time"
         android:textColor="@color/text99"
         android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/createTimeText"
+        app:layout_constraintBaseline_toBaselineOf="@id/tradeAmountText"
         app:layout_constraintRight_toRightOf="@id/legalCurrencyText"/>
 
     <TextView
@@ -144,11 +144,11 @@
         android:text="@string/status"
         android:textColor="@color/text99"
         android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/createTimeText"
+        app:layout_constraintBaseline_toBaselineOf="@id/tradeAmountText"
         app:layout_constraintRight_toRightOf="@id/limitText"/>
 
     <TextView
-        android:id="@+id/createTime"
+        android:id="@+id/tradeAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -156,9 +156,9 @@
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/createTimeText"
-        app:layout_constraintTop_toBottomOf="@id/createTimeText"
-        tools:text="09:56 05/04"/>
+        app:layout_constraintLeft_toLeftOf="@id/tradeAmountText"
+        app:layout_constraintTop_toBottomOf="@id/tradeAmountText"
+        tools:text="3000"/>
 
     <TextView
         android:id="@+id/updateTime"
@@ -166,7 +166,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text66"
         android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/createTime"
+        app:layout_constraintBaseline_toBaselineOf="@id/tradeAmount"
         app:layout_constraintRight_toRightOf="@id/updateTimeText"
         tools:text="09:56 05/04"/>
 
@@ -176,7 +176,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text66"
         android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/createTime"
+        app:layout_constraintBaseline_toBaselineOf="@id/tradeAmount"
         app:layout_constraintRight_toRightOf="@id/statusText"
         tools:text="上架"/>
 

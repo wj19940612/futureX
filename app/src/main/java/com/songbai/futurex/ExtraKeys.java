@@ -46,4 +46,5 @@ public interface ExtraKeys {
     String SELECTED_CURRENCY_SYMBOL = "selected_currency_symbol";
 
     String TRADE_DIRECTION = "trade_direction";
+    String ORDER_ID = "order_id";
 }

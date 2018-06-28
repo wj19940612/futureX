@@ -13,6 +13,7 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.fragment.mine.BindMailFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
@@ -152,9 +153,9 @@ public class PersonalDataActivity extends BaseActivity {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
             case R.id.headImageLayout:
-//                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
-//                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
-//                uploadUserImageDialogFragment.show(getSupportFragmentManager());
+                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
+                uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 ImagePicker
                         .create(this)
                         .openGallery()

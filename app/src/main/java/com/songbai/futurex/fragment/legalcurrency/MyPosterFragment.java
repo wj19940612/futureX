@@ -333,8 +333,8 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
             TextView mLegalAmount;
             @BindView(R.id.limit)
             TextView mLimit;
-            @BindView(R.id.createTime)
-            TextView mCreateTime;
+            @BindView(R.id.tradeAmount)
+            TextView mTreadAmount;
             @BindView(R.id.updateTime)
             TextView mUpdateTime;
             @BindView(R.id.status)
@@ -360,7 +360,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
 
                 switch (otcWarePoster.getPriceType()) {
                     case OtcWarePoster.FIXED_PRICE:
-                        mPrice.setText(getString(R.string.fixed_price_x, String.valueOf(otcWarePoster.getFixedPrice())));
+                        mPrice.setText(getString(R.string.fixed_price_x, FinanceUtil.trimTrailingZero(otcWarePoster.getFixedPrice())));
                         break;
                     case OtcWarePoster.FLOATING_PRICE:
                         mPrice.setText(getString(R.string.floating_price_x, FinanceUtil.formatToPercentage(otcWarePoster.getPercent())));
@@ -368,7 +368,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                     default:
                 }
                 mLegalAmount.setText(FinanceUtil.formatWithScale(otcWarePoster.getTradeCount(), 4));
-                mLimit.setText(getString(R.string.limit_range_x, String.valueOf(otcWarePoster.getMinTurnover()), String.valueOf(otcWarePoster.getMaxTurnover())));
+                mLimit.setText(getString(R.string.limit_range_x, FinanceUtil.trimTrailingZero(otcWarePoster.getMinTurnover()), FinanceUtil.trimTrailingZero(otcWarePoster.getMaxTurnover())));
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:
                         mEdit.setEnabled(true);
@@ -382,7 +382,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         break;
                     default:
                 }
-                mCreateTime.setText(DateUtil.format(otcWarePoster.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
+                mTreadAmount.setText(FinanceUtil.trimTrailingZero(otcWarePoster.getTradeCount()));
                 mUpdateTime.setText(DateUtil.format(otcWarePoster.getUpdateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
                 mEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
