@@ -111,6 +111,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="25dp">
 
                 <LinearLayout
@@ -148,6 +149,7 @@
                         android:visibility="visible"/>
 
                     <com.songbai.futurex.view.VolumeInputView
+                        android:id="@+id/volumeInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"/>
@@ -218,28 +220,31 @@
                             tools:text="+0.75%"/>
                     </LinearLayout>
 
-                    <TextView
+                    <com.songbai.futurex.view.autofit.AutofitTextView
                         android:id="@+id/availableCurrency"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:maxLines="1"
                         android:textColor="@color/text99"
                         android:textSize="10sp"
+                        app:minTextSize="1sp"
                         tools:text="@string/available_currency_x_x"/>
 
-                    <TextView
+                    <com.songbai.futurex.view.autofit.AutofitTextView
                         android:id="@+id/obtainableCurrency"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginTop="8dp"
                         android:maxLines="1"
                         android:textColor="@color/text99"
                         android:textSize="10sp"
+                        app:minTextSize="1sp"
                         tools:text="@string/obtainable_currency_x_x"/>
 
                     <SeekBar
+                        android:id="@+id/tradeVolumeSeekBar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -251,13 +256,15 @@
                         android:thumb="@drawable/thumb"
                         android:thumbOffset="0dp"/>
 
-                    <TextView
+                    <com.songbai.futurex.view.autofit.AutofitTextView
                         android:id="@+id/obtainableCurrencyRange"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
+                        android:maxLines="1"
                         android:textColor="@color/text99"
                         android:textSize="10sp"
+                        app:minTextSize="1sp"
                         tools:text="0 BTC - 0.03990052 BTC"/>
 
                     <TextView
@@ -277,7 +284,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="12dp"
-                android:layout_marginTop="20dp"
                 android:background="@color/bgF5"/>
 
             <com.songbai.futurex.view.RadioHeader

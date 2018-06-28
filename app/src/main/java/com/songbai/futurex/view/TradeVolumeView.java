@@ -109,12 +109,60 @@ public class TradeVolumeView extends LinearLayout {
 
         for (int i = 0; i < mMaxRows; i++) {
             View view = new BidPriceView(getContext());
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (v instanceof BidPriceView && !((BidPriceView) v).isEmptyValue()) {
+                        String price = ((BidPriceView) v).getPrice();
+                        String volume = ((BidPriceView) v).getVolume();
+                        onItemClick(price, volume);
+                    }
+                }
+            });
             mBidPriceParent.addView(view);
         }
 
         for (int i = 0; i < mMaxRows; i++) {
             View view = new AskPriceView(getContext());
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (v instanceof AskPriceView && !((AskPriceView) v).isEmptyValue()) {
+                        String price = ((AskPriceView) v).getPrice();
+                        String volume = ((AskPriceView) v).getVolume();
+                        onItemClick(price, volume);
+                    }
+                }
+            });
             mAskPriceParent.addView(view);
+        }
+    }
+
+    public double getAskPrice1() {
+        View childAt = mAskPriceParent.getChildAt(0);
+        if (childAt instanceof AskPriceView) {
+            return NumUtils.getDouble(((AskPriceView) childAt).getPrice());
+        }
+        return 0;
+    }
+
+    public double getBidPrice1() {
+        View childAt = mBidPriceParent.getChildAt(0);
+        if (childAt instanceof BidPriceView) {
+            return NumUtils.getDouble(((BidPriceView) childAt).getPrice());
+        }
+        return 0;
+    }
+
+    private void onItemClick(String price, String volume) {
+        try {
+            double p = Double.parseDouble(price);
+            double v = Double.parseDouble(volume);
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onItemClick(p, v);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
     }
 

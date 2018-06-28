@@ -33,6 +33,15 @@ public class NumUtils {
         return FinanceUtil.formatWithScale(price, scale);
     }
 
+    public static double getDouble(String number) {
+        try {
+            return Double.parseDouble(number);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     /**
      * 涨跌幅
      * @param percent

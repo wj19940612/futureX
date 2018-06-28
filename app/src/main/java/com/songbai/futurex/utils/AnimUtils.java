@@ -3,6 +3,7 @@ package com.songbai.futurex.utils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 
@@ -102,6 +103,16 @@ public class AnimUtils {
         animation.setDuration(duration);
         animation.setStartOffset(startOffset);
         animation.setAnimationListener(listener);
+        return animation;
+    }
+
+    public static Animation createSimpleScaleAnim(float scale, long duration) {
+        Animation animation = new ScaleAnimation(1, scale, 1, scale,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration(duration);
+        animation.setRepeatCount(1); // 重复一次并且是反向执行，即缩小
+        animation.setRepeatMode(Animation.REVERSE);
         return animation;
     }
 

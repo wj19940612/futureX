@@ -123,8 +123,8 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
         }
 
         if (isConnected()) {
-            Log.d(TAG, "execute: " + request.toJson());
-            mConnector.send(request.toJson());
+            Log.d(TAG, "execute: " + request.toJson(mGson));
+            mConnector.send(request.toJson(mGson));
         } else {
             mWaitingReqList.offer(request);
             connect();
@@ -158,11 +158,12 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
 
         final Resp resp = mGson.fromJson(receivedMsg, Resp.class);
         if (resp.code == Response.HEART) {
-            mConnector.send(new Request(Request.HEART).toJson());
+            mConnector.send(new Request(Request.HEART).toJson(mGson));
             return;
         }
 
         if (resp.code == Response.REGISTER_SUCCESS) {
+            Log.d(TAG, "register success: ");
             executePendingList();
             return;
         }
