@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -55,6 +56,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
     private int mPage;
     private boolean isPrepared;
     private boolean isFirstLoad;
+    private boolean mPairChanged;
 
     public static WantBuyOrSellFragment newInstance(int type, String coinType, String payCurrency) {
         WantBuyOrSellFragment wantBuyOrSellFragment = new WantBuyOrSellFragment();
@@ -91,11 +93,11 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
         mGetOtcWaresHome = new GetOtcWaresHome();
         mGetOtcWaresHome.setPage(mPage);
         mGetOtcWaresHome.setPageSize(20);
-        mGetOtcWaresHome.setCoinType(mCoinType);
         mGetOtcWaresHome.setType(mType);
-        mGetOtcWaresHome.setPayCurrency(mPayCurrency);
         mGetOtcWaresHome.setSortName("synthesis");
         mGetOtcWaresHome.setSort("asc");
+        mGetOtcWaresHome.setCoinType(mCoinType);
+        mGetOtcWaresHome.setPayCurrency(mPayCurrency);
         lazyLoad();
     }
 
@@ -104,6 +106,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isPrepared) {
             lazyLoad();
+        }
+        if (isVisibleToUser && isPrepared && mPairChanged) {
+            otcWaresCommend(mGetOtcWaresHome);
         }
     }
 
@@ -120,10 +125,20 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
         mPage = 0;
         mCoinType = coinType;
         mPayCurrency = payCurrency;
+        if (mGetOtcWaresHome == null) {
+            mGetOtcWaresHome = new GetOtcWaresHome();
+            mGetOtcWaresHome.setPageSize(20);
+            mGetOtcWaresHome.setType(mType);
+            mGetOtcWaresHome.setSortName("synthesis");
+            mGetOtcWaresHome.setSort("asc");
+        }
         mGetOtcWaresHome.setPage(mPage);
         mGetOtcWaresHome.setCoinType(mCoinType);
         mGetOtcWaresHome.setPayCurrency(mPayCurrency);
-        otcWaresCommend(mGetOtcWaresHome);
+        mPairChanged = true;
+        if (getUserVisibleHint() && isPrepared && mPairChanged) {
+            otcWaresCommend(mGetOtcWaresHome);
+        }
     }
 
     private void otcWaresCommend(GetOtcWaresHome getOtcWaresHome) {
@@ -131,6 +146,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
                 .callback(new Callback<Resp<PagingBean<LegalCurrencyTrade>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingBean<LegalCurrencyTrade>> resp) {
+                        if (mPairChanged) {
+                            mPairChanged = false;
+                        }
                         mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         mAdapter.setList(resp.getData().getData());
                         mAdapter.notifyDataSetChanged();
@@ -140,6 +158,12 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
                         if (mPage >= resp.getData().getTotal()) {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        stopFreshOrLoadAnimation();
                     }
                 }).fire();
     }

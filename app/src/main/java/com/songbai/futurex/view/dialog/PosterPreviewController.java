@@ -1,18 +1,19 @@
 package com.songbai.futurex.view.dialog;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcWarePoster;
-import com.songbai.futurex.model.WaresPreview;
+import com.songbai.futurex.model.mine.BankCardBean;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.view.SmartDialog;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +42,7 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
     TextView mDemand;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
-    private String mId;
+    private OtcWarePoster mOtcWarePoster;
 
     public PosterPreviewController(Context context) {
         mContext = context;
@@ -56,14 +57,9 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
 
     @Override
     protected void onInitView(final View view, final SmartDialog dialog) {
-        Apic.otcWaresGet(mId)
-                .callback(new Callback<Resp<WaresPreview>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<WaresPreview> resp) {
-                        setView(resp.getData());
-                    }
-                })
-                .fire();
+        if (mOtcWarePoster != null) {
+            setView(mOtcWarePoster);
+        }
         mClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,30 +68,90 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
         });
     }
 
-    private void setView(WaresPreview otcWaresAdd) {
-        switch (otcWaresAdd.getDealType()) {
+    public void setOtcWarePoster(OtcWarePoster otcWarePoster) {
+        mOtcWarePoster = otcWarePoster;
+    }
+
+    private void setView(OtcWarePoster otcWarePoster) {
+        switch (otcWarePoster.getDealType()) {
             case OtcWarePoster.DEAL_TYPE_BUY:
                 mTreadContent.setText(mContext.getString(R.string.buy_symbol_x,
-                        otcWaresAdd.getCoinSymbol().toUpperCase()));
+                        otcWarePoster.getCoinSymbol().toUpperCase()));
                 break;
             case OtcWarePoster.DEAL_TYPE_SELL:
                 mTreadContent.setText(mContext.getString(R.string.sell_symbol_x,
-                        otcWaresAdd.getCoinSymbol().toUpperCase()));
+                        otcWarePoster.getCoinSymbol().toUpperCase()));
                 break;
             default:
         }
-        switch (otcWaresAdd.getPriceType()) {
+        switch (otcWarePoster.getPriceType()) {
             case OtcWarePoster.FIXED_PRICE:
-                mPriceContent.setText(mContext.getString(R.string.fixed_price_x, String.valueOf(otcWaresAdd.getFixedPrice())));
+                mPriceContent.setText(mContext.getString(R.string.fixed_price_x, FinanceUtil.trimTrailingZero(otcWarePoster.getFixedPrice())));
                 break;
             case OtcWarePoster.FLOATING_PRICE:
-                mPriceContent.setText(mContext.getString(R.string.floating_price_x, String.valueOf(otcWaresAdd.getPercent())));
+                mPriceContent.setText(mContext.getString(R.string.floating_price_x_symbol, FinanceUtil.trimTrailingZero(otcWarePoster.getPercent())));
                 break;
             default:
         }
-        mTreadLimit.setText(otcWaresAdd.getMinTurnover() + "-" + otcWaresAdd.getMaxTurnover() + otcWaresAdd.getPayCurrency().toUpperCase());
-        mTreadAmount.setText(String.valueOf(otcWaresAdd.getTradeCount()));
-        mRemark.setText(otcWaresAdd.getRemark());
+        mTreadLimit.setText(mContext.getString(R.string.tread_limit_min_max_symbol_x, FinanceUtil.trimTrailingZero(otcWarePoster.getMinTurnover()), FinanceUtil.trimTrailingZero(otcWarePoster.getMaxTurnover()), otcWarePoster.getPayCurrency().toUpperCase()));
+        mTreadAmount.setText(String.valueOf(otcWarePoster.getTradeCount()));
+        setPayInfo(otcWarePoster.getBankList());
+        mRemark.setText(otcWarePoster.getRemark());
+        setDemand(otcWarePoster);
+    }
+
+    private void setDemand(OtcWarePoster waresPreview) {
+        String conditionType = waresPreview.getConditionType();
+        String conditionValue = waresPreview.getConditionValue();
+        if (TextUtils.isEmpty(conditionType)) {
+            return;
+        }
+        String[] types = conditionType.split(",");
+        String[] values = conditionValue.split(",");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < types.length; i++) {
+            sb.append((i + 1));
+            sb.append(".");
+            String type = types[i];
+            if (type.equals(OtcWarePoster.CONDITION_AUTH)) {
+                if ("1".equals(values[i])) {
+                    sb.append(mContext.getString(R.string.passed_primary_certification));
+                } else if ("2".equals(values[i])) {
+                    sb.append(mContext.getString(R.string.passed_primary_certification));
+                }
+            }
+            if (type.equals(OtcWarePoster.CONDITION_TRADE)) {
+                sb.append(mContext.getString(R.string.deal_count_more_than_x, values[i]));
+            }
+            sb.append(" ");
+        }
+        if (sb.length() > 0) {
+            mDemand.setText(sb.toString());
+        }
+    }
+
+    private void setPayInfo(List<BankCardBean> bankListBeans) {
+        if (bankListBeans != null && !bankListBeans.isEmpty()) {
+            StringBuilder payInfo = new StringBuilder();
+            for (BankCardBean bankCardBean : bankListBeans) {
+                switch (bankCardBean.getPayType()) {
+                    case BankCardBean.PAYTYPE_ALIPAY:
+                        payInfo.append(mContext.getString(R.string.alipay));
+                        payInfo.append(" ");
+                        break;
+                    case BankCardBean.PAYTYPE_WX:
+                        payInfo.append(mContext.getString(R.string.weichat));
+                        payInfo.append(" ");
+                        break;
+                    case BankCardBean.PAYTYPE_BANK:
+                        payInfo.append(mContext.getString(R.string.bank_card));
+                        payInfo.append(" ");
+                        break;
+                    default:
+                }
+            }
+            mPayType.setText(payInfo.subSequence(0, payInfo.length() - 1));
+        }
     }
 
     @OnClick(R.id.confirm)
@@ -105,15 +161,12 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
         }
     }
 
-    public void setPosterId(String id) {
-        mId = id;
-    }
-
     public interface OnItemClickListener {
         void onConfirmClick();
     }
 
-    public PosterPreviewController setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    public PosterPreviewController setOnItemClickListener(OnItemClickListener
+                                                                  onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
         return this;
     }

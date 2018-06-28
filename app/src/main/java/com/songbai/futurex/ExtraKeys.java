@@ -41,6 +41,9 @@ public interface ExtraKeys {
 
     String HAS_BIND_PHONE = "has_bind_phone";
     String OTC_WARE_POSTER = "otc_ware_poster";
+    String OTC_WARE_POSTER_ID = "otc_ware_poster_id";
+    String SELECTED_LEGAL_COIN_SYMBOL = "selected_legal_coin_symbol";
+    String SELECTED_CURRENCY_SYMBOL = "selected_currency_symbol";
 
     String TRADE_DIRECTION = "trade_direction";
 }

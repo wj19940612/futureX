@@ -674,7 +674,7 @@ public class Apic {
      * GET
      * (新)预览广告
      */
-    public static Api otcWaresGet(String id) {
+    public static Api otcWaresGet(int id) {
         return Api.get("/api/otc/wares/get",
                 new ReqParams().put("id", id));
     }
@@ -695,6 +695,30 @@ public class Apic {
      */
     public static Api getCountryCurrency() {
         return Api.get("/api/user/country/currency.do");
+    }
+
+    /**
+     * /api/otc/quota/price
+     * GET
+     * 发布广告--最低出售价
+     */
+    public static Api quotaPrice(String coin, String payCurrency, int type) {
+        return Api.get("/api/otc/quota/price",
+                new ReqParams()
+                        .put("coin", coin)
+                        .put("payCurrency", payCurrency)
+                        .put("type", type));
+    }
+
+    /**
+     * /api/otc/account/balance
+     * GET
+     * 查询法币余额--(v1.1)
+     */
+    public static Api accountBalance(String coinType) {
+        return Api.get("/api/otc/account/balance",
+                new ReqParams()
+                        .put("coinType", coinType));
     }
 
     /**

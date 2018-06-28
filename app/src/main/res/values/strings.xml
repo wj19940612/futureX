@@ -326,6 +326,7 @@
     <string name="update_time">更新时间</string>
     <string name="fixed_price_x">固定价格 %1$s</string>
     <string name="floating_price_x">溢价 %1$s</string>
+    <string name="floating_price_x_symbol">溢价&#160;%1$s&#160;%%</string>
     <string name="fixed_price">固定价格</string>
     <string name="floating_price">浮动价格</string>
     <string name="limit_range_x">%1$s-%2$s</string>
@@ -345,6 +346,9 @@
     <string name="tread_type_with_symbol">买卖方式：</string>
     <string name="single_price_with_symbol">单价：</string>
     <string name="tread_limit_with_symbol">交易限制：</string>
+    <string name="tread_limit_hint">最小限制－最大限制</string>
+    <string name="tread_limit_min_max_symbol_x">%1$s－%2$s&#160;%3$s</string>
+    <string name="please_input_right_tread_limit">请输入正确的限制金额</string>
     <string name="tread_amount_with_symbol">交易数量：</string>
     <string name="pay_type_with_symbol">交易方式：</string>
     <string name="remark_with_symbol">备注：</string>
@@ -358,6 +362,11 @@
     <string name="please_select_edit_type">请选择编辑类型</string>
     <string name="edit_content">编辑内容</string>
     <string name="delete_poster">删除广告</string>
+    <string name="pricing_currency">计价货币</string>
+    <string name="quota_price_x_symbol">价格：%1$s</string>
+    <string name="passed_primary_certification">必须通过初级认证</string>
+    <string name="passed_senior_certification">必须通过高级认证</string>
+    <string name="deal_count_more_than_x">交易成功次数大于%1$s</string>
 
     <!-- bottom tabs -->
     <string name="home">首页</string>

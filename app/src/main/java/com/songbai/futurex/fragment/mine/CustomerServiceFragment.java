@@ -406,7 +406,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
 //                        public void onClick(View v) {
 //                            if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
 //                                PreviewDialogFragment.newInstance(feedback.getContent())
-//                                        .show(((FeedbackActivity) context).getSupportFragmentManager());
+//                                        .showOrDismiss(((FeedbackActivity) context).getSupportFragmentManager());
 //                            }
 //                        }
 //                    });
@@ -462,7 +462,7 @@ public class CustomerServiceFragment extends UniqueActivity.UniFragment implemen
 //                    @Override
 //                    public void onClick(View v) {
 //                        PreviewDialogFragment.newInstance(feedback.getContent())
-//                                .show(((FeedbackActivity) context).getSupportFragmentManager());
+//                                .showOrDismiss(((FeedbackActivity) context).getSupportFragmentManager());
 //                    }
 //                });
             }

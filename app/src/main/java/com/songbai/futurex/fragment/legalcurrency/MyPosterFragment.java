@@ -1,5 +1,6 @@
 package com.songbai.futurex.fragment.legalcurrency;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -40,7 +42,8 @@ import butterknife.Unbinder;
  * @author yangguangda
  * @date 2018/6/21
  */
-public class MyAdFragment extends BaseSwipeLoadFragment {
+public class MyPosterFragment extends BaseSwipeLoadFragment {
+    private static final int REQUEST_PUBLISH_POSTER = 12312;
 
     @BindView(R.id.swipe_target)
     RecyclerView mRecyclerView;
@@ -56,9 +59,10 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
     private boolean isPrepared;
     private boolean isFirstLoad;
     private int mPageSize = 20;
+    private boolean mShouldRefresh;
 
-    public static MyAdFragment newInstance() {
-        MyAdFragment wantBuyOrSellFragment = new MyAdFragment();
+    public static MyPosterFragment newInstance() {
+        MyPosterFragment wantBuyOrSellFragment = new MyPosterFragment();
         Bundle bundle = new Bundle();
         wantBuyOrSellFragment.setArguments(bundle);
         return wantBuyOrSellFragment;
@@ -111,8 +115,11 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
         editTypeController.setOnItemClickListener(new EditTypeController.OnItemClickListener() {
             @Override
             public void onEditClick() {
-                UniqueActivity.launcher(MyAdFragment.this, SendAdFragment.class)
-                        .putExtra(ExtraKeys.OTC_WARE_POSTER, otcWarePoster).execute();
+                UniqueActivity.launcher(MyPosterFragment.this, PublishPosterFragment.class)
+                        .putExtra(ExtraKeys.OTC_WARE_POSTER_ID, otcWarePoster.getId())
+                        .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, otcWarePoster.getCoinSymbol())
+                        .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, otcWarePoster.getPayCurrency())
+                        .execute(MyPosterFragment.this, REQUEST_PUBLISH_POSTER);
             }
 
             @Override
@@ -123,6 +130,10 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
                             protected void onRespSuccess(Resp<Object> resp) {
                                 mAdapter.getList().remove(otcWarePoster);
                                 mAdapter.notifyDataSetChanged();
+                                if (mAdapter.getList().size() == 0) {
+                                    mPage = 0;
+                                    otcWaresList(mPage, mPageSize);
+                                }
                                 dialog.dismiss();
                             }
                         })
@@ -163,6 +174,11 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isPrepared) {
             lazyLoad();
+            if (mShouldRefresh) {
+                mPage = 0;
+                otcWaresList(mPage, mPageSize);
+                mShouldRefresh = false;
+            }
         }
     }
 
@@ -189,7 +205,27 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                     }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        stopFreshOrLoadAnimation();
+                    }
                 }).fire();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_PUBLISH_POSTER) {
+            if (data != null) {
+                boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
+                if (shouldRefresh) {
+                    mPage = 0;
+                    otcWaresList(mPage, mPageSize);
+                }
+            }
+        }
     }
 
     @Override
@@ -232,6 +268,12 @@ public class MyAdFragment extends BaseSwipeLoadFragment {
     @Override
     public LoadMoreFooterView getLoadMoreFooterView() {
         return mSwipeLoadMoreFooter;
+    }
+
+    public void refresh(boolean shouldRefresh) {
+        if (!isFirstLoad) {
+            mShouldRefresh = shouldRefresh;
+        }
     }
 
     public interface OnItemClickListener {
