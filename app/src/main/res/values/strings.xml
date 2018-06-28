@@ -488,4 +488,9 @@
     <string name="sell_limit">限价卖出</string>
     <string name="market_price">市价</string>
     <string name="trade_amt">交易额</string>
+
+
+    <string name="input_msg_enter_to_send">输入信息，按Enter发送</string>
+    <string name="over_50">发言不能超过50字符</string>
+    <string name="hello_customer_for_you">你好，客服%1$s很高兴为您服务！</string>
 </resources>

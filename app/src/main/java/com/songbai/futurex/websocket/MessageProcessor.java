@@ -202,6 +202,7 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
             @Override
             public void run() {
                 for (OnDataRecListener onDataRecListener : mOnDataRecListeners) {
+                    Log.e("zzz","msg");
                     onDataRecListener.onDataReceive(msg, code);
                 }
             }

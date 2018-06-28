@@ -22,6 +22,10 @@ public class Request<T> implements RequestCode {
         this.code = code;
     }
 
+    public Request(T parameter) {
+        this.parameter = parameter;
+    }
+
     public Request(int code, T parameter) {
         this.code = code;
         this.parameter = parameter;

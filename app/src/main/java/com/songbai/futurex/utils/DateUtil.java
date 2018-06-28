@@ -1,6 +1,7 @@
 package com.songbai.futurex.utils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -743,6 +744,19 @@ public class DateUtil {
         } else {
             return 3;
         }
+    }
+
+    /**
+     * 判断 time1 是否比 time2 晚了 milliseconds, 即 time1 - time2 <= milliseconds && time1 - time2 >= 0
+     *
+     * @param time1
+     * @param time2
+     * @param milliseconds
+     * @return
+     */
+    public static boolean isLessThanTimeInterval(long time1, long time2, long milliseconds) {
+        long diff = time1 - time2;
+        return diff >= 0 && diff <= milliseconds;
     }
 
 }
