@@ -40,7 +40,7 @@ public class RegisterInfo {
         String[] strings = tokens.split(";");
         for (int i = 0; i < strings.length; i++) {
             String str = strings[i];
-            strings[i] = str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\""));
+            strings[i] = str.substring(str.indexOf("=") + 1);
         }
         return strings;
     }

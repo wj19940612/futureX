@@ -186,9 +186,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     }
 
     private void updateDeepDataView(PairMarket.Deep deep) {
-        mBuyDeepList = deep.getBuyDeep();
-        mSellDeepList = deep.getSellDeep();
-        new CalcDeepTask(mBuyDeepList, mSellDeepList, this).execute();
+        if (deep != null) {
+            mBuyDeepList = deep.getBuyDeep();
+            mSellDeepList = deep.getSellDeep();
+            new CalcDeepTask(mBuyDeepList, mSellDeepList, this).execute();
+        }
     }
 
     private void updateDeepDataView() {
@@ -324,6 +326,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     private void initMarketViews() {
         mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
         mTradeDealView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mKlineDataDetailView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }

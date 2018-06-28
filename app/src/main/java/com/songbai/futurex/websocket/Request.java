@@ -35,7 +35,7 @@ public class Request<T> implements RequestCode {
         this.timestamp = timestamp;
     }
 
-    public String toJson() {
-        return new Gson().toJson(this);
+    public String toJson(Gson gson) {
+        return gson.toJson(this);
     }
 }

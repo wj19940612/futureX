@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -33,6 +34,11 @@ public class VolumeInputView extends FrameLayout {
 
     private int mVolumeScale;
     private boolean mTextWatcherDisable;
+    private OnVolumeChangeListener mOnVolumeChangeListener;
+
+    public interface OnVolumeChangeListener {
+        void onVolumeChange(double volume);
+    }
 
     public VolumeInputView(@NonNull Context context) {
         super(context);
@@ -42,6 +48,25 @@ public class VolumeInputView extends FrameLayout {
     public VolumeInputView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    public void setOnVolumeChangeListener(OnVolumeChangeListener onVolumeChangeListener) {
+        mOnVolumeChangeListener = onVolumeChangeListener;
+    }
+
+    private void onVolumeChange() {
+        if (mOnVolumeChangeListener != null) {
+            try {
+                double v = Double.parseDouble(mVolume.getText().toString());
+                mOnVolumeChangeListener.onVolumeChange(v);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public double getVolume() {
+        return NumUtils.getDouble(mVolume.getText().toString());
     }
 
     private void init() {
@@ -58,16 +83,27 @@ public class VolumeInputView extends FrameLayout {
                 if (!isValid(number)) {
                     mTextWatcherDisable = true;
                     mVolume.setText(formatVolume(number));
+                    mVolume.setSelection(mVolume.getText().toString().length());
                     mTextWatcherDisable = false;
+                    onVolumeChange();
+                    return;
                 }
+                onVolumeChange();
             }
         });
+    }
+
+    public void setVolume(double volume) {
+        mVolume.setText(formatVolume(String.valueOf(volume)));
+        mVolume.setSelection(mVolume.getText().toString().length());
+        onVolumeChange();
     }
 
     private String formatVolume(String number) {
         int pointIndex = number.indexOf('.');
         if (pointIndex > -1) {
-            return number.substring(0, pointIndex + mVolumeScale + 1);
+            int endIndex = Math.min(number.length(), pointIndex + mVolumeScale + 1);
+            return number.substring(0, endIndex);
         }
         return number;
     }
