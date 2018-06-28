@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
@@ -40,6 +41,7 @@ import com.songbai.futurex.view.ChangePriceView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TradeVolumeView;
+import com.songbai.futurex.view.VolumeInputView;
 import com.songbai.futurex.view.dialog.ItemSelectController;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
@@ -111,6 +113,10 @@ public class TradeFragment extends BaseFragment {
     RadioHeader mOrderListRadio;
     @BindView(R.id.orderListView)
     RecyclerView mOrderListView;
+    @BindView(R.id.volumeInput)
+    VolumeInputView mVolumeInput;
+    @BindView(R.id.tradeVolumeSeekBar)
+    SeekBar mTradeVolumeSeekBar;
 
     Unbinder unbinder;
 
@@ -123,6 +129,8 @@ public class TradeFragment extends BaseFragment {
     private MarketSubscriber mMarketSubscriber;
     private OnOptionalClickListener mOnOptionalClickListener;
     private OptionsPickerView mPickerView;
+    private List<CoinAbleAmount> mAvailableCurrencyList;
+    private double mObtainableCurrencyVolume;
 
     public interface OnOptionalClickListener {
         void onOptionalClick();
@@ -154,11 +162,51 @@ public class TradeFragment extends BaseFragment {
                 if (position == 0) { // buy in
                     mTradeDir = TradeDir.DIR_BUY_IN;
                     updateTradeDirectionView();
+                    updateTradeCurrencyView();
                 } else {
                     mTradeDir = TradeDir.DIR_SELL_OUT;
                     updateTradeDirectionView();
+                    updateTradeCurrencyView();
                 }
             }
+        });
+
+        mTradeVolumeView.setOnItemClickListener(new TradeVolumeView.OnItemClickListener() {
+            @Override
+            public void onItemClick(double price, double volume) {
+                if (mChangePriceView.getVisibility() == View.GONE) return;
+                mChangePriceView.setPrice(price);
+                mChangePriceView.startScaleAnim();
+                mChangePriceView.setModifiedManually(true);
+            }
+        });
+
+        mChangePriceView.setOnPriceChangeListener(new ChangePriceView.OnPriceChangeListener() {
+            @Override
+            public void onPriceChange(double price) {
+                updateTradeCurrencyView();
+                updateTradeAmount();
+            }
+        });
+
+        mVolumeInput.setOnVolumeChangeListener(new VolumeInputView.OnVolumeChangeListener() {
+            @Override
+            public void onVolumeChange(double volume) {
+                updateTradeAmount();
+            }
+        });
+
+        mTradeVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateTradeVolumeView();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
@@ -177,16 +225,25 @@ public class TradeFragment extends BaseFragment {
         });
     }
 
-    private void updateMarketView(PairMarket pairMarket) {
-        mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(),
-                pairMarket.getDeep().getSellDeep());
-        MarketData quota = pairMarket.getQuota();
-        if (mPairDesc != null && quota != null) {
-            mLastPrice.setText(NumUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
-            mPriceChange.setText(NumUtils.getPrefixPercent(quota.getUpDropSpeed()));
-            if (!mChangePriceView.isModifiedManually()) {
-                mChangePriceView.setPrice(quota.getLastPrice());
+    private void updateTradeVolumeView() {
+        int progress = mTradeVolumeSeekBar.getProgress();
+        int max = mTradeVolumeSeekBar.getMax();
+        double tradeVolume = mObtainableCurrencyVolume * progress / max;
+        mVolumeInput.setVolume(tradeVolume);
+    }
+
+    private void updateTradeAmount() {
+        if (mPairDesc != null && mCurrencyPair != null) {
+            double price = mChangePriceView.getPrice();
+            double volume = mVolumeInput.getVolume();
+            int scale = mPairDesc.getSuffixSymbol().getBalancePoint();
+            String unit = mCurrencyPair.getSuffixSymbol();
+            double amt = price * volume;
+            String tradeAmt = "0";
+            if (amt != 0) {
+                tradeAmt = NumUtils.getPrice(amt, scale);
             }
+            mTradeAmount.setText(tradeAmt + " " + unit.toUpperCase());
         }
     }
 
@@ -200,50 +257,6 @@ public class TradeFragment extends BaseFragment {
         } else {
             unsubscribeMarket();
         }
-    }
-
-    private void requestUserAccount() {
-        if (LocalUser.getUser().isLogin()) {
-            Apic.getAccountByUserForMuti(mCurrencyPair.getSuffixSymbol())
-                    .callback(new Callback<Resp<List<CoinAbleAmount>>>() {
-                        @Override
-                        protected void onRespSuccess(Resp<List<CoinAbleAmount>> resp) {
-                            List<CoinAbleAmount> data = resp.getData();
-                            if (data.size() > 0) {
-                                CoinAbleAmount coinAbleAmount = data.get(0);
-                                updateCurrencyView(coinAbleAmount.getAbleCoin());
-                            }
-                        }
-                    }).fireFreely();
-        } else {
-            mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
-                    "--", mCurrencyPair.getSuffixSymbol().toUpperCase()));
-            mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
-                    "--", mCurrencyPair.getPrefixSymbol().toUpperCase()));
-            mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
-                    "0", mCurrencyPair.getPrefixSymbol().toUpperCase()));
-        }
-    }
-
-    private void updateCurrencyView(double availableCounterCurrency) {
-        mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
-                NumUtils.getPrice(availableCounterCurrency),
-                mCurrencyPair.getSuffixSymbol().toUpperCase()));
-        double price = mChangePriceView.getPrice();
-        double obtainableBaseCurrency = calculateBaseCurrency(availableCounterCurrency, price);
-        mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
-                NumUtils.getPrice(obtainableBaseCurrency, mPairDesc.getPrefixSymbol().getBalancePoint()),
-                mCurrencyPair.getPrefixSymbol().toUpperCase()));
-        mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
-                NumUtils.getPrice(obtainableBaseCurrency, mPairDesc.getPrefixSymbol().getBalancePoint()),
-                mCurrencyPair.getPrefixSymbol().toUpperCase()));
-    }
-
-    private double calculateBaseCurrency(double availableCounterCurrency, double price) {
-        if (price != 0) {
-            return availableCounterCurrency / price;
-        }
-        return 0;
     }
 
     @Override
@@ -265,6 +278,105 @@ public class TradeFragment extends BaseFragment {
 
         if (getUserVisibleHint()) {
             unsubscribeMarket();
+        }
+    }
+
+    private void updateMarketView(PairMarket pairMarket) {
+        mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(),
+                pairMarket.getDeep().getSellDeep());
+        MarketData quota = pairMarket.getQuota();
+        if (mPairDesc != null && quota != null) {
+            mLastPrice.setText(NumUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
+            mPriceChange.setText(NumUtils.getPrefixPercent(quota.getUpDropSpeed()));
+            if (!mChangePriceView.isModifiedManually()) {
+                mChangePriceView.setPrice(quota.getLastPrice());
+            }
+        }
+    }
+
+    private void requestUserAccount() {
+        if (LocalUser.getUser().isLogin()) {
+            Apic.getAccountByUserForMuti(mCurrencyPair.getPrefixSymbol() + "," + mCurrencyPair.getSuffixSymbol())
+                    .callback(new Callback<Resp<List<CoinAbleAmount>>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<List<CoinAbleAmount>> resp) {
+                            mAvailableCurrencyList = resp.getData();
+                            if (mAvailableCurrencyList.size() > 0) {
+                                updateTradeCurrencyView();
+                            }
+                        }
+                    }).fireFreely();
+        } else {
+            updateTradeCurrencyView();
+        }
+    }
+
+    private void updateTradeCurrencyView() {
+        if (LocalUser.getUser().isLogin() && mAvailableCurrencyList != null) {
+            String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
+            String obtainableCurrencySign = mCurrencyPair.getPrefixSymbol();
+            int availableCurrencyScale = mPairDesc.getSuffixSymbol().getBalancePoint();
+            int obtainableCurrencyScale = mPairDesc.getPrefixSymbol().getBalancePoint();
+
+            if (mTradeDir == TradeDir.DIR_SELL_OUT) {
+                availableCurrencySign = mCurrencyPair.getPrefixSymbol();
+                obtainableCurrencySign = mCurrencyPair.getSuffixSymbol();
+                availableCurrencyScale = mPairDesc.getPrefixSymbol().getBalancePoint();
+                obtainableCurrencyScale = mPairDesc.getSuffixSymbol().getBalancePoint();
+            }
+
+            double availableCurrencyVolume = getAvailableCurrencyAmt(mAvailableCurrencyList, availableCurrencySign);
+            mObtainableCurrencyVolume = getObtainableCurrencyAmt(availableCurrencyVolume);
+
+            mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
+                    NumUtils.getPrice(availableCurrencyVolume, availableCurrencyScale), availableCurrencySign.toUpperCase()));
+            mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
+                    NumUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
+            mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
+                    NumUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
+        } else {
+            String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
+            String obtainableCurrencySign = mCurrencyPair.getPrefixSymbol();
+
+            if (mTradeDir == TradeDir.DIR_SELL_OUT) {
+                availableCurrencySign = mCurrencyPair.getPrefixSymbol();
+                obtainableCurrencySign = mCurrencyPair.getSuffixSymbol();
+            }
+
+            mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
+                    "--", availableCurrencySign.toUpperCase()));
+            mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
+                    "--", obtainableCurrencySign.toUpperCase()));
+            mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
+                    "0", obtainableCurrencySign.toUpperCase()));
+        }
+    }
+
+    private double getAvailableCurrencyAmt(List<CoinAbleAmount> availableCurrencyList, String availableCurrencySign) {
+        for (CoinAbleAmount amount : availableCurrencyList) {
+            if (amount.getCoinType().equalsIgnoreCase(availableCurrencySign)) {
+                return amount.getAbleCoin();
+            }
+        }
+        return 0;
+    }
+
+    private double getObtainableCurrencyAmt(double availableCounterCurrency) {
+        double price = mChangePriceView.getPrice();
+        if (mTradeTypeValue == MARKET_TRADE) {
+            if (mTradeDir == TradeDir.DIR_BUY_IN) {
+                price = mTradeVolumeView.getAskPrice1();
+            } else {
+                price = mTradeVolumeView.getBidPrice1();
+            }
+        }
+
+        if (price == 0) return 0;
+
+        if (mTradeDir == TradeDir.DIR_BUY_IN) {
+            return availableCounterCurrency / price;
+        } else {
+            return availableCounterCurrency * price;
         }
     }
 
@@ -359,7 +471,6 @@ public class TradeFragment extends BaseFragment {
     public void setTradeDir(int tradeDir) {
         mTradeDir = tradeDir;
     }
-
 
     public void setCurrencyPair(CurrencyPair currencyPair) {
         mCurrencyPair = currencyPair;

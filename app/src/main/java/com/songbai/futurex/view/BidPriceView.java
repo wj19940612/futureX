@@ -134,6 +134,14 @@ public class BidPriceView extends LinearLayout {
         mPrice.setText(price);
     }
 
+    public String getPrice() {
+        return mPrice.getText().toString();
+    }
+
+    public String getVolume() {
+        return mVolume.getText().toString();
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

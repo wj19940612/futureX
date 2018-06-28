@@ -186,9 +186,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     }
 
     private void updateDeepDataView(PairMarket.Deep deep) {
-        mBuyDeepList = deep.getBuyDeep();
-        mSellDeepList = deep.getSellDeep();
-        new CalcDeepTask(mBuyDeepList, mSellDeepList, this).execute();
+        if (deep != null) {
+            mBuyDeepList = deep.getBuyDeep();
+            mSellDeepList = deep.getSellDeep();
+            new CalcDeepTask(mBuyDeepList, mSellDeepList, this).execute();
+        }
     }
 
     private void updateDeepDataView() {

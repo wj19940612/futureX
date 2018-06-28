@@ -7,12 +7,16 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.utils.AnimUtils;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 
@@ -39,6 +43,11 @@ public class ChangePriceView extends FrameLayout {
     private boolean mTextWatcherDisable;
     private double mChangeSize;
     private boolean mModifiedManually;
+    private OnPriceChangeListener mOnPriceChangeListener;
+
+    public interface OnPriceChangeListener {
+        void onPriceChange(double price);
+    }
 
     public ChangePriceView(@NonNull Context context) {
         super(context);
@@ -48,6 +57,21 @@ public class ChangePriceView extends FrameLayout {
     public ChangePriceView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    private void onPriceChange() {
+        if (mOnPriceChangeListener != null) {
+            try {
+                double v = Double.parseDouble(mPrice.getText().toString());
+                mOnPriceChangeListener.onPriceChange(v);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setOnPriceChangeListener(OnPriceChangeListener onPriceChangeListener) {
+        mOnPriceChangeListener = onPriceChangeListener;
     }
 
     private void init() {
@@ -63,8 +87,12 @@ public class ChangePriceView extends FrameLayout {
                 if (!isValid(number)) {
                     mTextWatcherDisable = true;
                     mPrice.setText(formatPrice(number));
+                    mPrice.setSelection(mPrice.getText().toString().length());
                     mTextWatcherDisable = false;
+                    onPriceChange();
+                    return;
                 }
+                onPriceChange();
             }
         });
         mPrice.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -73,6 +101,14 @@ public class ChangePriceView extends FrameLayout {
                 if (hasFocus && !mModifiedManually) {
                     mModifiedManually = true;
                 }
+            }
+        });
+        ((ViewGroup) mPrice.getParent()).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPrice.requestFocus();
+                mPrice.setSelection(mPrice.getText().toString().length());
+                KeyBoardUtils.openKeyBoard(mPrice);
             }
         });
     }
@@ -93,10 +129,17 @@ public class ChangePriceView extends FrameLayout {
 
     public void setPrice(double price) {
         mPrice.setText(formatPrice(price));
+        mPrice.setSelection(mPrice.getText().toString().length());
+        onPriceChange();
+    }
+
+    public void startScaleAnim() {
+        Animation animation = AnimUtils.createSimpleScaleAnim(1.2f, 100);
+        mPrice.startAnimation(animation);
     }
 
     public double getPrice() {
-        String s = mPrice.toString();
+        String s = mPrice.getText().toString();
         try {
             return Double.parseDouble(s);
         } catch (NumberFormatException e) {
@@ -126,12 +169,14 @@ public class ChangePriceView extends FrameLayout {
                 minus();
                 mModifiedManually = true;
                 mTextWatcherDisable = false;
+                onPriceChange();
                 break;
             case R.id.plus:
                 mTextWatcherDisable = true;
                 plus();
                 mModifiedManually = true;
                 mTextWatcherDisable = false;
+                onPriceChange();
                 break;
         }
     }

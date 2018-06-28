@@ -76,13 +76,13 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
 
     @Override
     public void onNavigation(int mainPageIndex, Intent exUserDefineData) {
-        mBottomTabs.performTabClick(mainPageIndex);
-        Fragment fragment = mMainFragmentsAdapter.getFragment(PAGE_TRADE);
+        Fragment fragment = mMainFragmentsAdapter.getFragment(mainPageIndex);
         if (fragment instanceof TradeFragment) {
             int tradeDir = exUserDefineData.getIntExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_BUY_IN);
             CurrencyPair pair = exUserDefineData.getParcelableExtra(ExtraKeys.CURRENCY_PAIR);
             ((TradeFragment) fragment).setTradeDir(tradeDir);
             ((TradeFragment) fragment).setCurrencyPair(pair);
+            mBottomTabs.performTabClick(mainPageIndex);
         }
     }
 
