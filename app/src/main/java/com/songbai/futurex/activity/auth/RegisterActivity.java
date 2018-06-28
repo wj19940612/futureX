@@ -489,7 +489,7 @@ public class RegisterActivity extends BaseActivity {
 
         public void setAreaCodeList(List<AreaCode> areaCodeList) {
             mAreaCodeList = areaCodeList;
-            if (isInitialized()) {
+            if (isViewInitialized()) {
                 updateView();
             }
         }

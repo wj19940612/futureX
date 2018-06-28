@@ -189,16 +189,17 @@ public class MineFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.login, R.id.userInfoGroup, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
+    @OnClick({R.id.headLayout, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
             R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
         LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
-            case R.id.login:
-                Launcher.with(getActivity(), LoginActivity.class).execute(this, REQUEST_LOGIN);
-                break;
-            case R.id.userInfoGroup:
-                Launcher.with(this, PersonalDataActivity.class).execute(this,REQUEST_PERSONAL_DATA);
+            case R.id.headLayout:
+                if (user.isLogin()) {
+                    Launcher.with(this, PersonalDataActivity.class).execute(this, REQUEST_PERSONAL_DATA);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute(this, REQUEST_LOGIN);
+                }
                 break;
             case R.id.property:
                 Launcher.with(this, MyPropertyActivity.class).execute();

@@ -75,7 +75,7 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
     }
 
     public void setTitle(int titleRes) {
-        if (isInitialized()) {
+        if (isViewInitialized()) {
             mTitle.setText(titleRes);
         }
     }

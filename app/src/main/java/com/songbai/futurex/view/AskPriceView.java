@@ -63,6 +63,7 @@ public class AskPriceView extends LinearLayout {
         mHeight = (int) Display.dp2Px(32, getResources());
 
         mPrice = getTextView(12, ContextCompat.getColor(getContext(), R.color.red));
+        mPrice.setMaxLines(1);
         LayoutParams params  = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(mMargin12, 0, 0, 0);
@@ -70,12 +71,14 @@ public class AskPriceView extends LinearLayout {
 
         mVolume = getTextView(12, ContextCompat.getColor(getContext(), R.color.text66));
         mVolume.setGravity(Gravity.RIGHT);
+        mVolume.setMaxLines(1);
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         params.setMargins(0, 0, mMargin8, 0);
         addView(mVolume, params);
 
         mRank = getTextView(12, ContextCompat.getColor(getContext(), R.color.text99));
+        mRank.setMaxLines(1);
         params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, mMargin12, 0);
@@ -88,11 +91,8 @@ public class AskPriceView extends LinearLayout {
             mMaxValue = 10;
             mValue = 4;
         }
-    }
 
-    public void setMaxValue(double maxValue) {
-        mMaxValue = maxValue;
-        invalidate();
+        setEmptyValue();
     }
 
     public void setValue(double value) {
@@ -104,6 +104,18 @@ public class AskPriceView extends LinearLayout {
         mValue = value;
         mMaxValue = maxValue;
         invalidate();
+    }
+
+    public void setEmptyValue() {
+        mVolume.setText("--");
+        mPrice.setText("--");
+        mValue = 0;
+        mMaxValue = 0;
+        invalidate();
+    }
+
+    public boolean isEmptyValue() {
+        return mPaint.equals("--") && mVolume.equals("--");
     }
 
     public void setRank(int rank) {

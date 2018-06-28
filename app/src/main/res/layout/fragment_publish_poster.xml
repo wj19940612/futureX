@@ -15,10 +15,13 @@
         app:titleText="@string/publish_ad"/>
 
     <RelativeLayout
+        android:id="@+id/waresPairGroup"
         android:layout_width="match_parent"
-        android:layout_height="36dp">
+        android:layout_height="41dp"
+        android:background="@drawable/bg_white_with_bottom_shadow">
 
         <TextView
+            android:id="@+id/waresPair"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -27,9 +30,9 @@
             android:drawableLeft="@drawable/ic_common_coin_list"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
-            android:text="USDT/CNY"
             android:textColor="@color/text22"
-            android:textSize="13sp"/>
+            android:textSize="13sp"
+            tools:text="USDT/CNY"/>
 
         <TextView
             android:id="@+id/preview"
@@ -71,7 +74,8 @@
                     android:gravity="center"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:text="@string/buy_x"/>
+                    android:text="@string/buy_x"
+                    android:textColor="@color/selected_white_normal_66"/>
 
                 <TextView
                     android:id="@+id/sellOut"
@@ -81,7 +85,8 @@
                     android:gravity="center"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:text="@string/sell_x"/>
+                    android:text="@string/sell_x"
+                    android:textColor="@color/selected_white_normal_66"/>
             </LinearLayout>
 
             <LinearLayout
@@ -108,10 +113,10 @@
                     android:layout_marginRight="18dp"
                     android:layout_weight="1"
                     android:drawableRight="@drawable/ic_common_s_triangle"
-                    android:gravity="end"
-                    android:text="价格类型"
+                    android:gravity="end|center_vertical"
                     android:textColor="@color/text22"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    tools:text="价格类型"/>
             </LinearLayout>
 
             <LinearLayout
@@ -139,8 +144,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
-                    android:gravity="end"
-                    android:inputType="numberDecimal"
+                    android:digits="0123456789-."
+                    android:gravity="end|center_vertical"
                     android:textColor="@color/text49"
                     android:textSize="15sp"/>
 
@@ -149,9 +154,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:text="%"
                     android:textColor="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    tools:text="%"/>
             </LinearLayout>
 
             <TextView
@@ -186,10 +191,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
+                    android:hint="@string/tread_limit_hint"
                     android:textColor="@color/text99"
-                    android:textSize="15sp"
-                    tools:text="最小限制－最大限制"/>
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/payCurrencySymbol"
@@ -225,7 +230,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     android:inputType="numberDecimal"
                     android:textColor="@color/text99"
                     android:textSize="15sp"
@@ -266,7 +271,7 @@
                     android:layout_weight="1"
                     android:drawablePadding="5dp"
                     android:drawableRight="@drawable/ic_common_s_add"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     android:textColor="@color/text22"
                     android:textSize="15sp"
                     tools:text="支付宝、微信"/>
@@ -303,7 +308,7 @@
                     android:layout_marginRight="18dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     android:singleLine="true"
                     android:textColor="@color/text22"
                     android:textSize="15sp"
@@ -342,7 +347,7 @@
                     android:layout_weight="1"
                     android:drawableRight="@drawable/ic_common_s_triangle"
                     android:ellipsize="end"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     android:singleLine="true"
                     android:textColor="@color/text22"
                     android:textSize="15sp"
@@ -455,14 +460,17 @@
                         tools:text="0086"/>
                 </FrameLayout>
 
-                <TextView
+                <EditText
                     android:id="@+id/phone"
+                    style="@style/SingleEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="18dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
+                    android:hint="@string/phone"
+                    android:inputType="number"
                     android:singleLine="true"
                     android:textColor="@color/text22"
                     android:textSize="15sp"

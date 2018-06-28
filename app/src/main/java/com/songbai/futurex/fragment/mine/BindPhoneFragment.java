@@ -339,8 +339,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
                 mAreaCode.setText(codes.get(options1));
             }
-        })
-                .setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
+        }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
                     @Override
                     public void customLayout(View v) {
                         TextView cancel = v.findViewById(R.id.cancel);
@@ -365,7 +364,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 .setTextColorOut(ContextCompat.getColor(getContext(), R.color.text99))
                 .setDividerColor(ContextCompat.getColor(getContext(), R.color.bgDD))
                 .build();
-        mPvOptions.setPicker(codes, null, null);
+        mPvOptions.setPicker(codes);
         mPvOptions.show();
     }
 }

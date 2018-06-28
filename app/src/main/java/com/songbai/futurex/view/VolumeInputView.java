@@ -24,12 +24,14 @@ import butterknife.ButterKnife;
  * APIs:
  */
 public class VolumeInputView extends FrameLayout {
+    private static final int DEFAULT_VOLUME_SCALE = 8;
+
     @BindView(R.id.volume)
     EditText mVolume;
     @BindView(R.id.baseCurrency)
     TextView mBaseCurrency;
 
-    private int mScale;
+    private int mVolumeScale;
     private boolean mTextWatcherDisable;
 
     public VolumeInputView(@NonNull Context context) {
@@ -45,6 +47,7 @@ public class VolumeInputView extends FrameLayout {
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_volume_input, this, true);
         ButterKnife.bind(this);
+        mVolumeScale = DEFAULT_VOLUME_SCALE;
 
         mVolume.addTextChangedListener(new ValidationWatcher() {
             @Override
@@ -64,7 +67,7 @@ public class VolumeInputView extends FrameLayout {
     private String formatVolume(String number) {
         int pointIndex = number.indexOf('.');
         if (pointIndex > -1) {
-            return number.substring(0, pointIndex + mScale + 1);
+            return number.substring(0, pointIndex + mVolumeScale + 1);
         }
         return number;
     }
@@ -72,14 +75,14 @@ public class VolumeInputView extends FrameLayout {
     private boolean isValid(String number) {
         int pointIndex = number.indexOf('.');
         int lastIndex = number.length() - 1;
-        if (pointIndex > -1 && lastIndex - pointIndex > mScale) {
+        if (pointIndex > -1 && lastIndex - pointIndex > mVolumeScale) {
             return false;
         }
         return true;
     }
 
-    public void setScale(int scale) {
-        mScale = scale;
+    public void setVolumeScale(int scale) {
+        mVolumeScale = scale;
     }
 
     public void setBaseCurrency(String baseCurrency) {

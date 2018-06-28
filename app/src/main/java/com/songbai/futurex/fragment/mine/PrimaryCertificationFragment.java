@@ -159,7 +159,7 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_buttom_select_text, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_select_text, parent, false);
             return new CertificationTypeHolder(view);
         }
 
