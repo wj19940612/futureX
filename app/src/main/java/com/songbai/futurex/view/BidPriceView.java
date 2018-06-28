@@ -63,18 +63,21 @@ public class BidPriceView extends LinearLayout {
         mHeight = (int) Display.dp2Px(32, getResources());
 
         mRank = getTextView(12, ContextCompat.getColor(getContext(), R.color.text99));
+        mRank.setMaxLines(1);
         LinearLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(mMargin12, 0, 0, 0);
         addView(mRank, params);
 
         mVolume = getTextView(12, ContextCompat.getColor(getContext(), R.color.text66));
+        mVolume.setMaxLines(1);
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         params.setMargins(mMargin8, 0, 0, 0);
         addView(mVolume, params);
 
         mPrice = getTextView(12, ContextCompat.getColor(getContext(), R.color.green));
+        mPrice.setMaxLines(1);
         params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, mMargin12, 0);
@@ -87,6 +90,8 @@ public class BidPriceView extends LinearLayout {
             mMaxValue = 10;
             mValue = 4;
         }
+
+        setEmptyValue();
     }
 
     public void setMaxValue(double maxValue) {
@@ -103,6 +108,18 @@ public class BidPriceView extends LinearLayout {
         mValue = value;
         mMaxValue = maxValue;
         invalidate();
+    }
+
+    public void setEmptyValue() {
+        mVolume.setText("--");
+        mPrice.setText("--");
+        mValue = 0;
+        mMaxValue = 0;
+        invalidate();
+    }
+
+    public boolean isEmptyValue() {
+        return mPaint.equals("--") && mVolume.equals("--");
     }
 
     public void setRank(int rank) {

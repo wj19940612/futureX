@@ -217,9 +217,9 @@ public class TradeFragment extends BaseFragment {
                     }).fireFreely();
         } else {
             mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
-                    "-", mCurrencyPair.getSuffixSymbol().toUpperCase()));
+                    "--", mCurrencyPair.getSuffixSymbol().toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
-                    "-", mCurrencyPair.getPrefixSymbol().toUpperCase()));
+                    "--", mCurrencyPair.getPrefixSymbol().toUpperCase()));
             mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
                     "0", mCurrencyPair.getPrefixSymbol().toUpperCase()));
         }
@@ -343,6 +343,7 @@ public class TradeFragment extends BaseFragment {
                 "/" + mCurrencyPair.getSuffixSymbol().toUpperCase());
         mDecimalScale.setText(getString(R.string.x_scale_decimal, String.valueOf(mPairDesc.getPairs().getPricePoint())));
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
         mChangePriceView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
     }
@@ -470,15 +471,28 @@ public class TradeFragment extends BaseFragment {
             return;
         }
 
-        String[] deeps = mPairDesc.getPairs().getDeep().split(",");
+        final String[] deeps = mPairDesc.getPairs().getDeep().split(",");
         final List<String> deepList = new ArrayList<>();
-        for (String deep : deeps) {
-            deepList.add(getString(R.string.x_scale_decimal, deep));
+        int selectedOption = 0;
+        for (int i = 0; i < deeps.length; i++) {
+            String deep = deeps[i];
+            String deepStr = getString(R.string.x_scale_decimal, deep);
+            deepList.add(deepStr);
+            if (deepStr.equals(mDecimalScale.getText())) {
+                selectedOption = i;
+            }
         }
         mPickerView = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                mDecimalScale.setText(deepList.get(options1));
+                int mergeScale;
+                try {
+                    mergeScale = Integer.parseInt(deeps[options1]);
+                    mTradeVolumeView.setMergeScale(mergeScale);
+                    mDecimalScale.setText(deepList.get(options1));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
         }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
             @Override
@@ -505,6 +519,7 @@ public class TradeFragment extends BaseFragment {
                 .setDividerColor(ContextCompat.getColor(getContext(), R.color.bgDD))
                 .build();
         mPickerView.setPicker(deepList);
+        mPickerView.setSelectOptions(selectedOption);
         mPickerView.show();
     }
 }

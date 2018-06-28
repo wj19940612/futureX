@@ -19,6 +19,26 @@ public class DeepData {
     private double count;
     private double totalCount;
 
+    public DeepData(String price) {
+        try {
+            this.price = Double.parseDouble(price);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public DeepData(double price) {
+        this.price = price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setCount(double count) {
+        this.count = count;
+    }
+
     public double getPrice() {
         return price;
     }

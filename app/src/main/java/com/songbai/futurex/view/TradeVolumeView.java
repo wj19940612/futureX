@@ -12,10 +12,15 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.websocket.model.DeepData;
 
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Modified by john on 2018/6/21
@@ -37,8 +42,13 @@ public class TradeVolumeView extends LinearLayout {
     private TextView mQuantityAsk;
 
     private int mPriceScale;
+    private int mMergeScale;
     private int mVolumeScale;
     private int mMaxRows;
+
+    private List<DeepData> mBuyDeepList;
+    private List<DeepData> mSellDeepList;
+
     private OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
@@ -99,13 +109,11 @@ public class TradeVolumeView extends LinearLayout {
 
         for (int i = 0; i < mMaxRows; i++) {
             View view = new BidPriceView(getContext());
-            view.setVisibility(GONE);
             mBidPriceParent.addView(view);
         }
 
         for (int i = 0; i < mMaxRows; i++) {
             View view = new AskPriceView(getContext());
-            view.setVisibility(GONE);
             mAskPriceParent.addView(view);
         }
     }
@@ -123,11 +131,30 @@ public class TradeVolumeView extends LinearLayout {
         mPriceScale = scale;
     }
 
+    public void setMergeScale(int mergeScale) {
+        mMergeScale = mergeScale;
+
+        updateAskBidPriceViews(mBuyDeepList, mSellDeepList);
+    }
+
     public void setVolumeScale(int scale) {
         mVolumeScale = scale;
     }
 
     public void setDeepList(List<DeepData> buyDeepList, List<DeepData> sellDeepList) {
+        mBuyDeepList = buyDeepList;
+        mSellDeepList = sellDeepList;
+
+        updateAskBidPriceViews(mBuyDeepList, mSellDeepList);
+    }
+
+    private void updateAskBidPriceViews(List<DeepData> buyDeepList, List<DeepData> sellDeepList) {
+        if (buyDeepList == null || sellDeepList == null) return;
+
+        buyDeepList = mergeDeep(buyDeepList);
+        sellDeepList = mergeDeep(sellDeepList);
+        int scale = mMergeScale == mPriceScale ? mPriceScale : mMergeScale;
+
         if (mBidPriceParent != null && mBidPriceParent.getChildCount() > 0) {
             double maxVolume = 0;
             for (int i = 0; i < buyDeepList.size() && i < mMaxRows; i++) {
@@ -138,19 +165,16 @@ public class TradeVolumeView extends LinearLayout {
             for (int i = 0; i < buyDeepList.size() && i < mMaxRows; i++) {
                 DeepData deepData = buyDeepList.get(i);
                 BidPriceView view = (BidPriceView) mBidPriceParent.getChildAt(i);
-                if (view.getVisibility() == GONE) {
-                    view.setVisibility(VISIBLE);
-                }
                 view.setRank(i + 1);
-                view.setPrice(NumUtils.getPrice(deepData.getPrice(), mPriceScale));
+                view.setPrice(NumUtils.getPrice(deepData.getPrice(), scale));
                 view.setVolume(NumUtils.getVolume(deepData.getCount()));
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 
             for (int i = buyDeepList.size(); i < mMaxRows; i++) {
                 BidPriceView view = (BidPriceView) mBidPriceParent.getChildAt(i);
-                if (view.getVisibility() == VISIBLE) {
-                    view.setVisibility(GONE);
+                if (!view.isEmptyValue()) {
+                    view.setEmptyValue();
                 }
             }
         }
@@ -165,21 +189,38 @@ public class TradeVolumeView extends LinearLayout {
             for (int i = 0; i < sellDeepList.size() && i < mMaxRows; i++) {
                 DeepData deepData = sellDeepList.get(i);
                 AskPriceView view = (AskPriceView) mAskPriceParent.getChildAt(i);
-                if (view.getVisibility() == GONE) {
-                    view.setVisibility(VISIBLE);
-                }
                 view.setRank(i + 1);
-                view.setPrice(NumUtils.getPrice(deepData.getPrice(), mPriceScale));
+                view.setPrice(NumUtils.getPrice(deepData.getPrice(), scale));
                 view.setVolume(NumUtils.getVolume(deepData.getCount()));
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 
             for (int i = sellDeepList.size(); i < mMaxRows; i++) {
                 AskPriceView view = (AskPriceView) mAskPriceParent.getChildAt(i);
-                if (view.getVisibility() == VISIBLE) {
-                    view.setVisibility(GONE);
+                if (!view.isEmptyValue()) {
+                    view.setEmptyValue();
                 }
             }
         }
+    }
+
+    private List<DeepData> mergeDeep(List<DeepData> deepList) {
+        if (mPriceScale == mMergeScale) {
+            return deepList;
+        }
+
+        Map<String, DeepData> map = new LinkedHashMap<>();
+        for (DeepData deepData : deepList) {
+            double price = deepData.getPrice();
+            String mergePrice = FinanceUtil.formatWithScale(price, mMergeScale, RoundingMode.DOWN);
+            DeepData data = map.get(mergePrice);
+            if (data == null) {
+                data = new DeepData(mergePrice);
+            }
+            data.setCount(data.getCount() + deepData.getCount());
+            data.setTotalCount(data.getTotalCount() + deepData.getTotalCount());
+            map.put(mergePrice, data);
+        }
+        return new ArrayList<>(map.values());
     }
 }
