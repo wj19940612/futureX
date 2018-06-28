@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.activity.CustomServiceActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.activity.mine.InviteActivity;
@@ -223,7 +224,8 @@ public class MineFragment extends BaseFragment {
                 UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();
                 break;
             case R.id.customService:
-                UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();
+                Launcher.with(getActivity(),CustomServiceActivity.class).execute();
+//                UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();
                 break;
             case R.id.settings:
                 UniqueActivity.launcher(getActivity(), SettingsFragment.class).execute(this, REQUEST_SETTINGS);

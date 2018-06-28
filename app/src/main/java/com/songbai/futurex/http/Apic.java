@@ -1,6 +1,7 @@
 package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
+import com.songbai.futurex.App;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.BankBindData;
@@ -11,6 +12,8 @@ import com.songbai.futurex.model.local.LoginData;
 import com.songbai.futurex.model.local.WaresModel;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
+import com.songbai.futurex.utils.AppInfo;
+import com.songbai.futurex.websocket.model.CustomServiceChat;
 
 /**
  * Modified by john on 23/01/2018
@@ -1006,5 +1009,49 @@ public class Apic {
 
 
     public interface url {
+    }
+
+    /**
+     * 获取客服状态
+     *
+     * @return
+     */
+    public static Api getCustomerStatus() {
+        return Api.post("/api/user/chat/online.do", new ReqParams().put("deviceid", "111111111"));
+//        return Api.post("/api/user/chat/online.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())));
+    }
+
+    /**
+     * 发起客服聊天
+     *
+     * @return
+     */
+    public static Api chat() {
+        return Api.post("/api/user/chat/connect.do", new ReqParams().put("deviceid", "111111111"));
+    }
+
+    /**
+     * 查询客服聊天历史数据
+     * pageDir 0-从时间位置向前查询 1-从时间位置向后查询
+     * @return
+     */
+    public static Api requestChatHistory() {
+        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", "111111111").put("startTime",System.currentTimeMillis()).put("pageDir",0).put("pageSize",200));
+    }
+
+    /**
+     * 发送给客服消息
+     * @return
+     */
+    public static Api sendTextChat(String msg){
+        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid","111111111").put("msgtype", CustomServiceChat.MSG_TEXT).put("content",msg));
+    }
+
+    /**
+     * 发送给客服图片
+     * @return
+     */
+    public static Api sendPhotoChat(String photoAddress){
+        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid","111111111").put("msgtype", CustomServiceChat.MSG_PHOTO).put("content",photoAddress));
     }
 }

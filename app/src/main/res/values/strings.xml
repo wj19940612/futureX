@@ -514,7 +514,14 @@
     <string name="market_price">市价</string>
     <string name="limit_price">限价</string>
     <string name="trade_amt">交易额</string>
+
+
+    <string name="input_msg_enter_to_send">输入信息，按Enter发送</string>
+
+    <string name="over_50">发言不能超过50字符</string>
+    <string name="hello_customer_for_you">你好，客服%1$s很高兴为您服务！</string>
     <string name="trade_with_market_price">以当前最优价格交易</string>
+
     <string name="entrust">委托</string>
     <string name="history">历史</string>
     <string-array name="order_list_radio">

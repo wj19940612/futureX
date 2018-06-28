@@ -153,9 +153,9 @@ public class PersonalDataActivity extends BaseActivity {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
             case R.id.headImageLayout:
-                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
-                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
-                uploadUserImageDialogFragment.show(getSupportFragmentManager());
+//                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+//                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
+//                uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 ImagePicker
                         .create(this)
                         .openGallery()
@@ -216,12 +216,13 @@ public class PersonalDataActivity extends BaseActivity {
                 String image = ImageUtils.compressImageToBase64(stringExtra, this);
                 uploadImage(image);
             }
-        } else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
-            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
-            if (!TextUtils.isEmpty(galleryBitmapPath)) {
-                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
-                uploadImage(image);
-            }
+        }
+        else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
+//            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
+//            if (!TextUtils.isEmpty(galleryBitmapPath)) {
+//                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
+//                uploadImage(image);
+//            }
         } else if (requestCode == MODIFY_PERSONAL_DATA) {
             requestUserInfo();
         }
