@@ -14,6 +14,11 @@ import com.songbai.futurex.fragment.LegalCurrencyFragment;
 import com.songbai.futurex.fragment.MarketFragment;
 import com.songbai.futurex.fragment.MineFragment;
 import com.songbai.futurex.fragment.TradeFragment;
+import com.songbai.futurex.fragment.UpdateVersionDialogFragment;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.view.BottomTabs;
@@ -43,6 +48,7 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         translucentStatusBar();
+        checkVersion();
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
         mViewPager.setOffscreenPageLimit(4);
@@ -92,6 +98,20 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         if (fragment instanceof MarketFragment) {
             ((MarketFragment) fragment).updateOptionalList();
         }
+    }
+
+    private void checkVersion(){
+        Apic.queryForceVersion()
+                .callback(new Callback<Resp<AppVersion>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AppVersion> resp) {
+                        if (resp.getData() != null && resp.getData().isForceUpdate() || resp.getData().isNeedUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
+                                    .show(getSupportFragmentManager());
+                        }
+                    }
+                })
+                .fire();
     }
 
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
