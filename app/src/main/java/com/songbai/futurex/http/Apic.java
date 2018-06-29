@@ -8,9 +8,10 @@ import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LoginData;
-import com.songbai.futurex.model.local.WaresModel;
+import com.songbai.futurex.model.local.MakeOrder;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
+import com.songbai.futurex.model.local.WaresModel;
 
 /**
  * Modified by john on 23/01/2018
@@ -953,6 +954,23 @@ public class Apic {
         return Api.get("/api/entrust/pairs/pairsDescription",
                 new ReqParams()
                         .put("pairs", pair));
+    }
+
+    /**
+     * 下单
+     * <p>
+     * /api/entrust/entrust/order
+     *
+     * @param makeOrder
+     * @return
+     */
+    public static Api makeOrder(MakeOrder makeOrder) {
+        return Api.post("/api/entrust/entrust/order",
+                new ReqParams(MakeOrder.class, makeOrder));
+    }
+
+    public static Api getEntrustOrderList() {
+        return null;
     }
 
 
