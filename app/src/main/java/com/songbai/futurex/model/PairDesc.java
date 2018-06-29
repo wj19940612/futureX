@@ -69,6 +69,10 @@ public class PairDesc {
         private long supply;
         private String symbol;
         private double withdrawRate;
+
+        public int getBalancePoint() {
+            return balancePoint;
+        }
     }
 
     public static class PrefixSymbol {
@@ -109,6 +113,10 @@ public class PairDesc {
         private int supply;
         private String symbol;
         private double withdrawRate;
+
+        public int getBalancePoint() {
+            return balancePoint;
+        }
     }
 
     public static class Pairs {
@@ -150,6 +158,17 @@ public class PairDesc {
         private int status;
         private String suffixSymbol;
         private long updateTime;
+
+        public CurrencyPair getCurrencyPair() {
+            CurrencyPair currencyPair = new CurrencyPair();
+            currencyPair.setCategory(category);
+            currencyPair.setPairs(pairs);
+            currencyPair.setOption(option);
+            currencyPair.setPrefixSymbol(prefixSymbol);
+            currencyPair.setSort(sort);
+            currencyPair.setSuffixSymbol(suffixSymbol);
+            return currencyPair;
+        }
 
         @Override
         public String toString() {

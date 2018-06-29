@@ -6,7 +6,7 @@
     android:background="@color/bgF5"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatTextView
+    <TextView
         android:id="@+id/selectHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:overScrollMode="never"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <TextView
         android:id="@+id/cancel"
         android:layout_width="match_parent"
         android:layout_height="44dp"

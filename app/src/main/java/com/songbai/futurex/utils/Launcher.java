@@ -111,4 +111,13 @@ public class Launcher {
             fragment.startActivityForResult(mIntent, requestCode);
         }
     }
+
+    public void executeForResult(int requestCode) {
+        if (mContext != null) {
+            if (mContext instanceof Activity) {
+                Activity activity = (Activity) mContext;
+                activity.startActivityForResult(mIntent, requestCode);
+            }
+        }
+    }
 }

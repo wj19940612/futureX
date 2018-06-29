@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.songbai.futurex.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/titleBar"
+        android:clipToPadding="false"
+        android:paddingBottom="49dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_order_detail_card">
+
+                <TextView
+                    android:id="@+id/turnoverText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/turnover"
+                    android:textColor="@color/text99"
+                    android:textSize="17sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/turnover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="@id/turnoverText"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/turnoverText"
+                    tools:text="7654.00 CNY"/>
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintLeft_toLeftOf="@id/turnoverText"
+                    app:layout_constraintTop_toBottomOf="@id/turnoverText"
+                    tools:text="价格：6.45 CNY/USDT"/>
+
+                <TextView
+                    android:id="@+id/tradeAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintLeft_toLeftOf="@id/turnoverText"
+                    app:layout_constraintTop_toBottomOf="@id/price"
+                    tools:text="价格：6.45 CNY/USDT"/>
+
+                <TextView
+                    android:id="@+id/orderNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/turnoverText"
+                    app:layout_constraintTop_toBottomOf="@id/tradeAmount"
+                    tools:text="#1122334455667788"/>
+
+                <TextView
+                    android:id="@+id/orderStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="13dp"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/red"
+                    app:layout_constraintBottom_toTopOf="@id/timer"
+                    app:layout_constraintRight_toRightOf="@id/timer"
+                    tools:text="待买家付款"/>
+
+                <com.songbai.futurex.view.CountDownView
+                    android:id="@+id/timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/headPortrait"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/certification"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginTop="35dp"
+                    android:src="@drawable/ic_senior_star"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="@id/headPortrait"
+                    app:layout_constraintTop_toTopOf="@id/headPortrait"/>
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/text22"
+                    android:textSize="17sp"
+                    app:layout_constraintLeft_toRightOf="@id/headPortrait"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/headPortrait"
+                    tools:text="用户306"/>
+
+                <TextView
+                    android:id="@+id/countDealRate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="9dp"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/text66"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="@id/headPortrait"
+                    app:layout_constraintLeft_toLeftOf="@id/userName"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/userName"
+                    tools:text="20001单 完成率98.6%"/>
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="28dp"
+                android:text="@string/pay_info"
+                android:textColor="@color/text99"
+                android:textSize="17sp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/payInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:overScrollMode="never"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/pay_info"
+                android:textColor="@color/text99"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/trade_rules_description"
+                android:textColor="@color/text66"
+                android:textSize="13sp"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_white_with_top_shadow"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="联系对方"
+            android:textColor="@color/text66"
+            android:textSize="10dp"/>
+    </LinearLayout>
+</RelativeLayout>

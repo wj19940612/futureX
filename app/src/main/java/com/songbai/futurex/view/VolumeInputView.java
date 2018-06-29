@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -24,13 +25,20 @@ import butterknife.ButterKnife;
  * APIs:
  */
 public class VolumeInputView extends FrameLayout {
+    private static final int DEFAULT_VOLUME_SCALE = 8;
+
     @BindView(R.id.volume)
     EditText mVolume;
     @BindView(R.id.baseCurrency)
     TextView mBaseCurrency;
 
-    private int mScale;
+    private int mVolumeScale;
     private boolean mTextWatcherDisable;
+    private OnVolumeChangeListener mOnVolumeChangeListener;
+
+    public interface OnVolumeChangeListener {
+        void onVolumeChange(double volume);
+    }
 
     public VolumeInputView(@NonNull Context context) {
         super(context);
@@ -42,9 +50,29 @@ public class VolumeInputView extends FrameLayout {
         init();
     }
 
+    public void setOnVolumeChangeListener(OnVolumeChangeListener onVolumeChangeListener) {
+        mOnVolumeChangeListener = onVolumeChangeListener;
+    }
+
+    private void onVolumeChange() {
+        if (mOnVolumeChangeListener != null) {
+            try {
+                double v = Double.parseDouble(mVolume.getText().toString());
+                mOnVolumeChangeListener.onVolumeChange(v);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public double getVolume() {
+        return NumUtils.getDouble(mVolume.getText().toString());
+    }
+
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_volume_input, this, true);
         ButterKnife.bind(this);
+        mVolumeScale = DEFAULT_VOLUME_SCALE;
 
         mVolume.addTextChangedListener(new ValidationWatcher() {
             @Override
@@ -55,16 +83,27 @@ public class VolumeInputView extends FrameLayout {
                 if (!isValid(number)) {
                     mTextWatcherDisable = true;
                     mVolume.setText(formatVolume(number));
+                    mVolume.setSelection(mVolume.getText().toString().length());
                     mTextWatcherDisable = false;
+                    onVolumeChange();
+                    return;
                 }
+                onVolumeChange();
             }
         });
+    }
+
+    public void setVolume(double volume) {
+        mVolume.setText(formatVolume(String.valueOf(volume)));
+        mVolume.setSelection(mVolume.getText().toString().length());
+        onVolumeChange();
     }
 
     private String formatVolume(String number) {
         int pointIndex = number.indexOf('.');
         if (pointIndex > -1) {
-            return number.substring(0, pointIndex + mScale + 1);
+            int endIndex = Math.min(number.length(), pointIndex + mVolumeScale + 1);
+            return number.substring(0, endIndex);
         }
         return number;
     }
@@ -72,14 +111,14 @@ public class VolumeInputView extends FrameLayout {
     private boolean isValid(String number) {
         int pointIndex = number.indexOf('.');
         int lastIndex = number.length() - 1;
-        if (pointIndex > -1 && lastIndex - pointIndex > mScale) {
+        if (pointIndex > -1 && lastIndex - pointIndex > mVolumeScale) {
             return false;
         }
         return true;
     }
 
-    public void setScale(int scale) {
-        mScale = scale;
+    public void setVolumeScale(int scale) {
+        mVolumeScale = scale;
     }
 
     public void setBaseCurrency(String baseCurrency) {

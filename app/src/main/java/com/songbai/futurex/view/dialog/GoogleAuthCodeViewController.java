@@ -75,7 +75,7 @@ public class GoogleAuthCodeViewController extends SmartDialog.CustomViewControll
     }
 
     public void setTitle(int titleRes) {
-        if (isInitialized()) {
+        if (isViewInitialized()) {
             mTitle.setText(titleRes);
         }
     }

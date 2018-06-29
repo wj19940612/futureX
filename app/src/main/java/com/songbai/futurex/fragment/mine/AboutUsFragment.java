@@ -7,12 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.CustomServiceActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.UpdateVersionDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.utils.AppInfo;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -48,11 +53,14 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
     }
 
     private void queryForceVersion() {
-        Apic.queryForceVersion(AppInfo.getVersionName(getContext()), "")
-                .callback(new Callback<Resp<Object>>() {
+        Apic.queryForceVersion()
+                .callback(new Callback<Resp<AppVersion>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-
+                    protected void onRespSuccess(Resp<AppVersion> resp) {
+                        if (resp.getData() != null && resp.getData().isForceUpdate() || resp.getData().isNeedUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
+                                    .show(getChildFragmentManager());
+                        }
                     }
                 })
                 .fire();
@@ -68,10 +76,13 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.platformIntroduction:
+                UniqueActivity.launcher(this, PlatformIntroFragment.class).putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_PLATFORM).execute();
                 break;
             case R.id.companyIntroduction:
+                UniqueActivity.launcher(this, PlatformIntroFragment.class).putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_COMPANY).execute();
                 break;
             case R.id.connectCustomerService:
+                Launcher.with(this, CustomServiceActivity.class).execute();
                 break;
             case R.id.versionUpdating:
                 queryForceVersion();

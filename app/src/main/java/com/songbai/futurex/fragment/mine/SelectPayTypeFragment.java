@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -52,7 +53,7 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         if (mBindBankList != null) {
-            BindBankList.AliPayBean aliPay = mBindBankList.getAliPay();
+            BankCardBean aliPay = mBindBankList.getAliPay();
             mAliPay.setSubText(aliPay.getCardNumber());
             mWechatPay.setSubText(mBindBankList.getWechat().getCardNumber());
         }

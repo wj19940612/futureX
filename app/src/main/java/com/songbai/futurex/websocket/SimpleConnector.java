@@ -12,7 +12,6 @@ import com.koushikdutta.async.http.WebSocket;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,8 +107,8 @@ public final class SimpleConnector implements Connector {
         try {
             byte[] bytes = new byte[byteBuffer.capacity()];
             byteBuffer.get(bytes, 0, bytes.length);
-            String uncompressStr = Utils.uncompress(bytes, StandardCharsets.UTF_8.name());
-            return URLDecoder.decode(uncompressStr, StandardCharsets.UTF_8.name());
+            String uncompressStr = Utils.uncompress(bytes, "UTF-8");
+            return URLDecoder.decode(uncompressStr, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

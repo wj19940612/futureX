@@ -42,8 +42,8 @@ public class CookieManger {
     /**
      * rawCookie:
      * <p>
-     * token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; Version=1; Path=/(\n)
-     * token2="NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ="; Version=1; Path=/
+     * token1=OXR4eWllaWxhcXpnZmducndqYmxrZmJmcm1sbA==; Max-Age=7200; Expires=Thu, 28-Jun-2018 12:06:30 GMT; Path=/(\n)
+     * token2=Y2FjZDcyZmE5ZTQxM2E1MGI4YTUxMTFmOTc1Yjk2ZWI=; Max-Age=7200; Expires=Thu, 28-Jun-2018 12:06:30 GMT; Path=/
      */
     public String getLastCookie() {
         return mLastCookie;
@@ -53,7 +53,7 @@ public class CookieManger {
      * 获取名值对
      *
      * @param keyword
-     * @return eg. token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; token2="NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ="
+     * @return eg. token1=NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ==; token2=NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ=
      */
     public String getNameValuePair(String keyword) {
         if (TextUtils.isEmpty(mLastCookie)) return "";

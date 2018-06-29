@@ -5,23 +5,23 @@ package com.songbai.futurex.model.local;
  * @date 2018/6/22
  */
 public class WaresModel {
-    int dealType;//交易类型:1买入,2卖出	是	[string]
-    String coinSymbol;//币种	是	[string]
-    int priceType;//价格 1,固定价格 ，2 浮动价格	是	[string]
-    double fixedPrice;//固定价格	是	[string]
-    String percent;//溢价百分比	是	[string]
-    double minTurnover;//最小成交额	是	[string]
-    double maxTurnover;//最大成交额	是	[string]
-    String payIds;//银行卡id 	是	[string]
-    String payInfo;//广告的支付信息,逗号分隔 aliPay,wxPay,bankPay	是	[string]		查看
-    String conditionType;//条件限制集合		[string]		auth认证  trade 交易次数
-    String conditionValue;//条件值的集合 与必须上面一一对应		[string]
-    String payCurrency;//支付的货币符号	是	[string]
-    String remark;//备注	是	[string]
-    double tradeCount;//交易数量	是	[string]
-    String areaCode;//(v1.2)	电话区号		[string]
-    String telephone;//z(v1.2)
-    String id;//广告ID
+    private int dealType;//交易类型:1买入,2卖出
+    private String coinSymbol;//币种
+    private int priceType;//价格 1,固定价格 ，2 浮动价格
+    private String fixedPrice;//固定价格
+    private String percent;//溢价百分比
+    private double minTurnover;//最小成交额
+    private double maxTurnover;//最大成交额
+    private String payIds;//银行卡id
+    private String payInfo;//广告的支付信息,逗号分隔 aliPay,wxPay,bankPay查看
+    private String conditionType;//条件限制集合 auth认证  trade 交易次数
+    private String conditionValue;//条件值的集合 与必须上面 对应
+    private String payCurrency;//支付的货币符号 是
+    private String remark;//备注
+    private double tradeCount;//交易数量
+    private String areaCode;//(v1.2)电话区号
+    private String telephone;//z(v1.2)
+    private String id;//广告ID
 
     public int getDealType() {
         return dealType;
@@ -47,11 +47,11 @@ public class WaresModel {
         this.priceType = priceType;
     }
 
-    public double getFixedPrice() {
+    public String getFixedPrice() {
         return fixedPrice;
     }
 
-    public void setFixedPrice(double fixedPrice) {
+    public void setFixedPrice(String fixedPrice) {
         this.fixedPrice = fixedPrice;
     }
 

@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
@@ -73,15 +73,8 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
             }
 
             @Override
-            public void onDeleteClick(Object obj) {
-                int id = 0;
-                if (obj instanceof BindBankList.AliPayBean) {
-                    id = ((BindBankList.AliPayBean) obj).getId();
-                } else if (obj instanceof BindBankList.WechatBean) {
-                    id = ((BindBankList.WechatBean) obj).getId();
-                } else if (obj instanceof BindBankList.BankCardBean) {
-                    id = ((BindBankList.BankCardBean) obj).getId();
-                }
+            public void onDeleteClick(BankCardBean bankCardBean) {
+                int id = bankCardBean.getId();
                 showDrawPass(id);
             }
         });
@@ -127,17 +120,17 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
     private void setBindBankList(BindBankList bindBankList) {
         mBindBankList = bindBankList;
-        ArrayList<Object> list = new ArrayList<>();
-        BindBankList.AliPayBean aliPay = bindBankList.getAliPay();
-        if (aliPay.getBind() == BindBankList.ALIPAY_WECHATPAY_BIND) {
+        ArrayList<BankCardBean> list = new ArrayList<>();
+        BankCardBean aliPay = bindBankList.getAliPay();
+        if (aliPay.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
             list.add(aliPay);
         }
-        BindBankList.WechatBean wechat = bindBankList.getWechat();
-        if (wechat.getBind() == BindBankList.ALIPAY_WECHATPAY_BIND) {
+        BankCardBean wechat = bindBankList.getWechat();
+        if (wechat.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
             list.add(wechat);
         }
-        List<BindBankList.BankCardBean> bankCard = bindBankList.getBankCard();
-        for (BindBankList.BankCardBean bankCardBean : bankCard) {
+        List<BankCardBean> bankCard = bindBankList.getBankCard();
+        for (BankCardBean bankCardBean : bankCard) {
             list.add(bankCardBean);
         }
         mLegalCurrencyPayAdapter.setList(list);
@@ -172,7 +165,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
     static class LegalCurrencyPayAdapter extends RecyclerView.Adapter {
 
-        private ArrayList<Object> mList = new ArrayList<>();
+        private ArrayList<BankCardBean> mList = new ArrayList<>();
         private static OnItemClickListener mOnItemClickListener;
 
         @NonNull
@@ -194,7 +187,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
             return mList.size();
         }
 
-        public void setList(ArrayList<Object> list) {
+        public void setList(ArrayList<BankCardBean> list) {
             mList.clear();
             mList.addAll(list);
         }
@@ -202,7 +195,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         interface OnItemClickListener {
             void onItemClick();
 
-            void onDeleteClick(Object obj);
+            void onDeleteClick(BankCardBean bankCardBean);
         }
 
         void setmOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -226,19 +219,24 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                 mRootView = view;
             }
 
-            void bindData(final Object obj) {
-                if (obj instanceof BindBankList.AliPayBean) {
-                    mIcon.setImageResource(R.drawable.ic_legaltender_icon_alipay);
-                    mAccountName.setText(R.string.alipay);
-                    mAccount.setText(((BindBankList.AliPayBean) obj).getCardNumber());
-                } else if (obj instanceof BindBankList.WechatBean) {
-                    mIcon.setImageResource(R.drawable.ic_legaltender_icon_wechatpay);
-                    mAccountName.setText(R.string.wechatpay);
-                    mAccount.setText(((BindBankList.WechatBean) obj).getCardNumber());
-                } else if (obj instanceof BindBankList.BankCardBean) {
-                    mIcon.setImageResource(R.drawable.ic_legaltender_icon_bankcard);
-                    mAccountName.setText(((BindBankList.BankCardBean) obj).getBankName());
-                    mAccount.setText(((BindBankList.BankCardBean) obj).getCardNumber());
+            void bindData(final BankCardBean bankCardBean) {
+                switch (bankCardBean.getPayType()) {
+                    case BankCardBean.PAYTYPE_ALIPAY:
+                        mIcon.setImageResource(R.drawable.ic_legaltender_icon_alipay);
+                        mAccountName.setText(R.string.alipay);
+                        mAccount.setText(bankCardBean.getCardNumber());
+                        break;
+                    case BankCardBean.PAYTYPE_WX:
+                        mIcon.setImageResource(R.drawable.ic_legaltender_icon_wechatpay);
+                        mAccountName.setText(R.string.wechatpay);
+                        mAccount.setText(bankCardBean.getCardNumber());
+                        break;
+                    case BankCardBean.PAYTYPE_BANK:
+                        mIcon.setImageResource(R.drawable.ic_legaltender_icon_bankcard);
+                        mAccountName.setText(bankCardBean.getBankName());
+                        mAccount.setText(bankCardBean.getCardNumber());
+                        break;
+                    default:
                 }
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -252,8 +250,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                     @Override
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
-                            Log.e("wtf", "onClick: aaaaaaaaaa" );
-                            mOnItemClickListener.onDeleteClick(obj);
+                            mOnItemClickListener.onDeleteClick(bankCardBean);
                         }
                     }
                 });
