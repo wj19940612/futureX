@@ -52,12 +52,10 @@ public class Apic {
      * GET
      * 查询当前平台版本信息
      */
-    public static Api queryForceVersion(String pCode, String sign) {
+    public static Api queryForceVersion() {
         return Api.get("/api/user/appVersion/queryForceVersion.do",
                 new ReqParams()
-                        .put("platform", 2)
-                        .put("pCode", pCode)
-                        .put("sign", sign));
+                        .put("platform", 2));
     }
 
     /**
@@ -968,7 +966,7 @@ public class Apic {
      * @return
      */
     public static Api getCustomerStatus() {
-        return Api.post("/api/user/chat/online.do", new ReqParams().put("deviceid", "111111111"));
+        return Api.post("/api/user/chat/online.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())));
 //        return Api.post("/api/user/chat/online.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())));
     }
 
@@ -978,7 +976,7 @@ public class Apic {
      * @return
      */
     public static Api chat() {
-        return Api.post("/api/user/chat/connect.do", new ReqParams().put("deviceid", "111111111"));
+        return Api.post("/api/user/chat/connect.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())));
     }
 
     /**
@@ -987,7 +985,7 @@ public class Apic {
      * @return
      */
     public static Api requestChatHistory() {
-        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", "111111111").put("startTime",System.currentTimeMillis()).put("pageDir",0).put("pageSize",200));
+        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("startTime",System.currentTimeMillis()).put("pageDir",0).put("pageSize",200));
     }
 
     /**
@@ -995,7 +993,7 @@ public class Apic {
      * @return
      */
     public static Api sendTextChat(String msg){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid","111111111").put("msgtype", CustomServiceChat.MSG_TEXT).put("content",msg));
+        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid",AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_TEXT).put("content",msg));
     }
 
     /**
@@ -1003,6 +1001,14 @@ public class Apic {
      * @return
      */
     public static Api sendPhotoChat(String photoAddress){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid","111111111").put("msgtype", CustomServiceChat.MSG_PHOTO).put("content",photoAddress));
+        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid",AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_PHOTO).put("content",photoAddress));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static Api requestPlatformIntroduce(String code){
+        return Api.get("/api/user/article/getAgreement.do",new ReqParams().put("code",code));
     }
 }

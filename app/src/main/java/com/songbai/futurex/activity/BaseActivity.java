@@ -42,7 +42,8 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
 
     public static final String EX_TOKEN_EXPIRED_MESSAGE = "ex_token_expired_message";
 
-    protected static final int REQ_LOGIN = 808;
+    public static final int REQ_LOGIN = 808;
+
 
     protected String TAG;
 

@@ -42,6 +42,7 @@ import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.im.IMProcessor;
 import com.songbai.futurex.websocket.model.CustomServiceChat;
 
@@ -154,11 +155,11 @@ public class CustomServiceActivity extends BaseActivity {
         mIMProcessor = new IMProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code) {
-                new DataParser<CustomServiceChat>(data) {
+                new DataParser<Response<CustomServiceChat>>(data) {
 
                     @Override
-                    public void onSuccess(CustomServiceChat customServiceChat) {
-                        mCustomServiceChats.add(customServiceChat);
+                    public void onSuccess(Response<CustomServiceChat> customServiceChatResponse) {
+                        mCustomServiceChats.add(customServiceChatResponse.getContent());
                         mChatAdapter.notifyDataSetChanged();
                     }
                 }.parse();
@@ -287,7 +288,7 @@ public class CustomServiceActivity extends BaseActivity {
                 super.onFailure(reqError);
                 updateSendMsgUI(text, CustomServiceChat.SEND_FAILED);
             }
-        });
+        }).fireFreely();
     }
 
     private void requestSendPhotoMsg(final String photoAddress) {
@@ -352,8 +353,13 @@ public class CustomServiceActivity extends BaseActivity {
             }
 
             @Override
-            public void onReScroll() {
-                updateRecyclerViewPosition(true);
+            public void onRightReScroll() {
+                updateRecyclerViewPosition(false);
+            }
+
+            @Override
+            public void onLeftReScroll() {
+                updateRecyclerViewPosition(false);
             }
         };
     }
@@ -368,9 +374,9 @@ public class CustomServiceActivity extends BaseActivity {
 
     private void updateRecyclerViewPosition(boolean isSend) {
         if (isSend) {
-            mRecycleView.smoothScrollToPosition(Integer.MAX_VALUE);
+            mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount());
         } else if (((LinearLayoutManager) mRecycleView.getLayoutManager()).findLastCompletelyVisibleItemPosition() == mChatAdapter.getItemCount() - 2) {
-            mRecycleView.smoothScrollToPosition(Integer.MAX_VALUE);
+            mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount());
         }
     }
 
@@ -389,7 +395,9 @@ public class CustomServiceActivity extends BaseActivity {
         interface OnRetryClickListener {
             public void onRetry(CustomServiceChat customServiceChat);
 
-            public void onReScroll();
+            public void onRightReScroll();
+
+            public void onLeftReScroll();
         }
 
         public ChatAdapter(List<CustomServiceChat> customServiceChats, Context context, OnRetryClickListener onRetryClickListener) {
@@ -453,7 +461,7 @@ public class CustomServiceActivity extends BaseActivity {
             } else if (holder instanceof RightPhotoHolder) {
                 ((RightPhotoHolder) holder).bindingData(mOnRetryClickListener, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof LeftPhotoHolder) {
-                ((LeftPhotoHolder) holder).bindingData(mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
+                ((LeftPhotoHolder) holder).bindingData(mOnRetryClickListener,mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof SystemHolder) {
                 ((SystemHolder) holder).bindingData(mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             }
@@ -512,7 +520,7 @@ public class CustomServiceActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(CustomerService customerService, Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
+            public void bindingData(final OnRetryClickListener onRetryClickListener, CustomerService customerService, Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
                 if (customerService != null) {
                     GlideApp.with(context).load(customerService.getUserPortrait())
                             .placeholder(R.drawable.ic_default_head_portrait)
@@ -530,6 +538,20 @@ public class CustomServiceActivity extends BaseActivity {
                     GlideApp.with(context).load(customServiceChat.getContent())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    if (onRetryClickListener != null) {
+                                        onRetryClickListener.onLeftReScroll();
+                                    }
+                                    return false;
+                                }
+                            })
 //                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mPhoto);
                 }
@@ -631,7 +653,7 @@ public class CustomServiceActivity extends BaseActivity {
                                 @Override
                                 public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                                     if (onRetryClickListener != null) {
-                                        onRetryClickListener.onReScroll();
+                                        onRetryClickListener.onRightReScroll();
                                     }
                                     return false;
                                 }
