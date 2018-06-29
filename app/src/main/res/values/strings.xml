@@ -196,7 +196,9 @@
     <string name="certificated">已认证</string>
     <string name="gesture_pwd">手势密码</string>
     <string name="set_gesture_pwd">设置手势密码</string>
+    <string name="please_set_gesture_pwd">请设置手势密码</string>
     <string name="set_gesture_pwd_hint">创建您的解锁图案，让他人拿到您的手机后，无法打开应用</string>
+    <string name="gesture_pwd_must_less_than_four">手势密码不能少于4个点</string>
 
     <string name="draw_coin_address">提币地址</string>
     <string name="add_address">添加地址</string>
