@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.mine.SafeActivity">
+
+
+
+    <com.songbai.futurex.view.safety.GestureUnLockSudoKuView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        app:normalColor="@color/bg_D7E4FF"
+        app:selectColor="@color/bg_6B9BF6"
+        app:errorColor="@color/red"
+        app:selectCircleRadius="16dp"
+        app:linkLineHeight="1dp"
+        app:normalCircleRadius="38dp"/>
+</LinearLayout>

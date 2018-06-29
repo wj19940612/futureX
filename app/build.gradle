@@ -85,3 +85,4 @@ android {
         implementation project(path: ':swipeloadlayout')
     }
 }
+
