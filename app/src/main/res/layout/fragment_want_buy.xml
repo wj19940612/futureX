@@ -24,12 +24,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <android.support.v7.widget.RecyclerView
+        <FrameLayout
             android:id="@id/swipe_target"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="14dp"/>
+            android:layout_height="match_parent">
+
+            <com.songbai.futurex.view.EmptyRecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"/>
+
+            <include
+                layout="@layout/view_common_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/radioHeader"/>
+        </FrameLayout>
+
 
         <com.zcmrr.swipelayout.foot.LoadMoreFooterView
             android:id="@+id/swipe_load_more_footer"

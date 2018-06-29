@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/head"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="12dp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@+id/head"
+            android:layout_marginLeft="10dp"
+            android:textSize="13sp"
+            android:textColor="@color/text22"
+            android:text="客服小三"/>
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_below="@+id/name"
+            android:layout_marginTop="10dp"
+            android:layout_alignLeft="@+id/name"
+            android:layout_marginRight="68dp"
+            android:textSize="15sp"
+            android:textColor="@color/text22"
+            android:text="尊敬的小主，早上好，我是客服小三，很高兴为您服务。"
+            android:background="@drawable/bg_chat_left_content"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/content"
+            android:layout_marginTop="10dp"
+            android:layout_alignLeft="@+id/name"
+            android:textSize="13sp"
+            android:textColor="@color/text99"
+            android:text="11:41:12"/>
+    </RelativeLayout>
+
+</LinearLayout>

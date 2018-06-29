@@ -13,6 +13,7 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.fragment.mine.BindMailFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
@@ -215,12 +216,13 @@ public class PersonalDataActivity extends BaseActivity {
                 String image = ImageUtils.compressImageToBase64(stringExtra, this);
                 uploadImage(image);
             }
-        } else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
-            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
-            if (!TextUtils.isEmpty(galleryBitmapPath)) {
-                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
-                uploadImage(image);
-            }
+        }
+        else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
+//            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
+//            if (!TextUtils.isEmpty(galleryBitmapPath)) {
+//                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
+//                uploadImage(image);
+//            }
         } else if (requestCode == MODIFY_PERSONAL_DATA) {
             requestUserInfo();
         }

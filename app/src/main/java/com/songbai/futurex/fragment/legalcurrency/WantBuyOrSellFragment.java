@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -22,6 +24,7 @@ import com.songbai.futurex.model.LegalCurrencyTrade;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -40,7 +43,11 @@ import sbai.com.glide.GlideApp;
 public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
 
     @BindView(R.id.swipe_target)
-    RecyclerView mRecyclerView;
+    FrameLayout mSwipeTarget;
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
+    @BindView(R.id.recyclerView)
+    EmptyRecyclerView mRecyclerView;
     @BindView(R.id.swipe_refresh_header)
     RefreshHeaderView mSwipeRefreshHeader;
     @BindView(R.id.swipe_load_more_footer)
@@ -87,6 +94,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
             mCoinType = arguments.getString("coinType");
             mPayCurrency = arguments.getString("payCurrency");
         }
+        mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WantByAdapter();
         mRecyclerView.setAdapter(mAdapter);
@@ -158,6 +166,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
                         if (mPage >= resp.getData().getTotal()) {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
+                        if (mPage == 0) {
+                            mRecyclerView.hideAll(false);
+                        }
                     }
 
                     @Override
@@ -190,7 +201,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
     @NonNull
     @Override
     public Object getSwipeTargetView() {
-        return mRecyclerView;
+        return mSwipeTarget;
     }
 
     @NonNull

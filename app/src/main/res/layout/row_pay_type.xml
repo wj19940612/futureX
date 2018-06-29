@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/unionPay"
     android:layout_width="match_parent"
@@ -8,15 +9,51 @@
     android:adjustViewBounds="true"
     android:background="@drawable/bg_white_pressed_f5">
 
-    <TextView
-        android:id="@+id/textView"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:adjustViewBounds="true"
-        android:gravity="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
-        tools:text="@string/bank_card"/>
+        android:layout_height="44dp">
+
+        <ImageView
+            android:id="@+id/bankIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:layout_marginTop="9dp"
+            android:src="@drawable/ic_pay_alipay_s"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/bankName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/text49"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/bankIcon"
+            app:layout_constraintLeft_toRightOf="@id/bankIcon"
+            app:layout_constraintTop_toTopOf="@id/bankIcon"
+            tools:text="@string/bank_card"/>
+
+        <TextView
+            android:id="@+id/cardNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:textColor="@color/text99"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@id/bankName"
+            app:layout_constraintTop_toBottomOf="@id/bankName"
+            tools:text="12312"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bgF5"/>
 
     <ImageView
         android:id="@+id/checkMark"

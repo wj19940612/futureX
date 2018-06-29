@@ -27,7 +27,6 @@ import java.util.Map;
  */
 public class PayTypeController extends SmartDialog.CustomViewController {
     private Context mContext;
-    private String[] payType = new String[]{PayType.BANK_PAY, PayType.ALIPAY, PayType.WXPAY};
     private HashMap<String, String> mSelectedPayTypes = new HashMap<>();
     private OnItemClickListener mOnItemClickListener;
     private BindBankList mBankList;
@@ -159,33 +158,41 @@ public class PayTypeController extends SmartDialog.CustomViewController {
         private class PayTypeHolder extends RecyclerView.ViewHolder {
 
             private View mRootView;
-            private TextView mTextView;
+            private TextView mBankName;
+            private TextView mCardNum;
+            private ImageView mBankIcon;
             private ImageView mCheckMark;
 
             public PayTypeHolder(View itemView) {
                 super(itemView);
                 mRootView = itemView;
-                mTextView = itemView.findViewById(R.id.textView);
+                mBankName = itemView.findViewById(R.id.bankName);
+                mCardNum = itemView.findViewById(R.id.cardNum);
+                mBankIcon = itemView.findViewById(R.id.bankIcon);
                 mCheckMark = itemView.findViewById(R.id.checkMark);
             }
 
             public void bindData(final BankCardBean bankCardBean) {
                 String payType = "";
                 switch (bankCardBean.getPayType()) {
-                    case BankCardBean.PAYTYPE_ALIPAY:
-                        mTextView.setText(R.string.alipay);
-                        payType = PayType.ALIPAY;
-                        break;
-                    case BankCardBean.PAYTYPE_WX:
-                        mTextView.setText(R.string.wechatpay);
-                        payType = PayType.WXPAY;
-                        break;
-                    case BankCardBean.PAYTYPE_BANK:
-                        mTextView.setText(bankCardBean.getBankName() + bankCardBean.getCardNumber());
-                        payType = PayType.BANK_PAY;
-                        break;
-                    default:
+                        case BankCardBean.PAYTYPE_ALIPAY:
+                            mBankIcon.setImageResource(R.drawable.ic_pay_alipay_s);
+                            mBankName.setText(R.string.alipay);
+                            payType = PayType.ALIPAY;
+                            break;
+                        case BankCardBean.PAYTYPE_WX:
+                            mBankIcon.setImageResource(R.drawable.ic_pay_wechat_s);
+                            mBankName.setText(R.string.wechatpay);
+                            payType = PayType.WXPAY;
+                            break;
+                        case BankCardBean.PAYTYPE_BANK:
+                            mBankIcon.setImageResource(R.drawable.ic_pay_unionpay_s);
+                            mBankName.setText(bankCardBean.getBankName());
+                            payType = PayType.BANK_PAY;
+                            break;
+                        default:
                 }
+                mCardNum.setText(bankCardBean.getCardNumber());
                 boolean match = false;
                 if (mPayInfo != null) {
                     for (Map.Entry<String, String> entry : mPayInfo.entrySet()) {

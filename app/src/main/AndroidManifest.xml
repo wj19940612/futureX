@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.songbai.futurex"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.songbai.futurex">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.TERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
-
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -40,6 +38,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+
         <activity
             android:name=".activity.CrashInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|locale"
@@ -90,6 +90,18 @@
             android:name=".activity.mine.SetGesturePwdActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".fragment.mine.MessageCenterActivity"/>
+
+        <activity
+            android:name=".activity.LegalCurrencyOrderActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.CustomServiceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+
+        <activity
+            android:name=".activity.mine.SafeActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".service.NotificationService"/>
         <service android:name=".service.MyPushIntentService"/>

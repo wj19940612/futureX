@@ -17,6 +17,14 @@ import java.util.zip.GZIPInputStream;
  */
 public class Utils {
 
+    public static Request getRequest(Object o) {
+        Request request = new Request(o);
+        long timestamp = SysTime.getSysTime().getSystemTimestamp();
+        request.setTimestamp(String.valueOf(timestamp));
+        request.setUuid(createUUID(timestamp));
+        return request;
+    }
+
     public static Request getRequest(int code, Object o) {
         Request request = new Request(code, o);
         long timestamp = SysTime.getSysTime().getSystemTimestamp();

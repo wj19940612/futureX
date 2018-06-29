@@ -137,6 +137,7 @@
     <string name="logout">退出登录</string>
     <string name="platform_introduction">平台介绍</string>
     <string name="company_introduction">公司介绍</string>
+    <string name="service_agreement">服务协议</string>
     <string name="connect_customer_service">联系客服</string>
     <string name="version_updating">版本更新</string>
     <string name="feedback_content">反馈内容</string>

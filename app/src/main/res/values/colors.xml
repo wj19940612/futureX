@@ -21,4 +21,8 @@
     <color name="bgDD">#dddddd</color>
     <color name="sixtyPercentWhite">#99ffffff</color>
 
+    <color name="bg_D7E4FF">#D7E4FF</color>
+    <color name="bg_6B9BF6">#6B9BF6</color>
+    <color name="bg_B7BBC2">#B7BBC2</color>
+
 </resources>

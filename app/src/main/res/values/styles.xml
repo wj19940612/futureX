@@ -72,4 +72,6 @@
         <item name="android:activityOpenExitAnimation">@anim/hold</item>
     </style>
 
+
+
 </resources>

@@ -12,12 +12,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.activity.LegalCurrencyOrderActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.legalcurrency.MyPosterFragment;
 import com.songbai.futurex.fragment.legalcurrency.PublishPosterFragment;
@@ -27,6 +27,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CountryCurrency;
 import com.songbai.futurex.model.LegalCoin;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
@@ -49,8 +50,6 @@ import butterknife.Unbinder;
 public class LegalCurrencyFragment extends BaseFragment {
     private static int REQUEST_PUBLISH_POSTER = 14321;
 
-    @BindView(R.id.rootView)
-    LinearLayout mRootView;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.radioHeader)
@@ -165,7 +164,7 @@ public class LegalCurrencyFragment extends BaseFragment {
         mUnbinder.unbind();
     }
 
-    @OnClick({R.id.title, R.id.order})
+    @OnClick({R.id.title, R.id.order, R.id.publishPoster})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.title:
@@ -177,6 +176,9 @@ public class LegalCurrencyFragment extends BaseFragment {
                 }
                 break;
             case R.id.order:
+                Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+                break;
+            case R.id.publishPoster:
                 UniqueActivity.launcher(this, PublishPosterFragment.class)
                         .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, mSelectedLegalSymbol)
                         .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
