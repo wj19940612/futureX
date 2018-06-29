@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/bg_66_r2"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="13sp"/>
+
+    <TextView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:background="@drawable/bg_66_r2"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="13sp"/>
+
+    <TextView
+        android:layout_width="4dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text=":"
+        android:textColor="@color/white"
+        android:textSize="13sp"/>
+
+    <TextView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:background="@drawable/bg_66_r2"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="13sp"/>
+
+    <TextView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/bg_66_r2"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="13sp"/>
+</LinearLayout>

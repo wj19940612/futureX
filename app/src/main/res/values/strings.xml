@@ -313,7 +313,7 @@
     <string name="optional">（选填）</string>
     <string name="buyer_limit">对方限制</string>
     <string name="authentication_with_symbol">认证：</string>
-    <string name="trade_count_more_than">交易成功次数大于：</string>
+    <string name="trade_count_more_than">交易成功次数大于：</string>ø
     <string name="contract_info">联系方式</string>
     <string name="read_and_agree">我已阅读并同意</string>
     <string name="coin_trade_protocol">《发币交易协议》</string>
@@ -323,7 +323,6 @@
     <string name="attention_hint_text">为了保证投资者的交易安全，平台将采用数字货币托管系统，任何投资者严禁绕过平台私下交易，违者自行承担损失。\n请在交易说明及交易备注中，详细写下您所希望的交易条件，以及与您交易所需注意的事项，明确的信息将提升您的交易成功率及评价。\n请勿在平台尝试欺诈行为，违者将会导致账号被冻结，并承担法律责任。\n发布广告后请旅行契约精神，恶意抬价或者是反悔，被投诉将冻结账户3-14天不等。</string>
     <string name="single_price">单价</string>
     <string name="limit">限制</string>
-    <string name="create_time">创建时间</string>
     <string name="update_time">更新时间</string>
     <string name="fixed_price_x">固定价格 %1$s</string>
     <string name="floating_price_x">溢价 %1$s</string>
@@ -368,6 +367,24 @@
     <string name="passed_primary_certification">必须通过初级认证</string>
     <string name="passed_senior_certification">必须通过高级认证</string>
     <string name="deal_count_more_than_x">交易成功次数大于%1$s</string>
+    <!--LEGAL_CURRENCY_ORDER-->
+    <string-array name="legal_currency_order_header">
+        <item>@string/all</item>
+        <item>@string/unpaid</item>
+        <item>@string/paid</item>
+        <item>@string/canceled</item>
+        <item>@string/completed</item>
+    </string-array>
+    <string name="unpaid">未付款</string>
+    <string name="paid">已付款</string>
+    <string name="canceled">已取消</string>
+    <string name="turnover">交易金额</string>
+    <string name="trade_count_symbol_x">交易金额：%1$s&#160;%2$s</string>
+    <string name="pay_info">支付信息</string>
+    <string name="trade_rules_description">请务必向对方询问交易方式，并且与平台所留方式进行对比，若不一致，请慎重付款\n\n1.转帐时请备注「订单编号后4位」以加快确认速度\n\n2.请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n3.订单有效期为15分钟，请您在有效期内及时付款并点击「已转账」按钮，数字币才可以释放给您\n\n4.如果您无法在15分钟内完成付款，该笔订单将被取消\n\n5.开始交易后数字币由系统锁定托管，请安心下单</string>
+    <string name="order_detail_price_x">价格：%1$s&#160;%2$s/%3$s</string>
+    <string name="order_detail_amount_x">数量：%1$s&#160;%2$s</string>
+
 
     <!-- bottom tabs -->
     <string name="home">首页</string>

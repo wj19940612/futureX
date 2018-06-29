@@ -46,7 +46,7 @@ public class ClipHeadImageActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.complete:
-                submitFile();
+//                submitFile();
                 break;
         }
     }

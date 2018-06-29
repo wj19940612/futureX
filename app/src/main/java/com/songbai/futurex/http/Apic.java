@@ -723,6 +723,55 @@ public class Apic {
     }
 
     /**
+     * /api/otc/order/list
+     * GET
+     * 订单管理
+     */
+    public static Api legalCurrencyOrderList(int page, int pageSize, int status) {
+        return Api.get("/api/otc/order/list",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("status", status));
+    }
+
+    /**
+     * /api/otc/order/detail.do
+     * GET
+     * 订单详情--(v1.1)
+     */
+    public static Api otcOrderDetail(int id, int direct) {
+        return Api.get("/api/otc/order/detail.do",
+                new ReqParams()
+                        .put("id", id)
+                        .put("direct", direct));
+    }
+
+    /**
+     * /api/otc/wares/mine
+     * GET
+     * (改)个人广告主页-个人信息(V1.2)
+     */
+    public static Api otcWaresMine(String waresId, String orderId, int orientation) {
+        return Api.get("/api/otc/wares/mine",
+                new ReqParams()
+                        .put("waresId", waresId)
+                        .put("orderId", orderId)
+                        .put("orientation", orientation));
+    }
+
+    /**
+     * /api/otc/order/payInfo
+     * GET
+     * 订单支付信息--(v1.1)
+     */
+    public static Api orderPayInfo(int id) {
+        return Api.get("/api/otc/order/payInfo",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
      * 获取（phone/email）验证码
      * <p>
      * /api/user/validate/sendMsgCode.do
