@@ -1,7 +1,6 @@
 package com.songbai.futurex.utils;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +26,7 @@ public class DateUtil {
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
     public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
     public static final String FORMAT_HOUR_MINUTE_DATE= "HH:mm MM/dd";
+    public static final String FORMAT_SPECIAL_SLASH_ALL = "yyyy/MM/dd HH:mm:ss";
 
 
     private static final String TODAY = "今日";

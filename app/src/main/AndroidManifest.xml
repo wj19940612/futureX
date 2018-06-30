@@ -97,6 +97,13 @@
             android:name=".activity.CustomServiceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+        <activity
+            android:name=".activity.OtcOrderCompletedActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.OtcTradeChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <service android:name=".service.NotificationService"/>
         <service android:name=".service.MyPushIntentService"/>

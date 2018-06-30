@@ -17,9 +17,8 @@ import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.view.SmartDialog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yangguangda
@@ -27,7 +26,8 @@ import java.util.Map;
  */
 public class PayTypeController extends SmartDialog.CustomViewController {
     private Context mContext;
-    private HashMap<String, String> mSelectedPayTypes = new HashMap<>();
+    private ArrayList<String> mPayInfos = new ArrayList<>();
+    private String mBankId;
     private OnItemClickListener mOnItemClickListener;
     private BindBankList mBankList;
 
@@ -55,45 +55,59 @@ public class PayTypeController extends SmartDialog.CustomViewController {
             @Override
             public void onClick(View v) {
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onConfirmClick(mSelectedPayTypes);
+                    StringBuilder sb = new StringBuilder();
+                    for (String payInfo : mPayInfos) {
+                        sb.append(payInfo);
+                        sb.append(",");
+                    }
+                    mOnItemClickListener.onConfirmClick(sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "", mBankId);
                     dialog.dismiss();
                 }
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         final PayTypeAdapter adapter = new PayTypeAdapter();
-        adapter.setPayInfo(mSelectedPayTypes);
+        adapter.setPayInfo(mPayInfos);
+        adapter.setSelectedBankId(mBankId);
         adapter.setList(mBankList);
         adapter.setOnItemClickListener(new PayTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String payType, BankCardBean bankCardBean) {
                 int id = bankCardBean.getId();
-                if (mSelectedPayTypes.containsKey(payType)) {
-                    if (mSelectedPayTypes.get(payType).equals(String.valueOf(id))) {
-                        mSelectedPayTypes.remove(payType);
-                    } else {
-                        mSelectedPayTypes.put(payType, String.valueOf(id));
+                if (mPayInfos.contains(payType)) {
+                    mPayInfos.remove(payType);
+                    if (String.valueOf(id).equals(mBankId)) {
+                        mBankId = "";
                     }
                 } else {
-                    mSelectedPayTypes.put(payType, String.valueOf(id));
+                    mPayInfos.add(payType);
+                    if (PayType.BANK_PAY.equals(payType)) {
+                        mBankId = String.valueOf(id);
+                    }
                 }
-                adapter.setPayInfo(mSelectedPayTypes);
+                adapter.setPayInfo(mPayInfos);
+                adapter.setSelectedBankId(mBankId);
                 adapter.notifyDataSetChanged();
             }
         });
         recyclerView.setAdapter(adapter);
     }
 
-    public void setPayInfo(HashMap<String, String> payInfo) {
-        mSelectedPayTypes = payInfo;
+    public void setPayInfo(String payInfo) {
+        String[] split = payInfo.split(",");
+        mPayInfos.addAll(Arrays.asList(split));
     }
 
     public void setBankList(BindBankList bankList) {
         mBankList = bankList;
     }
 
+    public void setSelectedBankId(String selectedBankId) {
+        mBankId = selectedBankId;
+    }
+
     public interface OnItemClickListener {
-        void onConfirmClick(HashMap<String, String> payInfo);
+        void onConfirmClick(String payInfo, String id);
     }
 
     public PayTypeController setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -104,7 +118,8 @@ public class PayTypeController extends SmartDialog.CustomViewController {
     static class PayTypeAdapter extends RecyclerView.Adapter {
         private OnItemClickListener mListener;
         ArrayList<BankCardBean> mList = new ArrayList<>();
-        private HashMap<String, String> mPayInfo;
+        private ArrayList<String> mPayInfo;
+        private String mSelectedBankId;
 
         @NonNull
         @Override
@@ -143,8 +158,12 @@ public class PayTypeController extends SmartDialog.CustomViewController {
             mList.addAll(list);
         }
 
-        public void setPayInfo(HashMap<String, String> payInfo) {
+        public void setPayInfo(ArrayList<String> payInfo) {
             mPayInfo = payInfo;
+        }
+
+        public void setSelectedBankId(String selectedBankId) {
+            mSelectedBankId = selectedBankId;
         }
 
         public interface OnItemClickListener {
@@ -174,31 +193,32 @@ public class PayTypeController extends SmartDialog.CustomViewController {
 
             public void bindData(final BankCardBean bankCardBean) {
                 String payType = "";
+                boolean match = false;
                 switch (bankCardBean.getPayType()) {
-                        case BankCardBean.PAYTYPE_ALIPAY:
-                            mBankIcon.setImageResource(R.drawable.ic_pay_alipay_s);
-                            mBankName.setText(R.string.alipay);
-                            payType = PayType.ALIPAY;
-                            break;
-                        case BankCardBean.PAYTYPE_WX:
-                            mBankIcon.setImageResource(R.drawable.ic_pay_wechat_s);
-                            mBankName.setText(R.string.wechatpay);
-                            payType = PayType.WXPAY;
-                            break;
-                        case BankCardBean.PAYTYPE_BANK:
-                            mBankIcon.setImageResource(R.drawable.ic_pay_unionpay_s);
-                            mBankName.setText(bankCardBean.getBankName());
-                            payType = PayType.BANK_PAY;
-                            break;
-                        default:
+                    case BankCardBean.PAYTYPE_ALIPAY:
+                        mBankIcon.setImageResource(R.drawable.ic_pay_alipay_s);
+                        mBankName.setText(R.string.alipay);
+                        payType = PayType.ALIPAY;
+                        break;
+                    case BankCardBean.PAYTYPE_WX:
+                        mBankIcon.setImageResource(R.drawable.ic_pay_wechat_s);
+                        mBankName.setText(R.string.wechatpay);
+                        payType = PayType.WXPAY;
+                        break;
+                    case BankCardBean.PAYTYPE_BANK:
+                        mBankIcon.setImageResource(R.drawable.ic_pay_unionpay_s);
+                        mBankName.setText(bankCardBean.getBankName());
+                        payType = PayType.BANK_PAY;
+                        break;
+                    default:
                 }
                 mCardNum.setText(bankCardBean.getCardNumber());
-                boolean match = false;
                 if (mPayInfo != null) {
-                    for (Map.Entry<String, String> entry : mPayInfo.entrySet()) {
-                        if (entry.getKey().equals(payType)) {
-                            if (entry.getValue().equals(String.valueOf(bankCardBean.getId()))) {
-                                match = true;
+                    for (String s : mPayInfo) {
+                        if (s.equals(payType)) {
+                            match = true;
+                            if (payType.equals(PayType.BANK_PAY)) {
+                                match = mSelectedBankId.equals(String.valueOf(bankCardBean.getId()));
                             }
                         }
                     }

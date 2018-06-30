@@ -383,7 +383,20 @@
     <string name="trade_rules_description">请务必向对方询问交易方式，并且与平台所留方式进行对比，若不一致，请慎重付款\n\n1.转帐时请备注「订单编号后4位」以加快确认速度\n\n2.请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n3.订单有效期为15分钟，请您在有效期内及时付款并点击「已转账」按钮，数字币才可以释放给您\n\n4.如果您无法在15分钟内完成付款，该笔订单将被取消\n\n5.开始交易后数字币由系统锁定托管，请安心下单</string>
     <string name="order_detail_price_x">价格：%1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">数量：%1$s&#160;%2$s</string>
-
+    <string name="you_have_canceled_trade">您已取消这笔交易</string>
+    <string name="otc_order_success_wait_pay">您已经成功下单，请及时支付</string>
+    <string name="otc_trade_complete_desc">对方已确认收到您的付款，并已转币到您的帐户</string>
+    <string name="wait_to_pay_and_confirm">待付款并确认</string>
+    <string name="wait_sell_transfer_coin">待卖家转币</string>
+    <string name="seller_info">卖家信息</string>
+    <string name="contact_each_other">联系对方</string>
+    <string name="order_time_with_symbol_x">订单时间：%1$s</string>
+    <string name="wait_to_pay">等待付款</string>
+    <string name="pay_info_hint_to_seller">对方已成功下单，正在向您询问支付方式。</string>
+    <string name="pay_info_hint_to_buyer">您已成功下单，请与卖家确认支付方式。</string>
+    <string name="pay_info_safety_hint_to_seller">已向买家发送以上信息，请与买家确认</string>
+    <string name="pay_info_safety_hint_to_buyer">以上为卖家预留收款账号，请与卖家确认后付款。请谨慎付款到与预留账号不一致的账户，请勿付款到与卖家认证姓名不一致的账户。</string>
+    <string name="sold_x">出售&#160;%1$s</string>
 
     <!-- bottom tabs -->
     <string name="home">首页</string>

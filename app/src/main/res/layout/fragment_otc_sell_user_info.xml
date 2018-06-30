@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_seller_home_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.songbai.futurex.view.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:backFeature="true"
+            app:backIcon="@drawable/ic_tb_back_white"
+            app:titleText="@string/seller_info"
+            app:titleTextColor="@color/white"/>
+
+        <ImageView
+            android:id="@+id/headPortrait"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:padding="2dp"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            tools:text="用户306"/>
+
+        <TextView
+            android:id="@+id/authenticationStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:drawableLeft="@drawable/ic_primary_star"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="高级认证"
+            android:textColor="@color/white"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/countDealRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:text="20001单 完成率98.6%"
+            android:textColor="@color/white"
+            android:textSize="17sp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/primaryCertification"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/bg_seller_certification_item">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/primary_certification"
+            android:textColor="@color/text22"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_common_checkmark"
+            android:drawablePadding="3dp"
+            android:text="@string/certificated"
+            android:textColor="@color/text99"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/seniorCertification"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_seller_certification_item">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/senior_certification"
+            android:textColor="@color/text22"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_common_checkmark"
+            android:drawablePadding="3dp"
+            android:text="@string/certificated"
+            android:textColor="@color/text99"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mailCertification"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_seller_certification_item">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/mail_certification"
+            android:textColor="@color/text22"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_common_checkmark"
+            android:drawablePadding="3dp"
+            android:text="@string/certificated"
+            android:textColor="@color/text99"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/phoneCertification"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_seller_certification_item">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/phone_certification"
+            android:textColor="@color/text22"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_common_checkmark"
+            android:drawablePadding="3dp"
+            android:text="@string/certificated"
+            android:textColor="@color/text99"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+</LinearLayout>

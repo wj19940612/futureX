@@ -112,7 +112,9 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="14dp"
         android:background="@drawable/bg_f5_r2"
-        android:gravity="center"
+        android:gravity="center|left"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintHorizontal_bias="1"
@@ -121,4 +123,19 @@
         app:layout_constraintTop_toBottomOf="@id/statusContainer"
         tools:text="您已取消这笔交易"/>
 
+    <TextView
+        android:id="@+id/redPoint"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/point_red"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:textSize="9dp"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusContainer"
+        tools:text="9+"/>
 </android.support.constraint.ConstraintLayout>

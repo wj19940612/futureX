@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -26,6 +27,7 @@ import com.songbai.futurex.model.OtcWarePoster;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.EditTypeController;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
@@ -44,9 +46,10 @@ import butterknife.Unbinder;
  */
 public class MyPosterFragment extends BaseSwipeLoadFragment {
     private static final int REQUEST_PUBLISH_POSTER = 12312;
-
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
     @BindView(R.id.swipe_target)
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     @BindView(R.id.swipe_refresh_header)
     RefreshHeaderView mSwipeRefreshHeader;
     @BindView(R.id.swipe_load_more_footer)
@@ -85,6 +88,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         if (arguments != null) {
 
         }
+        mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new MyAdAdapter();
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -200,6 +204,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         mAdapter.setList(resp.getData().getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
+                        if (mPage == 0) {
+                            mRecyclerView.hideAll(false);
+                        }
                         mPage++;
                         if (mPage >= resp.getData().getTotal()) {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
@@ -210,6 +217,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                     public void onFailure(ReqError reqError) {
                         super.onFailure(reqError);
                         stopFreshOrLoadAnimation();
+                        if (mPage == 0) {
+                            mRecyclerView.hideAll(false);
+                        }
                     }
                 }).fire();
     }

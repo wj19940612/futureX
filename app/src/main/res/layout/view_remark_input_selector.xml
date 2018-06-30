@@ -9,7 +9,6 @@
 
     <EditText
         android:id="@+id/remark"
-        style="@style/SingleEditText"
         android:layout_width="0dp"
         android:layout_height="96dp"
         android:layout_marginLeft="12dp"
@@ -18,8 +17,14 @@
         android:background="@color/bgF5"
         android:gravity="start"
         android:hint="@string/remark_will_send_to_buy_default"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:paddingTop="10dp"
+        android:singleLine="false"
+        android:textColor="@color/text22"
         android:textColorHint="@color/text66"
+        android:textCursorDrawable="@drawable/cursor_primary"
+        android:textSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

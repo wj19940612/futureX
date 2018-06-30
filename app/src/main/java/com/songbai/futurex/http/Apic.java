@@ -1,7 +1,6 @@
 package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
-import com.songbai.futurex.App;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.BankBindData;
@@ -9,10 +8,9 @@ import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LoginData;
-import com.songbai.futurex.model.local.WaresModel;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
-import com.songbai.futurex.utils.AppInfo;
+import com.songbai.futurex.model.local.WaresModel;
 import com.songbai.futurex.websocket.model.CustomServiceChat;
 
 /**
@@ -729,7 +727,7 @@ public class Apic {
      * GET
      * 订单管理
      */
-    public static Api legalCurrencyOrderList(int page, int pageSize, int status) {
+    public static Api legalCurrencyOrderList(int page, int pageSize, String status) {
         return Api.get("/api/otc/order/list",
                 new ReqParams()
                         .put("page", page)
@@ -771,6 +769,43 @@ public class Apic {
         return Api.get("/api/otc/order/payInfo",
                 new ReqParams()
                         .put("id", id));
+    }
+
+    /**
+     * /api/otc/chat/history
+     * GET
+     * 历史消息
+     */
+    public static Api otcChatHistory(int waresOrderId, String startTime, int size) {
+        return Api.get("/api/otc/chat/history",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId)
+                        .put("startTime", startTime)
+                        .put("size", size));
+    }
+
+    /**
+     * /api/otc/chat/send
+     * POST
+     * 发送消息 消息类型 1文字 2图片
+     */
+    public static Api otcChatSend(String msg, int waresOrderId, int msgType) {
+        return Api.post("/api/otc/chat/send",
+                new ReqParams()
+                        .put("msg", msg)
+                        .put("waresOrderId", waresOrderId)
+                        .put("msgType", msgType));
+    }
+
+    /**
+     * /api/otc/chat/user
+     * POST
+     * 获取用户信息
+     */
+    public static Api otcChatUser(int waresOrderId) {
+        return Api.get("/api/otc/chat/user",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId));
     }
 
     /**
@@ -1033,25 +1068,28 @@ public class Apic {
     /**
      * 查询客服聊天历史数据
      * pageDir 0-从时间位置向前查询 1-从时间位置向后查询
+     *
      * @return
      */
     public static Api requestChatHistory() {
-        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", "111111111").put("startTime",System.currentTimeMillis()).put("pageDir",0).put("pageSize",200));
+        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", "111111111").put("startTime", System.currentTimeMillis()).put("pageDir", 0).put("pageSize", 200));
     }
 
     /**
      * 发送给客服消息
+     *
      * @return
      */
-    public static Api sendTextChat(String msg){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid","111111111").put("msgtype", CustomServiceChat.MSG_TEXT).put("content",msg));
+    public static Api sendTextChat(String msg) {
+        return Api.post("/api/user/chat/send.do", new ReqParams().put("deviceid", "111111111").put("msgtype", CustomServiceChat.MSG_TEXT).put("content", msg));
     }
 
     /**
      * 发送给客服图片
+     *
      * @return
      */
-    public static Api sendPhotoChat(String photoAddress){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid","111111111").put("msgtype", CustomServiceChat.MSG_PHOTO).put("content",photoAddress));
+    public static Api sendPhotoChat(String photoAddress) {
+        return Api.post("/api/user/chat/send.do", new ReqParams().put("deviceid", "111111111").put("msgtype", CustomServiceChat.MSG_PHOTO).put("content", photoAddress));
     }
 }

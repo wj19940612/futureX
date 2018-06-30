@@ -35,9 +35,11 @@ public class LegalCurrencyOrderActivity extends BaseActivity {
         setContentView(R.layout.activity_legal_currency);
         mBind = ButterKnife.bind(this);
         ArrayList<BaseFragment> fragments = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            fragments.add(LegalCurrencyOrderListFragment.newInstance(i));
-        }
+        fragments.add(LegalCurrencyOrderListFragment.newInstance(""));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance("1"));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance("2"));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance("0"));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance("3"));
         mViewPager.setAdapter(new LegalCurrencyOrderPager(getSupportFragmentManager(), fragments));
         mViewPager.setOffscreenPageLimit(fragments.size() - 1);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

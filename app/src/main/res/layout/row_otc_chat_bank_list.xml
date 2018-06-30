@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="9dp"
+    android:layout_marginTop="9dp">
+
+    <TextView
+        android:id="@+id/accountType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:drawableLeft="@drawable/ic_pay_alipay_s"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:text="@string/alipay"
+        android:textColor="@color/text22"
+        android:textSize="13sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bankName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:textColor="@color/text66"
+                android:textSize="13sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/accountType"
+                app:layout_constraintBottom_toTopOf="@id/cardNum"
+                app:layout_constraintLeft_toRightOf="@id/accountType"
+                app:layout_constraintRight_toLeftOf="@id/bankBranch"
+                tools:text="中国民生银行"/>
+
+            <TextView
+                android:id="@+id/bankBranch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text66"
+                android:textSize="13sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/bankName"
+                app:layout_constraintLeft_toRightOf="@id/bankName"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:text="城西支行"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/text66"
+                android:textSize="13sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/cardNum"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toRightOf="@id/accountType"
+                app:layout_constraintRight_toLeftOf="@id/cardNum"
+                app:layout_goneMarginLeft="0dp"
+                tools:text="张三年"/>
+
+            <TextView
+                android:id="@+id/cardNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text66"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/name"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bankName"
+                app:layout_goneMarginBottom="12dp"
+                app:layout_goneMarginLeft="18dp"
+                tools:text="*******9938"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

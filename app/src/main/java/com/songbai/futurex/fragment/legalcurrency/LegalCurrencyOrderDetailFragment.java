@@ -1,4 +1,4 @@
-package com.songbai.futurex.fragment;
+package com.songbai.futurex.fragment.legalcurrency;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,8 +21,10 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.mine.BankCardBean;
+import com.songbai.futurex.model.status.OtcOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.view.CountDownView;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import sbai.com.glide.GlideApp;
 
@@ -52,7 +55,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     @BindView(R.id.orderStatus)
     TextView mOrderStatus;
     @BindView(R.id.timer)
-    CountDownView mTimer;
+    CountDownView mCountDownView;
     @BindView(R.id.headPortrait)
     ImageView mHeadPortrait;
     @BindView(R.id.certification)
@@ -60,9 +63,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     @BindView(R.id.userName)
     TextView mUserName;
     @BindView(R.id.payInfo)
-    RecyclerView mPayInfo;
+    EmptyRecyclerView mPayInfo;
     @BindView(R.id.countDealRate)
     TextView mCountDealRate;
+    @BindView(R.id.bankEmptyView)
+    TextView mBankEmptyView;
     private int mOrderId;
     private int mTradeDirection;
     private Unbinder mBind;
@@ -83,6 +88,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        mPayInfo.setEmptyView(mBankEmptyView);
         otcOrderDetail(mOrderId, mTradeDirection);
         otcWaresMine("", String.valueOf(mOrderId), 1);
         orderPayInfo();
@@ -126,7 +132,15 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .into(mHeadPortrait);
         int authStatus = waresUserInfo.getAuthStatus();
         mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
-        mCertification.setImageResource(authStatus == 1 || authStatus == 2 ? R.drawable.ic_primary_star : R.drawable.ic_senior_star);
+        switch (authStatus) {
+            case 1:
+                mCertification.setImageResource(R.drawable.ic_primary_star);
+                break;
+            case 2:
+                mCertification.setImageResource(R.drawable.ic_senior_star);
+                break;
+            default:
+        }
         mUserName.setText(waresUserInfo.getUsername());
         mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,
                 waresUserInfo.getCountDeal(),
@@ -152,6 +166,23 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .into(mHeadPortrait);
         mUserName.setText(order.getBuyerName());
         switch (order.getStatus()) {
+            case OtcOrderStatus.ORDER_UNPAIED:
+                mCountDownView.setVisibility(View.VISIBLE);
+                mCountDownView.setTimes(order.getOrderTime() + 15 * 60 * 1000);
+                mCountDownView.setOnStateChangeListener(new CountDownView.OnStateChangeListener() {
+                    @Override
+                    public void onStateChange(int countDownState) {
+                        if (countDownState == CountDownView.STOPPED) {
+                            mCountDownView.setVisibility(View.GONE);
+                        }
+                    }
+                });
+                mOrderStatus.setText(R.string.wait_to_pay_and_confirm);
+                break;
+            case OtcOrderStatus.ORDER_PAIED:
+                mCountDownView.setVisibility(View.GONE);
+                mOrderStatus.setText(R.string.wait_sell_transfer_coin);
+                break;
             default:
         }
     }
@@ -162,12 +193,28 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         adapter.setList(bankList);
         mPayInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        mPayInfo.hideAll(false);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
+    }
+
+    @OnClick({R.id.headPortrait, R.id.bankEmptyView})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.headPortrait:
+                UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
+                        .putExtra(ExtraKeys.ORDER_ID, mOrderId)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
+                        .execute();
+                break;
+            case R.id.bankEmptyView:
+                break;
+            default:
+        }
     }
 
     class BankListAdapter extends RecyclerView.Adapter {
