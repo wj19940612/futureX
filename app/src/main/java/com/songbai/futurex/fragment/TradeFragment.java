@@ -24,6 +24,7 @@ import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
+import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -31,6 +32,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.local.MakeOrder;
 import com.songbai.futurex.model.mine.CoinAbleAmount;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.NumUtils;
@@ -59,6 +61,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.songbai.futurex.model.local.MakeOrder.LIMIT_TRADE;
+import static com.songbai.futurex.model.local.MakeOrder.MARKET_TRADE;
+
 /**
  * Modified by john on 2018/5/30
  * <p>
@@ -67,9 +72,6 @@ import butterknife.Unbinder;
  * APIs:
  */
 public class TradeFragment extends BaseFragment {
-
-    private static final int LIMIT_TRADE = 1;
-    private static final int MARKET_TRADE = 2;
 
     @BindView(R.id.optionalStatus)
     ImageView mOptionalStatus;
@@ -186,6 +188,7 @@ public class TradeFragment extends BaseFragment {
             public void onPriceChange(double price) {
                 updateTradeCurrencyView();
                 updateTradeAmount();
+                updateVolumeSeekBar();
             }
         });
 
@@ -193,13 +196,16 @@ public class TradeFragment extends BaseFragment {
             @Override
             public void onVolumeChange(double volume) {
                 updateTradeAmount();
+                updateVolumeSeekBar();
             }
         });
 
         mTradeVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateTradeVolumeView();
+                if (fromUser) {
+                    updateVolumeInputView();
+                }
             }
 
             @Override
@@ -225,7 +231,13 @@ public class TradeFragment extends BaseFragment {
         });
     }
 
-    private void updateTradeVolumeView() {
+    private void updateVolumeSeekBar() {
+        int max = mTradeVolumeSeekBar.getMax();
+        int progress = (int) (mVolumeInput.getVolume() / mObtainableCurrencyVolume * max);
+        mTradeVolumeSeekBar.setProgress(progress);
+    }
+
+    private void updateVolumeInputView() {
         int progress = mTradeVolumeSeekBar.getProgress();
         int max = mTradeVolumeSeekBar.getMax();
         double tradeVolume = mObtainableCurrencyVolume * progress / max;
@@ -362,14 +374,7 @@ public class TradeFragment extends BaseFragment {
     }
 
     private double getObtainableCurrencyAmt(double availableCounterCurrency) {
-        double price = mChangePriceView.getPrice();
-        if (mTradeTypeValue == MARKET_TRADE) {
-            if (mTradeDir == TradeDir.DIR_BUY_IN) {
-                price = mTradeVolumeView.getAskPrice1();
-            } else {
-                price = mTradeVolumeView.getBidPrice1();
-            }
-        }
+        double price = getTradePrice();
 
         if (price == 0) return 0;
 
@@ -378,6 +383,18 @@ public class TradeFragment extends BaseFragment {
         } else {
             return availableCounterCurrency * price;
         }
+    }
+
+    private double getTradePrice() {
+        double price = mChangePriceView.getPrice();
+        if (mTradeTypeValue == MARKET_TRADE) {
+            if (mTradeDir == TradeDir.DIR_BUY_IN) {
+                price = mTradeVolumeView.getAskPrice1();
+            } else {
+                price = mTradeVolumeView.getBidPrice1();
+            }
+        }
+        return price;
     }
 
     private void updateTradeDirectionView() {
@@ -542,8 +559,38 @@ public class TradeFragment extends BaseFragment {
             case R.id.recharge:
                 break;
             case R.id.tradeButton:
+                if (LocalUser.getUser().isLogin()) {
+                    requestMakeOrder();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
+    }
+
+    private void requestMakeOrder() {
+        if (mCurrencyPair == null) return;
+        MakeOrder makeOrder = new MakeOrder();
+        int direction = mTradeDir == TradeDir.DIR_BUY_IN ? MakeOrder.DIR_BUY : MakeOrder.DIR_SELL;
+        makeOrder.setDirection(direction);
+        makeOrder.setEntrustCount(mVolumeInput.getVolume());
+        makeOrder.setPairs(mCurrencyPair.getPairs());
+        makeOrder.setEntrustType(mTradeTypeValue);
+        makeOrder.setEntrustPrice(getTradePrice());
+
+        Apic.makeOrder(makeOrder).tag(TAG)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        if (mOrderListRadio.getSelectedPosition() == 0) {
+                            requestEntrustOrderList();
+                        }
+                    }
+                }).fire();
+    }
+
+    private void requestEntrustOrderList() {
+        Apic.getEntrustOrderList();
     }
 
     private void showTradeTypeSelector() {

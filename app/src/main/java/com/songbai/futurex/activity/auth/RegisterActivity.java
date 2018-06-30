@@ -32,7 +32,9 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.fragment.auth.SetPsdFragment;
+import com.songbai.futurex.fragment.mine.PlatformIntroFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -237,7 +239,7 @@ public class RegisterActivity extends BaseActivity {
                 requestEmailAuthCode(null);
                 break;
             case R.id.userAgreement:
-                // TODO: 2018/6/4 open user agreement h5
+                UniqueActivity.launcher(this, PlatformIntroFragment.class).putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_SERVICE_AGREEMENT).execute();
                 break;
         }
     }

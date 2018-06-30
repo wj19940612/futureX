@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="110dp">
+
+    <TextView
+        android:id="@+id/tradePair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="14dp"
+        android:textColor="@color/green"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="买入 HSR/USDT"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@id/tradePair"
+        app:layout_constraintLeft_toRightOf="@id/tradePair"
+        tools:text="09:56 05/04"/>
+
+    <TextView
+        android:id="@+id/revoke"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@id/tradePair"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="撤单"/>
+
+    <TextView
+        android:id="@+id/entrustPriceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/tradePair"
+        app:layout_constraintTop_toBottomOf="@id/tradePair"
+        tools:text="委托价 (USDT)"/>
+
+    <TextView
+        android:id="@+id/entrustVolumeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintHorizontal_bias="0.565"
+        app:layout_constraintLeft_toRightOf="@id/entrustPriceTitle"
+        app:layout_constraintRight_toLeftOf="@id/actualDealVolumeTitle"
+        app:layout_constraintTop_toTopOf="@id/entrustPriceTitle"
+        tools:text="委托量 (HSR)"/>
+
+    <TextView
+        android:id="@+id/actualDealVolumeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/entrustPriceTitle"
+        tools:text="实际成交 (HSR)"/>
+
+    <TextView
+        android:id="@+id/entrustPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="14.05"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/entrustPriceTitle"
+        app:layout_constraintTop_toBottomOf="@id/entrustPriceTitle"/>
+
+    <TextView
+        android:id="@+id/entrustVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="21.89"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintRight_toRightOf="@id/entrustVolumeTitle"
+        app:layout_constraintTop_toBottomOf="@id/entrustVolumeTitle"
+        app:layout_constraintTop_toTopOf="@id/entrustPrice"/>
+
+    <TextView
+        android:id="@+id/actualDealVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintRight_toRightOf="@id/actualDealVolumeTitle"
+        app:layout_constraintTop_toBottomOf="@id/actualDealVolumeTitle"
+        app:layout_constraintTop_toTopOf="@id/entrustPrice"
+        tools:text="0"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@color/bgF5"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</android.support.constraint.ConstraintLayout>

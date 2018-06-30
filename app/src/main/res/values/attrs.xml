@@ -157,4 +157,18 @@
     <declare-styleable name="TradeVolumeView">
         <attr name="maxRows" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="GestureUnLockSudoKuView">
+        <attr name="linkLineHeight" format="dimension|reference"/>
+        <attr name="selectCircleRadius" format="dimension|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="NineGridView">
+        <attr name="normalColor" format="color|reference"/>
+        <attr name="selectColor" format="color|reference"/>
+        <attr name="normalCircleRadius" format="dimension|reference"/>
+        <attr name="errorColor" format="color|reference"/>
+    </declare-styleable>
+
+
 </resources>
