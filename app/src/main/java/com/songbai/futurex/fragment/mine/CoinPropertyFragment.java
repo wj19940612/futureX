@@ -23,7 +23,7 @@ import com.songbai.futurex.activity.mine.PropertyFlowActivity;
 import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.AccountList;
@@ -135,9 +135,9 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
     private void getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData) {
         Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5)
-                .callback(new Callback<Resp<PagingBean<CoinPropertyFlow>>>() {
+                .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<CoinPropertyFlow>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                     }

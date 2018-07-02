@@ -23,14 +23,14 @@ import butterknife.Unbinder;
  * 提供了默认的布局  如果要使用自定义布局 可以重写onCreateView
  */
 
-public abstract class ListViewSwipeLoadFragment extends BaseSwipeLoadFragment<ListView> {
+public abstract class ListSwipeLoadFragment extends BaseSwipeLoadFragment<ListView> {
 
     private Unbinder mBind;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listview_swipe_load, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_swipe_load, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -97,7 +97,6 @@ public abstract class ListViewSwipeLoadFragment extends BaseSwipeLoadFragment<Li
     protected void onListViewScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
     }
-
 
     public void smoothScrollToTop() {
         ListView swipeTargetView = getSwipeTargetView();

@@ -1019,12 +1019,36 @@ public class Apic {
                 new ReqParams(MakeOrder.class, makeOrder));
     }
 
-    public static Api getEntrustOrderList() {
-        return null;
+    /**
+     * 请求委托订单列表
+     *
+     * @param page
+     * @param type
+     * @param endDate
+     * @param prefixSymbol
+     * @param suffixSymbol
+     * @return
+     */
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol) {
+        return Api.get("/api/entrust/entrust/mine", new ReqParams()
+                .put("pageSize", DEFAULT_PAGE_SIZE)
+                .put("page", page)
+                .put("current", type)
+                .put("endDate", endDate)
+                .put("suffixSymbol", suffixSymbol)
+                .put("prefixSymbol", prefixSymbol));
     }
 
-
-    public interface url {
+    /**
+     * 撤单
+     *
+     * @param orderId
+     * @return
+     */
+    public static Api revokeOrder(String orderId) {
+        return Api.post("/api/entrust/entrust/cancel/{id}",
+                new ReqParams()
+                .put("id", orderId));
     }
 
     /**
@@ -1049,33 +1073,39 @@ public class Apic {
     /**
      * 查询客服聊天历史数据
      * pageDir 0-从时间位置向前查询 1-从时间位置向后查询
+     *
      * @return
      */
     public static Api requestChatHistory() {
-        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("startTime",System.currentTimeMillis()).put("pageDir",0).put("pageSize",200));
+        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("startTime", System.currentTimeMillis()).put("pageDir", 0).put("pageSize", 200));
     }
 
     /**
      * 发送给客服消息
+     *
      * @return
      */
-    public static Api sendTextChat(String msg){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid",AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_TEXT).put("content",msg));
+    public static Api sendTextChat(String msg) {
+        return Api.post("/api/user/chat/send.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_TEXT).put("content", msg));
     }
 
     /**
      * 发送给客服图片
-     * @return
-     */
-    public static Api sendPhotoChat(String photoAddress){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid",AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_PHOTO).put("content",photoAddress));
-    }
-
-    /**
      *
      * @return
      */
-    public static Api requestPlatformIntroduce(String code){
-        return Api.get("/api/user/article/getAgreement.do",new ReqParams().put("code",code));
+    public static Api sendPhotoChat(String photoAddress) {
+        return Api.post("/api/user/chat/send.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_PHOTO).put("content", photoAddress));
     }
+
+    /**
+     * @return
+     */
+    public static Api requestPlatformIntroduce(String code) {
+        return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
+    }
+
+    public interface url {
+    }
+
 }

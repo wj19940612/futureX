@@ -6,8 +6,10 @@ import java.util.List;
  * @author yangguangda
  * @date 2018/6/20
  */
-public class PagingBean<T> {
+public class PagingWrap<T> {
+
     private List<T> data;
+
     private int pageSize;
     private int resultCount;//总共多少行
     private int start;
@@ -51,5 +53,16 @@ public class PagingBean<T> {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    @Override
+    public String toString() {
+        return "PagingWrap{" +
+                "data=" + data +
+                ", pageSize=" + pageSize +
+                ", resultCount=" + resultCount +
+                ", start=" + start +
+                ", total=" + total +
+                '}';
     }
 }

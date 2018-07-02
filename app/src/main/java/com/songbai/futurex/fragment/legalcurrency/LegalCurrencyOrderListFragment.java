@@ -23,7 +23,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.LegalCurrencyOrderDetailFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.LegalCurrencyOrder;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
@@ -100,9 +100,9 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
 
     private void legalCurrencyOrderList(final int page, int pageSize, int status) {
         Apic.legalCurrencyOrderList(page, pageSize, status)
-                .callback(new Callback<Resp<PagingBean<LegalCurrencyOrder>>>() {
+                .callback(new Callback<Resp<PagingWrap<LegalCurrencyOrder>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<LegalCurrencyOrder>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<LegalCurrencyOrder>> resp) {
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         if (page == 0) {
@@ -223,11 +223,11 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
             return mList.size();
         }
 
-        public void setList(PagingBean<LegalCurrencyOrder> pagingBean) {
-            if (pagingBean.getStart() == 0) {
+        public void setList(PagingWrap<LegalCurrencyOrder> pagingWrap) {
+            if (pagingWrap.getStart() == 0) {
                 mList.clear();
             }
-            mList.addAll(pagingBean.getData());
+            mList.addAll(pagingWrap.getData());
         }
 
         public void setOnRVItemClickListener(OnRVItemClickListener onRVItemClickListener) {

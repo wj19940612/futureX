@@ -20,7 +20,7 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
  * <p>
  */
 
-public abstract class RecycleViewSwipeLoadActivity extends BaseSwipeLoadActivity<RecyclerView> {
+public abstract class RVSwipeLoadActivity extends BaseSwipeLoadActivity<RecyclerView> {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

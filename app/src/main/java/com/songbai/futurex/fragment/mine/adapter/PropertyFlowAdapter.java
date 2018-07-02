@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.model.status.FlowStatus;
 import com.songbai.futurex.model.status.FlowType;
@@ -47,7 +47,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
         return mList.size();
     }
 
-    public void setList(PagingBean<CoinPropertyFlow> pagingResp) {
+    public void setList(PagingWrap<CoinPropertyFlow> pagingResp) {
         if (pagingResp.getStart() == 0) {
             mList.clear();
         }

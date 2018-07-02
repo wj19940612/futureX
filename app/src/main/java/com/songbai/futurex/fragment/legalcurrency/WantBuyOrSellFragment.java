@@ -18,7 +18,7 @@ import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.LegalCurrencyTrade;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
@@ -151,9 +151,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
 
     private void otcWaresCommend(GetOtcWaresHome getOtcWaresHome) {
         Apic.otcWaresHome(getOtcWaresHome)
-                .callback(new Callback<Resp<PagingBean<LegalCurrencyTrade>>>() {
+                .callback(new Callback<Resp<PagingWrap<LegalCurrencyTrade>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<LegalCurrencyTrade>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<LegalCurrencyTrade>> resp) {
                         if (mPairChanged) {
                             mPairChanged = false;
                         }

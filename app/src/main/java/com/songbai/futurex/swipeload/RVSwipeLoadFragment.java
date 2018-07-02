@@ -22,7 +22,7 @@ import butterknife.Unbinder;
  * 提供了默认的布局  如果要使用自定义布局 可以重写onCreateView
  */
 
-public abstract class RecycleViewSwipeLoadFragment extends BaseSwipeLoadFragment<RecyclerView> {
+public abstract class RVSwipeLoadFragment extends BaseSwipeLoadFragment<RecyclerView> {
 
     private Unbinder mBind;
 

@@ -20,7 +20,7 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcWarePoster;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
@@ -193,9 +193,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
 
     private void otcWaresList(int page, int pageSize) {
         Apic.otcWaresList(page, pageSize)
-                .callback(new Callback<Resp<PagingBean<OtcWarePoster>>>() {
+                .callback(new Callback<Resp<PagingWrap<OtcWarePoster>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<OtcWarePoster>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<OtcWarePoster>> resp) {
                         mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         mAdapter.setList(resp.getData().getData());
                         mAdapter.notifyDataSetChanged();

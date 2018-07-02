@@ -48,16 +48,4 @@ public interface SwipeLoader<T> {
     void loadMoreComplete(CharSequence msg);
 
     void loadMoreComplete(@StringRes int msgRes);
-
-    /**
-     * <p>
-     * 是否使用默认的自动加载条件
-     * 默认为true
-     * 如果改为false  需要自己实现listview或者recycleview的滑动事件判断 来处理加载更多事件
-     * </p>
-     *
-     * @return
-     */
-    boolean isUseDefaultLoadMoreConditions();
-
 }
