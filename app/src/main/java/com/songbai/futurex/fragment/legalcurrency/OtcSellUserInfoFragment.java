@@ -65,10 +65,10 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-
+        otcWaresMine("", mOrderId, mTradeDirection);
     }
 
-    private void otcWaresMine(String waresId, String orderId, int orientation) {
+    private void otcWaresMine(String waresId, int orderId, int orientation) {
         Apic.otcWaresMine(waresId, orderId, orientation)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override

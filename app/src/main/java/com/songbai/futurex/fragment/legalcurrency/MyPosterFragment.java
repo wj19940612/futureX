@@ -30,6 +30,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.EditTypeController;
+import com.songbai.futurex.view.dialog.MsgHintController;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -63,6 +64,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     private boolean isFirstLoad;
     private int mPageSize = 20;
     private boolean mShouldRefresh;
+    private SmartDialog mSmartDialog;
 
     public static MyPosterFragment newInstance() {
         MyPosterFragment wantBuyOrSellFragment = new MyPosterFragment();
@@ -104,7 +106,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         updateStatus(otcWarePoster, OtcWarePoster.ON_SHELF);
                         break;
                     case OtcWarePoster.ON_SHELF:
-                        updateStatus(otcWarePoster, OtcWarePoster.OFF_SHELF);
+                        showOffShelfView(otcWarePoster);
                         break;
                     default:
                 }
@@ -112,6 +114,20 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         });
         mRecyclerView.setAdapter(mAdapter);
         lazyLoad();
+    }
+
+    private void showOffShelfView(final OtcWarePoster otcWarePoster) {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                updateStatus(otcWarePoster, OtcWarePoster.OFF_SHELF);
+            }
+        });
+        withDrawPsdViewController.setMsg(R.string.off_shelf_hint_msg);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_ad_xiajia_pic);
+        mSmartDialog = SmartDialog.solo(getActivity());
+        mSmartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
     }
 
     private void showEditTypeSelector(final OtcWarePoster otcWarePoster) {

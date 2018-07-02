@@ -100,6 +100,7 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
                         stopFreshOrLoadAnimation();
                         if (resp.getData().getTotal() > mPage) {
                             mPage++;
+                        }else {
                         }
                     }
                 })
@@ -203,7 +204,9 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
                         break;
                     default:
                 }
-                mContent.setText(textId);
+                if (textId!=0) {
+                    mContent.setText(textId);
+                }
                 mHint.setVisibility(View.GONE);
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override

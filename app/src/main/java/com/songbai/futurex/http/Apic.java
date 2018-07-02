@@ -607,6 +607,32 @@ public class Apic {
     }
 
     /**
+     * /api/otc/order/buy
+     * POST
+     * 下单--购买
+     */
+    public static Api otcOrderBuy(int id, String cost, String coinCount) {
+        return Api.post("/api/otc/order/buy",
+                new ReqParams()
+                        .put("id", id)
+                        .put("cost", cost)
+                        .put("coinCount", coinCount));
+    }
+
+    /**
+     * /api/otc/order/sell
+     * POST
+     * 下单--出售
+     */
+    public static Api otcOrderSell(int id, String coinCount, String drawPass) {
+        return Api.post("/api/otc/order/sell",
+                new ReqParams()
+                        .put("id", id)
+                        .put("coinCount", coinCount)
+                        .put("drawPass", drawPass));
+    }
+
+    /**
      * /api/otc/wares/home
      * GET
      * (改)首页列表/个人广告页--(v1.1)
@@ -749,11 +775,36 @@ public class Apic {
     }
 
     /**
+     * /api/otc/order/cancel
+     * POST
+     * 取消订单
+     */
+    public static Api otcOrderCancel(int id) {
+        return Api.post("/api/otc/order/cancel",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
+     * /api/otc/order/confirm
+     * POST
+     * 订单状态修改
+     */
+    public static Api otcOrderConfirm(int id, int status, String drawPass, String googleCode) {
+        return Api.post("/api/otc/order/confirm",
+                new ReqParams()
+                        .put("id", id)
+                        .put("status", status)
+                        .put("drawPass", drawPass)
+                        .put("googleCode", googleCode));
+    }
+
+    /**
      * /api/otc/wares/mine
      * GET
      * (改)个人广告主页-个人信息(V1.2)
      */
-    public static Api otcWaresMine(String waresId, String orderId, int orientation) {
+    public static Api otcWaresMine(String waresId, int orderId, int orientation) {
         return Api.get("/api/otc/wares/mine",
                 new ReqParams()
                         .put("waresId", waresId)

@@ -174,6 +174,7 @@
     <string name="set_cash_pwd">资金密码设置</string>
     <string name="set_cash_pwd_success">资金密码设置成功</string>
     <string name="please_input_set_cash_pwd">请输入资金密码</string>
+    <string name="forget_cash_pwd">忘记资金密码?</string>
     <string name="confirm_set_cash_pwd">确认资金密码</string>
     <string name="send_sms_auth_code_phone_hint_x">已发送至您的手机号：%1$s，请注意查收</string>
     <string name="send_mail_auth_code_hint_x">已发送至您的邮箱：%1$s，请注意查收</string>
@@ -336,6 +337,7 @@
     <string name="sell_blank_symbol_x">卖出&#160;%1$s</string>
     <string name="on_shelf">上架</string>
     <string name="off_shelf">下架</string>
+    <string name="off_shelf_hint_msg">您确实要下架广告吗</string>
     <string name="please_select_price_type">请选择价格类型</string>
     <string name="floating_price_rate">溢价比例</string>
     <string name="percent_symbol">%</string>
@@ -380,6 +382,10 @@
     <string name="unpaid">未付款</string>
     <string name="paid">已付款</string>
     <string name="canceled">已取消</string>
+    <string name="max_buy_amount">最大可买&#160;%1$s</string>
+    <string name="max_sell_amount">最大可卖&#160;%1$s</string>
+    <string name="trade_amount_empty_hint">您还未输入交易数量</string>
+    <string name="cash_pwd_empty_hint">您还未输入资金密码</string>
     <string name="turnover">交易金额</string>
     <string name="trade_count_symbol_x">交易金额：%1$s&#160;%2$s</string>
     <string name="pay_info">支付信息</string>
@@ -393,6 +399,10 @@
     <string name="wait_sell_transfer_coin">待卖家转币</string>
     <string name="seller_info">卖家信息</string>
     <string name="contact_each_other">联系对方</string>
+    <string name="cancel_trade">取消交易</string>
+    <string name="appeal">申诉</string>
+    <string name="i_have_paid">我已付款</string>
+    <string name="confirm_transfer_coin">确认转币</string>
     <string name="order_time_with_symbol_x">订单时间：%1$s</string>
     <string name="wait_to_pay">等待付款</string>
     <string name="pay_info_hint_to_seller">对方已成功下单，正在向您询问支付方式。</string>

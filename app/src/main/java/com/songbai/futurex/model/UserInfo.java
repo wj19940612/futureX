@@ -32,6 +32,7 @@ public class UserInfo {
     private int googleAuth; // 是否设置谷歌验证 yes or no
     private long lastLoginTime; //最后登录时间
     private String googleAuthString; //谷歌验证开启情况
+    private int id;
     private String loginIp;
     private int promoter; // 是否是推广员 yes or no
     private String realName; // 真实姓名
@@ -97,6 +98,14 @@ public class UserInfo {
 
     public void setGoogleAuthString(String googleAuthString) {
         this.googleAuthString = googleAuthString;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public long getLastLoginTime() {

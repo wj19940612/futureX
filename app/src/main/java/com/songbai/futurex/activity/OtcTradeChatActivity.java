@@ -38,6 +38,7 @@ import com.songbai.futurex.model.CustomerService;
 import com.songbai.futurex.model.OtcChatMessage;
 import com.songbai.futurex.model.OtcChatUserInfo;
 import com.songbai.futurex.model.OtcOrderDetail;
+import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.OtcBankInfoMsg;
 import com.songbai.futurex.model.mine.BankCardBean;
@@ -227,6 +228,16 @@ public class OtcTradeChatActivity extends BaseActivity {
         }
     }
 
+    private void otcWaresMine(int orderId) {
+        Apic.otcWaresMine("", orderId, 1)
+                .callback(new Callback<Resp<WaresUserInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<WaresUserInfo> resp) {
+                        mTitleBar.setTitle(resp.getData().getUsername());
+                    }
+                }).fire();
+    }
+
     private void otcOrderDetail() {
         Apic.otcOrderDetail(mOrderId, mTradeDirection)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
@@ -242,9 +253,13 @@ public class OtcTradeChatActivity extends BaseActivity {
                 .callback(new Callback<Resp<ArrayList<OtcChatUserInfo>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<OtcChatUserInfo>> resp) {
-
+                        setUserInfo(resp.getData());
                     }
                 }).fire();
+    }
+
+    private void setUserInfo(ArrayList<OtcChatUserInfo> data) {
+
     }
 
     private void orderPayInfo() {
@@ -292,7 +307,6 @@ public class OtcTradeChatActivity extends BaseActivity {
                 break;
             default:
         }
-        mTitleBar.setTitle(order.getBuyerName());
         switch (mTradeDirection) {
             case OtcOrderStatus.ORDER_DIRECT_BUY:
                 mTradeType.setText(getString(R.string.buy_x,
@@ -307,6 +321,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void loadData() {
+        otcWaresMine(mOrderId);
         otcOrderDetail();
         otcOrderUser();
         orderPayInfo();

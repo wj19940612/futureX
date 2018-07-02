@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
@@ -108,6 +109,7 @@ public class MarketFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
         mListMap = new HashMap<>();
 
         mRadioHeader.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
@@ -292,7 +294,6 @@ public class MarketFragment extends BaseFragment {
                     .execute(this, REQ_CODE_LOGIN);
         }
     }
-
 
 
     static class OptionalAdapter extends RecyclerView.Adapter<OptionalAdapter.ViewHolder> {
