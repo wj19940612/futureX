@@ -10,12 +10,6 @@ package com.songbai.futurex.model.local;
 public class MakeOrder {
     private static final int ANDROID_APP = 1;
 
-    public static final int DIR_BUY = 1;
-    public static final int DIR_SELL = 2;
-
-    public static final int LIMIT_TRADE = 1;
-    public static final int MARKET_TRADE = 2;
-
     private String signId;
     private int direction;
     private double entrustCount;

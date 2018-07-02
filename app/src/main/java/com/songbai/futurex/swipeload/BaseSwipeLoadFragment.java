@@ -8,7 +8,6 @@ import android.view.View;
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
-import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.BaseFragment;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
@@ -21,27 +20,17 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
  * <p>
  */
 
-public abstract class BaseSwipeLoadFragment<T extends View> extends BaseFragment implements
-        OnLoadMoreListener, OnRefreshListener, SwipeLoader<T> {
+public abstract class BaseSwipeLoadFragment<T extends View> extends BaseFragment
+        implements OnLoadMoreListener, OnRefreshListener, SwipeLoader<T> {
 
     protected SwipeToLoadLayout mSwipeToLoadLayout;
-
     protected T mSwipeTargetView;
-
     protected RefreshHeaderView mRefreshHeaderView;
-
     protected LoadMoreFooterView mLoadMoreFooterView;
 
-
     protected void stopFreshOrLoadAnimation() {
-        if (mSwipeToLoadLayout != null) {
-            if (mSwipeToLoadLayout.isRefreshing()) {
-                mSwipeToLoadLayout.setRefreshing(false);
-            }
-            if (mSwipeToLoadLayout.isLoadingMore()) {
-                mSwipeToLoadLayout.setLoadingMore(false);
-            }
-        }
+        stopFreshAnimation();
+        stopLoadMoreAnimation();
     }
 
     protected void stopFreshAnimation() {
@@ -52,7 +41,7 @@ public abstract class BaseSwipeLoadFragment<T extends View> extends BaseFragment
         }
     }
 
-    protected void stopLoadAnimation() {
+    protected void stopLoadMoreAnimation() {
         if (mSwipeToLoadLayout != null) {
             if (mSwipeToLoadLayout.isLoadingMore()) {
                 mSwipeToLoadLayout.setLoadingMore(false);
@@ -80,18 +69,6 @@ public abstract class BaseSwipeLoadFragment<T extends View> extends BaseFragment
 
     @Override
     public void loadMoreComplete(CharSequence msg) {
-        if (mLoadMoreFooterView != null) {
-            mLoadMoreFooterView.setLoadMoreSuccess(msg);
-        }
-        stopLoadAnimation();
-    }
-
-    public void refreshFailure() {
-        refreshComplete(getString(R.string.refresh_fail));
-    }
-
-    public void refreshSuccess() {
-        refreshComplete(getString(R.string.refresh_complete));
     }
 
     @Override
@@ -100,18 +77,8 @@ public abstract class BaseSwipeLoadFragment<T extends View> extends BaseFragment
     }
 
     @Override
-    public boolean isUseDefaultLoadMoreConditions() {
-        return true;
-    }
-
-    @Override
     public void refreshComplete(CharSequence msg) {
-        if (mRefreshHeaderView != null) {
-            mRefreshHeaderView.refreshSuccess(msg);
-        }
-        stopFreshAnimation();
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -120,7 +87,6 @@ public abstract class BaseSwipeLoadFragment<T extends View> extends BaseFragment
         mSwipeToLoadLayout = getSwipeToLoadLayout();
         mRefreshHeaderView = getRefreshHeaderView();
         mLoadMoreFooterView = getLoadMoreFooterView();
-
         if (mSwipeToLoadLayout != null) {
             mSwipeToLoadLayout.setOnLoadMoreListener(this);
             mSwipeToLoadLayout.setOnRefreshListener(this);

@@ -14,11 +14,11 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.MessageType;
-import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
+import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.view.TitleBar;
 
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
  * @author yangguangda
  * @date 2018/5/30
  */
-public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
+public class MessageCenterActivity extends RVSwipeLoadActivity {
     @BindView(R.id.swipe_target)
     RecyclerView mSwipeTarget;
     @BindView(R.id.rootView)
@@ -92,9 +92,9 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
 
     private void getMessageList() {
         Apic.msgList(mPage, mSize)
-                .callback(new Callback<Resp<PagingBean<SysMessage>>>() {
+                .callback(new Callback<Resp<PagingWrap<SysMessage>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<SysMessage>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<SysMessage>> resp) {
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
@@ -146,7 +146,7 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
             return mList.size();
         }
 
-        public void setList(PagingBean<SysMessage> resp) {
+        public void setList(PagingWrap<SysMessage> resp) {
             if (resp.getStart() == 0) {
                 mList.clear();
             }

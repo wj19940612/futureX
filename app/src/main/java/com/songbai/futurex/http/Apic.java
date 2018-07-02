@@ -1107,12 +1107,36 @@ public class Apic {
                 new ReqParams(MakeOrder.class, makeOrder));
     }
 
-    public static Api getEntrustOrderList() {
-        return null;
+    /**
+     * 请求委托订单列表
+     *
+     * @param page
+     * @param type
+     * @param endDate
+     * @param prefixSymbol
+     * @param suffixSymbol
+     * @return
+     */
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol) {
+        return Api.get("/api/entrust/entrust/mine", new ReqParams()
+                .put("pageSize", DEFAULT_PAGE_SIZE)
+                .put("page", page)
+                .put("current", type)
+                .put("endDate", endDate)
+                .put("suffixSymbol", suffixSymbol)
+                .put("prefixSymbol", prefixSymbol));
     }
 
-
-    public interface url {
+    /**
+     * 撤单
+     *
+     * @param orderId
+     * @return
+     */
+    public static Api revokeOrder(String orderId) {
+        return Api.post("/api/entrust/entrust/cancel/{id}",
+                new ReqParams()
+                .put("id", orderId));
     }
 
     /**
@@ -1168,4 +1192,8 @@ public class Apic {
     public static Api requestPlatformIntroduce(String code) {
         return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
     }
+
+    public interface url {
+    }
+
 }

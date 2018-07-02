@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgF5"
     android:orientation="vertical">
+
+    <com.sbai.bcnews.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"/>
 
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipeToLoadLayout"
@@ -12,7 +20,7 @@
         android:layout_height="match_parent"
         app:default_to_loading_more_scrolling_duration="500"
         app:layout_constraintTop_toBottomOf="@+id/titleBar"
-        app:load_more_complete_delay_duration="500"
+        app:load_more_complete_delay_duration="0"
         app:load_more_final_drag_offset="@dimen/load_more_final_offset"
         app:load_more_trigger_offset="@dimen/load_more_trigger_offset"
         app:refresh_final_drag_offset="@dimen/refresh_final_offset"
@@ -24,8 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <com.songbai.futurex.view.EmptyRecyclerView
-            android:id="@+id/swipe_target"
+        <ListView
+            android:id="@id/swipe_target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"/>
@@ -35,14 +43,4 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
-
-    <include
-        layout="@layout/view_common_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/radioHeader"/>
-</RelativeLayout>
+</LinearLayout>

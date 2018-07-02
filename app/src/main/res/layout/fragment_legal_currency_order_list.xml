@@ -12,10 +12,10 @@
         android:layout_height="match_parent"
         app:default_to_loading_more_scrolling_duration="500"
         app:load_more_complete_delay_duration="500"
-        app:load_more_final_drag_offset="@dimen/load_more_final_offset_google"
-        app:load_more_trigger_offset="@dimen/load_more_trigger_offset_google"
-        app:refresh_final_drag_offset="@dimen/refresh_final_offset_google"
-        app:refresh_trigger_offset="@dimen/refresh_trigger_offset_google"
+        app:load_more_final_drag_offset="@dimen/load_more_final_offset"
+        app:load_more_trigger_offset="@dimen/load_more_trigger_offset"
+        app:refresh_final_drag_offset="@dimen/refresh_final_offset"
+        app:refresh_trigger_offset="@dimen/refresh_trigger_offset"
         app:swipe_style="classic">
 
         <com.zcmrr.swipelayout.header.RefreshHeaderView

@@ -12,13 +12,8 @@ public class Resp<T> {
 
     private int code;
     private String msg;
-    private int page;
-    private int pageSize;
-    private int resultCount;
-    private int total;
 
     private T data;
-
 
     public int getCode() {
         return code;
@@ -26,10 +21,6 @@ public class Resp<T> {
 
     public String getMsg() {
         return msg;
-    }
-
-    public int getResultCount() {
-        return resultCount;
     }
 
     public T getData() {

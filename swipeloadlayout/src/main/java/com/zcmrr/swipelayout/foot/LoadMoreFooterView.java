@@ -1,20 +1,14 @@
 package com.zcmrr.swipelayout.foot;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeLoadMoreFooterLayout;
 import com.zcmrr.swipelayout.R;
-
-/**
- * Created by ${wangJie} on 2018/1/25.
- */
 
 public class LoadMoreFooterView extends SwipeLoadMoreFooterLayout {
 
@@ -23,9 +17,6 @@ public class LoadMoreFooterView extends SwipeLoadMoreFooterLayout {
     private ProgressBar progressBar;
 
     private int mFooterHeight;
-
-    private CharSequence mLoadMoreCompleteText;
-
 
     public LoadMoreFooterView(Context context) {
         this(context, null);
@@ -37,14 +28,17 @@ public class LoadMoreFooterView extends SwipeLoadMoreFooterLayout {
 
     public LoadMoreFooterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mFooterHeight = getResources().getDimensionPixelOffset(R.dimen.load_more_footer_height_twitter);
+        LayoutInflater.from(getContext()).inflate(R.layout.view_load_more_footer, this, true);
 
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_load_more_footer, this, false);
-        tvLoadMore = view.findViewById(R.id.tvLoadMore);
-        ivSuccess = view.findViewById(R.id.ivSuccess);
-        progressBar = view.findViewById(R.id.progressbar);
-        mLoadMoreCompleteText = getContext().getString(R.string.swipe_load_more);
-        addView(view);
+        mFooterHeight = getResources().getDimensionPixelOffset(R.dimen.load_more_footer_height);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        tvLoadMore = (TextView) findViewById(R.id.tvLoadMore);
+        ivSuccess = (ImageView) findViewById(R.id.ivSuccess);
+        progressBar = (ProgressBar) findViewById(R.id.progressbar);
     }
 
 
@@ -58,11 +52,11 @@ public class LoadMoreFooterView extends SwipeLoadMoreFooterLayout {
         if (!isComplete) {
             ivSuccess.setVisibility(GONE);
             progressBar.setVisibility(GONE);
-//            if (-y >= mFooterHeight) {
-//                tvLoadMore.setText(R.string.restart_load_more);
-//            } else {
-            tvLoadMore.setText(R.string.swipe_load_more);
-//            }
+            if (-y >= mFooterHeight) {
+                tvLoadMore.setText(R.string.load_more); // 释放加载更多 判断
+            } else {
+                tvLoadMore.setText(R.string.load_more);
+            }
         }
     }
 
@@ -74,7 +68,6 @@ public class LoadMoreFooterView extends SwipeLoadMoreFooterLayout {
 
     @Override
     public void onRelease() {
-
     }
 
     @Override
@@ -86,32 +79,5 @@ public class LoadMoreFooterView extends SwipeLoadMoreFooterLayout {
     @Override
     public void onReset() {
         ivSuccess.setVisibility(GONE);
-        mLoadMoreCompleteText = "";
     }
-
-    public void setLoadMoreCompleteText(@StringRes int resid) {
-        setLoadMoreCompleteText(getContext().getString(resid));
-    }
-
-    public void setLoadMoreCompleteText(CharSequence text) {
-        mLoadMoreCompleteText = text;
-        tvLoadMore.setText(mLoadMoreCompleteText);
-    }
-
-    public void setLoadMoreSuccess(CharSequence loadMoreCompleteText) {
-        setLoadMoreCompleteText(loadMoreCompleteText);
-    }
-
-    public void setLoadMoreSuccess(@StringRes int resid) {
-        setLoadMoreCompleteText(getContext().getString(resid));
-    }
-
-    public void setLoadMoreFailure(CharSequence loadMoreCompleteText) {
-        setLoadMoreCompleteText(loadMoreCompleteText);
-    }
-
-    public void setLoadMoreFailure(@StringRes int resId) {
-        setLoadMoreCompleteText(getContext().getString(resId));
-    }
-
 }
