@@ -508,7 +508,7 @@ public class Apic {
      * 标记全部已读
      */
     public static Api msgReadAll() {
-        return Api.post("/api/user/msg/list");
+        return Api.get("/api/user/msg/list");
     }
 
     /**
@@ -517,7 +517,7 @@ public class Apic {
      * 标记已读
      */
     public static Api msgRead(int msgId) {
-        return Api.post("/api/user/msg/list",
+        return Api.get("/api/user/msg/list",
                 new ReqParams()
                         .put("msgId", msgId));
     }

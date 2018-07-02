@@ -123,11 +123,11 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 updateStatus(otcWarePoster, OtcWarePoster.OFF_SHELF);
             }
         });
-        withDrawPsdViewController.setMsg(R.string.off_shelf_hint_msg);
-        withDrawPsdViewController.setImageRes(R.drawable.ic_ad_xiajia_pic);
         mSmartDialog = SmartDialog.solo(getActivity());
         mSmartDialog.setCustomViewController(withDrawPsdViewController)
                 .show();
+        withDrawPsdViewController.setMsg(R.string.off_shelf_hint_msg);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_ad_xiajia_pic);
     }
 
     private void showEditTypeSelector(final OtcWarePoster otcWarePoster) {
@@ -144,6 +144,23 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
 
             @Override
             public void onDeleteClick(final SmartDialog dialog) {
+                dialog.dismiss();
+                showDeleteView(otcWarePoster);
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog
+                .setWidthScale(1)
+                .setWindowGravity(Gravity.BOTTOM)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setCustomViewController(editTypeController)
+                .show();
+    }
+
+    private void showDeleteView(final OtcWarePoster otcWarePoster) {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
                 Apic.otcWaresDelete(otcWarePoster.getId())
                         .callback(new Callback<Resp<Object>>() {
                             @Override
@@ -154,19 +171,16 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                                     mPage = 0;
                                     otcWaresList(mPage, mPageSize);
                                 }
-                                dialog.dismiss();
                             }
                         })
                         .fire();
             }
         });
-        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-        smartDialog
-                .setWidthScale(1)
-                .setWindowGravity(Gravity.BOTTOM)
-                .setWindowAnim(R.style.BottomDialogAnimation)
-                .setCustomViewController(editTypeController)
+        mSmartDialog = SmartDialog.solo(getActivity());
+        mSmartDialog.setCustomViewController(withDrawPsdViewController)
                 .show();
+        withDrawPsdViewController.setMsg(R.string.delete_poster_hint_msg);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_ad_delete_pic);
     }
 
     private void updateStatus(final OtcWarePoster otcWarePoster, int onShelf) {

@@ -51,4 +51,34 @@ public interface MessageType {
      * 您提交的认证信息审核失败，点击查看详情
      */
     int USER_AUTH_FAIL = 6;
+    /**
+     * 7
+     * <p>
+     * 平台仲裁-->通过
+     */
+    int ARBITRAGE_PASS = 7;
+    /**
+     * 8
+     * <p>
+     * 平台仲裁-->拒绝
+     */
+    int ARBITRAGE_REJECT = 8;
+    /**
+     * 9
+     * <p>
+     * 系统下架不满足条件的广告
+     */
+    int OFF_SHELVES_WARES = 9;
+    /**
+     * 10
+     * <p>
+     * 您的法币订单已取消
+     */
+    int OTC_ORDER_CANCEL = 10;
+    /**
+     * 11
+     * <p>
+     * 您的订单已延期
+     */
+    int OTC_ORDER_DELAY = 11;
 }

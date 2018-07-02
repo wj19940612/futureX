@@ -293,6 +293,11 @@
     <string name="otc_sell_pay">您的法币交易订单，卖家已确认收款，并转币，请查收>></string>
     <string name="otc_order_msg">您的订单已经回复,赶紧去看看吧>></string>
     <string name="user_auth_fail">您提交的认证信息审核失败，点击查看详情</string>
+    <string name="arbitrage_pass">平台仲裁-->通过</string>
+    <string name="arbitrage_reject">平台仲裁-->拒绝</string>
+    <string name="off_shelves_wares">系统下架不满足条件的广告</string>
+    <string name="otc_order_cancel">您的法币订单已取消</string>
+    <string name="otc_order_delay">您的订单已延期</string>
 
     <!--LEGAL_CURRENCY-->
     <string-array name="legal_currency_header">
@@ -337,7 +342,9 @@
     <string name="sell_blank_symbol_x">卖出&#160;%1$s</string>
     <string name="on_shelf">上架</string>
     <string name="off_shelf">下架</string>
+    <string name="can_not_trade_with_self">本人不可与本人交易</string>
     <string name="off_shelf_hint_msg">您确实要下架广告吗</string>
+    <string name="delete_poster_hint_msg">您确实要删除广告吗</string>
     <string name="please_select_price_type">请选择价格类型</string>
     <string name="floating_price_rate">溢价比例</string>
     <string name="percent_symbol">%</string>

@@ -49,8 +49,8 @@ public class MsgHintController extends SmartDialog.CustomViewController {
                 mOnClickListener.onConfirmClick();
             }
         });
-        setImageRes(mImgRes);
         setMsg(mMsgRes);
+        setImageRes(mImgRes);
     }
 
     public void setImageRes(int imgRes) {
@@ -60,10 +60,10 @@ public class MsgHintController extends SmartDialog.CustomViewController {
         }
     }
 
-    public void setMsg(int titleRes) {
-        mMsgRes = titleRes;
+    public void setMsg(int msgRes) {
+        mMsgRes = msgRes;
         if (isViewInitialized()) {
-            mHintMsg.setText(titleRes);
+            mHintMsg.setText(msgRes);
         }
     }
 

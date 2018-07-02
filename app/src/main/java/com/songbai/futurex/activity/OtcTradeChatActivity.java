@@ -34,7 +34,6 @@ import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.CustomerService;
 import com.songbai.futurex.model.OtcChatMessage;
 import com.songbai.futurex.model.OtcChatUserInfo;
 import com.songbai.futurex.model.OtcOrderDetail;
@@ -68,6 +67,8 @@ import butterknife.OnClick;
 import sbai.com.glide.GlideApp;
 
 public class OtcTradeChatActivity extends BaseActivity {
+    private static final int DIRECTION_RIGHT = 2;
+    private static final int DIRECTION_LEFT = 1;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recycleView)
@@ -102,9 +103,8 @@ public class OtcTradeChatActivity extends BaseActivity {
 
     private int mOrderId;
     private int mTradeDirection;
-
-    private static String sMyName = "我";
-    private static String sOtherName = "他";
+    private static OtcChatUserInfo mRightOtcChatUserInfo;
+    private static OtcChatUserInfo mLeftOtcChatUserInfo;
 
     private Network.NetworkChangeReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
         @Override
@@ -259,7 +259,18 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void setUserInfo(ArrayList<OtcChatUserInfo> data) {
-
+        LocalUser user = LocalUser.getUser();
+        int id = 0;
+        if (user.isLogin()) {
+            id = user.getUserInfo().getId();
+        }
+        for (OtcChatUserInfo otcChatUserInfo : data) {
+            if (otcChatUserInfo.getId() == id) {
+                mRightOtcChatUserInfo = otcChatUserInfo;
+            } else {
+                mLeftOtcChatUserInfo = otcChatUserInfo;
+            }
+        }
     }
 
     private void orderPayInfo() {
@@ -341,6 +352,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
     private void loadChatData(List<OtcChatMessage> data) {
         Collections.reverse(data);
+        mOtcChatMessages.clear();
         mOtcChatMessages.addAll(data);
         mChatAdapter.notifyDataSetChanged();
     }
@@ -493,7 +505,6 @@ public class OtcTradeChatActivity extends BaseActivity {
 
         private List<Object> mList;
         private Context mContext;
-        private CustomerService mCustomerService;
         private OnRetryClickListener mOnRetryClickListener;
 
         interface OnRetryClickListener {
@@ -508,10 +519,6 @@ public class OtcTradeChatActivity extends BaseActivity {
             mOnRetryClickListener = onRetryClickListener;
         }
 
-        public void setCustomerService(CustomerService customerService) {
-            mCustomerService = customerService;
-        }
-
         @Override
         public int getItemViewType(int position) {
             if (mList == null || mList.size() == 0) {
@@ -520,9 +527,9 @@ public class OtcTradeChatActivity extends BaseActivity {
             Object obj = mList.get(position);
             if (obj instanceof OtcChatMessage) {
                 OtcChatMessage message = (OtcChatMessage) obj;
-                if (message.getDirection() == 1 && !(message.getMsgType() == 2)) {
+                if (message.getDirection() == DIRECTION_LEFT && !(message.getMsgType() == 2)) {
                     return TYPE_LEFT;
-                } else if (message.getDirection() == 2 && message.getMsgType() == 2) {
+                } else if (message.getDirection() == DIRECTION_RIGHT && message.getMsgType() == 2) {
                     return TYPE_LEFT_PHOTO;
                 } else if (message.getMsgType() == 2) {
                     return TYPE_RIGHT_PHOTO;
@@ -568,13 +575,13 @@ public class OtcTradeChatActivity extends BaseActivity {
             if (holder instanceof PayInfoHolder) {
                 ((PayInfoHolder) holder).bindData((OtcBankInfoMsg) mList.get(position), mContext);
             } else if (holder instanceof LeftTextHolder) {
-                ((LeftTextHolder) holder).bindingData(mCustomerService, mContext, (OtcChatMessage) mList.get(position), lastChat, position, getItemCount());
+                ((LeftTextHolder) holder).bindingData(mContext, (OtcChatMessage) mList.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof RightTextHolder) {
                 ((RightTextHolder) holder).bindingData(mOnRetryClickListener, mContext, (OtcChatMessage) mList.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof RightPhotoHolder) {
                 ((RightPhotoHolder) holder).bindingData(mOnRetryClickListener, mContext, (OtcChatMessage) mList.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof LeftPhotoHolder) {
-                ((LeftPhotoHolder) holder).bindingData(mCustomerService, mContext, (OtcChatMessage) mList.get(position), lastChat, position, getItemCount());
+                ((LeftPhotoHolder) holder).bindingData(mContext, (OtcChatMessage) mList.get(position), lastChat, position, getItemCount());
             }
         }
 
@@ -598,20 +605,14 @@ public class OtcTradeChatActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(CustomerService customerService, Context context, OtcChatMessage otcChatMessage, OtcChatMessage lastChat, int position, int itemCount) {
-                if (customerService != null) {
-                    GlideApp.with(context).load(customerService.getUserPortrait())
-                            .placeholder(R.drawable.ic_default_head_portrait)
-                            .circleCrop()
-                            .into(mHead);
-                }
-                if (otcChatMessage.getDirection() == 1) {
-                    mName.setText(sOtherName);
-                } else {
-                    mName.setText(sMyName);
-                }
+            private void bindingData(Context context, OtcChatMessage otcChatMessage, OtcChatMessage lastChat, int position, int itemCount) {
+                boolean right = otcChatMessage.getDirection() == DIRECTION_RIGHT;
+                mName.setText(right ? mRightOtcChatUserInfo.getUserName() : mLeftOtcChatUserInfo.getUserName());
+                GlideApp.with(context)
+                        .load(right ? mRightOtcChatUserInfo.getUserPortrait() : mLeftOtcChatUserInfo.getUserPortrait())
+                        .centerCrop()
+                        .into(mHead);
                 mContent.setText(otcChatMessage.getMessage());
-
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
             }
         }
@@ -631,25 +632,19 @@ public class OtcTradeChatActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(CustomerService customerService, Context context, OtcChatMessage otcChatMessage, OtcChatMessage lastChat, int position, int itemCount) {
-                if (customerService != null) {
-                    GlideApp.with(context).load(customerService.getUserPortrait())
-                            .placeholder(R.drawable.ic_default_head_portrait)
-                            .circleCrop()
-                            .into(mHead);
-                }
-                if (otcChatMessage.getDirection() == 1) {
-                    mName.setText(sOtherName);
-                } else {
-                    mName.setText(sMyName);
-                }
+            public void bindingData(Context context, OtcChatMessage otcChatMessage, OtcChatMessage lastChat, int position, int itemCount) {
+                boolean right = otcChatMessage.getDirection() == DIRECTION_RIGHT;
+                mName.setText(right ? mRightOtcChatUserInfo.getUserName() : mLeftOtcChatUserInfo.getUserName());
+                GlideApp.with(context)
+                        .load(right ? mRightOtcChatUserInfo.getUserPortrait() : mLeftOtcChatUserInfo.getUserPortrait())
+                        .centerCrop()
+                        .into(mHead);
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
 
                 if (otcChatMessage.getMsgType() == 2) {
                     GlideApp.with(context).load(otcChatMessage.getMessage())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mPhoto);
                 }
             }
@@ -673,22 +668,12 @@ public class OtcTradeChatActivity extends BaseActivity {
             }
 
             public void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage, OtcChatMessage lastChat, int position, int itemCount) {
-                if (LocalUser.getUser().isLogin()) {
-                    GlideApp.with(context).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                            .placeholder(R.drawable.ic_default_head_portrait)
-                            .circleCrop()
-                            .into(mHead);
-                } else {
-                    GlideApp.with(context).load(otcChatMessage.getMessage())
-                            .placeholder(R.drawable.ic_default_head_portrait)
-                            .circleCrop()
-                            .into(mHead);
-                }
-                if (otcChatMessage.getDirection() == 1) {
-                    mName.setText(sOtherName);
-                } else {
-                    mName.setText(sMyName);
-                }
+                boolean right = otcChatMessage.getDirection() == DIRECTION_RIGHT;
+                mName.setText(right ? mRightOtcChatUserInfo.getUserName() : mLeftOtcChatUserInfo.getUserName());
+                GlideApp.with(context)
+                        .load(right ? mRightOtcChatUserInfo.getUserPortrait() : mLeftOtcChatUserInfo.getUserPortrait())
+                        .centerCrop()
+                        .into(mHead);
                 mContent.setText(otcChatMessage.getMessage());
 
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
@@ -723,17 +708,12 @@ public class OtcTradeChatActivity extends BaseActivity {
             }
 
             public void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage, OtcChatMessage lastChat, int position, int itemCount) {
-                if (LocalUser.getUser().getUserInfo() != null) {
-                    GlideApp.with(context).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                            .placeholder(R.drawable.ic_default_head_portrait)
-                            .circleCrop()
-                            .into(mHead);
-                }
-                if (otcChatMessage.getDirection() == 1) {
-                    mName.setText(sOtherName);
-                } else {
-                    mName.setText(sMyName);
-                }
+                boolean right = otcChatMessage.getDirection() == DIRECTION_RIGHT;
+                mName.setText(right ? mRightOtcChatUserInfo.getUserName() : mLeftOtcChatUserInfo.getUserName());
+                GlideApp.with(context)
+                        .load(right ? mRightOtcChatUserInfo.getUserPortrait() : mLeftOtcChatUserInfo.getUserPortrait())
+                        .centerCrop()
+                        .into(mHead);
 
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -39,6 +40,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     LinearLayout mRootView;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
+    @BindView(R.id.swipeToLoadLayout)
+    SwipeToLoadLayout mSwipeToLoadLayout;
     private MessageListAdapter mAdapter;
     private int mPage;
     private int mSize = 20;
@@ -100,7 +103,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         stopFreshOrLoadAnimation();
                         if (resp.getData().getTotal() > mPage) {
                             mPage++;
-                        }else {
+                        } else {
+                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                     }
                 })
@@ -147,7 +151,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         }
 
         public void setList(PagingWrap<SysMessage> resp) {
-            if (resp.getStart() == 0) {
+            if (resp.getStart() == 1) {
                 mList.clear();
             }
             mList.addAll(resp.getData());
@@ -202,9 +206,24 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                     case MessageType.USER_AUTH_FAIL:
                         textId = R.string.user_auth_fail;
                         break;
+                    case MessageType.ARBITRAGE_PASS:
+                        textId = R.string.arbitrage_pass;
+                        break;
+                    case MessageType.ARBITRAGE_REJECT:
+                        textId = R.string.arbitrage_reject;
+                        break;
+                    case MessageType.OFF_SHELVES_WARES:
+                        textId = R.string.off_shelves_wares;
+                        break;
+                    case MessageType.OTC_ORDER_CANCEL:
+                        textId = R.string.otc_order_cancel;
+                        break;
+                    case MessageType.OTC_ORDER_DELAY:
+                        textId = R.string.otc_order_delay;
+                        break;
                     default:
                 }
-                if (textId!=0) {
+                if (textId != 0) {
                     mContent.setText(textId);
                 }
                 mHint.setVisibility(View.GONE);

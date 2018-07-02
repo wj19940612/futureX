@@ -242,8 +242,12 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     }
 
     private void showBuyOrSellView(final int type, Object obj) {
-        BuyOrSellController buyOrSellController = new BuyOrSellController(getContext());
         final LegalCurrencyTrade legalCurrencyTrade = (LegalCurrencyTrade) obj;
+        if (legalCurrencyTrade.getOperate() == 0) {
+            ToastUtil.show(R.string.can_not_trade_with_self);
+            return;
+        }
+        BuyOrSellController buyOrSellController = new BuyOrSellController(getContext());
         buyOrSellController.setData(legalCurrencyTrade);
         buyOrSellController.setType(type);
         buyOrSellController.setOnConfirmClickListener(new BuyOrSellController.OnConfirmClickListener() {
