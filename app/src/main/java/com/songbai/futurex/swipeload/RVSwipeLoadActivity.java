@@ -22,15 +22,6 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
 public abstract class RVSwipeLoadActivity extends BaseSwipeLoadActivity<RecyclerView> {
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        ButterKnife.bind(this);
-//        if (getSwipeTargetView() != null) {
-//            getSwipeTargetView().addOnScrollListener(mOnScrollListener);
-//        }
-    }
-
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (getSwipeTargetView() != null) {
@@ -49,7 +40,7 @@ public abstract class RVSwipeLoadActivity extends BaseSwipeLoadActivity<Recycler
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (!recyclerView.canScrollVertically(RecyclerView.VERTICAL)) {
+                if (!recyclerView.canScrollVertically(1)) {
                     triggerLoadMore();
                 }
             }

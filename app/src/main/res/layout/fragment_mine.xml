@@ -87,7 +87,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/headPortrait"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/headPortrait"/>
-
         </android.support.constraint.ConstraintLayout>
 
         <com.songbai.futurex.view.IconTextRow

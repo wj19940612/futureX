@@ -591,5 +591,6 @@
     <string name="system_revoked">系统撤销</string>
     <string name="part_deal_part_revoked">部分成交部分撤单</string>
     <string name="unknown_operation">未知操作</string>
+    <string name="filter">筛选</string>
 
 </resources>
