@@ -1,69 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/white">
-
-        <ImageView
-            android:id="@+id/optionalStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/btn_optional_status"/>
-
-        <TextView
-            android:id="@+id/pairName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:textColor="@color/text22"
-            android:textSize="18sp"
-            tools:text="BTC/USDT"/>
-
-        <ImageView
-            android:id="@+id/pairArrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/pairName"
-            android:src="@drawable/ic_tb_down_arrow"/>
-
-        <ImageView
-            android:id="@+id/switchToMarketPage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_market"/>
-    </RelativeLayout>
-
-    <com.songbai.futurex.view.RadioHeader
-        android:id="@+id/tradeDirRadio"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:paddingLeft="12dp"
-        app:tabArray="@array/trade_dir_radio"
-        app:tabInterval="30dp"/>
+    android:focusableInTouchMode="true">
 
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipeToLoadLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"
         app:load_more_enabled="false"
         app:load_more_final_drag_offset="@dimen/load_more_final_offset"
         app:load_more_trigger_offset="@dimen/load_more_trigger_offset"
@@ -80,13 +30,18 @@
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/swipe_target"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -129,6 +84,7 @@
                     android:background="@color/green"/>
 
                 <LinearLayout
+                    android:id="@+id/tradeLine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
@@ -312,6 +268,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/bg_white_with_under_line"
                     android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
                     app:tabArray="@array/order_list_radio"
                     app:tabInterval="30dp"/>
 
@@ -352,4 +309,70 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
-</LinearLayout>
+
+    <com.songbai.futurex.view.RadioHeader
+        android:id="@+id/tradeDirRadio"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"
+        app:tabArray="@array/trade_dir_radio"
+        app:tabInterval="30dp"/>
+
+    <com.songbai.futurex.view.RadioHeader
+        android:id="@+id/orderListFloatRadio"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_white_with_under_line"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"
+        app:tabArray="@array/order_list_radio"
+        app:tabInterval="30dp"/>
+
+    <RelativeLayout
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/optionalStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/btn_optional_status"/>
+
+        <TextView
+            android:id="@+id/pairName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/text22"
+            android:textSize="18sp"
+            tools:text="BTC/USDT"/>
+
+        <ImageView
+            android:id="@+id/pairArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/pairName"
+            android:src="@drawable/ic_tb_down_arrow"/>
+
+        <ImageView
+            android:id="@+id/switchToMarketPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_market"/>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

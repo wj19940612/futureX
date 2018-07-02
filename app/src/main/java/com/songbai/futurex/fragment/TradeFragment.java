@@ -98,6 +98,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     ImageView mSwitchToMarketPage;
     @BindView(R.id.tradeDirRadio)
     RadioHeader mTradeDirRadio;
+    @BindView(R.id.orderListFloatRadio)
+    RadioHeader mOrderListFloatRadio;
     @BindView(R.id.decimalScale)
     TextView mDecimalScale;
     @BindView(R.id.tradeVolumeView)
@@ -148,6 +150,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     LinearLayout mEmptyView;
 
     Unbinder unbinder;
+
 
     private CurrencyPair mCurrencyPair;
     private String mTradePair;
@@ -289,8 +292,15 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 } else {
                     mOrderAdapter.setOrderType(Order.TYPE_HIS_ENTRUST);
                 }
+                mOrderListFloatRadio.selectTab(position);
                 mPage = 0;
                 requestOrderList();
+            }
+        });
+        mOrderListFloatRadio.setOnTabClickListener(new RadioHeader.OnTabClickListener() {
+            @Override
+            public void onTabClick(int position, String content) {
+                mOrderListRadio.selectTab(position);
             }
         });
 
@@ -321,6 +331,27 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         });
         mOrderList.setAdapter(mOrderAdapter);
         mOrderList.setEmptyView(mEmptyView);
+
+        mSwipeTarget.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int tradeDirRadioHeight = mTradeDirRadio.getHeight();
+                if (scrollY >= mOrderListRadio.getTop() - tradeDirRadioHeight) {
+                    int diff = scrollY - (mOrderListRadio.getTop() - tradeDirRadioHeight);
+                    if (diff <= tradeDirRadioHeight) {
+                        mTradeDirRadio.setTranslationY(-diff);
+                    }
+                } else if (mTradeDirRadio.getTranslationY() != 0) {
+                    mTradeDirRadio.setTranslationY(0);
+                }
+
+                if (scrollY >= mOrderListRadio.getTop()) {
+                    mOrderListFloatRadio.setVisibility(View.VISIBLE);
+                } else {
+                    mOrderListFloatRadio.setVisibility(View.GONE);
+                }
+            }
+        });
 
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
@@ -827,6 +858,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     static class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         static class HistoryViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.split)
+            View mSplit;
             @BindView(R.id.tradePair)
             TextView mTradePair;
             @BindView(R.id.orderStatus)
@@ -859,7 +892,12 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(Order order, Context context, int prefixScale, int suffixScale) {
+            public void bind(Order order, Context context, int prefixScale, int suffixScale, int position) {
+                if (position == 0) {
+                    mSplit.setVisibility(View.GONE);
+                } else {
+                    mSplit.setVisibility(View.VISIBLE);
+                }
                 int color = ContextCompat.getColor(context, R.color.green);
                 String tradeDir = context.getString(R.string.buy_in);
                 if (order.getDirection() == Order.DIR_SELL) {
@@ -1024,7 +1062,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             if (holder instanceof EntrustViewHolder) {
                 ((EntrustViewHolder) holder).bind(mOrderList.get(position), mContext, mOnOrderRevokeClickListener);
             } else if (holder instanceof HistoryViewHolder) {
-                ((HistoryViewHolder) holder).bind(mOrderList.get(position), mContext, mPrefixScale, mSuffixScale);
+                ((HistoryViewHolder) holder).bind(mOrderList.get(position), mContext, mPrefixScale, mSuffixScale, position);
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
