@@ -108,7 +108,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         initDialog();
         mUpdateVersionMsg.setText(mAppVersion.getUpdateLog());
         mTitle.setText(getString(R.string.check_new_version));
-        mVersionName.setText(getString(R.string.version, mAppVersion.getLastVersion()));
+        mVersionName.setText(mAppVersion.getLastVersion());
     }
 
     private void initDialog() {
@@ -119,7 +119,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
             window.setGravity(Gravity.CENTER);
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout((int) (dm.widthPixels * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setLayout((int) (dm.widthPixels * 1.0), WindowManager.LayoutParams.WRAP_CONTENT);
         }
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
