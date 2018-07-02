@@ -99,6 +99,8 @@
                     android:layout_marginBottom="13dp"
                     android:includeFontPadding="false"
                     android:textColor="@color/red"
+                    android:textSize="13sp"
+                    app:layout_goneMarginRight="20dp"
                     app:layout_constraintBottom_toTopOf="@id/timer"
                     app:layout_constraintRight_toRightOf="@id/timer"
                     tools:text="待买家付款"/>
@@ -177,14 +179,33 @@
                 android:textColor="@color/text99"
                 android:textSize="17sp"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/payInfo"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:overScrollMode="never"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"/>
+                android:layout_height="wrap_content">
+
+                <com.songbai.futurex.view.EmptyRecyclerView
+                    android:id="@+id/payInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:overScrollMode="never"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"/>
+
+                <TextView
+                    android:id="@+id/bankEmptyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_order_datail_consult"
+                    android:gravity="center"
+                    android:text="点击咨询支付方式"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15sp"/>
+
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"

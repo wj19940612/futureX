@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
     <TextView
+        android:id="@+id/tenMin"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/bg_66_r2"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="1"
         android:textColor="@color/white"
-        android:textSize="13sp"/>
+        android:textSize="13sp"
+        tools:text="1"/>
 
     <TextView
+        android:id="@+id/min"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginLeft="2dp"
@@ -23,9 +26,9 @@
         android:background="@drawable/bg_66_r2"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="1"
         android:textColor="@color/white"
-        android:textSize="13sp"/>
+        android:textSize="13sp"
+        tools:text="1"/>
 
     <TextView
         android:layout_width="4dp"
@@ -37,6 +40,7 @@
         android:textSize="13sp"/>
 
     <TextView
+        android:id="@+id/tenSecond"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginLeft="2dp"
@@ -44,17 +48,18 @@
         android:background="@drawable/bg_66_r2"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="1"
         android:textColor="@color/white"
-        android:textSize="13sp"/>
+        android:textSize="13sp"
+        tools:text="1"/>
 
     <TextView
+        android:id="@+id/second"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/bg_66_r2"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="1"
         android:textColor="@color/white"
-        android:textSize="13sp"/>
+        android:textSize="13sp"
+        tools:text="1"/>
 </LinearLayout>

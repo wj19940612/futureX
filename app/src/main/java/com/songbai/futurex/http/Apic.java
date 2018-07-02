@@ -728,7 +728,7 @@ public class Apic {
      * GET
      * 订单管理
      */
-    public static Api legalCurrencyOrderList(int page, int pageSize, int status) {
+    public static Api legalCurrencyOrderList(int page, int pageSize, String status) {
         return Api.get("/api/otc/order/list",
                 new ReqParams()
                         .put("page", page)
@@ -770,6 +770,43 @@ public class Apic {
         return Api.get("/api/otc/order/payInfo",
                 new ReqParams()
                         .put("id", id));
+    }
+
+    /**
+     * /api/otc/chat/history
+     * GET
+     * 历史消息
+     */
+    public static Api otcChatHistory(int waresOrderId, String startTime, int size) {
+        return Api.get("/api/otc/chat/history",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId)
+                        .put("startTime", startTime)
+                        .put("size", size));
+    }
+
+    /**
+     * /api/otc/chat/send
+     * POST
+     * 发送消息 消息类型 1文字 2图片
+     */
+    public static Api otcChatSend(String msg, int waresOrderId, int msgType) {
+        return Api.post("/api/otc/chat/send",
+                new ReqParams()
+                        .put("msg", msg)
+                        .put("waresOrderId", waresOrderId)
+                        .put("msgType", msgType));
+    }
+
+    /**
+     * /api/otc/chat/user
+     * POST
+     * 获取用户信息
+     */
+    public static Api otcChatUser(int waresOrderId) {
+        return Api.get("/api/otc/chat/user",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId));
     }
 
     /**

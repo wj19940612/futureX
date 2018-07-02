@@ -1,4 +1,4 @@
-package com.songbai.futurex.view.dialog;
+package com.songbai.futurex.view;
 
 import android.content.Context;
 import android.support.annotation.StringRes;

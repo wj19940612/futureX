@@ -52,17 +52,54 @@
         app:rowText="@string/connect_customer_service"
         app:rowTextSize="16sp"/>
 
-    <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/versionUpdating"
+    <RelativeLayout
+        android:id="@+id/versionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_pressed_f5"
-        app:hasBottomSplitLine="true"
-        app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/version_updating"
-        app:rowTextSize="16sp"
-        app:subTextColor="@color/text99"
-        app:subTextSize="14sp"
-        tools:subText="V1.0"/>
+        android:paddingLeft="14dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/text22"
+            android:textSize="16sp"
+            android:text="@string/version_updating"/>
+
+        <ImageView
+            android:id="@+id/versionArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:src="@drawable/ic_common_right_arrow" />
+
+        <TextView
+            android:id="@+id/versionUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/versionArrow"
+            android:layout_marginRight="17dp"
+            android:gravity="center"
+            android:textColor="@color/text99"
+            android:textSize="14sp"
+            android:text="V1.0.2"/>
+
+        <View
+            android:id="@+id/versionIcon"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/ic_version_point"
+            android:layout_toLeftOf="@+id/versionUpdate"
+            android:layout_marginRight="2dp"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

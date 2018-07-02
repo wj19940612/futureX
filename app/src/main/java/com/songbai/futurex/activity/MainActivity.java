@@ -14,6 +14,7 @@ import com.songbai.futurex.fragment.LegalCurrencyFragment;
 import com.songbai.futurex.fragment.MarketFragment;
 import com.songbai.futurex.fragment.MineFragment;
 import com.songbai.futurex.fragment.TradeFragment;
+import com.songbai.futurex.fragment.UpdateVersionDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
@@ -99,15 +100,15 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         }
     }
 
-    private void checkVersion(){
+    private void checkVersion() {
         Apic.queryForceVersion()
                 .callback(new Callback<Resp<AppVersion>>() {
                     @Override
                     protected void onRespSuccess(Resp<AppVersion> resp) {
-//                        if (resp.getData() != null && resp.getData().isForceUpdate() || resp.getData().isNeedUpdate()) {
-//                            UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
-//                                    .show(getSupportFragmentManager());
-//                        }
+                        if (resp.getData() != null && (resp.getData().isForceUpdate() || resp.getData().isNeedUpdate())) {
+                            UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
+                                    .show(getSupportFragmentManager());
+                        }
                     }
                 })
                 .fire();

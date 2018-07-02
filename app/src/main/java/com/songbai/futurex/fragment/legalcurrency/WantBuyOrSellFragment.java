@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,11 +41,9 @@ import sbai.com.glide.GlideApp;
  */
 public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
 
-    @BindView(R.id.swipe_target)
-    FrameLayout mSwipeTarget;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
-    @BindView(R.id.recyclerView)
+    @BindView(R.id.swipe_target)
     EmptyRecyclerView mRecyclerView;
     @BindView(R.id.swipe_refresh_header)
     RefreshHeaderView mSwipeRefreshHeader;
@@ -161,13 +158,13 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
                         mAdapter.setList(resp.getData().getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
+                        if (mPage == 0) {
+                            mRecyclerView.hideAll(false);
+                        }
                         mPage++;
                         mGetOtcWaresHome.setPage(mPage);
                         if (mPage >= resp.getData().getTotal()) {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
-                        }
-                        if (mPage == 0) {
-                            mRecyclerView.hideAll(false);
                         }
                     }
 
@@ -175,6 +172,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
                     public void onFailure(ReqError reqError) {
                         super.onFailure(reqError);
                         stopFreshOrLoadAnimation();
+                        if (mPage == 0) {
+                            mRecyclerView.hideAll(false);
+                        }
                     }
                 }).fire();
     }
@@ -201,7 +201,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
     @NonNull
     @Override
     public Object getSwipeTargetView() {
-        return mSwipeTarget;
+        return mRecyclerView;
     }
 
     @NonNull
@@ -287,7 +287,15 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment {
                         .into(mHeadPortrait);
                 int authStatus = legalCurrencyTrade.getAuthStatus();
                 mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
-                mCertification.setImageResource(authStatus == 1 || authStatus == 2 ? R.drawable.ic_primary_star : R.drawable.ic_senior_star);
+                switch (authStatus) {
+                    case 1:
+                        mCertification.setImageResource(R.drawable.ic_primary_star);
+                        break;
+                    case 2:
+                        mCertification.setImageResource(R.drawable.ic_senior_star);
+                        break;
+                    default:
+                }
                 mUserName.setText(legalCurrencyTrade.getUsername());
                 mPrice.setText(getString(R.string.x_space_x,
                         FinanceUtil.formatWithScale(legalCurrencyTrade.getFixedPrice()),

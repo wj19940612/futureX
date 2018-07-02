@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:background="@color/bgF5"/>
+
+    <com.songbai.futurex.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:backFeature="true"
+        app:titleText="@string/canceled"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/sellerInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleBar"
+        android:layout_marginTop="40dp">
+
+        <ImageView
+            android:id="@+id/headPortrait"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="20dp"
+            android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/certification"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="35dp"
+            android:src="@drawable/ic_senior_star"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/headPortrait"
+            app:layout_constraintTop_toTopOf="@id/headPortrait"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/text22"
+            android:textSize="17sp"
+            app:layout_constraintLeft_toRightOf="@id/headPortrait"
+            app:layout_constraintRight_toLeftOf="@id/contractEachOther"
+            app:layout_constraintTop_toTopOf="@id/headPortrait"
+            tools:text="用户306"/>
+
+        <TextView
+            android:id="@+id/countDealRate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="9dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/text66"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@id/headPortrait"
+            app:layout_constraintLeft_toLeftOf="@id/userName"
+            app:layout_constraintRight_toLeftOf="@id/contractEachOther"
+            app:layout_constraintTop_toBottomOf="@id/userName"
+            tools:text="20001单 完成率98.6%"/>
+
+        <TextView
+            android:id="@+id/contractEachOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:drawableTop="@drawable/ic_otc_pay_chat"
+            android:gravity="center"
+            android:text="@string/contact_each_other"
+            android:textColor="@color/text66"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sellerInfo"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_r4">
+
+        <TextView
+            android:id="@+id/turnoverText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/turnover"
+            android:textColor="@color/text66"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toTopOf="@id/price"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside"/>
+
+        <TextView
+            android:id="@+id/turnover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/text49"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@id/turnoverText"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/turnoverText"
+            tools:text="7654.00 CNY"/>
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@id/tradeAmount"
+            app:layout_constraintLeft_toLeftOf="@id/turnoverText"
+            app:layout_constraintTop_toBottomOf="@id/turnoverText"
+            tools:text="价格：6.45 CNY/USDT"/>
+
+        <TextView
+            android:id="@+id/tradeAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@id/orderNo"
+            app:layout_constraintLeft_toLeftOf="@id/turnoverText"
+            app:layout_constraintTop_toBottomOf="@id/price"
+            tools:text="价格：6.45 CNY/USDT"/>
+
+        <TextView
+            android:id="@+id/orderNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@id/orderTime"
+            app:layout_constraintLeft_toLeftOf="@id/turnoverText"
+            app:layout_constraintTop_toBottomOf="@id/tradeAmount"
+            tools:text="#1122334455667788"/>
+
+        <TextView
+            android:id="@+id/orderTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="21dp"
+            android:textColor="@color/text66"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintLeft_toLeftOf="@id/turnoverText"
+            app:layout_constraintRight_toLeftOf="@id/orderStatus"
+            app:layout_constraintTop_toBottomOf="@id/orderNo"
+            tools:text="订单时间：2018/11/11 11:11:11"/>
+
+        <TextView
+            android:id="@+id/orderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/text66"
+            android:textSize="17sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/orderTime"
+            app:layout_constraintLeft_toRightOf="@id/orderTime"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="178dp"
+            tools:text="待买家付款"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

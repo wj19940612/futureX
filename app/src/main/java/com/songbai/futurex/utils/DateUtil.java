@@ -15,6 +15,7 @@ public class DateUtil {
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
     public static final String FORMAT_HOUR_MINUTE_DATE= "HH:mm MM/dd";
+    public static final String FORMAT_SPECIAL_SLASH_ALL = "yyyy/MM/dd HH:mm:ss";
 
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
