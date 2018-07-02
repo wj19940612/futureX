@@ -21,20 +21,14 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
 public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity
         implements SwipeLoader<T>, OnLoadMoreListener, OnRefreshListener {
 
-    private SwipeToLoadLayout mSwipeToLoadLayout;
-    private T mSwipeTargetView;
-    private RefreshHeaderView mRefreshHeaderView;
-    private LoadMoreFooterView mLoadMoreFooterView;
+    protected SwipeToLoadLayout mSwipeToLoadLayout;
+    protected T mSwipeTargetView;
+    protected RefreshHeaderView mRefreshHeaderView;
+    protected LoadMoreFooterView mLoadMoreFooterView;
 
     protected void stopFreshOrLoadAnimation() {
-        if (mSwipeToLoadLayout != null) {
-            if (mSwipeToLoadLayout.isRefreshing()) {
-                mSwipeToLoadLayout.setRefreshing(false);
-            }
-            if (mSwipeToLoadLayout.isLoadingMore()) {
-                mSwipeToLoadLayout.setLoadingMore(false);
-            }
-        }
+        stopFreshAnimation();
+        stopLoadMoreAnimation();
     }
 
     protected void stopFreshAnimation() {
@@ -45,7 +39,7 @@ public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity
         }
     }
 
-    protected void stopLoadAnimation() {
+    protected void stopLoadMoreAnimation() {
         if (mSwipeToLoadLayout != null) {
             if (mSwipeToLoadLayout.isLoadingMore()) {
                 mSwipeToLoadLayout.setLoadingMore(false);
@@ -83,7 +77,7 @@ public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity
 //        if (mLoadMoreFooterView != null) {
 //            mLoadMoreFooterView.setLoadMoreSuccess(msg);
 //        }
-        stopLoadAnimation();
+        stopLoadMoreAnimation();
     }
 
     @Override

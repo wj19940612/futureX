@@ -21,7 +21,7 @@ import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.activity.mine.InviteActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
-import com.songbai.futurex.fragment.mine.CustomerServiceFragment;
+import com.songbai.futurex.activity.mine.TradeOrdersActivity;
 import com.songbai.futurex.fragment.mine.MessageCenterActivity;
 import com.songbai.futurex.fragment.mine.SafetyCenterFragment;
 import com.songbai.futurex.fragment.mine.SettingsFragment;
@@ -205,6 +205,11 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(this, MyPropertyActivity.class).execute();
                 break;
             case R.id.tradeOrderLog:
+                if (user.isLogin()) {
+                    Launcher.with(getActivity(), TradeOrdersActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.legalCurrencyTradeOrder:
                 break;

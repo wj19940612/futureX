@@ -747,21 +747,25 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         int type = mOrderListRadio.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
         Apic.getEntrustOrderList(mPage, type, endTime,
-                mCurrencyPair.getPrefixSymbol(), mCurrencyPair.getSuffixSymbol()).tag(TAG)
+                mCurrencyPair.getPrefixSymbol(), mCurrencyPair.getSuffixSymbol())
+                .id(mOrderListRadio.getSelectTab())
+                .tag(TAG)
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {
                     @Override
                     protected void onRespData(PagingWrap<Order> data) {
-                        if (mPage == 0) {
-                            mOrderAdapter.setOrderList(data.getData());
-                        } else {
-                            mOrderAdapter.appendOrderList(data.getData());
-                        }
-                        stopLoadMoreAnimation();
+                        if (getId().equals(mOrderListRadio.getSelectTab())) {
+                            if (mPage == 0) {
+                                mOrderAdapter.setOrderList(data.getData());
+                            } else {
+                                mOrderAdapter.appendOrderList(data.getData());
+                            }
+                            stopLoadMoreAnimation();
 
-                        if (data.getData().size() < Apic.DEFAULT_PAGE_SIZE) {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
-                        } else {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            if (data.getData().size() < Apic.DEFAULT_PAGE_SIZE) {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            } else {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            }
                         }
                     }
                 }).fireFreely();
@@ -915,7 +919,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
                 mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
                 mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix()));
-                mDealTotalAmt.setText(NumUtils.getPrice(order.getDealCount() * order.getDealPrice(), suffixScale));
+                mDealTotalAmt.setText(NumUtils.getAmt(order.getDealCount() * order.getDealPrice(), suffixScale));
                 mDealAveragePrice.setText(NumUtils.getPrice(order.getDealPrice()));
                 mDealVolume.setText(NumUtils.getVolume(order.getDealCount()));
                 mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix()));
