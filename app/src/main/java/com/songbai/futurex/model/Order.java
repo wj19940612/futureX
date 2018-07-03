@@ -16,6 +16,7 @@ public class Order implements OrderStatus {
 
     public static final int DIR_BUY = 1;
     public static final int DIR_SELL = 2;
+    public static final int DIR_DEFAULT = -198;
 
     public static final int LIMIT_TRADE = 1;
     public static final int MARKET_TRADE = 2;
