@@ -26,6 +26,14 @@ public class Apic {
 
     public static final int DEFAULT_PAGE_SIZE = 20;
 
+
+    public interface url {
+
+        String NOTICE_DETAIL_PAGE = Api.getFixedHost() + "/noticeDetail?id=%s";
+
+    }
+
+
     public static Api getAreaCodes() {
         return Api.get("/api/user/country/country.d");
     }
@@ -527,7 +535,7 @@ public class Apic {
      * POST
      * 标记已读
      */
-    public static Api msgRead(int msgId) {
+    public static Api msgRead(String msgId) {
         return Api.get("/api/user/msg/list",
                 new ReqParams()
                         .put("msgId", msgId));
@@ -1202,9 +1210,6 @@ public class Apic {
      */
     public static Api requestPlatformIntroduce(String code) {
         return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
-    }
-
-    public interface url {
     }
 
 }
