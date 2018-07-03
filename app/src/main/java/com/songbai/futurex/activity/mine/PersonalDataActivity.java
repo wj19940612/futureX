@@ -13,6 +13,7 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.fragment.mine.BindMailFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
@@ -25,10 +26,8 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Display;
-import com.songbai.futurex.utils.ImagePicker;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
-import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -153,18 +152,9 @@ public class PersonalDataActivity extends BaseActivity {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
             case R.id.headImageLayout:
-//                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
-//                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
-//                uploadUserImageDialogFragment.show(getSupportFragmentManager());
-                ImagePicker
-                        .create(this)
-                        .openGallery()
-                        .maxSelectNum(1)
-                        .forResult();
-//                ImagePicker
-//                        .create(this)
-//                        .openCamera()
-//                        .forResult();
+                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
+                uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
                 Launcher.with(this, ModifyNickNameActivity.class)
@@ -175,7 +165,7 @@ public class PersonalDataActivity extends BaseActivity {
                 break;
             case R.id.phoneCertification:
                 UniqueActivity.launcher(this, BindPhoneFragment.class)
-                        .putExtra(ExtraKeys.HAS_BIND_PHONE, TextUtils.isEmpty(userInfo.getUserPhone()))
+                        .putExtra(ExtraKeys.HAS_BIND_PHONE, !TextUtils.isEmpty(userInfo.getUserPhone()))
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.mailCertification:
@@ -218,18 +208,11 @@ public class PersonalDataActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ImagePicker.IMAGE_TYPE_OPEN_CUSTOM_GALLERY) {
+        if (requestCode == UploadUserImageDialogFragment.REQ_CLIP_HEAD_IMAGE_PAGE) {
             if (data != null) {
-                String stringExtra = data.getStringExtra(ExtraKeys.IMAGE_PATH);
-                String image = ImageUtils.compressImageToBase64(stringExtra, this);
-                uploadImage(image);
+                String imagePath = data.getStringExtra(ExtraKeys.IMAGE_PATH);
+                submitPortraitPath(imagePath);
             }
-        } else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
-//            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
-//            if (!TextUtils.isEmpty(galleryBitmapPath)) {
-//                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
-//                uploadImage(image);
-//            }
         } else if (requestCode == MODIFY_PERSONAL_DATA) {
             requestUserInfo();
         }

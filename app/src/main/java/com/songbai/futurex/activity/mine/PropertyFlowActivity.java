@@ -1,13 +1,13 @@
 package com.songbai.futurex.activity.mine;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -25,15 +25,16 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
-import com.songbai.futurex.model.mine.CoinInfo;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.model.status.FlowStatus;
-import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
+import com.songbai.futurex.swipeload.BaseSwipeLoadActivity;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.PropertyFlowFilter;
+import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
+import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,25 +44,28 @@ import butterknife.ButterKnife;
  * @author yangguangda
  * @date 2018/6/1
  */
-public class PropertyFlowActivity extends RVSwipeLoadActivity {
+public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.swipe_target)
-    RecyclerView mSwipeTarget;
-    @BindView(R.id.rootView)
-    RelativeLayout mRootView;
+    EmptyRecyclerView mSwipeTarget;
     @BindView(R.id.swipeToLoadLayout)
     SwipeToLoadLayout mSwipeToLoadLayout;
     @BindView(R.id.filtrateGroup)
     LinearLayout mFiltrateGroup;
     private final int TYPE_ALL = 10;
+    @BindView(R.id.swipe_refresh_header)
+    RefreshHeaderView mSwipeRefreshHeader;
+    @BindView(R.id.swipe_load_more_footer)
+    LoadMoreFooterView mSwipeLoadMoreFooter;
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
     private GetUserFinanceFlowData mGetUserFinanceFlowData;
     private int mPage = 0;
     private int mPageSize = 20;
     private boolean mAllType;
     private String mCoinType;
     private PropertyFlowAdapter mAdapter;
-    private ArrayList<CoinInfo> mCoinInfos;
     private final int[] flowStatus = new int[]{TYPE_ALL,
             FlowStatus.SUCCESS, FlowStatus.FREEZE, FlowStatus.DRAW_REJECT,
             FlowStatus.ENTRUS_RETURN, FlowStatus.FREEZE_DEDUCT, FlowStatus.ENTRUSE_RETURN_SYS,
@@ -71,6 +75,7 @@ public class PropertyFlowActivity extends RVSwipeLoadActivity {
             R.string.entrust_return, R.string.freeze_deduct, R.string.sys_withdraw, R.string.freeze_return};
     private OptionsPickerView<String> mPvOptions;
     private ArrayList<String> mFlowStatusStr;
+    private ArrayList<Integer> mFlowStatus;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,10 +101,15 @@ public class PropertyFlowActivity extends RVSwipeLoadActivity {
                             mFlowStatusStr.add(getString(flowStatusStrRe));
                         }
                     }
-                    showSelector(mFlowStatusStr, Arrays.<Object>asList(flowStatus));
+                    showSelector(mFlowStatusStr, mFlowStatus);
                 }
             }
         });
+        mFlowStatus = new ArrayList<>();
+        for (int status : flowStatus) {
+            mFlowStatus.add(status);
+        }
+        mSwipeTarget.setEmptyView(mEmptyView);
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PropertyFlowAdapter();
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
@@ -144,11 +154,6 @@ public class PropertyFlowActivity extends RVSwipeLoadActivity {
     }
 
     @Override
-    public View getContentView() {
-        return mRootView;
-    }
-
-    @Override
     public void onLoadMore() {
         getUserFinanceFlow();
     }
@@ -167,9 +172,11 @@ public class PropertyFlowActivity extends RVSwipeLoadActivity {
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
-                        if (resp.getData().getTotal() > mPage + 1) {
-                            mPage++;
-                        } else {
+                        if (mPage == 0) {
+                            mSwipeTarget.hideAll(false);
+                        }
+                        mPage++;
+                        if (mPage >= resp.getData().getTotal()) {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                     }
@@ -177,7 +184,12 @@ public class PropertyFlowActivity extends RVSwipeLoadActivity {
                 .fire();
     }
 
-    private void showSelector(final List<String> item, final List<Object> origin) {
+    private void showSelector(final List<String> item, final ArrayList<Integer> origin) {
+        String status = mGetUserFinanceFlowData.getStatus();
+        int selectedOption = 0;
+        if (!TextUtils.isEmpty(status)) {
+            selectedOption = mFlowStatus.indexOf(Integer.valueOf(status));
+        }
         mPvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
@@ -205,6 +217,7 @@ public class PropertyFlowActivity extends RVSwipeLoadActivity {
                     }
                 })
                 .setCyclic(false, false, false)
+                .setSelectOptions(selectedOption)
                 .setTextColorCenter(ContextCompat.getColor(this, R.color.text22))
                 .setTextColorOut(ContextCompat.getColor(this, R.color.text99))
                 .setDividerColor(ContextCompat.getColor(this, R.color.bgDD))
@@ -213,10 +226,34 @@ public class PropertyFlowActivity extends RVSwipeLoadActivity {
         mPvOptions.show();
     }
 
-    private void filterStatus(int options1, List<String> item, List<Object> origin) {
+    private void filterStatus(int options1, List<String> item, ArrayList<Integer> origin) {
         int status = (int) origin.get(options1);
         mGetUserFinanceFlowData.setStatus(status == TYPE_ALL ? "" : String.valueOf(status));
         mPage = 0;
         getUserFinanceFlow();
+    }
+
+    @NonNull
+    @Override
+    public Object getSwipeTargetView() {
+        return mSwipeTarget;
+    }
+
+    @NonNull
+    @Override
+    public SwipeToLoadLayout getSwipeToLoadLayout() {
+        return mSwipeToLoadLayout;
+    }
+
+    @NonNull
+    @Override
+    public RefreshHeaderView getRefreshHeaderView() {
+        return mSwipeRefreshHeader;
+    }
+
+    @NonNull
+    @Override
+    public LoadMoreFooterView getLoadMoreFooterView() {
+        return mSwipeLoadMoreFooter;
     }
 }

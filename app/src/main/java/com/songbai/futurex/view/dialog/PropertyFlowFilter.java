@@ -138,6 +138,27 @@ public class PropertyFlowFilter {
                 showOrDismiss();
             }
         });
+        if (!TextUtils.isEmpty(mTempCoinSymbol)) {
+            mSelectCoinType.setText(mTempCoinSymbol.toUpperCase());
+        }
+        if (mTempFlowType != 0) {
+            mFlowType.setText(flowTypeStrRes[mFlowTypes.indexOf(mTempFlowType)]);
+        }
+        if (mTempFlowStatus != 0) {
+            mStatus.setText(flowStatusStrRes[mFlowStatus.indexOf(mTempFlowStatus)]);
+        }
+        if (!TextUtils.isEmpty(mTempStartTime)) {
+            long timeMillion = getTimeMillion(mTempStartTime);
+            if (timeMillion > 0) {
+                mStartTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
+            }
+        }
+        if (!TextUtils.isEmpty(mTempEndTime)) {
+            long timeMillion = getTimeMillion(mTempEndTime);
+            if (timeMillion > 0) {
+                mEndTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
+            }
+        }
     }
 
     public void showOrDismiss() {
@@ -312,10 +333,9 @@ public class PropertyFlowFilter {
                 break;
             default:
         }
-        if (!TextUtils.isEmpty(date)) {
-            //注意是空格+UTC
-            date = date.replace("Z", " UTC");
-            lastDate.setTimeInMillis(DateUtil.getDate(date, DateUtil.FORMAT_UTZ_STANDARD));
+        long timeMillion = getTimeMillion(date);
+        if (timeMillion != 0) {
+            lastDate.setTimeInMillis(timeMillion);
         }
         Calendar startDate = Calendar.getInstance();
         Calendar endDate = Calendar.getInstance();
@@ -356,6 +376,15 @@ public class PropertyFlowFilter {
                 .setDividerColor(ContextCompat.getColor(mContext, R.color.bgDD))
                 .build();
         mPvTime.show();
+    }
+
+    private long getTimeMillion(String date) {
+        if (!TextUtils.isEmpty(date)) {
+            //注意是空格+UTC
+            date = date.replace("Z", " UTC");
+            return DateUtil.getDate(date, DateUtil.FORMAT_UTZ_STANDARD);
+        }
+        return 0;
     }
 
     public void setSelectedTime(View view, Date date) {

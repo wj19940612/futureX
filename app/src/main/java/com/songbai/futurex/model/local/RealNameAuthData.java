@@ -10,7 +10,7 @@ public class RealNameAuthData {
     String idcardFrontImg;
     String idcardBackImg;
     String handIdcardImg;
-    int type;
+    int idType;
 
     public static final class Builder {
         String idcardNum;
@@ -18,7 +18,7 @@ public class RealNameAuthData {
         String idcardFrontImg;
         String idcardBackImg;
         String handIdcardImg;
-        int type;
+        int idType;
 
         public static Builder create() {
             return new Builder();
@@ -49,8 +49,8 @@ public class RealNameAuthData {
             return this;
         }
 
-        public Builder type(int type) {
-            this.type = type;
+        public Builder idType(int type) {
+            this.idType = type;
             return this;
         }
 
@@ -61,7 +61,7 @@ public class RealNameAuthData {
             realNameAuthData.idcardFrontImg = this.idcardFrontImg;
             realNameAuthData.idcardBackImg = this.idcardBackImg;
             realNameAuthData.handIdcardImg = this.handIdcardImg;
-            realNameAuthData.type = this.type;
+            realNameAuthData.idType = this.idType;
             return realNameAuthData;
         }
     }

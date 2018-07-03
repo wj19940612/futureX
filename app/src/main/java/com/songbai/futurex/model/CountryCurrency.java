@@ -59,6 +59,17 @@ public class CountryCurrency {
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
+
+    @Override
+    public String toString() {
+        return "CountryCurrency{" +
+                "country='" + country + '\'' +
+                ", englishName='" + englishName + '\'' +
+                ", ico='" + ico + '\'' +
+                ", name='" + name + '\'' +
+                ", symbol='" + symbol + '\'' +
+                '}';
+    }
 }
 
 

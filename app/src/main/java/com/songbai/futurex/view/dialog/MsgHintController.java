@@ -3,6 +3,7 @@ package com.songbai.futurex.view.dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
@@ -41,12 +42,19 @@ public class MsgHintController extends SmartDialog.CustomViewController {
     @Override
     public void onInitView(View view, final SmartDialog dialog) {
         mHintMsg = (TextView) view.findViewById(R.id.hintMsg);
+        ImageView close = (ImageView) view.findViewById(R.id.close);
         mConfirm = (TextView) view.findViewById(R.id.confirm);
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 mOnClickListener.onConfirmClick();
+            }
+        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
         setMsg(mMsgRes);
