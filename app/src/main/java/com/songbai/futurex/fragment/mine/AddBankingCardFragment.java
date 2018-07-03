@@ -176,6 +176,10 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     }
 
     private void showBankSelect(final ArrayList<BankListBean> bankListBeans) {
+        ArrayList<String> banks = new ArrayList<>();
+        for (BankListBean bankListBean : bankListBeans) {
+            banks.add(bankListBean.getBankName());
+        }
         OptionsPickerView pvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
@@ -186,7 +190,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
                 }
             }
         }).build();
-        pvOptions.setPicker(bankListBeans, null, null);
+        pvOptions.setPicker(banks, null, null);
         pvOptions.show();
     }
 

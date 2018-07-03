@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
@@ -30,6 +31,8 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     private static final int SETTINGS_RESULT = 12354;
     @BindView(R.id.language)
     IconTextRow mLanguage;
+    @BindView(R.id.logout)
+    TextView mLogout;
     private Unbinder mBind;
 
     @Nullable
@@ -47,7 +50,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-
+        mLogout.setVisibility(LocalUser.getUser().isLogin() ? View.VISIBLE : View.GONE);
     }
 
     @Override

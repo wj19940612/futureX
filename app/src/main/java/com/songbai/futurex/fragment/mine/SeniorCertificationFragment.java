@@ -153,10 +153,11 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
 
     private void selectImage(final View view) {
         if (mCanEdit) {
+            getHIntImage(view);
             UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
                     UploadUserImageDialogFragment.IMAGE_TYPE_NOT_DEAL, "",
-                    -1, getString(R.string.please_add_certification_front_pic),
-                    1, R.drawable.ic_authentication_idcard_front);
+                    -1, getString(getHIntStiring(view)),
+                    1, getHIntImage(view));
             uploadUserImageDialogFragment.setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                 @Override
                 public void onImagePath(int index, String imagePath) {
@@ -166,6 +167,59 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
             });
             uploadUserImageDialogFragment.show(getChildFragmentManager());
         }
+    }
+
+    private int getHIntImage(View view) {
+        switch (view.getId()) {
+            case R.id.frontImg:
+                switch (mUserAuth.getIdType()) {
+                    case 0:
+                        return R.drawable.ic_authentication_idcard_front;
+                    case 1:
+                        return R.drawable.ic_authentication_idcard_front_tw;
+                    case 2:
+                        return R.drawable.ic_authentication_passport_front;
+                    default:
+                }
+                break;
+            case R.id.backImg:
+                switch (mUserAuth.getIdType()) {
+                    case 0:
+                        return R.drawable.ic_authentication_idcard_back;
+                    case 1:
+                        return R.drawable.ic_authentication_idcard_back_tw;
+                    case 2:
+                        return R.drawable.ic_authentication_passport_handheld;
+                    default:
+                }
+                break;
+            case R.id.handIdCardImg:
+                switch (mUserAuth.getIdType()) {
+                    case 0:
+                        return R.drawable.ic_authentication_idcard_handheld;
+                    case 1:
+                        return R.drawable.ic_authentication_idcard_handheld_tw;
+                    case 2:
+                        return R.drawable.ic_authentication_passport_handheld;
+                    default:
+                }
+                break;
+            default:
+        }
+        return R.drawable.ic_authentication_idcard_front;
+    }
+
+    private int getHIntStiring(View view) {
+        switch (view.getId()) {
+            case R.id.frontImg:
+                return R.string.please_add_certification_front_pic;
+            case R.id.backImg:
+                return R.string.please_add_certification_back_pic;
+            case R.id.handIdCardImg:
+                return R.string.please_add_handle_certification_pic;
+            default:
+        }
+        return R.string.please_add_certification_front_pic;
     }
 
     private void confirmAuth() {

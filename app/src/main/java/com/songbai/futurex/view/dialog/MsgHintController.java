@@ -24,6 +24,7 @@ public class MsgHintController extends SmartDialog.CustomViewController {
     private TextView mConfirm;
     private int mImgRes;
     private int mMsgRes;
+    private int mConfirmText;
 
     public interface OnClickListener {
         void onConfirmClick();
@@ -59,6 +60,9 @@ public class MsgHintController extends SmartDialog.CustomViewController {
         });
         setMsg(mMsgRes);
         setImageRes(mImgRes);
+        if (mConfirmText != 0) {
+            setConfirmText(mConfirmText);
+        }
     }
 
     public void setImageRes(int imgRes) {
@@ -72,6 +76,13 @@ public class MsgHintController extends SmartDialog.CustomViewController {
         mMsgRes = msgRes;
         if (isViewInitialized()) {
             mHintMsg.setText(msgRes);
+        }
+    }
+
+    public void setConfirmText(int confirmText) {
+        mConfirmText = confirmText;
+        if (isViewInitialized()) {
+            mConfirm.setText(mConfirmText);
         }
     }
 

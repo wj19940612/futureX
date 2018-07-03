@@ -63,6 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
+        android:visibility="gone"
         app:rowText="@string/gesture_pwd"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>

@@ -352,6 +352,8 @@
     <string name="can_not_trade_with_self">本人不可与本人交易</string>
     <string name="off_shelf_hint_msg">您确实要下架广告吗</string>
     <string name="delete_poster_hint_msg">您确实要删除广告吗</string>
+    <string name="set_draw_cash_pwd_hint">您还未设置资金密码，为了您账户的安全，请先设置</string>
+    <string name="go_to_set">去设置</string>
     <string name="please_select_price_type">请选择价格类型</string>
     <string name="floating_price_rate">溢价比例</string>
     <string name="percent_symbol">%</string>

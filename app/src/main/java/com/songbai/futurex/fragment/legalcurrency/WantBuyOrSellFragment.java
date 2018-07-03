@@ -23,21 +23,26 @@ import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
+import com.songbai.futurex.fragment.mine.CashPwdFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.LegalCurrencyTrade;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.status.OtcOrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.inputfilter.MoneyValueFilter;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.MsgHintController;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -238,7 +243,31 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
     @Override
     public void onItemClick(View view, int position, Object obj) {
-        showBuyOrSellView(mType, obj);
+        if (LocalUser.getUser().isLogin()) {
+            if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+                showSetDrawCashPwdHint();
+            }
+            showBuyOrSellView(mType, obj);
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
+    }
+
+    private void showSetDrawCashPwdHint() {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                UniqueActivity.launcher(WantBuyOrSellFragment.this, CashPwdFragment.class)
+                        .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
+                        .execute();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setConfirmText(R.string.go_to_set);
+        withDrawPsdViewController.setMsg(R.string.set_draw_cash_pwd_hint);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     private void showBuyOrSellView(final int type, Object obj) {
