@@ -191,6 +191,10 @@ public class PersonalDataActivity extends BaseActivity {
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.seniorCertification:
+                if (userInfo.getAuthenticationStatus() < 1) {
+                    ToastUtil.show(R.string.passed_primary_certification);
+                    return;
+                }
                 UniqueActivity.launcher(this, SeniorCertificationFragment.class)
                         .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus)
                         .execute(MODIFY_PERSONAL_DATA);

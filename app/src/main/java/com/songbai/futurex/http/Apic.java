@@ -26,6 +26,14 @@ public class Apic {
 
     public static final int DEFAULT_PAGE_SIZE = 20;
 
+
+    public interface url {
+
+        String NOTICE_DETAIL_PAGE = Api.getFixedHost() + "/noticeDetail?id=%s";
+
+    }
+
+
     public static Api getAreaCodes() {
         return Api.get("/api/user/country/country.d");
     }
@@ -321,6 +329,17 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/getUserFinanceFlowDetail.do
+     * GET
+     * 获取资产流水的详细信息
+     */
+    public static Api getUserFinanceFlowDetail(int id) {
+        return Api.get("/api/user/wallet/getUserFinanceFlowDetail.do",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
      * /api/user/wallet/getDepositWalletAddrByCoinType.do
      * GET
      * 获取充值地址（叶海啸）
@@ -516,7 +535,7 @@ public class Apic {
      * POST
      * 标记已读
      */
-    public static Api msgRead(int msgId) {
+    public static Api msgRead(String msgId) {
         return Api.get("/api/user/msg/list",
                 new ReqParams()
                         .put("msgId", msgId));
@@ -1136,7 +1155,7 @@ public class Apic {
     public static Api revokeOrder(String orderId) {
         return Api.post("/api/entrust/entrust/cancel/{id}",
                 new ReqParams()
-                .put("id", orderId));
+                        .put("id", orderId));
     }
 
     /**
@@ -1191,9 +1210,6 @@ public class Apic {
      */
     public static Api requestPlatformIntroduce(String code) {
         return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
-    }
-
-    public interface url {
     }
 
 }

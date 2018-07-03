@@ -122,14 +122,14 @@
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:textColor="@color/text22"
-            android:textSize="15sp"/>
+            android:textSize="13sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:text="到"
+            android:text="@string/to"
             android:textColor="@color/text22"
             android:textSize="15sp"/>
 
@@ -144,7 +144,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:textColor="@color/text22"
-            android:textSize="15sp"/>
+            android:textSize="13sp"/>
     </LinearLayout>
 
     <LinearLayout

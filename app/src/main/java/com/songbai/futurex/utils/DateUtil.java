@@ -1,5 +1,7 @@
 package com.songbai.futurex.utils;
 
+
+import android.text.TextUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,9 +14,23 @@ public class DateUtil {
     public static final String FORMAT_NOT_SECOND = "MM月dd日 HH:mm";
     public static final String FORMAT_NOT_HOUR = "MM月dd日 ";
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日 HH:mm";
+
+    public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
-    public static final String FORMAT_HOUR_MINUTE_DATE= "HH:mm MM/dd";
+
+    public static final String FORMAT_MINUTE_SECOND = "mm:ss";
+    public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
+    public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
+    public static final String FORMAT_HOUR_MINUTE_DATE = "HH:mm MM/dd";
+
+
+    private static final String TODAY = "今日";
+    private static final String YESTERDAY = "昨日";
+
+    public static final String FORMAT_UTZ_STANDARD= "yyyy-MM-dd'T'HH:mm:ss.SSS Z";
+    public static final String FORMAT_HOUR_MINUTE_SECOND_DATE_YEAR= "HH:mm:ss MM/dd/yyyy";
     public static final String FORMAT_SPECIAL_SLASH_ALL = "yyyy/MM/dd HH:mm:ss";
 
     public static String format(long time, String toFormat) {
@@ -212,6 +228,7 @@ public class DateUtil {
         return date.getTime();
     }
 
+
     /**
      * 格式化时间  如果是当天 则显示18:20
      * 如果是昨天 则 昨天 18:20
@@ -233,6 +250,402 @@ public class DateUtil {
             }
         } else {
             return DateUtil.format(createTime, DateUtil.FORMAT_YEAR_MONTH_DAY);
+        }
+    }
+
+    /**
+<<<<<<< HEAD
+     * 返回格式 7月15日
+     *
+     * @param createTime
+     * @return
+     */
+
+    public static String getStudyFormatTime(long createTime) {
+        return DateUtil.format(createTime, DateUtil.FORMAT_NOT_HOUR);
+    }
+
+
+    /**
+     * 评论时间显示机制：
+     * 1分钟内显示“刚刚”，
+     * 1小时内显示“XX分钟前”，
+     * 大于1小时在当天的显示“XX小时前”，
+     * 昨天的显示“昨天”，
+     * 再往前的显示“xx-xx”，跨年加上年份；
+     *
+     * @param createTime
+     * @return
+     */
+//    public static String formatDefaultStyleTime(long createTime) {
+//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+//        if (DateUtil.isToday(createTime, systemTime)) {
+//            if (systemTime - createTime < 60 * 60 * 1000) {
+//                int time = (int) ((systemTime - createTime) / 1000 / 60);
+//                if (time < 1) {
+//                    return "刚刚";
+//                }
+//                return time + "分钟前";
+//            }
+//            int hour = (int) ((systemTime - createTime) / 1000 / 60 / 60);
+//            return hour + "小时前";
+//        } else if (DateUtil.isYesterday(createTime, systemTime)) {
+//            return "昨天";
+//        } else if (DateUtil.isInThisYear(createTime)) {
+//            return DateUtil.format(createTime, "MM/dd ");
+//        } else {
+//            return DateUtil.format(createTime, "yyyy/MM/dd ");
+//        }
+//    }
+
+    /**
+     * 如果是当天，显示今天
+     * 如果是昨天，显示昨天
+     * 如果是本年内的其他时期  12/07;
+     * 跨年  2015/12/07
+     * 涉及页面  资讯列表，资讯详情
+     *
+     * @param createTime
+     * @return
+     */
+//    public static String formatNewsStyleTime(long createTime) {
+//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+//        if (DateUtil.isInThisDay(createTime, systemTime))
+//            return "今天";
+//        else if (DateUtil.isYesterday(createTime, systemTime)) {
+//            return "昨天";
+//        } else if (DateUtil.isInThisYear(createTime)) {
+//            return DateUtil.format(createTime, "MM/dd ");
+//        } else {
+//            return DateUtil.format(createTime, "yyyy/MM/dd ");
+//        }
+//    }
+
+    /**
+     * 当前是否白天
+     *
+     * @return
+     */
+    public static boolean isDayTime() {
+        long systemTime = System.currentTimeMillis();
+        int time = Integer.valueOf(DateUtil.format(systemTime, "HHmm"));
+        return time >= 600 && time <= 1800;
+    }
+
+    public static String formatNoticeTime(long time) {
+        long timeMillis = System.currentTimeMillis();
+        if (DateUtil.isInThisDay(time, timeMillis)) {
+            return DateUtil.format(time, FORMAT_HOUR_MINUTE_SECOND);
+        }
+        return DateUtil.format(time, FORMAT_SPECIAL_SLASH_NO_HOUR);
+    }
+
+
+//    /**
+//     * 获取明细页面的格式化时间
+//     * 日期显示：
+//     * 本日记录：今日00:00；
+//     * 昨日记录：昨日00:00
+//     * 两日以前记录：XX日00:00
+//     *
+//     * @param createTime
+//     * @return
+//     */
+//    public static String getDetailFormatTime(long createTime) {
+//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+//        if (isToday(createTime, systemTime)) {
+//            return TODAY;
+//        }
+//        if (isYesterday(createTime, systemTime)) {
+//            return YESTERDAY;
+//        }
+//        return DateUtil.format(createTime, FORMAT_ONLY_DATE);
+//    }
+
+    /**
+     * 获取反馈页面的格式化时间
+     * 日期显示：
+     * 本日记录：今天
+     * 昨日记录：昨天
+     * 两日以前记录：XX日00:00
+     *
+     * @param createTime
+     * @return
+     */
+//    public static String getFeedbackFormatTime(long createTime) {
+//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+//        if (isToday(createTime, systemTime)) {
+//            return "今天";
+//        }
+//        if (isYesterday(createTime, systemTime)) {
+//            return "昨天";
+//        }
+//        if (isInThisYear(createTime)) {
+//            return DateUtil.format(createTime, FORMAT_NOT_HOUR);
+//        }
+//        return DateUtil.format(createTime, FORMAT_YEAR_MONTH_DAY);
+//    }
+
+    /**
+     * 格式化月份  如果是当月 则显示本月
+     * 如果是当年中的其他月份  显示x月
+     * 如果是跨年月份   则显示xxxx年xx月
+     *
+     * @param createTime
+     * @return
+     */
+//    public static String formatMonth(long createTime) {
+//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+//        if (DateUtil.isInThisMonth(createTime, systemTime)) {
+//            return "本月";
+//        } else if (DateUtil.isInThisYear(createTime)) {
+//            return DateUtil.format(createTime, "M月");
+//        } else {
+//            return DateUtil.format(createTime, "yyyy年MM月");
+//        }
+//
+//    }
+
+    /**
+     * 计算传入的时间与当前时间的相差天数
+     *
+     * @param date 服务器所传递的时间
+     * @return
+     */
+    public static String compareTimeDifference(String date) {
+        long curTime = System.currentTimeMillis() / (long) 1000;
+        long overTime = getDate(date, DateUtil.FORMAT_SPECIAL) / 1000;
+        long time = overTime - curTime;
+
+        if (time < 60 && time >= 0) {
+            return "1分钟后";
+        } else if (time >= 60 && time < 3600) {
+            return time / 60 + "分钟后";
+        } else if (time >= 3600 && time < 3600 * 24) {
+            return time / 3600 + "小时后";
+        } else if (time >= 3600 * 24 && time < 3600 * 24 * 30) {
+            return time / 3600 / 24 + "天后";
+        } else if (time >= 3600 * 24 * 30 && time < 3600 * 24 * 30 * 12) {
+            return time / 3600 / 24 / 30 + "个月后";
+        } else if (time >= 3600 * 24 * 30 * 12) {
+            return time / 3600 / 24 / 30 / 12 + "年后";
+        } else {
+            return "0";
+        }
+    }
+
+    /**
+     * 比较两个时间相差的天数
+     *
+     * @param timestamp
+     * @return
+     */
+    public static int compareDateDifference(long timestamp) {
+        long systemTime = System.currentTimeMillis();
+        if (timestamp >= systemTime) {
+            return 0;
+        }
+        long days = (systemTime - timestamp) / (1000 * 60 * 60 * 24);
+        return (int) days;
+    }
+
+    public static String getTodayStartTime(long timestamp) {
+        return format(timestamp, "yyyy-MM-dd") + " 00:00:00";
+    }
+
+    public static String getTodayEndTime(long timestamp) {
+        return format(timestamp, "yyyy-MM-dd") + " 24:00:00";
+    }
+
+    /**
+     * 比较两个时间相差的分钟 返回格式为11:40
+     */
+    public static String compareTime(long timestamp) {
+        String resultHour;
+        String resultMin;
+        long systemTime = System.currentTimeMillis();
+        if (timestamp == 0 || timestamp < systemTime) {
+            return "00:00";
+        }
+        long minutes = (timestamp - systemTime) / (1000 * 60);
+        long hours = minutes / 60;
+        long minute = minutes % 60;
+        if (hours >= 24) {
+            return "24:00";
+        }
+        if (hours < 10) {
+            resultHour = "0" + String.valueOf(hours);
+        } else {
+            resultHour = String.valueOf(hours);
+        }
+        if (minute < 10) {
+            resultMin = "0" + String.valueOf(minute);
+        } else {
+            resultMin = String.valueOf(minute);
+        }
+        return resultHour + ":" + resultMin;
+    }
+
+
+    /**
+     * string 类型转换为 long 类型  strTime 的时间格式和 formatType 的时间格式必须相同
+     *
+     * @param time
+     * @param fromFormat 时间格式
+     * @return
+     * @throws ParseException
+     */
+    public static long convertString2Long(String time, String fromFormat) {
+        Date date = convertString2Date(time, fromFormat); // String类型转成date类型
+        if (date == null) {
+            return 0;
+        } else {
+            return date.getTime();
+        }
+    }
+
+
+    /**
+     * string 类型转换为 date 类型
+     *
+     * @param time
+     * @param fromFormat 要转换的格式 yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
+     * @return
+     * @throws ParseException
+     */
+    public static Date convertString2Date(String time, String fromFormat) {
+        SimpleDateFormat formatter = new SimpleDateFormat(fromFormat);
+        Date date = null;
+        try {
+            date = formatter.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    //xxxx年第几季度
+    public static String getYearQuarter(String date) {
+        return getYearQuarter(getDate(date, "yyyy-MM-dd"));
+    }
+
+    public static String getYearQuarter(long date) {
+        Calendar.getInstance().setTime(new Date(date));
+        int i = Calendar.getInstance().get(Calendar.MONTH);
+        String year = format(date, "yyyy");
+        String month = format(date, "yyyy MM");
+        month = month.substring(month.length() - 2, month.length());
+        if (!TextUtils.isEmpty(month) && month.startsWith("0")) {
+            month = month.substring(0, month.length());
+        }
+        int monthTime = Integer.valueOf(month);
+        return year + "年第" + getQuarter(monthTime) + "季度  " + "(截止日期: " + format(date, FORMAT_SPECIAL_SLASH_NO_HOUR + ")");
+    }
+
+    public static String getQuarter(int time) {
+        String monthTime = String.valueOf(time);
+        switch (time) {
+            case 1:
+            case 2:
+            case 3:
+                return "—";
+            case 4:
+            case 5:
+            case 6:
+                return "二";
+            case 7:
+            case 8:
+            case 9:
+                return "三";
+            case 10:
+            case 11:
+            case 12:
+                return "四";
+        }
+        return "";
+    }
+
+    //return xx:xx
+    public static String getCountdownTime(int total, int spend) {
+        String timeStr = null;
+        int last = total - spend;
+        int minute = 0;
+        int second = 0;
+        if (last <= 0) {
+            return "00:00";
+        } else {
+            minute = last / 60;
+            if (minute < 60) {
+                second = last % 60;
+                timeStr = unitFormat(minute) + ":" + unitFormat(second);
+            }
+        }
+        return timeStr;
+    }
+
+    public static String unitFormat(int i) {
+        String retStr = null;
+        if (i >= 0 && i < 10)
+            retStr = "0" + Integer.toString(i);
+        else
+            retStr = "" + i;
+        return retStr;
+    }
+
+    /**
+     * 15分钟
+     *
+     * @param seconds
+     * @return
+     */
+    public static String getMinutes(long seconds) {
+        return seconds / 60 + "分钟";
+    }
+
+    /**
+     * 1分钟内：显示xx秒
+     * 60s等整数：显示1分钟
+     * 超过60后：显示xx分xx秒
+     */
+
+    public static String formatTime(long second) {
+        if (second < 60) {
+            return second + "秒";
+        } else if (second % 60 == 0) {
+            return second / 60 + "分钟";
+        } else {
+            return second / 60 + "分" + second % 60 + "秒";
+        }
+    }
+
+    /**
+     * @param timestamp
+     * @return 1-上午 2-下午 3-晚上
+     */
+    public static int getDayAndNight(long timestamp) {
+        Date date = new Date(timestamp);
+        int hour = date.getHours();
+        if (hour == 12) {
+            if (date.getMinutes() > 0) {
+                return 2;
+            } else {
+                return 1;
+            }
+        }
+
+        if (hour == 18) {
+            if (date.getMinutes() > 0) {
+                return 3;
+            } else {
+                return 2;
+            }
+        }
+        if (hour > 0 && hour < 12) {
+            return 1;
+        } else if (hour > 12 && hour < 18) {
+            return 2;
+        } else {
+            return 3;
         }
     }
 

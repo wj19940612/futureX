@@ -194,7 +194,11 @@ public class OtcTradeChatActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<OtcChatMessage> resp) {
                         Log.e(TAG, "onSuccess: 收到消息啦");
-                        mOtcChatMessages.add(resp.getContent());
+                        OtcChatMessage otcChatMessage = resp.getContent();
+                        if (otcChatMessage.getDirection()==DIRECTION_RIGHT) {
+                            return;
+                        }
+                        mOtcChatMessages.add(otcChatMessage);
                         mChatAdapter.notifyDataSetChanged();
                         updateRecyclerViewPosition(true);
                     }
@@ -355,6 +359,7 @@ public class OtcTradeChatActivity extends BaseActivity {
         mOtcChatMessages.clear();
         mOtcChatMessages.addAll(data);
         mChatAdapter.notifyDataSetChanged();
+        updateRecyclerViewPosition(true);
     }
 
     private void loadChatData(OtcChatMessage data) {

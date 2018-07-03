@@ -85,6 +85,9 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     }
 
     private void setAuthInfo(UserAuth data) {
+        if (data == null) {
+            return;
+        }
         mUserAuth = data;
         int idType = data.getIdType();
         int idCardTypeText;
