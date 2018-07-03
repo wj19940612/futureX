@@ -280,13 +280,13 @@ public class CustomServiceActivity extends BaseActivity {
         Apic.sendTextChat(text).tag(TAG).callback(new Callback<Resp>() {
             @Override
             protected void onRespSuccess(Resp resp) {
-                updateSendMsgUI(text, CustomServiceChat.SEND_SUCCESS);
+//                updateSendMsgUI(text, CustomServiceChat.SEND_SUCCESS);
             }
 
             @Override
             public void onFailure(ReqError reqError) {
                 super.onFailure(reqError);
-                updateSendMsgUI(text, CustomServiceChat.SEND_FAILED);
+//                updateSendMsgUI(text, CustomServiceChat.SEND_FAILED);
             }
         }).fireFreely();
     }
@@ -295,13 +295,13 @@ public class CustomServiceActivity extends BaseActivity {
         Apic.sendPhotoChat(photoAddress).tag(TAG).callback(new Callback<Resp>() {
             @Override
             protected void onRespSuccess(Resp resp) {
-                updateSendPhotoUI(photoAddress, CustomServiceChat.SEND_SUCCESS);
+//                updateSendPhotoUI(photoAddress, CustomServiceChat.SEND_SUCCESS);
             }
 
             @Override
             public void onFailure(ReqError reqError) {
                 super.onFailure(reqError);
-                updateSendPhotoUI(photoAddress, CustomServiceChat.SEND_FAILED);
+//                updateSendPhotoUI(photoAddress, CustomServiceChat.SEND_FAILED);
             }
         }).fireFreely();
     }

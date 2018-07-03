@@ -24,6 +24,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -75,8 +76,9 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         if (mHasBindEmail) {
-            mTitleBar.setTitle(R.string.unbind_mail);
-            mConfirmBind.setText(R.string.confirm_unbind);
+            mTitleBar.setTitle(R.string.modify_mail);
+            mConfirmBind.setText(R.string.confirm_modify);
+            mSmsAuthCode.setHint(R.string.please_input_used_mail_auth_code);
         } else {
             mTitleBar.setTitle(R.string.bind_mail);
             mConfirmBind.setText(R.string.confirm_bind);
@@ -112,7 +114,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
                 getEmailAuthCode(email);
                 break;
             case R.id.getSmsAuthCode:
-                showImageAuthCodeDialog();
+                sendOld("");
                 break;
             case R.id.confirmBind:
                 bindMail(mEmail.getText().toString(), mMailAuthCode.getText().toString(), mSmsAuthCode.getText().toString());
@@ -192,7 +194,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
         mAuthCodeViewController = new AuthCodeViewController(getContext(), new AuthCodeViewController.OnClickListener() {
             @Override
             public void onConfirmClick(String authCode) {
-                requestPhoneAuthCode(authCode);
+                sendOld(authCode);
             }
 
             @Override
@@ -210,11 +212,11 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
         requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
     }
 
-    private void requestPhoneAuthCode(String imageAuthCode) {
+    private void sendOld(String imageAuthCode) {
         AuthSendOld authSendOld = new AuthSendOld();
         authSendOld.setImgCode(imageAuthCode);
-        authSendOld.setSendType(AuthCodeGet.BINDING_EMAIL);
-        authSendOld.setSendType(AuthSendOld.TYPE_SMS);
+        authSendOld.setSmsType(AuthCodeGet.BINDING_EMAIL);
+        authSendOld.setSendType(mHasBindEmail ? AuthSendOld.TYPE_MAIL : AuthSendOld.TYPE_SMS);
 
         Apic.sendOld(authSendOld).tag(TAG)
                 .callback(new Callback<Resp>() {
@@ -257,7 +259,8 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Object>() {
                     @Override
                     protected void onRespSuccess(Object resp) {
-
+                        ToastUtil.show(R.string.bind_success);
+                        finish();
                     }
                 })
                 .fire();

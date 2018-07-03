@@ -98,8 +98,10 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mAdapter = new PropertyFlowAdapter();
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
-            public void onItemClick() {
-                UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowFragment.class).execute();
+            public void onItemClick(int id) {
+                UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowDetailFragment.class)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID,id)
+                        .execute();
             }
         });
         mRecyclerView.setAdapter(mAdapter);

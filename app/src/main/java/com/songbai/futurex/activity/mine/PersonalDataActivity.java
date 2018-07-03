@@ -26,9 +26,8 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Display;
-import com.songbai.futurex.utils.ImagePicker;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.image.ImageUtils;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -137,7 +136,7 @@ public class PersonalDataActivity extends BaseActivity {
 
     private void setIconTextRowSubDrawable(IconTextRow iconTextRow, @DrawableRes int id) {
         TextView subTextView = iconTextRow.getSubTextView();
-        subTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, id, 0);
+        subTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, id, 0);
     }
 
     @Override
@@ -153,18 +152,9 @@ public class PersonalDataActivity extends BaseActivity {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
             case R.id.headImageLayout:
-//                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
-//                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
-//                uploadUserImageDialogFragment.show(getSupportFragmentManager());
-                ImagePicker
-                        .create(this)
-                        .openGallery()
-                        .maxSelectNum(1)
-                        .forResult();
-//                ImagePicker
-//                        .create(this)
-//                        .openCamera()
-//                        .forResult();
+                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "", -1, getString(R.string.please_select_portrait));
+                uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
                 Launcher.with(this, ModifyNickNameActivity.class)
@@ -175,7 +165,7 @@ public class PersonalDataActivity extends BaseActivity {
                 break;
             case R.id.phoneCertification:
                 UniqueActivity.launcher(this, BindPhoneFragment.class)
-                        .putExtra(ExtraKeys.HAS_BIND_PHONE, TextUtils.isEmpty(userInfo.getUserPhone()))
+                        .putExtra(ExtraKeys.HAS_BIND_PHONE, !TextUtils.isEmpty(userInfo.getUserPhone()))
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.mailCertification:
@@ -191,13 +181,21 @@ public class PersonalDataActivity extends BaseActivity {
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.seniorCertification:
+                if (userInfo.getAuthenticationStatus() < 1) {
+                    ToastUtil.show(R.string.passed_primary_certification);
+                    return;
+                }
                 UniqueActivity.launcher(this, SeniorCertificationFragment.class)
                         .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus)
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.legalCurrencyPayManagement:
-                UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
-                        .execute(MODIFY_PERSONAL_DATA);
+                if (userInfo.getAuthenticationStatus() < 1) {
+                    ToastUtil.show(R.string.passed_primary_certification);
+                } else {
+                    UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
+                            .execute(MODIFY_PERSONAL_DATA);
+                }
                 break;
             case R.id.addressManagement:
                 UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class)
@@ -210,19 +208,11 @@ public class PersonalDataActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ImagePicker.IMAGE_TYPE_OPEN_CUSTOM_GALLERY) {
+        if (requestCode == UploadUserImageDialogFragment.REQ_CLIP_HEAD_IMAGE_PAGE) {
             if (data != null) {
-                String stringExtra = data.getStringExtra(ExtraKeys.IMAGE_PATH);
-                String image = ImageUtils.compressImageToBase64(stringExtra, this);
-                uploadImage(image);
+                String imagePath = data.getStringExtra(ExtraKeys.IMAGE_PATH);
+                submitPortraitPath(imagePath);
             }
-        }
-        else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
-//            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
-//            if (!TextUtils.isEmpty(galleryBitmapPath)) {
-//                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);
-//                uploadImage(image);
-//            }
         } else if (requestCode == MODIFY_PERSONAL_DATA) {
             requestUserInfo();
         }

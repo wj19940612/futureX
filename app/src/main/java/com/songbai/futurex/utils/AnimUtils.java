@@ -1,5 +1,8 @@
 package com.songbai.futurex.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -71,6 +74,33 @@ public class AnimUtils {
         };
         animation.setDuration(duration);
         return animation;
+    }
+
+    public static void spreadAnimate(final View view, int start, int end, final boolean isSpread) {
+        ValueAnimator animator = ValueAnimator.ofInt(start, end);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator arg0) {
+                int value = (int) arg0.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                layoutParams.height = value;
+                view.setLayoutParams(layoutParams);
+
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+            }
+        });
+        animator.start();
     }
 
     public static Animation createTransYFromParent(long duration) {

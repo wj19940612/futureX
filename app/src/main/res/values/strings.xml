@@ -35,6 +35,7 @@
     <string name="invite">邀请返佣</string>
     <string name="invite_friends_can_get">邀请好友可获佣</string>
     <string name="message_center">消息中心</string>
+    <string name="notice_center">公告中心</string>
     <string name="safety_center">安全中心</string>
     <string name="custom_service">聊天客服</string>
     <string name="settings">设置</string>
@@ -112,15 +113,18 @@
     <string name="update_success">更新成功</string>
     <string name="bind_phone">绑定手机</string>
     <string name="edit_phone">修改手机</string>
+    <string name="used_phone_auth_code">旧手机验证码</string>
     <string name="please_input_phone_num">请输入手机号码</string>
     <string name="send_auth_code">发送验证码</string>
     <string name="message_auth_code">短信验证码</string>
     <string name="mail_auth_code">邮箱验证码</string>
     <string name="resend">重新发送</string>
-    <string name="confirm_bind">确认绑定</string>
-    <string name="confirm_unbind">确认解绑</string>
-    <string name="unbind_mail">解绑邮箱</string>
     <string name="bind_mail">绑定邮箱</string>
+    <string name="confirm_bind">确认绑定</string>
+    <string name="modify_mail">修改邮箱</string>
+    <string name="confirm_modify">确认修改</string>
+    <string name="please_input_used_mail_auth_code">请输入旧邮箱验证码</string>
+    <string name="bind_success">绑定成功</string>
     <string name="please_input_mail">请输入邮箱</string>
     <string name="please_input_mail_auth_code">请输入邮箱验证码</string>
     <string name="please_input_phone_auth_code">请输入手机验证码</string>
@@ -148,6 +152,7 @@
     <string name="about_us">关于我们</string>
     <string name="feedback">建议反馈</string>
     <string name="logout">退出登录</string>
+    <string name="confirm_logout">要确定退出吗？</string>
     <string name="platform_introduction">平台介绍</string>
     <string name="company_introduction">公司介绍</string>
     <string name="service_agreement">服务协议</string>
@@ -174,6 +179,7 @@
     <string name="set_cash_pwd">资金密码设置</string>
     <string name="set_cash_pwd_success">资金密码设置成功</string>
     <string name="please_input_set_cash_pwd">请输入资金密码</string>
+    <string name="forget_cash_pwd">忘记资金密码?</string>
     <string name="confirm_set_cash_pwd">确认资金密码</string>
     <string name="send_sms_auth_code_phone_hint_x">已发送至您的手机号：%1$s，请注意查收</string>
     <string name="send_mail_auth_code_hint_x">已发送至您的邮箱：%1$s，请注意查收</string>
@@ -255,9 +261,10 @@
     <string name="status">状态</string>
     <string name="all_status">所有状态</string>
     <string name="time">时间</string>
+    <string name="to">到</string>
     <string name="reset">重置</string>
 
-    <string name="withdraw_cash">提现</string>
+    <string name="withdraw_cash">提币</string>
     <string name="buy_order">委托买入</string>
     <string name="sell_order">委托卖出</string>
     <string name="otc_transfer_out">OTC交易转出</string>
@@ -292,6 +299,11 @@
     <string name="otc_sell_pay">您的法币交易订单，卖家已确认收款，并转币，请查收>></string>
     <string name="otc_order_msg">您的订单已经回复,赶紧去看看吧>></string>
     <string name="user_auth_fail">您提交的认证信息审核失败，点击查看详情</string>
+    <string name="arbitrage_pass">平台仲裁-->通过</string>
+    <string name="arbitrage_reject">平台仲裁-->拒绝</string>
+    <string name="off_shelves_wares">系统下架不满足条件的广告</string>
+    <string name="otc_order_cancel">您的法币订单已取消</string>
+    <string name="otc_order_delay">您的订单已延期</string>
 
     <!--LEGAL_CURRENCY-->
     <string-array name="legal_currency_header">
@@ -336,6 +348,9 @@
     <string name="sell_blank_symbol_x">卖出&#160;%1$s</string>
     <string name="on_shelf">上架</string>
     <string name="off_shelf">下架</string>
+    <string name="can_not_trade_with_self">本人不可与本人交易</string>
+    <string name="off_shelf_hint_msg">您确实要下架广告吗</string>
+    <string name="delete_poster_hint_msg">您确实要删除广告吗</string>
     <string name="please_select_price_type">请选择价格类型</string>
     <string name="floating_price_rate">溢价比例</string>
     <string name="percent_symbol">%</string>
@@ -380,6 +395,10 @@
     <string name="unpaid">未付款</string>
     <string name="paid">已付款</string>
     <string name="canceled">已取消</string>
+    <string name="max_buy_amount">最大可买&#160;%1$s</string>
+    <string name="max_sell_amount">最大可卖&#160;%1$s</string>
+    <string name="trade_amount_empty_hint">您还未输入交易数量</string>
+    <string name="cash_pwd_empty_hint">您还未输入资金密码</string>
     <string name="turnover">交易金额</string>
     <string name="trade_count_symbol_x">交易金额：%1$s&#160;%2$s</string>
     <string name="pay_info">支付信息</string>
@@ -393,6 +412,10 @@
     <string name="wait_sell_transfer_coin">待卖家转币</string>
     <string name="seller_info">卖家信息</string>
     <string name="contact_each_other">联系对方</string>
+    <string name="cancel_trade">取消交易</string>
+    <string name="appeal">申诉</string>
+    <string name="i_have_paid">我已付款</string>
+    <string name="confirm_transfer_coin">确认转币</string>
     <string name="order_time_with_symbol_x">订单时间：%1$s</string>
     <string name="wait_to_pay">等待付款</string>
     <string name="pay_info_hint_to_seller">对方已成功下单，正在向您询问支付方式。</string>
@@ -575,5 +598,14 @@
     <string name="part_deal_part_revoked">部分成交部分撤单</string>
     <string name="unknown_operation">未知操作</string>
     <string name="filter">筛选</string>
+    <string name="trading_on">交易对</string>
+    <string name="select_currency">请选择计价货币</string>
+    <string name="order_status">订单状态</string>
+    <string name="has_finish">已完成</string>
+    <string name="has_withdrawn">已撤销</string>
+    <string name="please_input_currency">请输入币种</string>
+    <string name="please_select_currency">请选择计价货币</string>
+    <string name="please_select_direction">请选择买卖方向</string>
+    <string name="search_currency_pairs">搜索币种</string>
 
 </resources>

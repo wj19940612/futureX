@@ -19,4 +19,9 @@ public class LegalCoin {
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
+
+    @Override
+    public String toString() {
+        return getSymbol();
+    }
 }

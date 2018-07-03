@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.CustomServiceActivity;
+import com.songbai.futurex.activity.LegalCurrencyOrderActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.activity.mine.InviteActivity;
@@ -67,6 +69,22 @@ public class MineFragment extends BaseFragment {
     IconTextRow mProperty;
     @BindView(R.id.tradeOrderLog)
     IconTextRow mTradeOrderLog;
+    @BindView(R.id.userInfoContainer)
+    FrameLayout mUserInfoContainer;
+    @BindView(R.id.imageView2)
+    ImageView mImageView2;
+    @BindView(R.id.legalCurrencyTradeOrder)
+    IconTextRow mLegalCurrencyTradeOrder;
+    @BindView(R.id.invite)
+    IconTextRow mInvite;
+    @BindView(R.id.noticeCenter)
+    IconTextRow mNoticeCenter;
+    @BindView(R.id.safetyCenter)
+    IconTextRow mSafetyCenter;
+    @BindView(R.id.customService)
+    IconTextRow mCustomService;
+    @BindView(R.id.settings)
+    IconTextRow mSettings;
     private Unbinder mBind;
 
     @Nullable
@@ -190,7 +208,7 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.headLayout, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
-            R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
+            R.id.msgCenter, R.id.safetyCenter, R.id.noticeCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
         LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
@@ -198,7 +216,7 @@ public class MineFragment extends BaseFragment {
                 if (user.isLogin()) {
                     Launcher.with(this, PersonalDataActivity.class).execute(this, REQUEST_PERSONAL_DATA);
                 } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute(this, REQUEST_LOGIN);
+                    login();
                 }
                 break;
             case R.id.property:
@@ -212,6 +230,7 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.legalCurrencyTradeOrder:
+                Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
                 break;
             case R.id.invite:
                 if (user.isLogin()) {
@@ -223,19 +242,36 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.msgCenter:
-                Launcher.with(getActivity(), MessageCenterActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), MessageCenterActivity.class).execute();
+                } else {
+                    login();
+                }
                 break;
             case R.id.safetyCenter:
                 UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();
                 break;
+            case R.id.noticeCenter:
+                if (LocalUser.getUser().isLogin())
+                    Launcher.with(getActivity(), MessageCenterActivity.class)
+                            .putExtra(ExtraKeys.TAG, MessageCenterActivity.PAGE_TYPE_NOTICE)
+                            .execute();
+                else
+                    login();
+                break;
             case R.id.customService:
-                Launcher.with(getActivity(),CustomServiceActivity.class).execute();
+                Launcher.with(getActivity(), CustomServiceActivity.class).execute();
 //                UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();
+
                 break;
             case R.id.settings:
                 UniqueActivity.launcher(getActivity(), SettingsFragment.class).execute(this, REQUEST_SETTINGS);
                 break;
             default:
         }
+    }
+
+    private void login() {
+        Launcher.with(getActivity(), LoginActivity.class).execute(this, REQUEST_LOGIN);
     }
 }

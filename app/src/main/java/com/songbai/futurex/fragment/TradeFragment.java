@@ -327,7 +327,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mOrderAdapter = new OrderAdapter(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
-
             }
         });
         mOrderAdapter.setOnOrderRevokeClickListener(new OrderAdapter.OnOrderRevokeClickListener() {
@@ -355,7 +354,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 if (scrollY >= mOrderListRadio.getTop()) {
                     mOrderListFloatRadio.setVisibility(View.VISIBLE);
                 } else {
-                    mOrderListFloatRadio.setVisibility(View.GONE);
+                    mOrderListFloatRadio.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -446,8 +445,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
                         @Override
                         public void onBaseCurrencyChange(String baseCurrency, CurrencyPair currencyPair) {
-                            ToastUtil.show(currencyPair.getPairs());
                             mPairsPopup.showOrDismiss(mOrderListFloatRadio);
+
                         }
                     });
             mPairsPopup.setDimView(mDimView);

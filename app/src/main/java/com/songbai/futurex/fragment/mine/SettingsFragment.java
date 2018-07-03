@@ -14,6 +14,8 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.view.IconTextRow;
+import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.MsgHintController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,12 +69,30 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 UniqueActivity.launcher(getActivity(), FeedbackFragment.class).execute();
                 break;
             case R.id.logout:
-                LocalUser.getUser().logout();
-                FragmentActivity activity = getActivity();
-                activity.setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                activity.finish();
+                showLogoutView();
                 break;
             default:
         }
+    }
+
+    private void showLogoutView() {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                logout();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setMsg(R.string.confirm_logout);
+        withDrawPsdViewController.setImageRes(0);
+    }
+
+    private void logout() {
+        LocalUser.getUser().logout();
+        FragmentActivity activity = getActivity();
+        activity.setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+        activity.finish();
     }
 }

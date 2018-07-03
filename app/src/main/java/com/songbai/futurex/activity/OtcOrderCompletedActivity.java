@@ -72,10 +72,10 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
         mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
         otcOrderDetail(mOrderId, mTradeDirection);
-        otcWaresMine("", String.valueOf(mOrderId), 1);
+        otcWaresMine("", mOrderId, 1);
     }
 
-    private void otcWaresMine(String waresId, String orderId, int orientation) {
+    private void otcWaresMine(String waresId, int orderId, int orientation) {
         Apic.otcWaresMine(waresId, orderId, orientation)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
@@ -158,7 +158,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
 
     @OnClick(R.id.contractEachOther)
     public void onViewClicked() {
-        Launcher.with(this,OtcTradeChatActivity.class)
+        Launcher.with(this, OtcTradeChatActivity.class)
                 .putExtra(ExtraKeys.ORDER_ID, mOrderId)
                 .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
                 .execute();

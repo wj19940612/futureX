@@ -85,8 +85,8 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     private void showDrawPass(final int id) {
         WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(), new WithDrawPsdViewController.OnClickListener() {
             @Override
-            public void onConfirmClick(String authCode) {
-                bindUntie(id, md5Encrypt(authCode));
+            public void onConfirmClick(String cashPwd,String googleAuth) {
+                bindUntie(id, md5Encrypt(cashPwd));
             }
         });
 

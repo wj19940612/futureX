@@ -15,20 +15,24 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.LegalCoin;
 import com.songbai.futurex.model.Order;
 import com.songbai.futurex.model.local.SysTime;
 import com.songbai.futurex.model.status.OrderStatus;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
+import com.songbai.futurex.view.HistoryFilter;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
@@ -41,6 +45,8 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.songbai.futurex.model.Order.DIR_DEFAULT;
 
 /**
  * Modified by john on 2018/7/2
@@ -63,11 +69,17 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     LoadMoreFooterView mSwipeLoadMoreFooter;
     @BindView(R.id.rootView)
     ConstraintLayout mRootView;
+    @BindView(R.id.historyFilter)
+    LinearLayout mHistoryFilter;
 
     private int mPage;
     private OrderAdapter mOrderAdapter;
     private RadioHeader mRadioHeader;
     private TextView mFilter;
+
+    private OptionsPickerView<LegalCoin> mPvOptions;
+
+    private List<LegalCoin> mLegalCoinArrayList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +88,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         ButterKnife.bind(this);
 
         initTitleBar();
+        initFilterView();
 
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(getActivity()));
         mOrderAdapter = new OrderAdapter(new OnRVItemClickListener() {
@@ -114,6 +127,27 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         });
     }
 
+    private void initFilterView() {
+        HistoryFilter historyFilter = new HistoryFilter(mHistoryFilter);
+        mFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mHistoryFilter.getVisibility() == View.GONE) {
+                    AnimatorUtil.expandVertical(mHistoryFilter,200);
+                } else {
+                    AnimatorUtil.collapseVertical(mHistoryFilter,200);
+                }
+            }
+        });
+        historyFilter.setOnFilterListener(new HistoryFilter.OnFilterListener() {
+            @Override
+            public void onFilter(String suffixSymbol, String prefixSymbol, int direction) {
+                requestOrderList(suffixSymbol, prefixSymbol, direction);
+                AnimatorUtil.collapseVertical(mHistoryFilter);
+            }
+        });
+    }
+
     private void requestRevokeOrder(Order order) {
         Apic.revokeOrder(order.getId()).tag(TAG)
                 .callback(new Callback<Resp>() {
@@ -125,9 +159,13 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     }
 
     private void requestOrderList() {
+        requestOrderList(null, null, DIR_DEFAULT);
+    }
+
+    private void requestOrderList(String suffixSymbol, String prefixSymbol, int direction) {
         int type = mRadioHeader.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime, null, null).tag(TAG)
+        Apic.getEntrustOrderList(mPage, type, endTime, suffixSymbol, prefixSymbol, direction).tag(TAG)
                 .id(mRadioHeader.getSelectTab())
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {
                     @Override

@@ -198,7 +198,7 @@ public class GestureUnLockSudoKuView extends NineGridView {
     private LockCircle getOuterCircle(int x, int y) {
         for (int i = 0; i < mCircleList.size(); i++) {
             LockCircle circle = mCircleList.get(i);
-            if ((x - circle.getX()) * (x - circle.getX()) + (y - circle.getY()) * (y - circle.getY()) <= mSelectCircleRadius * mSelectCircleRadius) {
+            if ((x - circle.getX()) * (x - circle.getX()) + (y - circle.getY()) * (y - circle.getY()) <= mNormalCircleRadius * mNormalCircleRadius) {
                 if (circle.getNineGridCircleStatus() != NineGridCircleStatus.SELECT) {
                     return circle;
                 }

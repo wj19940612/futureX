@@ -274,4 +274,17 @@ public class Api extends RequestManager {
             }
         }
     }
+
+    /**
+     * 因为h5和原生的域名不同 需要将原生域名替换为h5的域名
+     *
+     * @param nativeUrl
+     * @return
+     */
+    public static String getH5Url(String nativeUrl) {
+        if (nativeUrl.contains("ex")) {
+            return nativeUrl.replace("ex", "exm");
+        }
+        return nativeUrl;
+    }
 }

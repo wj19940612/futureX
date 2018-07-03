@@ -85,6 +85,9 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     }
 
     private void setAuthInfo(UserAuth data) {
+        if (data == null) {
+            return;
+        }
         mUserAuth = data;
         int idType = data.getIdType();
         int idCardTypeText;
@@ -163,7 +166,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
 
     private void confirmAuth(String url) {
         RealNameAuthData realNameAuthData = RealNameAuthData.Builder.create()
-                .type(mUserAuth.getIdType())
+                .idType(mUserAuth.getIdType())
                 .name(mUserAuth.getName())
                 .idcardNum(mUserAuth.getIdcardNum())
                 .idcardFrontImg(url)
