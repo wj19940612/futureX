@@ -64,6 +64,7 @@
     <string name="please_add_certification_front_pic">请添加证件正面照片</string>
     <string name="please_add_certification_back_pic">请添加证件背面照片</string>
     <string name="please_add_handle_certification_pic">请添加手持证件照片</string>
+    <string name="submit_success">提交成功</string>
     <string name="example">示例</string>
     <string name="upload_pic_rules">照片要求：\n1. 照片文件大小不能超过4M！文件格式须为jpg或者png！\n2. 请确保照片无水印，无污渍，身份信息清晰，头像完整且非文字反向照片！\n3. 需您提供本人双手手持证件照的照片，请确保照片上证件照清晰可见，无妆容完整露出双手手臂，手持位置未遮挡证件信息，且证件未遮挡您的脸部！\n点击添加可查看示例，请提交您本人的身份材料照片。照片请勿进行PS处理！</string>
     <string name="legal_currency_pay_management">法币支付管理</string>

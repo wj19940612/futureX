@@ -1,6 +1,5 @@
 package com.songbai.futurex.fragment.mine;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,12 +13,13 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.mine.UserAuth;
-import com.songbai.futurex.utils.ImagePicker;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -52,6 +52,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     private UserAuth mUserAuth;
     private int mAuthenticationStatus;
     private boolean mCanEdit;
+    private RealNameAuthData mRealNameAuthData;
 
     @Nullable
     @Override
@@ -89,6 +90,9 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
             return;
         }
         mUserAuth = data;
+        mRealNameAuthData = RealNameAuthData.Builder.create()
+                .idType(mUserAuth.getIdType())
+                .build();
         int idType = data.getIdType();
         int idCardTypeText;
         switch (idType) {
@@ -136,80 +140,84 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.frontImg:
-                selectImage();
-                break;
             case R.id.backImg:
-                break;
             case R.id.handIdCardImg:
+                selectImage(view);
                 break;
             case R.id.submit:
-//                confirmAuth(url);
+                confirmAuth();
                 break;
             default:
         }
     }
 
-    private void selectImage() {
+    private void selectImage(final View view) {
         if (mCanEdit) {
-//        UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
-//                UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE, "",
-//                -1, getString(R.string.please_add_certification_front_pic),
-//                1, R.drawable.ic_authentication_idcard_front);
-//        uploadUserImageDialogFragment.show(getChildFragmentManager());
-            ImagePicker
-                    .create(this)
-                    .openGallery()
-                    .maxSelectNum(1)
-                    .forResult();
+            UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+                    UploadUserImageDialogFragment.IMAGE_TYPE_NOT_DEAL, "",
+                    -1, getString(R.string.please_add_certification_front_pic),
+                    1, R.drawable.ic_authentication_idcard_front);
+            uploadUserImageDialogFragment.setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
+                @Override
+                public void onImagePath(int index, String imagePath) {
+                    String image = ImageUtils.compressImageToBase64(imagePath, getContext());
+                    uploadImage(image, view);
+                }
+            });
+            uploadUserImageDialogFragment.show(getChildFragmentManager());
         }
     }
 
-    private void confirmAuth(String url) {
-        RealNameAuthData realNameAuthData = RealNameAuthData.Builder.create()
-                .idType(mUserAuth.getIdType())
-                .name(mUserAuth.getName())
-                .idcardNum(mUserAuth.getIdcardNum())
-                .idcardFrontImg(url)
-                .idcardBackImg(url)
-                .handIdcardImg(url)
-                .build();
-        Apic.realNameAuth(realNameAuthData)
+    private void confirmAuth() {
+        Apic.realNameAuth(mRealNameAuthData)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        SeniorCertificationFragment.this.getActivity().finish();
+                        ToastUtil.show(R.string.submit_success);
+                        finish();
                     }
                 })
                 .fire();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ImagePicker.IMAGE_TYPE_OPEN_CUSTOM_GALLERY) {
-            if (data != null) {
-                String stringExtra = data.getStringExtra(ExtraKeys.IMAGE_PATH);
-                String image = ImageUtils.compressImageToBase64(stringExtra, getContext());
-                uploadImage(image);
-            }
-        } else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
-            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(getContext(), data);
-            if (!TextUtils.isEmpty(galleryBitmapPath)) {
-                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, getContext());
-                uploadImage(image);
-            }
-        }
-    }
-
-    private void uploadImage(String image) {
+    private void uploadImage(String image, final View view) {
         Apic.uploadImage(image)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
-                        String url = resp.getData();
-                        confirmAuth(url);
+                        setImage(resp.getData(), view);
                     }
                 })
                 .fire();
+    }
+
+    private void setImage(String url, View view) {
+        GlideApp
+                .with(this)
+                .load(url)
+                .into((ImageView) view);
+        switch (view.getId()) {
+            case R.id.frontImg:
+                mRealNameAuthData.setIdcardFrontImg(url);
+                break;
+            case R.id.backImg:
+                mRealNameAuthData.setIdcardBackImg(url);
+                break;
+            case R.id.handIdCardImg:
+                mRealNameAuthData.setHandIdcardImg(url);
+                break;
+            default:
+        }
+        checkIsEnable();
+    }
+
+    private void checkIsEnable() {
+        if (!TextUtils.isEmpty(mRealNameAuthData.getIdcardFrontImg())
+                && !TextUtils.isEmpty(mRealNameAuthData.getIdcardBackImg())
+                && !TextUtils.isEmpty(mRealNameAuthData.getHandIdcardImg())) {
+            mSubmit.setEnabled(true);
+        } else {
+            mSubmit.setEnabled(false);
+        }
     }
 }

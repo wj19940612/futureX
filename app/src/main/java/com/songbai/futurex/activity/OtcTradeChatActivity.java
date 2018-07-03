@@ -577,13 +577,6 @@ public class OtcTradeChatActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            OtcChatMessage lastChat = null;
-            if (position > 0) {
-                Object obj = mList.get(position - 1);
-                if (obj instanceof OtcChatMessage) {
-                    lastChat = (OtcChatMessage) obj;
-                }
-            }
             if (holder instanceof PayInfoHolder) {
                 ((PayInfoHolder) holder).bindData((OtcBankInfoMsg) mList.get(position), mContext);
             } else if (holder instanceof LeftTextHolder) {
@@ -621,7 +614,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mName.setText(mLeftOtcChatUserInfo.getUserName());
                 GlideApp.with(context)
                         .load(mLeftOtcChatUserInfo.getUserPortrait())
-                        .centerCrop()
+                        .circleCrop()
                         .into(mHead);
                 mContent.setText(otcChatMessage.getMessage());
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
@@ -647,7 +640,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mName.setText(mLeftOtcChatUserInfo.getUserName());
                 GlideApp.with(context)
                         .load(mLeftOtcChatUserInfo.getUserPortrait())
-                        .centerCrop()
+                        .circleCrop()
                         .into(mHead);
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
 
@@ -681,7 +674,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mName.setText(mRightOtcChatUserInfo.getUserName());
                 GlideApp.with(context)
                         .load(mRightOtcChatUserInfo.getUserPortrait())
-                        .centerCrop()
+                        .circleCrop()
                         .into(mHead);
                 mContent.setText(otcChatMessage.getMessage());
 
@@ -720,7 +713,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mName.setText(mRightOtcChatUserInfo.getUserName());
                 GlideApp.with(context)
                         .load(mRightOtcChatUserInfo.getUserPortrait())
-                        .centerCrop()
+                        .circleCrop()
                         .into(mHead);
 
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));

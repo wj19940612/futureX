@@ -22,6 +22,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinInfo;
 import com.songbai.futurex.model.status.FlowStatus;
 import com.songbai.futurex.model.status.FlowType;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -163,9 +164,23 @@ public class PropertyFlowFilter {
 
     public void showOrDismiss() {
         if (mView.getVisibility() == View.VISIBLE) {
-            mView.setVisibility(View.GONE);
+            AnimatorUtil.collapseVertical(mView, new AnimatorUtil.OnAnimatorFactionListener() {
+                @Override
+                public void onFaction(float fraction) {
+                    if (fraction==1) {
+                        mView.setVisibility(View.GONE);
+                    }
+                }
+            });
         } else {
-            mView.setVisibility(View.VISIBLE);
+            AnimatorUtil.expandVertical(mView,new AnimatorUtil.OnAnimatorFactionListener() {
+                @Override
+                public void onFaction(float fraction) {
+                    if (fraction==1) {
+                        mView.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         }
     }
 
