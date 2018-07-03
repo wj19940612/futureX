@@ -36,10 +36,10 @@ public class OtcChatMessage {
     private int waresOrderId;
     private int chatMsgStatus;
 
-    public OtcChatMessage(int msgType, String message, int receiveUid, int sendUid, int chatMsgStatus) {
+    public OtcChatMessage(int msgType, int direction, String message, int receiveUid, int sendUid, int chatMsgStatus) {
         createTime = System.currentTimeMillis();
         this.msgType = msgType;
-        this.direction = DIRECTION_SEND;
+        this.direction = direction;
         this.message = message;
         this.receiveUid = receiveUid;
         this.sendUid = sendUid;

@@ -101,7 +101,7 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
 
     private void submitCertification(int idType, String name, String idcardNum) {
         RealNameAuthData realNameAuthData = RealNameAuthData.Builder.create()
-                .type(idType)
+                .idType(idType)
                 .name(name)
                 .idcardNum(idcardNum)
                 .build();

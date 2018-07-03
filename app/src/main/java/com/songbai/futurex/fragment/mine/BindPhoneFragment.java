@@ -32,6 +32,7 @@ import com.songbai.futurex.model.AreaCode;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.utils.StrFormatter;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -93,6 +94,9 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mHasBindPhone ? R.string.edit_phone : R.string.bind_phone);
+        if (mHasBindPhone) {
+            mMailAuthCode.setHint(R.string.used_phone_auth_code);
+        }
         mPhone.addTextChangedListener(mWatcher);
         getAreaCode();
     }
@@ -116,11 +120,8 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
                     @Override
                     protected void onRespData(List<AreaCode> data) {
-                        if (!data.isEmpty()) {
-                            mAreaCodes = data;
-                            String areaCode = data.get(0).getTeleCode();
-                            mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode));
-                        }
+                        ToastUtil.show(R.string.bind_success);
+                        finish();
                     }
                 }).fireFreely();
     }
@@ -190,9 +191,10 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         }
     }
 
-    private void requestAuthCode(String phoneNum) {
+    private void requestAuthCode(String phoneNum, String authCode) {
         AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
                 .type(AuthCodeGet.TYPE_MODIFY_PHONE)
+                .imgCode(authCode)
                 .phone(phoneNum)
                 .build();
 
@@ -208,7 +210,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                         if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-                            showImageAuthCodeDialog(true);
+                            showImageAuthCodeDialog(false);
                         } else {
                             super.onRespFailure(failedResp);
                         }
@@ -216,14 +218,18 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 }).fire();
     }
 
-    private void showImageAuthCodeDialog(final boolean mail) {
+    private void showImageAuthCodeDialog(final boolean sentOld) {
         mAuthCodeViewController = new AuthCodeViewController(getContext(), new AuthCodeViewController.OnClickListener() {
             @Override
             public void onConfirmClick(String authCode) {
-                if (mail) {
-                    getEmailAuthCode(authCode);
+                if (sentOld) {
+                    if (mHasBindPhone) {
+                        sendOld(AuthSendOld.TYPE_SMS, authCode);
+                    } else {
+                        sendOld(AuthSendOld.TYPE_MAIL, authCode);
+                    }
                 } else {
-                    requestPhoneAuthCode(authCode);
+                    requestAuthCode(mPhoneNum, authCode);
                 }
             }
 
@@ -242,34 +248,8 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
     }
 
-    private void requestPhoneAuthCode(String imageAuthCode) {
-        AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
-                .imgCode(imageAuthCode)
-                .type(AuthCodeGet.TYPE_SAFE_PSD)
-                .build();
-
-        Apic.getAuthCode(authCodeGet).tag(TAG)
-                .callback(new Callback<Resp>() {
-                    @Override
-                    protected void onRespSuccess(Resp resp) {
-                        freezeGetPhoneAuthCodeButton();
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-                            showImageAuthCodeDialog(true);
-                        } else {
-                            super.onRespFailure(failedResp);
-                        }
-                    }
-                }).fire();
-    }
-
     private void requestAuthCodeImage(int width, int height) {
-        Apic.getAuthCodeImage(AuthCodeGet.BINDING_EMAIL).tag(TAG)
+        Apic.getAuthCodeImage(AuthCodeGet.TYPE_MODIFY_PHONE).tag(TAG)
                 .bitmapCfg(new BitmapCfg(width, height))
                 .callback(new ReqCallback<Bitmap>() {
                     @Override
@@ -284,16 +264,27 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 }).fireFreely();
     }
 
-    private void getEmailAuthCode(String authCode) {
+    private void sendOld(int type, String authCode) {
         AuthSendOld authSendOld = new AuthSendOld();
+        authSendOld.setSendType(type);
+        authSendOld.setSmsType(AuthCodeGet.TYPE_MODIFY_PHONE);
         authSendOld.setImgCode(authCode);
-        authSendOld.setSendType(AuthCodeGet.TYPE_MODIFY_PHONE);
-        authSendOld.setSendType(AuthSendOld.TYPE_MAIL);
         Apic.sendOld(authSendOld)
-                .callback(new Callback<Object>() {
+                .callback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespSuccess(Object resp) {
+                    protected void onRespSuccess(Resp<Object> resp) {
                         freezeGetEmailAuthCodeButton();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
+                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
+                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
+                            showImageAuthCodeDialog(true);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
                     }
                 })
                 .fire();
@@ -313,11 +304,15 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.getMessageAuthCode:
                 if (!TextUtils.isEmpty(mPhoneNum)) {
-                    requestAuthCode(mPhoneNum);
+                    requestAuthCode(mPhoneNum, "");
                 }
                 break;
             case R.id.getMailAuthCode:
-                showImageAuthCodeDialog(true);
+                if (mHasBindPhone) {
+                    sendOld(AuthSendOld.TYPE_SMS, "");
+                } else {
+                    sendOld(AuthSendOld.TYPE_MAIL, "");
+                }
                 break;
             case R.id.confirmBind:
                 updatePhone(mPhoneNum, mSmsAuth, mMailAuth, "");
@@ -340,25 +335,25 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 mAreaCode.setText(codes.get(options1));
             }
         }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                TextView cancel = v.findViewById(R.id.cancel);
+                TextView confirm = v.findViewById(R.id.confirm);
+                cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void customLayout(View v) {
-                        TextView cancel = v.findViewById(R.id.cancel);
-                        TextView confirm = v.findViewById(R.id.confirm);
-                        cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPvOptions.dismiss();
-                            }
-                        });
-                        confirm.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPvOptions.returnData();
-                                mPvOptions.dismiss();
-                            }
-                        });
+                    public void onClick(View v) {
+                        mPvOptions.dismiss();
                     }
-                })
+                });
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPvOptions.returnData();
+                        mPvOptions.dismiss();
+                    }
+                });
+            }
+        })
                 .setCyclic(false, false, false)
                 .setTextColorCenter(ContextCompat.getColor(getContext(), R.color.text22))
                 .setTextColorOut(ContextCompat.getColor(getContext(), R.color.text99))
