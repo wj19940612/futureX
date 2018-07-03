@@ -19,9 +19,6 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.view.IconTextRow;
-
-import junit.runner.Version;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,7 +72,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
     }
 
     private void queryForceVersion() {
-        if (mAppVersion != null) {
+        if (mAppVersion == null) {
             Apic.queryForceVersion()
                     .callback(new Callback<Resp<AppVersion>>() {
                         @Override

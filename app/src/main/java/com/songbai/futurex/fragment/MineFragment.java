@@ -191,7 +191,7 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.headLayout, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
-            R.id.msgCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
+            R.id.msgCenter, R.id.noticeCenter, R.id.safetyCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
         LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
@@ -226,6 +226,8 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.msgCenter:
                 Launcher.with(getActivity(), MessageCenterActivity.class).execute();
+                break;
+            case R.id.noticeCenter:
                 break;
             case R.id.safetyCenter:
                 UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();

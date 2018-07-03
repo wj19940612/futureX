@@ -321,6 +321,17 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/getUserFinanceFlowDetail.do
+     * GET
+     * 获取资产流水的详细信息
+     */
+    public static Api getUserFinanceFlowDetail(int id) {
+        return Api.get("/api/user/wallet/getUserFinanceFlowDetail.do",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
      * /api/user/wallet/getDepositWalletAddrByCoinType.do
      * GET
      * 获取充值地址（叶海啸）
@@ -1136,7 +1147,7 @@ public class Apic {
     public static Api revokeOrder(String orderId) {
         return Api.post("/api/entrust/entrust/cancel/{id}",
                 new ReqParams()
-                .put("id", orderId));
+                        .put("id", orderId));
     }
 
     /**

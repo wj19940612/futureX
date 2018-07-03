@@ -77,7 +77,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         isFirstLoad = true;
-        View view = inflater.inflate(R.layout.fragment_my_ad, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_poster, container, false);
         mBind = ButterKnife.bind(this, view);
         isPrepared = true;
         return view;

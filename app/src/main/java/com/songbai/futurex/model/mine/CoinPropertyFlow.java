@@ -5,11 +5,20 @@ package com.songbai.futurex.model.mine;
  * @date 2018/6/12
  */
 public class CoinPropertyFlow {
+    private int id;
     private String coinType;
     private long createTime;
     private int flowType;
     private int status;
     private double value;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCoinType() {
         return coinType;
