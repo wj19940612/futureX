@@ -9,9 +9,11 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,10 +27,14 @@ import com.songbai.futurex.model.Order;
 import com.songbai.futurex.model.local.SysTime;
 import com.songbai.futurex.model.status.OrderStatus;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
+import com.songbai.futurex.utils.AnimUtils;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
+import com.songbai.futurex.view.HistoryFilter;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
@@ -63,8 +69,8 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     LoadMoreFooterView mSwipeLoadMoreFooter;
     @BindView(R.id.rootView)
     ConstraintLayout mRootView;
-    @BindView(R.id.filterLayout)
-    LinearLayout mFilterLayout;
+    @BindView(R.id.historyFilter)
+    LinearLayout mHistoryFilter;
 
     private int mPage;
     private OrderAdapter mOrderAdapter;
@@ -78,6 +84,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         ButterKnife.bind(this);
 
         initTitleBar();
+        initFilterView();
 
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(getActivity()));
         mOrderAdapter = new OrderAdapter(new OnRVItemClickListener() {
@@ -102,12 +109,6 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         View customView = mTitleBar.getCustomView();
         mRadioHeader = customView.findViewById(R.id.radioHeader);
         mFilter = customView.findViewById(R.id.filter);
-        mFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFilterLayout.setVisibility(mFilterLayout.getVisibility() == View.VISIBLE?View.GONE:View.VISIBLE);
-            }
-        });
         mRadioHeader.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
@@ -118,6 +119,37 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 }
                 mPage = 0;
                 requestOrderList();
+            }
+        });
+    }
+
+    private void initFilterView() {
+        HistoryFilter historyFilter = new HistoryFilter(mHistoryFilter);
+        mFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mHistoryFilter.getVisibility() == View.GONE) {
+                    AnimatorUtil.expandVertical(mHistoryFilter, new AnimatorUtil.OnAnimatorFactionListener() {
+                        @Override
+                        public void onFaction(float fraction) {
+                            if (fraction == 1) {
+                                mHistoryFilter.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                } else {
+                    AnimatorUtil.collapseVertical(mHistoryFilter, new AnimatorUtil.OnAnimatorFactionListener() {
+                        @Override
+                        public void onFaction(float fraction) {
+                            if (fraction == 1) {
+                                mHistoryFilter.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
+//                Animation expendY = AnimUtils.createExpendY(mHistoryFilter,300);
+//                mHistoryFilter.startAnimation(expendY);
+//                mHistoryFilter.setVisibility(mHistoryFilter.getVisibility() == View.VISIBLE?View.GONE:View.VISIBLE);
             }
         });
     }
