@@ -361,7 +361,7 @@ public class OtcTradeChatActivity extends BaseActivity {
             mOtcChatMessages.add(0, mBankInfoMsg);
         }
         mChatAdapter.notifyDataSetChanged();
-        updateRecyclerViewPosition(true);
+        mRecycleView.scrollToPosition(Integer.MAX_VALUE);
     }
 
     private void loadChatData(OtcChatMessage data) {
