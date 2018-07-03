@@ -331,9 +331,26 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         case MessageType.USER_AUTH_FAIL:
                             textId = R.string.user_auth_fail;
                             break;
+                        case MessageType.ARBITRAGE_PASS:
+                            textId = R.string.arbitrage_pass;
+                            break;
+                        case MessageType.ARBITRAGE_REJECT:
+                            textId = R.string.arbitrage_reject;
+                            break;
+                        case MessageType.OFF_SHELVES_WARES:
+                            textId = R.string.off_shelves_wares;
+                            break;
+                        case MessageType.OTC_ORDER_CANCEL:
+                            textId = R.string.otc_order_cancel;
+                            break;
+                        case MessageType.OTC_ORDER_DELAY:
+                            textId = R.string.otc_order_delay;
+                            break;
                         default:
                     }
-                    mContent.setText(textId);
+                    if (textId != 0) {
+                        mContent.setText(textId);
+                    }
                     mHint.setVisibility(View.GONE);
                 }
 

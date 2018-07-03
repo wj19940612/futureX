@@ -119,10 +119,12 @@
     <string name="message_auth_code">短信验证码</string>
     <string name="mail_auth_code">邮箱验证码</string>
     <string name="resend">重新发送</string>
-    <string name="confirm_bind">确认绑定</string>
-    <string name="confirm_unbind">确认解绑</string>
-    <string name="unbind_mail">解绑邮箱</string>
     <string name="bind_mail">绑定邮箱</string>
+    <string name="confirm_bind">确认绑定</string>
+    <string name="modify_mail">修改邮箱</string>
+    <string name="confirm_modify">确认修改</string>
+    <string name="please_input_used_mail_auth_code">请输入旧邮箱验证码</string>
+    <string name="bind_success">绑定成功</string>
     <string name="please_input_mail">请输入邮箱</string>
     <string name="please_input_mail_auth_code">请输入邮箱验证码</string>
     <string name="please_input_phone_auth_code">请输入手机验证码</string>
