@@ -93,6 +93,9 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mHasBindPhone ? R.string.edit_phone : R.string.bind_phone);
+        if (mHasBindPhone) {
+            mMailAuthCode.setHint(R.string.used_phone_auth_code);
+        }
         mPhone.addTextChangedListener(mWatcher);
         getAreaCode();
     }
@@ -317,7 +320,11 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.getMailAuthCode:
-                showImageAuthCodeDialog(true);
+                if (mHasBindPhone) {
+                    showImageAuthCodeDialog(true);
+                } else {
+
+                }
                 break;
             case R.id.confirmBind:
                 updatePhone(mPhoneNum, mSmsAuth, mMailAuth, "");
@@ -340,25 +347,25 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 mAreaCode.setText(codes.get(options1));
             }
         }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                TextView cancel = v.findViewById(R.id.cancel);
+                TextView confirm = v.findViewById(R.id.confirm);
+                cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void customLayout(View v) {
-                        TextView cancel = v.findViewById(R.id.cancel);
-                        TextView confirm = v.findViewById(R.id.confirm);
-                        cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPvOptions.dismiss();
-                            }
-                        });
-                        confirm.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPvOptions.returnData();
-                                mPvOptions.dismiss();
-                            }
-                        });
+                    public void onClick(View v) {
+                        mPvOptions.dismiss();
                     }
-                })
+                });
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPvOptions.returnData();
+                        mPvOptions.dismiss();
+                    }
+                });
+            }
+        })
                 .setCyclic(false, false, false)
                 .setTextColorCenter(ContextCompat.getColor(getContext(), R.color.text22))
                 .setTextColorOut(ContextCompat.getColor(getContext(), R.color.text99))

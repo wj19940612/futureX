@@ -1,5 +1,6 @@
 package com.songbai.futurex.activity.mine;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
@@ -11,8 +12,6 @@ import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.UserInfo;
-import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.clipimage.ClipImageLayout;
 
@@ -46,46 +45,32 @@ public class ClipHeadImageActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.complete:
-//                submitFile();
+                submitFile();
                 break;
+            default:
         }
     }
 
     private void submitFile() {
         Bitmap clipBitmap = mClipImageLayout.clip();
-//        String picture = ImageUtils.bitmapToBase64(clipBitmap);
         String base64 = ImageUtils.compressImageToBase64(clipBitmap, getActivity());
         submitPortraitPath(base64);
     }
 
     private void submitPortraitPath(final String data) {
         // TODO: 2018/5/29
-        Apic.submitPortraitPath(data)
+        Apic.uploadImage(data)
                 .timeout(10_000)
                 .indeterminate(this)
-                .callback(new Callback<Resp<Object>>() {
+                .callback(new Callback<Resp<String>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        requestUserInfo();
-                    }
-                })
-                .fire();
-    }
-
-    private void requestUserInfo() {
-        // TODO: 2018/5/29
-        Apic.findUserInfo()
-                .tag(TAG)
-                .callback(new Callback<Resp<UserInfo>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<UserInfo> resp) {
-                        LocalUser.getUser().setUserInfo(resp.getData());
-//                        ToastUtil.show(R.string.modify_success);
-                        setResult(RESULT_OK);
+                    protected void onRespSuccess(Resp<String> resp) {
+                        Intent data = new Intent();
+                        data.putExtra(ExtraKeys.IMAGE_PATH, resp.getData());
+                        setResult(1, data);
                         finish();
                     }
                 })
                 .fire();
     }
-
 }

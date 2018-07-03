@@ -113,6 +113,7 @@
     <string name="update_success">更新成功</string>
     <string name="bind_phone">绑定手机</string>
     <string name="edit_phone">修改手机</string>
+    <string name="used_phone_auth_code">旧手机验证码</string>
     <string name="please_input_phone_num">请输入手机号码</string>
     <string name="send_auth_code">发送验证码</string>
     <string name="message_auth_code">短信验证码</string>
@@ -149,6 +150,7 @@
     <string name="about_us">关于我们</string>
     <string name="feedback">建议反馈</string>
     <string name="logout">退出登录</string>
+    <string name="confirm_logout">要确定退出吗？</string>
     <string name="platform_introduction">平台介绍</string>
     <string name="company_introduction">公司介绍</string>
     <string name="service_agreement">服务协议</string>
