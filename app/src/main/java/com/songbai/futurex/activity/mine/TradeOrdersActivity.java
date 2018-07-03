@@ -63,6 +63,8 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     LoadMoreFooterView mSwipeLoadMoreFooter;
     @BindView(R.id.rootView)
     ConstraintLayout mRootView;
+    @BindView(R.id.filterLayout)
+    LinearLayout mFilterLayout;
 
     private int mPage;
     private OrderAdapter mOrderAdapter;
@@ -100,6 +102,12 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         View customView = mTitleBar.getCustomView();
         mRadioHeader = customView.findViewById(R.id.radioHeader);
         mFilter = customView.findViewById(R.id.filter);
+        mFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFilterLayout.setVisibility(mFilterLayout.getVisibility() == View.VISIBLE?View.GONE:View.VISIBLE);
+            }
+        });
         mRadioHeader.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
