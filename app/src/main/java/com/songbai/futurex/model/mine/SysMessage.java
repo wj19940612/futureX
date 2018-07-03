@@ -10,11 +10,30 @@ public class SysMessage {
 
     private String classify;
     private long createTime;
-    private int id;
+    private String id;
     private String msg;
     private int status;
     private int type;
     private long updateTime;
+
+    private String title;
+    private String style;
+    private long showStartTime;
+
+//    private String content;
+//    private long createTime;
+//    private int format;
+//    private String id;
+//    private int index;
+//    private String lang;
+//    private String operator;
+//    private long showEndTime;
+
+//    private int status;
+//    private String style;
+
+//    private int type;
+//    private long updateTime;
 
     public String getClassify() {
         return classify;
@@ -32,11 +51,11 @@ public class SysMessage {
         this.createTime = createTime;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -70,5 +89,29 @@ public class SysMessage {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    public long getShowStartTime() {
+        return showStartTime;
+    }
+
+    public void setShowStartTime(long showStartTime) {
+        this.showStartTime = showStartTime;
     }
 }

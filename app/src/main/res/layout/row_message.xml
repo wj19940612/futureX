@@ -12,7 +12,7 @@
         android:id="@+id/timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
+        android:layout_marginLeft="14dp"
         android:layout_marginTop="14dp"
         android:textColor="@color/text99"
         android:textSize="11dp"
@@ -36,6 +36,7 @@
         tools:text="关于xxx的上线通知"/>
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/hint"
         android:layout_width="42dp"
         android:layout_height="21dp"
@@ -43,7 +44,6 @@
         android:layout_marginRight="14dp"
         android:background="@drawable/bg_red_round_rect_border"
         android:gravity="center"
-        android:text="@string/important"
         android:textColor="@color/red"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/content"

@@ -25,6 +25,14 @@ public class Apic {
 
     public static final int DEFAULT_PAGE_SIZE = 20;
 
+
+    public interface url {
+
+        String NOTICE_DETAIL_PAGE = Api.getFixedHost() + "/noticeDetail?id=%s";
+
+    }
+
+
     public static Api getAreaCodes() {
         return Api.get("/api/user/country/country.d");
     }
@@ -515,8 +523,8 @@ public class Apic {
      * POST
      * 标记已读
      */
-    public static Api msgRead(int msgId) {
-        return Api.post("/api/user/msg/list",
+    public static Api msgRead(String msgId) {
+        return Api.get("/api/user/msg/list",
                 new ReqParams()
                         .put("msgId", msgId));
     }
@@ -1006,9 +1014,6 @@ public class Apic {
     }
 
 
-    public interface url {
-    }
-
     /**
      * 获取客服状态
      *
@@ -1031,33 +1036,35 @@ public class Apic {
     /**
      * 查询客服聊天历史数据
      * pageDir 0-从时间位置向前查询 1-从时间位置向后查询
+     *
      * @return
      */
     public static Api requestChatHistory() {
-        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("startTime",System.currentTimeMillis()).put("pageDir",0).put("pageSize",200));
+        return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("startTime", System.currentTimeMillis()).put("pageDir", 0).put("pageSize", 200));
     }
 
     /**
      * 发送给客服消息
+     *
      * @return
      */
-    public static Api sendTextChat(String msg){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid",AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_TEXT).put("content",msg));
+    public static Api sendTextChat(String msg) {
+        return Api.post("/api/user/chat/send.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_TEXT).put("content", msg));
     }
 
     /**
      * 发送给客服图片
-     * @return
-     */
-    public static Api sendPhotoChat(String photoAddress){
-        return Api.post("/api/user/chat/send.do",new ReqParams().put("deviceid",AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_PHOTO).put("content",photoAddress));
-    }
-
-    /**
      *
      * @return
      */
-    public static Api requestPlatformIntroduce(String code){
-        return Api.get("/api/user/article/getAgreement.do",new ReqParams().put("code",code));
+    public static Api sendPhotoChat(String photoAddress) {
+        return Api.post("/api/user/chat/send.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("msgtype", CustomServiceChat.MSG_PHOTO).put("content", photoAddress));
+    }
+
+    /**
+     * @return
+     */
+    public static Api requestPlatformIntroduce(String code) {
+        return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
     }
 }

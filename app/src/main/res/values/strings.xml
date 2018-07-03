@@ -35,6 +35,7 @@
     <string name="invite">邀请返佣</string>
     <string name="invite_friends_can_get">邀请好友可获佣</string>
     <string name="message_center">消息中心</string>
+    <string name="notice_center">公告中心</string>
     <string name="safety_center">安全中心</string>
     <string name="custom_service">聊天客服</string>
     <string name="settings">设置</string>

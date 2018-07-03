@@ -1,7 +1,6 @@
 package com.songbai.futurex.utils;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,14 +18,14 @@ public class DateUtil {
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日 HH:mm";
     public static final String FORMAT_YEAR_MONTH = "yyyy年MM月";
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
-    public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
+    public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
     public static final String FORMAT_MINUTE_SECOND = "mm:ss";
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
     public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
-    public static final String FORMAT_HOUR_MINUTE_DATE= "HH:mm MM/dd";
+    public static final String FORMAT_HOUR_MINUTE_DATE = "HH:mm MM/dd";
 
 
     private static final String TODAY = "今日";
@@ -436,6 +435,13 @@ public class DateUtil {
         return time >= 600 && time <= 1800;
     }
 
+    public static String formatNoticeTime(long time) {
+        long timeMillis = System.currentTimeMillis();
+        if (DateUtil.isInThisDay(time, timeMillis)) {
+            return DateUtil.format(time, FORMAT_HOUR_MINUTE_SECOND);
+        }
+        return DateUtil.format(time, FORMAT_SPECIAL_SLASH_NO_HOUR);
+    }
 
 
 //    /**

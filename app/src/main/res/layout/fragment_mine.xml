@@ -163,6 +163,22 @@
             tools:subText="3"/>
 
         <com.songbai.futurex.view.IconTextRow
+            android:id="@+id/noticeCenter"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_white_pressed_f5"
+            android:visibility="visible"
+            app:hasBottomSplitLine="true"
+            app:leftIcon="@drawable/ic_mine_notice"
+            app:rightIcon="@drawable/ic_common_right_arrow"
+            app:rowText="@string/notice_center"
+            app:rowTextSize="16sp"
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/bgF5"
+            app:subTextColor="@android:color/white"
+            app:subTextSize="12sp"/>
+
+        <com.songbai.futurex.view.IconTextRow
             android:id="@+id/safetyCenter"
             android:layout_width="match_parent"
             android:layout_height="50dp"
