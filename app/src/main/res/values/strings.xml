@@ -600,4 +600,10 @@
     <string name="unknown_operation">未知操作</string>
     <string name="filter">筛选</string>
 
+    <string name="trading_on">交易对</string>
+    <string name="select_currency">请选择计价货币</string>
+    <string name="order_status">订单状态</string>
+    <string name="has_finish">已完成</string>
+    <string name="has_withdrawn">已撤销</string>
+
 </resources>

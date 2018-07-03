@@ -2,6 +2,7 @@ package com.songbai.futurex.utils;
 
 import android.animation.ValueAnimator;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
