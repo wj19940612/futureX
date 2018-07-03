@@ -53,6 +53,8 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.songbai.futurex.model.Order.DIR_DEFAULT;
+
 /**
  * Modified by john on 2018/7/2
  * <p>
@@ -112,7 +114,6 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         mSwipeTarget.setEmptyView(mEmptyView);
 
         requestOrderList();
-        getLegalCoin();
     }
 
     private void initTitleBar() {
@@ -131,14 +132,6 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 requestOrderList();
             }
         });
-
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2018/7/3 出现筛选页面
-                showLegalCurrencySelect();
-            }
-        });
     }
 
     private void initFilterView() {
@@ -147,27 +140,17 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             @Override
             public void onClick(View v) {
                 if (mHistoryFilter.getVisibility() == View.GONE) {
-                    AnimatorUtil.expandVertical(mHistoryFilter, new AnimatorUtil.OnAnimatorFactionListener() {
-                        @Override
-                        public void onFaction(float fraction) {
-                            if (fraction == 1) {
-                                mHistoryFilter.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
+                    AnimatorUtil.expandVertical(mHistoryFilter,200);
                 } else {
-                    AnimatorUtil.collapseVertical(mHistoryFilter, new AnimatorUtil.OnAnimatorFactionListener() {
-                        @Override
-                        public void onFaction(float fraction) {
-                            if (fraction == 1) {
-                                mHistoryFilter.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    AnimatorUtil.collapseVertical(mHistoryFilter,200);
                 }
-//                Animation expendY = AnimUtils.createExpendY(mHistoryFilter,300);
-//                mHistoryFilter.startAnimation(expendY);
-//                mHistoryFilter.setVisibility(mHistoryFilter.getVisibility() == View.VISIBLE?View.GONE:View.VISIBLE);
+            }
+        });
+        historyFilter.setOnFilterListener(new HistoryFilter.OnFilterListener() {
+            @Override
+            public void onFilter(String suffixSymbol, String prefixSymbol, int direction) {
+                requestOrderList(suffixSymbol, prefixSymbol, direction);
+                AnimatorUtil.collapseVertical(mHistoryFilter);
             }
         });
     }
@@ -183,9 +166,13 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     }
 
     private void requestOrderList() {
+        requestOrderList(null, null, DIR_DEFAULT);
+    }
+
+    private void requestOrderList(String suffixSymbol, String prefixSymbol, int direction) {
         int type = mRadioHeader.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime, null, null).tag(TAG)
+        Apic.getEntrustOrderList(mPage, type, endTime, suffixSymbol, prefixSymbol, direction).tag(TAG)
                 .id(mRadioHeader.getSelectTab())
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {
                     @Override
@@ -206,65 +193,6 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                         }
                     }
                 }).fireFreely();
-    }
-
-    private void getLegalCoin() {
-        Apic.getLegalCoin()
-                .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
-                        mLegalCoinArrayList = resp.getData();
-                    }
-                }).fire();
-    }
-
-    private void showLegalCurrencySelect() {
-        if (mLegalCoinArrayList == null) {
-            getLegalCoin();
-            return;
-        }
-        if (mPvOptions == null) {
-            mPvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
-                @Override
-                public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                    if (options1 < mLegalCoinArrayList.size()) {
-                        LegalCoin legalCoin = mLegalCoinArrayList.get(options1);
-                        selectLegal(legalCoin);
-                    }
-                }
-            }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
-                @Override
-                public void customLayout(View v) {
-                    TextView cancel = v.findViewById(R.id.cancel);
-                    TextView confirm = v.findViewById(R.id.confirm);
-                    cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mPvOptions.dismiss();
-                        }
-                    });
-                    confirm.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mPvOptions.returnData();
-                            mPvOptions.dismiss();
-                        }
-                    });
-                }
-            })
-                    .setCyclic(false, false, false)
-                    .setTextColorCenter(ContextCompat.getColor(this, R.color.text22))
-                    .setTextColorOut(ContextCompat.getColor(this, R.color.text99))
-                    .setDividerColor(ContextCompat.getColor(this, R.color.bgDD))
-                    .build();
-            mPvOptions.setPicker(mLegalCoinArrayList, null, null);
-        }
-        mPvOptions.show();
-    }
-
-    private void selectLegal(LegalCoin legalCoin) {
-        // TODO: 2018/7/3 更新所选择的货币
-        
     }
 
     @Override

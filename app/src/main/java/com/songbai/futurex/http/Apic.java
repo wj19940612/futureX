@@ -2,6 +2,7 @@ package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.App;
+import com.songbai.futurex.model.Order;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.BankBindData;
@@ -984,7 +985,7 @@ public class Apic {
     /**
      * 根据计价货币获取货币对
      * <p>
-     *
+     * <p>
      * /api/entrust/pairs/pairsSimpleList.do
      *
      * @param suffixSymbol
@@ -1127,6 +1128,7 @@ public class Apic {
                 new ReqParams(MakeOrder.class, makeOrder));
     }
 
+
     /**
      * 请求委托订单列表
      *
@@ -1138,13 +1140,38 @@ public class Apic {
      * @return
      */
     public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol) {
-        return Api.get("/api/entrust/entrust/mine", new ReqParams()
-                .put("pageSize", DEFAULT_PAGE_SIZE)
+        ReqParams reqParams = new ReqParams();
+        reqParams.put("pageSize", DEFAULT_PAGE_SIZE)
                 .put("page", page)
                 .put("current", type)
                 .put("endDate", endDate)
                 .put("suffixSymbol", suffixSymbol)
-                .put("prefixSymbol", prefixSymbol));
+                .put("prefixSymbol", prefixSymbol);
+        return Api.get("/api/entrust/entrust/mine", reqParams);
+    }
+
+    /**
+     * 请求委托订单列表
+     *
+     * @param page
+     * @param type
+     * @param endDate
+     * @param prefixSymbol
+     * @param suffixSymbol
+     * @return
+     */
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, int direction) {
+        ReqParams reqParams = new ReqParams();
+        reqParams.put("pageSize", DEFAULT_PAGE_SIZE)
+                .put("page", page)
+                .put("current", type)
+                .put("endDate", endDate)
+                .put("suffixSymbol", suffixSymbol)
+                .put("prefixSymbol", prefixSymbol);
+        if (direction != Order.DIR_DEFAULT) {
+            reqParams.put("direction", direction);
+        }
+        return Api.get("/api/entrust/entrust/mine", reqParams);
     }
 
     /**

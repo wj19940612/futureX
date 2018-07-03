@@ -604,5 +604,8 @@
     <string name="order_status">订单状态</string>
     <string name="has_finish">已完成</string>
     <string name="has_withdrawn">已撤销</string>
+    <string name="please_input_currency">请输入币种</string>
+    <string name="please_select_currency">请选择计价货币</string>
+    <string name="please_select_direction">请选择买卖方向</string>
 
 </resources>
