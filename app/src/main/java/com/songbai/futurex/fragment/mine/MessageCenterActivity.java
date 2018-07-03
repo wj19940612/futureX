@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -145,7 +147,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     private void requestNotice() {
         // TODO: 2018/7/2 字体
         String lang = "";
-
+        String language = Locale.getDefault().getLanguage();
+        Log.d(TAG, "requestNotice: "+language);
         Apic.findNewsList(PAGE_TYPE_NOTICE, lang, mOffset, Apic.DEFAULT_PAGE_SIZE)
                 .callback(new Callback<Resp<List<SysMessage>>>() {
                     @Override
@@ -294,8 +297,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
             }
 
             void bindData(final SysMessage sysMessage, final int position, int pageType, boolean allIsRead) {
-                if (allIsRead) mContent.setSelected(true);
-                else if (pageType == PAGE_TYPE_NOTICE) {
+
+                if (pageType == PAGE_TYPE_NOTICE) {
                     mContent.setSelected(true);
                     mTimestamp.setText(DateUtil.formatNoticeTime(sysMessage.getShowStartTime()));
                     mContent.setText(sysMessage.getTitle());
@@ -306,7 +309,11 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         mHint.setVisibility(View.GONE);
                     }
                 } else {
-                    mContent.setSelected(sysMessage.getStatus() == SysMessage.READ);
+                    if (allIsRead) {
+                        mContent.setSelected(true);
+                    } else {
+                        mContent.setSelected(sysMessage.getStatus() == SysMessage.READ);
+                    }
                     mTimestamp.setText(DateUtil.format(sysMessage.getCreateTime(), DateUtil.FORMAT_SPECIAL_SLASH));
                     int textId = 0;
                     switch (sysMessage.getType()) {

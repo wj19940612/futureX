@@ -984,6 +984,7 @@ public class Apic {
     /**
      * 根据计价货币获取货币对
      * <p>
+     *
      * /api/entrust/pairs/pairsSimpleList.do
      *
      * @param suffixSymbol

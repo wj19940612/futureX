@@ -15,12 +15,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.LegalCoin;
 import com.songbai.futurex.model.Order;
 import com.songbai.futurex.model.local.SysTime;
 import com.songbai.futurex.model.status.OrderStatus;
@@ -69,6 +74,10 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     private RadioHeader mRadioHeader;
     private TextView mFilter;
 
+    private OptionsPickerView<LegalCoin> mPvOptions;
+
+    private List<LegalCoin> mLegalCoinArrayList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +103,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         mSwipeTarget.setEmptyView(mEmptyView);
 
         requestOrderList();
+        getLegalCoin();
     }
 
     private void initTitleBar() {
@@ -110,6 +120,14 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 }
                 mPage = 0;
                 requestOrderList();
+            }
+        });
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 2018/7/3 出现筛选页面
+                showLegalCurrencySelect();
             }
         });
     }
@@ -148,6 +166,65 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                         }
                     }
                 }).fireFreely();
+    }
+
+    private void getLegalCoin() {
+        Apic.getLegalCoin()
+                .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
+                        mLegalCoinArrayList = resp.getData();
+                    }
+                }).fire();
+    }
+
+    private void showLegalCurrencySelect() {
+        if (mLegalCoinArrayList == null) {
+            getLegalCoin();
+            return;
+        }
+        if (mPvOptions == null) {
+            mPvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
+                @Override
+                public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                    if (options1 < mLegalCoinArrayList.size()) {
+                        LegalCoin legalCoin = mLegalCoinArrayList.get(options1);
+                        selectLegal(legalCoin);
+                    }
+                }
+            }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
+                @Override
+                public void customLayout(View v) {
+                    TextView cancel = v.findViewById(R.id.cancel);
+                    TextView confirm = v.findViewById(R.id.confirm);
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mPvOptions.dismiss();
+                        }
+                    });
+                    confirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mPvOptions.returnData();
+                            mPvOptions.dismiss();
+                        }
+                    });
+                }
+            })
+                    .setCyclic(false, false, false)
+                    .setTextColorCenter(ContextCompat.getColor(this, R.color.text22))
+                    .setTextColorOut(ContextCompat.getColor(this, R.color.text99))
+                    .setDividerColor(ContextCompat.getColor(this, R.color.bgDD))
+                    .build();
+            mPvOptions.setPicker(mLegalCoinArrayList, null, null);
+        }
+        mPvOptions.show();
+    }
+
+    private void selectLegal(LegalCoin legalCoin) {
+        // TODO: 2018/7/3 更新所选择的货币
+        
     }
 
     @Override
