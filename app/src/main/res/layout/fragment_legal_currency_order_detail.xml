@@ -99,8 +99,10 @@
                     android:layout_marginBottom="13dp"
                     android:includeFontPadding="false"
                     android:textColor="@color/red"
+                    android:textSize="13sp"
                     app:layout_constraintBottom_toTopOf="@id/timer"
                     app:layout_constraintRight_toRightOf="@id/timer"
+                    app:layout_goneMarginRight="20dp"
                     tools:text="待买家付款"/>
 
                 <com.songbai.futurex.view.CountDownView
@@ -177,14 +179,33 @@
                 android:textColor="@color/text99"
                 android:textSize="17sp"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/payInfo"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:overScrollMode="never"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"/>
+                android:layout_height="wrap_content">
+
+                <com.songbai.futurex.view.EmptyRecyclerView
+                    android:id="@+id/payInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:overScrollMode="never"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"/>
+
+                <TextView
+                    android:id="@+id/bankEmptyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_order_datail_consult"
+                    android:gravity="center"
+                    android:text="点击咨询支付方式"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15sp"/>
+
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -214,12 +235,57 @@
         android:background="@drawable/bg_white_with_top_shadow"
         android:paddingTop="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/contractEachOther"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <com.songbai.futurex.view.BadgeTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="3dp"
+                android:drawableTop="@drawable/ic_otc_pay_chat"
+                android:gravity="center"
+                android:text="@string/contact_each_other"
+                android:textColor="@color/text66"
+                android:textSize="10dp"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/appeal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:background="@drawable/bg_red_r2"
             android:gravity="center"
-            android:text="联系对方"
+            android:text="@string/appeal"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/cancelOrder"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="@string/cancel_trade"
             android:textColor="@color/text66"
-            android:textSize="10dp"/>
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:background="@drawable/btn_primary"
+            android:gravity="center"
+            android:text="@string/i_have_paid"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
     </LinearLayout>
 </RelativeLayout>

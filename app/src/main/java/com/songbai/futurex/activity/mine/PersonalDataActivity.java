@@ -13,7 +13,6 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.fragment.mine.BindMailFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
@@ -28,6 +27,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.ImagePicker;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -137,7 +137,7 @@ public class PersonalDataActivity extends BaseActivity {
 
     private void setIconTextRowSubDrawable(IconTextRow iconTextRow, @DrawableRes int id) {
         TextView subTextView = iconTextRow.getSubTextView();
-        subTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, id, 0);
+        subTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, id, 0);
     }
 
     @Override
@@ -191,13 +191,21 @@ public class PersonalDataActivity extends BaseActivity {
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.seniorCertification:
+                if (userInfo.getAuthenticationStatus() < 1) {
+                    ToastUtil.show(R.string.passed_primary_certification);
+                    return;
+                }
                 UniqueActivity.launcher(this, SeniorCertificationFragment.class)
                         .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus)
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.legalCurrencyPayManagement:
-                UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
-                        .execute(MODIFY_PERSONAL_DATA);
+                if (userInfo.getAuthenticationStatus() < 1) {
+                    ToastUtil.show(R.string.passed_primary_certification);
+                } else {
+                    UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
+                            .execute(MODIFY_PERSONAL_DATA);
+                }
                 break;
             case R.id.addressManagement:
                 UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class)
@@ -216,8 +224,7 @@ public class PersonalDataActivity extends BaseActivity {
                 String image = ImageUtils.compressImageToBase64(stringExtra, this);
                 uploadImage(image);
             }
-        }
-        else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
+        } else if (requestCode == ImagePicker.REQ_CODE_TAKE_PHONE_FROM_PHONES) {
 //            String galleryBitmapPath = ImagePicker.getGalleryBitmapPath(this, data);
 //            if (!TextUtils.isEmpty(galleryBitmapPath)) {
 //                String image = ImageUtils.compressImageToBase64(galleryBitmapPath, this);

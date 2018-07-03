@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Common attrs-->
+    <attr name="hasBottomSplitLine" format="boolean"/>
+    <attr name="splitLineColor" format="color|reference"/>
+
     <!--底部 tabs-->
     <declare-styleable name="BottomTabs">
         <attr name="textSize" format="dimension"/>
@@ -169,6 +173,4 @@
         <attr name="normalCircleRadius" format="dimension|reference"/>
         <attr name="errorColor" format="color|reference"/>
     </declare-styleable>
-
-
 </resources>

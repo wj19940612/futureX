@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/view_common_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radioHeader"/>
+
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipeToLoadLayout"
         android:layout_width="match_parent"
@@ -13,10 +23,10 @@
         app:default_to_loading_more_scrolling_duration="500"
         app:layout_constraintTop_toBottomOf="@+id/titleBar"
         app:load_more_complete_delay_duration="500"
-        app:load_more_final_drag_offset="@dimen/load_more_final_offset_google"
-        app:load_more_trigger_offset="@dimen/load_more_trigger_offset_google"
-        app:refresh_final_drag_offset="@dimen/refresh_final_offset_google"
-        app:refresh_trigger_offset="@dimen/refresh_trigger_offset_google"
+        app:load_more_final_drag_offset="@dimen/load_more_final_offset"
+        app:load_more_trigger_offset="@dimen/load_more_trigger_offset"
+        app:refresh_final_drag_offset="@dimen/refresh_final_offset"
+        app:refresh_trigger_offset="@dimen/refresh_trigger_offset"
         app:swipe_style="classic">
 
         <com.zcmrr.swipelayout.header.RefreshHeaderView
@@ -24,33 +34,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <FrameLayout
-            android:id="@id/swipe_target"
+        <com.songbai.futurex.view.EmptyRecyclerView
+            android:id="@+id/swipe_target"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.songbai.futurex.view.EmptyRecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"/>
-
-            <include
-                layout="@layout/view_common_empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/radioHeader"/>
-        </FrameLayout>
-
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="6dp"/>
 
         <com.zcmrr.swipelayout.foot.LoadMoreFooterView
             android:id="@+id/swipe_load_more_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
-
 </LinearLayout>

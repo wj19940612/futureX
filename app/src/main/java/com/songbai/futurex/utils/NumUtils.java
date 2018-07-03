@@ -29,10 +29,44 @@ public class NumUtils {
         return String.valueOf(price);
     }
 
+    /**
+     * 价格
+     *
+     * @param price
+     * @param scale
+     * @return
+     */
     public static String getPrice(double price, int scale) {
         return FinanceUtil.formatWithScale(price, scale);
     }
 
+    /**
+     * 金额
+     *
+     * @param amt
+     * @return
+     */
+    public static String getAmt(double amt) {
+        return FinanceUtil.formatWithScale(amt, 8);
+    }
+
+    /**
+     * 交易金额
+     *
+     * @param amt
+     * @param scale
+     * @return
+     */
+    public static String getAmt(double amt, int scale) {
+        return FinanceUtil.formatWithScale(amt, scale);
+    }
+
+    /**
+     * 浮点数据
+     *
+     * @param number
+     * @return
+     */
     public static double getDouble(String number) {
         try {
             return Double.parseDouble(number);

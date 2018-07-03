@@ -8,7 +8,6 @@ import android.view.View;
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
-import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
@@ -16,29 +15,20 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
 /**
  * Created by ${wangJie} on 2018/1/29.
  * 提供的基础刷新 加载基类
- * 有两个子类 可以直接使用 {@link ListSwipeLoadActivity }和{@link RecycleViewSwipeLoadActivity}
+ * 有两个子类 可以直接使用 {@link ListSwipeLoadActivity }和{@link RVSwipeLoadActivity}
  */
 
-public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity implements
-        SwipeLoader<T>, OnLoadMoreListener, OnRefreshListener {
+public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity
+        implements SwipeLoader<T>, OnLoadMoreListener, OnRefreshListener {
 
-    private SwipeToLoadLayout mSwipeToLoadLayout;
-
-    private T mSwipeTargetView;
-
-    private RefreshHeaderView mRefreshHeaderView;
-
-    private LoadMoreFooterView mLoadMoreFooterView;
+    protected SwipeToLoadLayout mSwipeToLoadLayout;
+    protected T mSwipeTargetView;
+    protected RefreshHeaderView mRefreshHeaderView;
+    protected LoadMoreFooterView mLoadMoreFooterView;
 
     protected void stopFreshOrLoadAnimation() {
-        if (mSwipeToLoadLayout != null) {
-            if (mSwipeToLoadLayout.isRefreshing()) {
-                mSwipeToLoadLayout.setRefreshing(false);
-            }
-            if (mSwipeToLoadLayout.isLoadingMore()) {
-                mSwipeToLoadLayout.setLoadingMore(false);
-            }
-        }
+        stopFreshAnimation();
+        stopLoadMoreAnimation();
     }
 
     protected void stopFreshAnimation() {
@@ -49,17 +39,12 @@ public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity
         }
     }
 
-    protected void stopLoadAnimation() {
+    protected void stopLoadMoreAnimation() {
         if (mSwipeToLoadLayout != null) {
             if (mSwipeToLoadLayout.isLoadingMore()) {
                 mSwipeToLoadLayout.setLoadingMore(false);
             }
         }
-    }
-
-    @Override
-    public boolean isUseDefaultLoadMoreConditions() {
-        return true;
     }
 
     @Override
@@ -89,18 +74,10 @@ public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity
 
     @Override
     public void loadMoreComplete(CharSequence msg) {
-        if (mLoadMoreFooterView != null) {
-            mLoadMoreFooterView.setLoadMoreSuccess(msg);
-        }
-        stopLoadAnimation();
-    }
-
-    public void refreshFailure() {
-        refreshComplete(getString(R.string.refresh_fail));
-    }
-
-    public void refreshSuccess() {
-        refreshComplete(getString(R.string.refresh_complete));
+//        if (mLoadMoreFooterView != null) {
+//            mLoadMoreFooterView.setLoadMoreSuccess(msg);
+//        }
+        stopLoadMoreAnimation();
     }
 
     @Override
@@ -110,9 +87,9 @@ public abstract class BaseSwipeLoadActivity<T extends View> extends BaseActivity
 
     @Override
     public void refreshComplete(CharSequence msg) {
-        if (mRefreshHeaderView != null) {
-            mRefreshHeaderView.refreshSuccess(msg);
-        }
+//        if (mRefreshHeaderView != null) {
+//            mRefreshHeaderView.refreshSuccess(msg);
+//        }
         stopFreshAnimation();
     }
 

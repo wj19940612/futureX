@@ -27,6 +27,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CountryCurrency;
 import com.songbai.futurex.model.LegalCoin;
+import com.songbai.futurex.model.status.OtcOrderStatus;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
@@ -92,8 +93,8 @@ public class LegalCurrencyFragment extends BaseFragment {
                 mSelectedLegalSymbol.toUpperCase(),
                 mSelectedCurrencySymbol.toUpperCase()));
         mFragments = new ArrayList<>();
-        mFragments.add(WantBuyOrSellFragment.newInstance(1, mSelectedLegalSymbol, mSelectedCurrencySymbol));
-        mFragments.add(WantBuyOrSellFragment.newInstance(2, mSelectedLegalSymbol, mSelectedCurrencySymbol));
+        mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_SELL, mSelectedLegalSymbol, mSelectedCurrencySymbol));
+        mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_BUY, mSelectedLegalSymbol, mSelectedCurrencySymbol));
         mFragments.add(MyPosterFragment.newInstance());
         LegalCurrencyPager adapter = new LegalCurrencyPager(getChildFragmentManager(), mFragments);
         mViewPager.setAdapter(adapter);

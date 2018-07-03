@@ -17,11 +17,13 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.CustomServiceActivity;
+import com.songbai.futurex.activity.LegalCurrencyOrderActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.activity.mine.InviteActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
+import com.songbai.futurex.activity.mine.TradeOrdersActivity;
 import com.songbai.futurex.fragment.mine.MessageCenterActivity;
 import com.songbai.futurex.fragment.mine.SafetyCenterFragment;
 import com.songbai.futurex.fragment.mine.SettingsFragment;
@@ -221,8 +223,14 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(this, MyPropertyActivity.class).execute();
                 break;
             case R.id.tradeOrderLog:
+                if (user.isLogin()) {
+                    Launcher.with(getActivity(), TradeOrdersActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.legalCurrencyTradeOrder:
+                Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
                 break;
             case R.id.invite:
                 if (user.isLogin()) {
@@ -239,7 +247,6 @@ public class MineFragment extends BaseFragment {
                 } else {
                     login();
                 }
-
                 break;
             case R.id.safetyCenter:
                 UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();
@@ -255,6 +262,7 @@ public class MineFragment extends BaseFragment {
             case R.id.customService:
                 Launcher.with(getActivity(), CustomServiceActivity.class).execute();
 //                UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();
+
                 break;
             case R.id.settings:
                 UniqueActivity.launcher(getActivity(), SettingsFragment.class).execute(this, REQUEST_SETTINGS);

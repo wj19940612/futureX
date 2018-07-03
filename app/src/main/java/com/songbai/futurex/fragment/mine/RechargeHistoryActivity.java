@@ -17,11 +17,11 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
-import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
+import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import butterknife.Unbinder;
  * @author yangguangda
  * @date 2018/5/30
  */
-public class RechargeHistoryActivity extends RecycleViewSwipeLoadActivity {
+public class RechargeHistoryActivity extends RVSwipeLoadActivity {
     @BindView(R.id.swipe_target)
     RecyclerView mSwipeTarget;
     @BindView(R.id.swipeToLoadLayout)
@@ -69,9 +69,9 @@ public class RechargeHistoryActivity extends RecycleViewSwipeLoadActivity {
 
     private void getRechargeFlow(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
         Apic.getUserFinanceFlow(getUserFinanceFlowData, page, pageSize)
-                .callback(new Callback<Resp<PagingBean<CoinPropertyFlow>>>() {
+                .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<CoinPropertyFlow>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
                         mAdapter.setList(resp.getData().getData());
                     }
                 })

@@ -9,9 +9,10 @@ import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LoginData;
-import com.songbai.futurex.model.local.WaresModel;
+import com.songbai.futurex.model.local.MakeOrder;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.local.RegisterData;
+import com.songbai.futurex.model.local.WaresModel;
 import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.websocket.model.CustomServiceChat;
 
@@ -328,6 +329,17 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/getUserFinanceFlowDetail.do
+     * GET
+     * 获取资产流水的详细信息
+     */
+    public static Api getUserFinanceFlowDetail(int id) {
+        return Api.get("/api/user/wallet/getUserFinanceFlowDetail.do",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
      * /api/user/wallet/getDepositWalletAddrByCoinType.do
      * GET
      * 获取充值地址（叶海啸）
@@ -515,7 +527,7 @@ public class Apic {
      * 标记全部已读
      */
     public static Api msgReadAll() {
-        return Api.post("/api/user/msg/list");
+        return Api.get("/api/user/msg/list");
     }
 
     /**
@@ -611,6 +623,32 @@ public class Apic {
      */
     public static Api indexRiseList() {
         return Api.get("/api/entrust/selfPairs/indexRiseList");
+    }
+
+    /**
+     * /api/otc/order/buy
+     * POST
+     * 下单--购买
+     */
+    public static Api otcOrderBuy(int id, String cost, String coinCount) {
+        return Api.post("/api/otc/order/buy",
+                new ReqParams()
+                        .put("id", id)
+                        .put("cost", cost)
+                        .put("coinCount", coinCount));
+    }
+
+    /**
+     * /api/otc/order/sell
+     * POST
+     * 下单--出售
+     */
+    public static Api otcOrderSell(int id, String coinCount, String drawPass) {
+        return Api.post("/api/otc/order/sell",
+                new ReqParams()
+                        .put("id", id)
+                        .put("coinCount", coinCount)
+                        .put("drawPass", drawPass));
     }
 
     /**
@@ -735,7 +773,7 @@ public class Apic {
      * GET
      * 订单管理
      */
-    public static Api legalCurrencyOrderList(int page, int pageSize, int status) {
+    public static Api legalCurrencyOrderList(int page, int pageSize, String status) {
         return Api.get("/api/otc/order/list",
                 new ReqParams()
                         .put("page", page)
@@ -756,11 +794,36 @@ public class Apic {
     }
 
     /**
+     * /api/otc/order/cancel
+     * POST
+     * 取消订单
+     */
+    public static Api otcOrderCancel(int id) {
+        return Api.post("/api/otc/order/cancel",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
+     * /api/otc/order/confirm
+     * POST
+     * 订单状态修改
+     */
+    public static Api otcOrderConfirm(int id, int status, String drawPass, String googleCode) {
+        return Api.post("/api/otc/order/confirm",
+                new ReqParams()
+                        .put("id", id)
+                        .put("status", status)
+                        .put("drawPass", drawPass)
+                        .put("googleCode", googleCode));
+    }
+
+    /**
      * /api/otc/wares/mine
      * GET
      * (改)个人广告主页-个人信息(V1.2)
      */
-    public static Api otcWaresMine(String waresId, String orderId, int orientation) {
+    public static Api otcWaresMine(String waresId, int orderId, int orientation) {
         return Api.get("/api/otc/wares/mine",
                 new ReqParams()
                         .put("waresId", waresId)
@@ -777,6 +840,43 @@ public class Apic {
         return Api.get("/api/otc/order/payInfo",
                 new ReqParams()
                         .put("id", id));
+    }
+
+    /**
+     * /api/otc/chat/history
+     * GET
+     * 历史消息
+     */
+    public static Api otcChatHistory(int waresOrderId, String startTime, int size) {
+        return Api.get("/api/otc/chat/history",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId)
+                        .put("startTime", startTime)
+                        .put("size", size));
+    }
+
+    /**
+     * /api/otc/chat/send
+     * POST
+     * 发送消息 消息类型 1文字 2图片
+     */
+    public static Api otcChatSend(String msg, int waresOrderId, int msgType) {
+        return Api.post("/api/otc/chat/send",
+                new ReqParams()
+                        .put("msg", msg)
+                        .put("waresOrderId", waresOrderId)
+                        .put("msgType", msgType));
+    }
+
+    /**
+     * /api/otc/chat/user
+     * POST
+     * 获取用户信息
+     */
+    public static Api otcChatUser(int waresOrderId) {
+        return Api.get("/api/otc/chat/user",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId));
     }
 
     /**
@@ -1013,6 +1113,50 @@ public class Apic {
                         .put("pairs", pair));
     }
 
+    /**
+     * 下单
+     * <p>
+     * /api/entrust/entrust/order
+     *
+     * @param makeOrder
+     * @return
+     */
+    public static Api makeOrder(MakeOrder makeOrder) {
+        return Api.post("/api/entrust/entrust/order",
+                new ReqParams(MakeOrder.class, makeOrder));
+    }
+
+    /**
+     * 请求委托订单列表
+     *
+     * @param page
+     * @param type
+     * @param endDate
+     * @param prefixSymbol
+     * @param suffixSymbol
+     * @return
+     */
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol) {
+        return Api.get("/api/entrust/entrust/mine", new ReqParams()
+                .put("pageSize", DEFAULT_PAGE_SIZE)
+                .put("page", page)
+                .put("current", type)
+                .put("endDate", endDate)
+                .put("suffixSymbol", suffixSymbol)
+                .put("prefixSymbol", prefixSymbol));
+    }
+
+    /**
+     * 撤单
+     *
+     * @param orderId
+     * @return
+     */
+    public static Api revokeOrder(String orderId) {
+        return Api.post("/api/entrust/entrust/cancel/{id}",
+                new ReqParams()
+                        .put("id", orderId));
+    }
 
     /**
      * 获取客服状态
@@ -1067,4 +1211,5 @@ public class Apic {
     public static Api requestPlatformIntroduce(String code) {
         return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
     }
+
 }

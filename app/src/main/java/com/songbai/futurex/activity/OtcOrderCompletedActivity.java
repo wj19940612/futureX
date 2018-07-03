@@ -1,0 +1,166 @@
+package com.songbai.futurex.activity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.R;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OtcOrderDetail;
+import com.songbai.futurex.model.WaresUserInfo;
+import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.view.TitleBar;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import sbai.com.glide.GlideApp;
+
+/**
+ * @author yangguangda
+ * @date 2018/6/29
+ */
+public class OtcOrderCompletedActivity extends BaseActivity {
+
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+    @BindView(R.id.headPortrait)
+    ImageView mHeadPortrait;
+    @BindView(R.id.certification)
+    ImageView mCertification;
+    @BindView(R.id.userName)
+    TextView mUserName;
+    @BindView(R.id.countDealRate)
+    TextView mCountDealRate;
+    @BindView(R.id.contractEachOther)
+    TextView mContractEachOther;
+    @BindView(R.id.turnover)
+    TextView mTurnover;
+    @BindView(R.id.price)
+    TextView mPrice;
+    @BindView(R.id.tradeAmount)
+    TextView mTradeAmount;
+    @BindView(R.id.orderNo)
+    TextView mOrderNo;
+    @BindView(R.id.orderTime)
+    TextView mOrderTime;
+    @BindView(R.id.orderStatus)
+    TextView mOrderStatus;
+    Unbinder unbinder;
+    private int mOrderId;
+    private int mTradeDirection;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_otc_order_complated);
+        unbinder = ButterKnife.bind(this);
+        translucentStatusBar();
+        setStatusBarDarkModeForM(true);
+        ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
+        Intent intent = getIntent();
+        mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
+        mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
+        otcOrderDetail(mOrderId, mTradeDirection);
+        otcWaresMine("", mOrderId, 1);
+    }
+
+    private void otcWaresMine(String waresId, int orderId, int orientation) {
+        Apic.otcWaresMine(waresId, orderId, orientation)
+                .callback(new Callback<Resp<WaresUserInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<WaresUserInfo> resp) {
+                        setWaresUserInfo(resp.getData());
+                    }
+                }).fire();
+    }
+
+    private void otcOrderDetail(int id, int direct) {
+        Apic.otcOrderDetail(id, direct)
+                .callback(new Callback<Resp<OtcOrderDetail>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<OtcOrderDetail> resp) {
+                        setView(resp.getData());
+                    }
+                }).fire();
+    }
+
+    private void setView(OtcOrderDetail otcOrderDetail) {
+        OtcOrderDetail.OrderBean order = otcOrderDetail.getOrder();
+        mTurnover.setText(getString(R.string.x_space_x,
+                FinanceUtil.formatWithScale(order.getOrderAmount()),
+                order.getPayCurrency().toUpperCase()));
+        mPrice.setText(getString(R.string.order_detail_price_x,
+                FinanceUtil.formatWithScale(order.getOrderPrice()),
+                order.getPayCurrency().toUpperCase(), order.getCoinSymbol().toUpperCase()));
+        mTradeAmount.setText(getString(R.string.order_detail_amount_x,
+                FinanceUtil.formatWithScale(order.getOrderCount()),
+                order.getCoinSymbol().toUpperCase()));
+        mOrderNo.setText(order.getOrderId());
+        GlideApp
+                .with(this)
+                .load(order.getBuyerPortrait())
+                .circleCrop()
+                .into(mHeadPortrait);
+        mUserName.setText(order.getBuyerName());
+        switch (order.getStatus()) {
+            case OtcOrderStatus.ORDER_CANCLED:
+                mOrderStatus.setText(R.string.canceled);
+                mTitleBar.setTitle(R.string.canceled);
+                break;
+            case OtcOrderStatus.ORDER_COMPLATED:
+                mOrderStatus.setText(R.string.completed);
+                mTitleBar.setTitle(R.string.completed);
+                break;
+            default:
+        }
+        mOrderTime.setText(getString(R.string.order_time_with_symbol_x, DateUtil.format(order.getOrderTime(), DateUtil.FORMAT_SPECIAL_SLASH_ALL)));
+    }
+
+    private void setWaresUserInfo(WaresUserInfo waresUserInfo) {
+        GlideApp
+                .with(this)
+                .load(waresUserInfo.getUserPortrait())
+                .circleCrop()
+                .into(mHeadPortrait);
+        int authStatus = waresUserInfo.getAuthStatus();
+        mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
+        switch (authStatus) {
+            case 1:
+                mCertification.setImageResource(R.drawable.ic_primary_star);
+                break;
+            case 2:
+                mCertification.setImageResource(R.drawable.ic_senior_star);
+                break;
+            default:
+        }
+        mUserName.setText(waresUserInfo.getUsername());
+        mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,
+                waresUserInfo.getCountDeal(),
+                FinanceUtil.formatToPercentage(waresUserInfo.getDoneRate())));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+
+    @OnClick(R.id.contractEachOther)
+    public void onViewClicked() {
+        Launcher.with(this, OtcTradeChatActivity.class)
+                .putExtra(ExtraKeys.ORDER_ID, mOrderId)
+                .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
+                .execute();
+    }
+}

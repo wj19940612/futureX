@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -13,71 +12,65 @@ import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.bigkoo.pickerview.view.TimePickerView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.fragment.mine.PropertyFlowFragment;
+import com.songbai.futurex.fragment.mine.PropertyFlowDetailFragment;
 import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinInfo;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
-import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
-import com.songbai.futurex.utils.AnimatorUtil;
-import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.model.status.FlowStatus;
+import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.dialog.PropertyFlowFilter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * @author yangguangda
  * @date 2018/6/1
  */
-public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
+public class PropertyFlowActivity extends RVSwipeLoadActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.swipe_target)
     RecyclerView mSwipeTarget;
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
-    @BindView(R.id.filtrateGroup)
-    LinearLayout mFiltrateGroup;
     @BindView(R.id.swipeToLoadLayout)
     SwipeToLoadLayout mSwipeToLoadLayout;
-    @BindView(R.id.selectCoinType)
-    TextView mSelectCoinType;
-    @BindView(R.id.flowType)
-    TextView mFlowType;
-    @BindView(R.id.status)
-    TextView mStatus;
-    @BindView(R.id.startTime)
-    TextView mStartTime;
-    @BindView(R.id.endTime)
-    TextView mEndTime;
+    @BindView(R.id.filtrateGroup)
+    LinearLayout mFiltrateGroup;
+    private final int TYPE_ALL = 10;
     private GetUserFinanceFlowData mGetUserFinanceFlowData;
     private int mPage = 0;
     private int mPageSize = 20;
     private boolean mAllType;
     private String mCoinType;
     private PropertyFlowAdapter mAdapter;
-    private OptionsPickerView mPvOptions;
     private ArrayList<CoinInfo> mCoinInfos;
+    private final int[] flowStatus = new int[]{TYPE_ALL,
+            FlowStatus.SUCCESS, FlowStatus.FREEZE, FlowStatus.DRAW_REJECT,
+            FlowStatus.ENTRUS_RETURN, FlowStatus.FREEZE_DEDUCT, FlowStatus.ENTRUSE_RETURN_SYS,
+            FlowStatus.FREEZE_RETURN};
+    private final int[] flowStatusStrRes = new int[]{
+            R.string.all_status, R.string.completed, R.string.freeze, R.string.withdraw_coin_rejected,
+            R.string.entrust_return, R.string.freeze_deduct, R.string.sys_withdraw, R.string.freeze_return};
+    private OptionsPickerView<String> mPvOptions;
+    private ArrayList<String> mFlowStatusStr;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,11 +88,15 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
             @Override
             public void onClick(View v) {
                 if (mAllType) {
-                    // TODO: 2018/6/4 动画
-                    AnimatorUtil.expandVertical(mFiltrateGroup);
-//                    mFiltrateGroup.setVisibility(mFiltrateGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    showAllPropertyFilter();
                 } else {
-
+                    if (mFlowStatusStr == null) {
+                        mFlowStatusStr = new ArrayList<>();
+                        for (int flowStatusStrRe : flowStatusStrRes) {
+                            mFlowStatusStr.add(getString(flowStatusStrRe));
+                        }
+                    }
+                    showSelector(mFlowStatusStr, Arrays.<Object>asList(flowStatus));
                 }
             }
         });
@@ -107,13 +104,43 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
         mAdapter = new PropertyFlowAdapter();
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
-            public void onItemClick() {
-                UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowFragment.class).execute();
+            public void onItemClick(int id) {
+                UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowDetailFragment.class)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
+                        .execute();
             }
         });
         mSwipeTarget.setAdapter(mAdapter);
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         getUserFinanceFlow();
+    }
+
+    private void showAllPropertyFilter() {
+        PropertyFlowFilter propertyFlowFilter = new PropertyFlowFilter(this, mFiltrateGroup);
+        propertyFlowFilter.restoreData(
+                mGetUserFinanceFlowData.getCoinType(), mGetUserFinanceFlowData.getFlowType(),
+                mGetUserFinanceFlowData.getStatus(), mGetUserFinanceFlowData.getStartTime(),
+                mGetUserFinanceFlowData.getEndTime());
+        propertyFlowFilter.setOnSelectCallBack(new PropertyFlowFilter.OnSelectCallBack() {
+            @Override
+            public void onSelected(String coinSymbol, int flowType, int flowStatus, String startTime, String endTime) {
+                mGetUserFinanceFlowData.setCoinType(coinSymbol);
+                mGetUserFinanceFlowData.setCoinType(coinSymbol);
+                mGetUserFinanceFlowData.setFlowType(flowType == PropertyFlowFilter.ALL ? "" : String.valueOf(flowType));
+                mGetUserFinanceFlowData.setStartTime(startTime);
+                mGetUserFinanceFlowData.setEndTime(endTime);
+                mPage = 0;
+                getUserFinanceFlow();
+            }
+
+            @Override
+            public void onResetClick() {
+                mGetUserFinanceFlowData = new GetUserFinanceFlowData();
+                mPage = 0;
+                getUserFinanceFlow();
+            }
+        });
+        propertyFlowFilter.showOrDismiss();
     }
 
     @Override
@@ -134,9 +161,9 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
 
     private void getUserFinanceFlow() {
         Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize)
-                .callback(new Callback<Resp<PagingBean<CoinPropertyFlow>>>() {
+                .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<CoinPropertyFlow>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
@@ -150,78 +177,11 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
                 .fire();
     }
 
-    @OnClick({R.id.selectCoinType, R.id.flowType, R.id.status, R.id.startTime, R.id.endTime, R.id.reset, R.id.filtrate})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.selectCoinType:
-                showCoinInfo(view);
-                break;
-            case R.id.flowType:
-                break;
-            case R.id.status:
-                break;
-            case R.id.startTime:
-                showTimePicker(view);
-                break;
-            case R.id.endTime:
-                showTimePicker(view);
-                break;
-            case R.id.reset:
-                mGetUserFinanceFlowData = new GetUserFinanceFlowData();
-                mSelectCoinType.setText(R.string.select_coin_type);
-                mFlowType.setText(R.string.all_type);
-                mStatus.setText(R.string.all_status);
-                mStartTime.setText("");
-                mEndTime.setText("");
-                break;
-            case R.id.filtrate:
-                mPage = 0;
-                getUserFinanceFlow();
-                break;
-            default:
-        }
-    }
-
-    private void showCoinInfo(final View view) {
-        if (mCoinInfos == null) {
-            Apic.coinLoadSimpleList()
-                    .callback(new Callback<Resp<ArrayList<CoinInfo>>>() {
-                        @Override
-                        protected void onRespSuccess(Resp<ArrayList<CoinInfo>> resp) {
-                            mCoinInfos = resp.getData();
-                            mCoinInfos.add(0, new CoinInfo());
-                            ArrayList<String> list = new ArrayList<>();
-                            for (CoinInfo coinInfo : mCoinInfos) {
-                                String symbol = coinInfo.getSymbol();
-                                if (!TextUtils.isEmpty(symbol)) {
-                                    list.add(symbol.toUpperCase());
-                                } else {
-                                    list.add(getString(R.string.all_type));
-                                }
-                            }
-                            showSelector((TextView) view, list, mCoinInfos);
-                        }
-                    })
-                    .fire();
-        } else {
-            ArrayList<String> list = new ArrayList<>();
-            for (CoinInfo coinInfo : mCoinInfos) {
-                String symbol = coinInfo.getSymbol();
-                if (!TextUtils.isEmpty(symbol)) {
-                    list.add(symbol.toUpperCase());
-                } else {
-                    list.add(getString(R.string.all_type));
-                }
-            }
-            showSelector((TextView) view, list, mCoinInfos);
-        }
-    }
-
-    private void showSelector(final TextView target, final List<String> item, final List<?> origin) {
+    private void showSelector(final List<String> item, final List<Object> origin) {
         mPvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                setSelectedItem(options1, item, target, origin);
+                filterStatus(options1, item, origin);
             }
         })
                 .setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
@@ -253,49 +213,10 @@ public class PropertyFlowActivity extends RecycleViewSwipeLoadActivity {
         mPvOptions.show();
     }
 
-    private void setSelectedItem(int options1, List<String> item, TextView target, List<?> origin) {
-        target.setText(item.get(options1));
-        Object obj = origin.get(options1);
-        switch (target.getId()) {
-            case R.id.selectCoinType:
-                if (obj instanceof CoinInfo) {
-                    mGetUserFinanceFlowData.setCoinType(((CoinInfo) obj).getSymbol());
-                }
-                break;
-            case R.id.flowType:
-                break;
-            case R.id.status:
-                break;
-            default:
-        }
-    }
-
-    private void showTimePicker(final View view) {
-        Calendar startDate = Calendar.getInstance();
-        Calendar endDate = Calendar.getInstance();
-        startDate.set(2018, 4, 1);
-        endDate.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DATE));
-        TimePickerView pvTime = new TimePickerBuilder(PropertyFlowActivity.this, new OnTimeSelectListener() {
-            @Override
-            public void onTimeSelect(Date date, View v) {
-                setSelectedTime(view, date);
-            }
-        })
-                .setRangDate(startDate, endDate)
-                .build();
-        pvTime.show();
-    }
-
-    public void setSelectedTime(View view, Date date) {
-        ((TextView) view).setText(DateUtil.format(date.getTime(), DateUtil.FORMAT_NOT_SECOND));
-        switch (view.getId()) {
-            case R.id.startTime:
-                mGetUserFinanceFlowData.setStartTime(String.valueOf(date.getTime()));
-                break;
-            case R.id.endTime:
-                mGetUserFinanceFlowData.setEndTime(String.valueOf(date.getTime()));
-                break;
-            default:
-        }
+    private void filterStatus(int options1, List<String> item, List<Object> origin) {
+        int status = (int) origin.get(options1);
+        mGetUserFinanceFlowData.setStatus(status == TYPE_ALL ? "" : String.valueOf(status));
+        mPage = 0;
+        getUserFinanceFlow();
     }
 }

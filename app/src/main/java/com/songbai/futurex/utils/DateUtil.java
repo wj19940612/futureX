@@ -1,7 +1,7 @@
 package com.songbai.futurex.utils;
 
-import android.text.TextUtils;
 
+import android.text.TextUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,17 +11,15 @@ public class DateUtil {
 
     public static final String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    public static final String FORMAT_YEAR = "yyyy年MM月dd日 HH:mm:ss";
     public static final String FORMAT_NOT_SECOND = "MM月dd日 HH:mm";
     public static final String FORMAT_NOT_HOUR = "MM月dd日 ";
-    public static final String FORMAT_ONLY_DATE = "dd日 ";
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日 HH:mm";
-    public static final String FORMAT_YEAR_MONTH = "yyyy年MM月";
+
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
-    public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
+
     public static final String FORMAT_MINUTE_SECOND = "mm:ss";
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
     public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
@@ -30,6 +28,10 @@ public class DateUtil {
 
     private static final String TODAY = "今日";
     private static final String YESTERDAY = "昨日";
+
+    public static final String FORMAT_UTZ_STANDARD= "yyyy-MM-dd'T'HH:mm:ss.SSS Z";
+    public static final String FORMAT_HOUR_MINUTE_SECOND_DATE_YEAR= "HH:mm:ss MM/dd/yyyy";
+    public static final String FORMAT_SPECIAL_SLASH_ALL = "yyyy/MM/dd HH:mm:ss";
 
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
@@ -181,38 +183,6 @@ public class DateUtil {
         return date;
     }
 
-    public static String getDayOfWeek(long time) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(time);
-        String result = "";
-        switch (calendar.get(Calendar.DAY_OF_WEEK)) {
-            case Calendar.MONDAY:
-                result = "一";
-                break;
-            case Calendar.TUESDAY:
-                result = "二";
-                break;
-            case Calendar.WEDNESDAY:
-                result = "三";
-                break;
-            case Calendar.THURSDAY:
-                result = "四";
-                break;
-            case Calendar.FRIDAY:
-                result = "五";
-                break;
-            case Calendar.SATURDAY:
-                result = "六";
-                break;
-            case Calendar.SUNDAY:
-                result = "日";
-                break;
-            default:
-                break;
-        }
-        return result;
-    }
-
     public static int getDayOfMonth(long time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time);
@@ -231,54 +201,23 @@ public class DateUtil {
         return dateFormat.format(date);
     }
 
-    public static String formatSlash(long timestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_SPECIAL_SLASH);
-        Date date = new Date(timestamp);
-        return dateFormat.format(date);
-    }
-
-    public static String getFormatYearMonth(long timestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_YEAR_MONTH);
-        Date date = new Date(timestamp);
-        return dateFormat.format(date);
-    }
-
-    public static String getFormatDay(long timestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_ONLY_DATE);
-        Date date = new Date(timestamp);
-        return dateFormat.format(date);
-    }
-
-    public static String getFormatSpecialSlashNoHour(long timestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_SPECIAL_SLASH_NO_HOUR);
-        Date date = new Date(timestamp);
-        return dateFormat.format(date);
-    }
-
     /**
-     * 将日期格式转化为时间(秒数)
+     * 将日期格式转化为时间
      *
      * @param time
      * @return
      */
-    public static long getStringToDate(String time) {
-        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_FORMAT);
-        Date date = new Date();
-        try {
-            date = sdf.parse(time);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date.getTime();
+    public static long getDate(String time) {
+        return getDate(time, DEFAULT_FORMAT);
     }
 
     /**
-     * 将日期格式转化为时间(秒数)
+     * 将日期格式转化为时间
      *
      * @param time
      * @return
      */
-    public static long getStringToDate(String time, String format) {
+    public static long getDate(String time, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         Date date = new Date();
         try {
@@ -289,49 +228,6 @@ public class DateUtil {
         return date.getTime();
     }
 
-
-    /**
-     * 判断指定时间和当前时间是否小于minute分钟
-     *
-     * @param txtDate 指定的时间
-     * @return
-     */
-    public static boolean isTimeMatchFiveMin(String txtDate) {
-        return isTimeMatchFiveMin(txtDate, 1);
-    }
-
-    public static boolean isTimeMatchFiveMin(String txtDate, int minute) {
-        if (TextUtils.isEmpty(txtDate)) {
-            return false;
-        }
-        if (minute == 0) {
-            minute = 5;
-        }
-        try {
-            final SimpleDateFormat format = new SimpleDateFormat(DEFAULT_FORMAT);
-            final Date workDay = format.parse(txtDate);
-
-            final Calendar c1 = Calendar.getInstance();
-            final Calendar c2 = Calendar.getInstance();
-
-            final Date currTime = new Date();
-
-            c1.setTime(workDay);
-            c2.setTime(currTime);
-
-            if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
-                    && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)
-                    && c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)
-                    && c1.get(Calendar.HOUR_OF_DAY) == c2.get(Calendar.HOUR_OF_DAY)) {
-                if (Math.abs(c1.get(Calendar.MINUTE) - c2.get(Calendar.MINUTE)) < minute) {
-                    return true;
-                }
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     /**
      * 格式化时间  如果是当天 则显示18:20
@@ -358,6 +254,7 @@ public class DateUtil {
     }
 
     /**
+<<<<<<< HEAD
      * 返回格式 7月15日
      *
      * @param createTime
@@ -517,7 +414,7 @@ public class DateUtil {
      */
     public static String compareTimeDifference(String date) {
         long curTime = System.currentTimeMillis() / (long) 1000;
-        long overTime = getStringToDate(date, DateUtil.FORMAT_SPECIAL) / 1000;
+        long overTime = getDate(date, DateUtil.FORMAT_SPECIAL) / 1000;
         long time = overTime - curTime;
 
         if (time < 60 && time >= 0) {
@@ -629,7 +526,7 @@ public class DateUtil {
 
     //xxxx年第几季度
     public static String getYearQuarter(String date) {
-        return getYearQuarter(getStringToDate(date, "yyyy-MM-dd"));
+        return getYearQuarter(getDate(date, "yyyy-MM-dd"));
     }
 
     public static String getYearQuarter(long date) {

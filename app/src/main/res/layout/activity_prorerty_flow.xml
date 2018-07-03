@@ -44,7 +44,7 @@
     </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
 
     <include
-        layout="@layout/row_filtrate"
+        layout="@layout/view_property_flow_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/titleBar"/>

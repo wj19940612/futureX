@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.mine.CashPwdFragment;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 
@@ -24,11 +27,14 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
     private TextView mTitle;
     private OnClickListener mOnClickListener;
     private Context mContext;
-    private EditText mAuthCodeInput;
+    private EditText mCashPwd;
     private TextView mConfirm;
+    private EditText mGoogleAuthCode;
+    private boolean showCashPwd = true;
+    private boolean showGoogleAuth = false;
 
     public interface OnClickListener {
-        void onConfirmClick(String authCode);
+        void onConfirmClick(String cashPwd,String googleAuth);
     }
 
     public WithDrawPsdViewController(Context context, OnClickListener onClickListener) {
@@ -38,16 +44,21 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
 
     @Override
     public View onCreateView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.view_with_draw_psd, null);
+        return LayoutInflater.from(mContext).inflate(R.layout.view_with_draw_psd_google_auth, null);
     }
 
     @Override
     public void onInitView(View view, final SmartDialog dialog) {
         mTitle = view.findViewById(R.id.topTitle);
-        mAuthCodeInput = (EditText) view.findViewById(R.id.authCodeInput);
+        mCashPwd = (EditText) view.findViewById(R.id.cashPwd);
+        mCashPwd.setVisibility(showCashPwd ? View.VISIBLE : View.GONE);
         mConfirm = (TextView) view.findViewById(R.id.confirm);
+        mGoogleAuthCode = (EditText) view.findViewById(R.id.googleAuthCode);
+        mGoogleAuthCode.setVisibility(showGoogleAuth ? View.VISIBLE : View.GONE);
+        TextView forgetCashPwd = (TextView) view.findViewById(R.id.forgetCashPwd);
+        forgetCashPwd.setVisibility(showCashPwd ? View.VISIBLE : View.GONE);
 
-        mAuthCodeInput.addTextChangedListener(new ValidationWatcher() {
+        mCashPwd.addTextChangedListener(new ValidationWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean enable = checkConfirmButtonEnable();
@@ -57,26 +68,51 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
             }
         });
 
+        forgetCashPwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UniqueActivity.launcher(mContext, CashPwdFragment.class)
+                        .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, true).execute();
+            }
+        });
+
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                String authCode = mAuthCodeInput.getText().toString();
-                mOnClickListener.onConfirmClick(authCode);
+                String authCode = mCashPwd.getText().toString();
+                mOnClickListener.onConfirmClick(authCode,mGoogleAuthCode.getText().toString());
             }
         });
     }
 
     private boolean checkConfirmButtonEnable() {
-        if (TextUtils.isEmpty(mAuthCodeInput.getText().toString())) {
+        if (showCashPwd && TextUtils.isEmpty(mCashPwd.getText().toString())) {
+            return false;
+        }
+        if (showGoogleAuth && TextUtils.isEmpty(mGoogleAuthCode.getText().toString())) {
             return false;
         }
         return true;
     }
 
+    public void setShowCashPwd(boolean showCashPwd) {
+        this.showCashPwd = showCashPwd;
+    }
+
+    public void setShowGoogleAuth(boolean showGoogleAuth) {
+        this.showGoogleAuth = showGoogleAuth;
+    }
+
     public void setTitle(int titleRes) {
         if (isViewInitialized()) {
             mTitle.setText(titleRes);
+        }
+    }
+
+    public void mConfirm(int titleRes) {
+        if (isViewInitialized()) {
+            mConfirm.setText(titleRes);
         }
     }
 }

@@ -19,11 +19,11 @@ import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.MessageType;
-import com.songbai.futurex.swipeload.RecycleViewSwipeLoadActivity;
+import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnItemClickListener;
@@ -41,7 +41,8 @@ import butterknife.ButterKnife;
  * @author yangguangda
  * @date 2018/5/30
  */
-public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
+
+public class MessageCenterActivity extends RVSwipeLoadActivity {
 
     public static final int PAGE_TYPE_MESSAGE = 0;
     public static final int PAGE_TYPE_NOTICE = 1;
@@ -56,8 +57,10 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
     RefreshHeaderView mSwipeRefreshHeader;
     @BindView(R.id.swipe_load_more_footer)
     LoadMoreFooterView mSwipeLoadMoreFooter;
+
     @BindView(R.id.swipeToLoadLayout)
     SwipeToLoadLayout mSwipeToLoadLayout;
+
     private MessageListAdapter mAdapter;
 
     private int mPage;
@@ -174,9 +177,9 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
 
     private void getMessageList() {
         Apic.msgList(mPage, Apic.DEFAULT_PAGE_SIZE)
-                .callback(new Callback<Resp<PagingBean<SysMessage>>>() {
+                .callback(new Callback<Resp<PagingWrap<SysMessage>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingBean<SysMessage>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<SysMessage>> resp) {
                         updateMessageList(resp);
                     }
 
@@ -185,11 +188,10 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
                         super.onFinish();
                         stopFreshOrLoadAnimation();
                     }
-                })
-                .fire();
+                }).fire();
     }
 
-    private void updateMessageList(Resp<PagingBean<SysMessage>> resp) {
+    private void updateMessageList(Resp<PagingWrap<SysMessage>> resp) {
         if (resp.getData() != null) {
             if (resp.getData().getTotal() > mPage) {
                 mPage++;
@@ -261,9 +263,9 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
             return mList.size();
         }
 
-
         public void setOnItemClickListener(OnItemClickListener<SysMessage> onItemClickListener) {
             mOnItemClickListener = onItemClickListener;
+
         }
 
         public void clear() {
@@ -347,3 +349,6 @@ public class MessageCenterActivity extends RecycleViewSwipeLoadActivity {
         }
     }
 }
+
+
+

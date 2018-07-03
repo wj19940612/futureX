@@ -30,6 +30,7 @@ public interface ExtraKeys {
     String BIND_BANK_LIST = "bind_bank_list";
     String COIN_ADDRESS_INFO = "coin_address_info";
     String TRANSFER_TYPE = "transfer_type";
+    String PROPERTY_FLOW_ID = "property_flow_id";
     String ACCOUNT_BEANS = "account_beans";
     String ACCOUNT_BEAN = "account_bean";
     String MODIFIED_SHOULD_REFRESH = "modified_should_refresh";

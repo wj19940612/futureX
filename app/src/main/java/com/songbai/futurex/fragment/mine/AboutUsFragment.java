@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
@@ -18,7 +19,6 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,9 +30,13 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class AboutUsFragment extends UniqueActivity.UniFragment {
-    @BindView(R.id.versionUpdating)
-    IconTextRow mVersionUpdating;
+    @BindView(R.id.versionUpdate)
+    TextView mVersionUpdate;
+    @BindView(R.id.versionIcon)
+    View mVersionIcon;
     private Unbinder mBind;
+
+    private AppVersion mAppVersion;
 
     @Nullable
     @Override
@@ -49,21 +53,41 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mVersionUpdating.setSubText(getString(R.string.version_x, AppInfo.getVersionName(getContext())));
+        mVersionUpdate.setText(getString(R.string.version_x, AppInfo.getVersionName(getContext())));
+        queryVersion();
     }
 
-    private void queryForceVersion() {
+    private void queryVersion() {
         Apic.queryForceVersion()
                 .callback(new Callback<Resp<AppVersion>>() {
                     @Override
                     protected void onRespSuccess(Resp<AppVersion> resp) {
-                        if (resp.getData() != null && resp.getData().isForceUpdate() || resp.getData().isNeedUpdate()) {
-                            UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
-                                    .show(getChildFragmentManager());
+                        if (resp.getData() != null && (resp.getData().isForceUpdate() || resp.getData().isNeedUpdate())) {
+                            mVersionIcon.setVisibility(View.VISIBLE);
+                            mAppVersion = resp.getData();
                         }
                     }
                 })
-                .fire();
+                .fireFreely();
+    }
+
+    private void queryForceVersion() {
+        if (mAppVersion == null) {
+            Apic.queryForceVersion()
+                    .callback(new Callback<Resp<AppVersion>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<AppVersion> resp) {
+                            if (resp.getData() != null && (resp.getData().isForceUpdate() || resp.getData().isNeedUpdate())) {
+                                UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
+                                        .show(getChildFragmentManager());
+                            }
+                        }
+                    })
+                    .fireFreely();
+        } else if (mAppVersion.isForceUpdate() || mAppVersion.isForceUpdate()) {
+            UpdateVersionDialogFragment.newInstance(mAppVersion, mAppVersion.isForceUpdate())
+                    .show(getChildFragmentManager());
+        }
     }
 
     @Override
@@ -72,7 +96,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.platformIntroduction, R.id.companyIntroduction, R.id.connectCustomerService, R.id.versionUpdating})
+    @OnClick({R.id.platformIntroduction, R.id.companyIntroduction, R.id.connectCustomerService, R.id.versionLayout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.platformIntroduction:
@@ -84,7 +108,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
             case R.id.connectCustomerService:
                 Launcher.with(this, CustomServiceActivity.class).execute();
                 break;
-            case R.id.versionUpdating:
+            case R.id.versionLayout:
                 queryForceVersion();
                 break;
             default:

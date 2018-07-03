@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.http.PagingBean;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.model.status.FlowStatus;
 import com.songbai.futurex.model.status.FlowType;
@@ -47,7 +47,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
         return mList.size();
     }
 
-    public void setList(PagingBean<CoinPropertyFlow> pagingResp) {
+    public void setList(PagingWrap<CoinPropertyFlow> pagingResp) {
         if (pagingResp.getStart() == 0) {
             mList.clear();
         }
@@ -59,7 +59,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnClickListener {
-        void onItemClick();
+        void onItemClick(int id);
     }
 
     class PropertyFlowHolder extends RecyclerView.ViewHolder {
@@ -79,7 +79,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
             mRootView = view;
         }
 
-        void bindData(CoinPropertyFlow coinPropertyFlow) {
+        void bindData(final CoinPropertyFlow coinPropertyFlow) {
 
             int flowType = coinPropertyFlow.getFlowType();
             switch (flowType) {
@@ -153,7 +153,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickListener != null) {
-                        mOnClickListener.onItemClick();
+                        mOnClickListener.onItemClick(coinPropertyFlow.getId());
                     }
                 }
             });

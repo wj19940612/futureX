@@ -38,13 +38,22 @@ public class RadioHeader extends LinearLayout {
     private float mPointMarginLeft;
 
     private OnTabSelectedListener mOnTabSelectedListener;
+    private OnTabClickListener mOnTabClickListener;
 
     public interface OnTabSelectedListener {
         void onTabSelected(int position, String content);
     }
 
+    public interface OnTabClickListener {
+        void onTabClick(int position, String content);
+    }
+
     public void setOnTabSelectedListener(OnTabSelectedListener onTabSelectedListener) {
         mOnTabSelectedListener = onTabSelectedListener;
+    }
+
+    public void setOnTabClickListener(OnTabClickListener onTabClickListener) {
+        mOnTabClickListener = onTabClickListener;
     }
 
     public RadioHeader(Context context) {
@@ -102,7 +111,7 @@ public class RadioHeader extends LinearLayout {
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectTab(finalI);
+                    onTabClick(finalI);
                 }
             });
         }
@@ -111,6 +120,13 @@ public class RadioHeader extends LinearLayout {
             mSelectedPosition = 0;
             getChildAt(0).setSelected(true);
         }
+    }
+
+    private void onTabClick(int finalI) {
+        if (mOnTabClickListener != null) {
+            mOnTabClickListener.onTabClick(finalI, mTabArray[mSelectedPosition].toString());
+        }
+        selectTab(finalI);
     }
 
     public void selectTab(int position) {
