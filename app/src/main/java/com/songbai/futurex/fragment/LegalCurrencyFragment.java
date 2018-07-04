@@ -37,7 +37,7 @@ import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.MsgHintController;
-import com.songbai.futurex.view.dialog.WaresPairFilter;
+import com.songbai.futurex.view.popup.WaresPairFilter;
 
 import java.util.ArrayList;
 

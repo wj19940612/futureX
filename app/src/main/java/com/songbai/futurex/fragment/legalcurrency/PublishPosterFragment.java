@@ -54,7 +54,7 @@ import com.songbai.futurex.view.dialog.PosterPreviewController;
 import com.songbai.futurex.view.dialog.PriceTypeController;
 import com.songbai.futurex.view.dialog.RemarkInputController;
 import com.songbai.futurex.view.dialog.TradeLimitController;
-import com.songbai.futurex.view.dialog.WaresPairFilter;
+import com.songbai.futurex.view.popup.WaresPairFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
