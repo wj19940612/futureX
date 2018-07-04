@@ -196,6 +196,14 @@ public class TradeVolumeView extends LinearLayout {
         updateAskBidPriceViews(mBuyDeepList, mSellDeepList);
     }
 
+    public void reset() {
+        if (mBuyDeepList != null && mSellDeepList != null) {
+            mBuyDeepList.clear();
+            mSellDeepList.clear();
+        }
+        updateAskBidPriceViews(mBuyDeepList, mSellDeepList);
+    }
+
     private void updateAskBidPriceViews(List<DeepData> buyDeepList, List<DeepData> sellDeepList) {
         if (buyDeepList == null || sellDeepList == null) return;
 

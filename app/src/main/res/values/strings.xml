@@ -497,8 +497,9 @@
         <item>USDT</item>
         <item>BTC</item>
         <item>ETH</item>
-        <item>自选</item>
+        <item>@string/optional_text</item>
     </string-array>
+    <string name="optional_text">自选</string>
     <string name="main_area">主区</string>
     <string name="creative_area">创新区</string>
     <string name="new_currency_area">新币区</string>
@@ -565,7 +566,7 @@
     <string name="input_msg_enter_to_send">输入信息，按Enter发送</string>
 
     <string name="over_50">发言不能超过50字符</string>
-    <string name="hello_customer_for_you">你好，客服%1$s很高兴为您服务！</string>
+    <string name="hello_customer_for_you">尊敬的小主您好，我是%1$s，很高兴为您服务。</string>
     <string name="trade_with_market_price">以当前最优价格交易</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
@@ -605,7 +606,6 @@
     <string name="part_deal_part_revoked">部分成交部分撤单</string>
     <string name="unknown_operation">未知操作</string>
     <string name="filter">筛选</string>
-
     <string name="trading_on">交易对</string>
     <string name="select_currency">请选择计价货币</string>
     <string name="order_status">订单状态</string>
@@ -614,5 +614,6 @@
     <string name="please_input_currency">请输入币种</string>
     <string name="please_select_currency">请选择计价货币</string>
     <string name="please_select_direction">请选择买卖方向</string>
+    <string name="search_currency_pairs">搜索币种</string>
 
 </resources>

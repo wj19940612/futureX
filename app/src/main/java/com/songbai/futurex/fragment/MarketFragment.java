@@ -295,7 +295,6 @@ public class MarketFragment extends BaseFragment {
         }
     }
 
-
     static class OptionalAdapter extends RecyclerView.Adapter<OptionalAdapter.ViewHolder> {
 
         private OnRVItemClickListener mOnRVItemClickListener;

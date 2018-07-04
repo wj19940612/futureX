@@ -18,6 +18,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.LegalCoin;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class HistoryFilter {
         ButterKnife.bind(this, view);
     }
 
-    @OnClick({R.id.selectCurrency, R.id.buyBtn, R.id.sellBtn, R.id.has_finish, R.id.has_withdrawn, R.id.reset, R.id.filterBtn})
+    @OnClick({R.id.selectCurrency, R.id.buyBtn, R.id.sellBtn, R.id.has_finish, R.id.has_withdrawn, R.id.reset, R.id.filterBtn,R.id.emptyClick})
     public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.selectCurrency:
@@ -93,6 +94,9 @@ public class HistoryFilter {
                 break;
             case R.id.filterBtn:
                 filter();
+                break;
+            case R.id.emptyClick:
+                goneView();
                 break;
         }
     }
@@ -210,5 +214,9 @@ public class HistoryFilter {
         if (mOnFilterListener != null) {
             mOnFilterListener.onFilter(mCurrency.getText().toString(), mSelectCurrency.getText().toString(), mBuyBtn.isSelected() ? DIR_BUY : DIR_SELL);
         }
+    }
+
+    private void goneView() {
+        AnimatorUtil.collapseVertical(mView, 100);
     }
 }

@@ -53,9 +53,11 @@ import com.songbai.futurex.view.ChangePriceView;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.TradeVolumeView;
 import com.songbai.futurex.view.VolumeInputView;
 import com.songbai.futurex.view.dialog.ItemSelectController;
+import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Response;
@@ -69,6 +71,7 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -88,14 +91,6 @@ import static com.songbai.futurex.model.Order.MARKET_TRADE;
  */
 public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
-    @BindView(R.id.optionalStatus)
-    ImageView mOptionalStatus;
-    @BindView(R.id.pairName)
-    TextView mPairName;
-    @BindView(R.id.pairArrow)
-    ImageView mPairArrow;
-    @BindView(R.id.switchToMarketPage)
-    ImageView mSwitchToMarketPage;
     @BindView(R.id.tradeDirRadio)
     RadioHeader mTradeDirRadio;
     @BindView(R.id.orderListFloatRadio)
@@ -148,9 +143,17 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     EmptyRecyclerView mOrderList;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+    @BindView(R.id.dimView)
+    View mDimView;
 
     Unbinder unbinder;
 
+    ImageView mOptionalStatus;
+    TextView mPairName;
+    ImageView mPairArrow;
+    ImageView mSwitchToMarketPage;
 
     private CurrencyPair mCurrencyPair;
     private String mTradePair;
@@ -166,6 +169,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private int mPage;
     private OrderAdapter mOrderAdapter;
+    private CurrencyPairsPopup mPairsPopup;
 
     @Override
     public void onLoadMore() {
@@ -224,6 +228,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        addTopPaddingWithStatusBar(mTitleBar);
+
+        initTitleBar();
+
         mTradeTypeValue = LIMIT_TRADE;
         mTradeDirRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
@@ -320,7 +328,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mOrderAdapter = new OrderAdapter(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
-
             }
         });
         mOrderAdapter.setOnOrderRevokeClickListener(new OrderAdapter.OnOrderRevokeClickListener() {
@@ -348,7 +355,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 if (scrollY >= mOrderListRadio.getTop()) {
                     mOrderListFloatRadio.setVisibility(View.VISIBLE);
                 } else {
-                    mOrderListFloatRadio.setVisibility(View.GONE);
+                    mOrderListFloatRadio.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -365,8 +372,117 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         }
                     }
                 }.parse();
+
+                new DataParser<Response<Map<String, MarketData>>>(data) {
+                    @Override
+                    public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
+                        if (mPairsPopup == null) return;
+                        mPairsPopup.setMarketDataList(mapResponse.getContent());
+                    }
+                }.parse();
             }
         });
+    }
+
+    private void initTitleBar() {
+        View customView = mTitleBar.getCustomView();
+        mOptionalStatus = customView.findViewById(R.id.optionalStatus);
+        mPairName = customView.findViewById(R.id.pairName);
+        mPairArrow = customView.findViewById(R.id.pairArrow);
+        mSwitchToMarketPage = customView.findViewById(R.id.switchToMarketPage);
+
+        mOptionalStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    toggleOptionalStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+
+        mPairName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurrencyPair == null) return;
+
+                showCurrencyPairPopup();
+            }
+        });
+        mPairArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPairName.performClick();
+            }
+        });
+        mSwitchToMarketPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurrencyPair != null) {
+                    openMarketDetailPage(mCurrencyPair);
+                }
+            }
+        });
+    }
+
+    private void requestCurrencyPairList(final String counterCurrency) {
+        if (counterCurrency.equalsIgnoreCase(getString(R.string.optional_text))) {
+            Apic.getOptionalList().tag(TAG)
+                    .id(counterCurrency)
+                    .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
+                        @Override
+                        protected void onRespData(List<CurrencyPair> data) {
+                            if (getId().equalsIgnoreCase(mPairsPopup.getSelectCounterCurrency())) {
+                                mPairsPopup.showDisplayList(counterCurrency, data);
+                            }
+                        }
+                    }).fire();
+        } else {
+            Apic.getCurrencyPairList(counterCurrency).tag(TAG)
+                    .id(counterCurrency)
+                    .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
+                        @Override
+                        protected void onRespData(List<CurrencyPair> data) {
+                            if (getId().equalsIgnoreCase(mPairsPopup.getSelectCounterCurrency())) {
+                                mPairsPopup.showDisplayList(counterCurrency, data);
+                            }
+                        }
+                    }).fire();
+        }
+    }
+
+    private void showCurrencyPairPopup() {
+        if (mPairsPopup == null) {
+            mPairsPopup = new CurrencyPairsPopup(getActivity(), mCurrencyPair,
+                    new CurrencyPairsPopup.OnCurrencyChangeListener() {
+                        @Override
+                        public void onCounterCurrencyChange(String counterCurrency, List<CurrencyPair> newDisplayList) {
+                            if (newDisplayList == null || newDisplayList.isEmpty()) {
+                                requestCurrencyPairList(counterCurrency);
+                            }
+                        }
+
+                        @Override
+                        public void onBaseCurrencyChange(String baseCurrency, CurrencyPair currencyPair) {
+                            switchNewCurrencyPair(currencyPair);
+                        }
+                    });
+            mPairsPopup.setDimView(mDimView);
+        }
+        mPairsPopup.showOrDismiss(mOrderListFloatRadio);
+        mPairsPopup.selectCounterCurrency(mCurrencyPair.getSuffixSymbol());
+    }
+
+    private void switchNewCurrencyPair(CurrencyPair currencyPair) {
+        mCurrencyPair = currencyPair;
+
+        unsubscribeMarket();
+        resetView();
+
+        subscribeMarket();
+        requestPairDescription();
+        updateTradeDirectionView();
     }
 
     private void requestRevokeOrder(Order order) {
@@ -441,9 +557,20 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         }
     }
 
+    private void resetView() {
+        mTradeVolumeView.reset();
+        mChangePriceView.reset();
+        mVolumeInput.reset();
+        mPage = 0;
+        mOrderAdapter.setOrderList(new ArrayList<Order>());
+        mLastPrice.setText("--.--");
+        mPriceChange.setText("--.--");
+        mTradeVolumeSeekBar.setProgress(0);
+        mObtainableCurrencyRange.setText("");
+    }
+
     private void updateMarketView(PairMarket pairMarket) {
-        mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(),
-                pairMarket.getDeep().getSellDeep());
+        mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(), pairMarket.getDeep().getSellDeep());
         MarketData quota = pairMarket.getQuota();
         if (mPairDesc != null && quota != null) {
             mLastPrice.setText(NumUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
@@ -683,26 +810,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 .execute();
     }
 
-    @OnClick({R.id.optionalStatus, R.id.pairName, R.id.pairArrow, R.id.switchToMarketPage,
-            R.id.decimalScale, R.id.tradeType, R.id.recharge, R.id.tradeButton})
+    @OnClick({R.id.decimalScale, R.id.tradeType, R.id.recharge, R.id.tradeButton})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.optionalStatus:
-                if (LocalUser.getUser().isLogin()) {
-                    toggleOptionalStatus();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.pairName:
-            case R.id.pairArrow:
-
-                break;
-            case R.id.switchToMarketPage:
-                if (mCurrencyPair != null) {
-                    openMarketDetailPage(mCurrencyPair);
-                }
-                break;
             case R.id.decimalScale:
                 showDecimalScaleSelector();
                 break;
