@@ -9,17 +9,12 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.CustomListener;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
@@ -32,10 +27,8 @@ import com.songbai.futurex.model.Order;
 import com.songbai.futurex.model.local.SysTime;
 import com.songbai.futurex.model.status.OrderStatus;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
-import com.songbai.futurex.utils.AnimUtils;
 import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.DateUtil;
-import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -52,6 +45,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.songbai.futurex.model.Order.DIR_DEFAULT;
 
@@ -83,10 +77,6 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     private OrderAdapter mOrderAdapter;
     private RadioHeader mRadioHeader;
     private TextView mFilter;
-
-    private OptionsPickerView<LegalCoin> mPvOptions;
-
-    private List<LegalCoin> mLegalCoinArrayList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,9 +130,9 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             @Override
             public void onClick(View v) {
                 if (mHistoryFilter.getVisibility() == View.GONE) {
-                    AnimatorUtil.expandVertical(mHistoryFilter,200);
+                    AnimatorUtil.expandVertical(mHistoryFilter, 200, mRootView.getMeasuredHeight() - mTitleBar.getMeasuredHeight());
                 } else {
-                    AnimatorUtil.collapseVertical(mHistoryFilter,200);
+                    AnimatorUtil.collapseVertical(mHistoryFilter, 200);
                 }
             }
         });

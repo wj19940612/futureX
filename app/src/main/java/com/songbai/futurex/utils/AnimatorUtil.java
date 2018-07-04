@@ -26,8 +26,29 @@ public class AnimatorUtil {
         expandVertical(view, listener, 500);
     }
 
-    public static void expandVertical(final View view, int duration) {
-        expandVertical(view, null, duration);
+    public static void expandVertical(final View view, int duration,int viewHeight) {
+        final int measuredHeight = viewHeight;
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0 so use 1 instead.
+        view.getLayoutParams().height = 1;
+
+        final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+        valueAnimator.setDuration(duration);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float fraction = animation.getAnimatedFraction();
+                if (fraction > 0) {
+                    view.setVisibility(View.VISIBLE);
+
+                }
+                int height = (int) (measuredHeight * fraction);
+                setHeight(view, height);
+                if (fraction == 1) {
+                    valueAnimator.removeAllUpdateListeners();
+                }
+            }
+        });
+        valueAnimator.start();
     }
 
     /**
@@ -45,7 +66,26 @@ public class AnimatorUtil {
     }
 
     public static void collapseVertical(final View view, int duration) {
-        collapseVertical(view, null, duration);
+        final int measuredHeight = view.getMeasuredHeight();
+        final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+        valueAnimator.setDuration(duration);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float fraction = animation.getAnimatedFraction();
+                int height = (int) (measuredHeight * (1 - fraction));
+                setHeight(view, height);
+                //动画执行结束的时候，设置View为View.GONE，同时移除监听器
+                if (fraction > 0.95) {
+                    view.setVisibility(View.GONE);
+                }
+                if (fraction == 1) {
+                    valueAnimator.removeAllUpdateListeners();
+                }
+            }
+        });
+        valueAnimator.start();
     }
 
     /**
@@ -74,7 +114,7 @@ public class AnimatorUtil {
         view.getLayoutParams().height = 1;
 
         final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-        valueAnimator.setDuration(500);
+        valueAnimator.setDuration(duration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -105,7 +145,7 @@ public class AnimatorUtil {
     public static void collapseVertical(final View view, @Nullable final OnAnimatorFactionListener listener, int duration) {
         final int measuredHeight = view.getMeasuredHeight();
         final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-        valueAnimator.setDuration(500);
+        valueAnimator.setDuration(duration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override

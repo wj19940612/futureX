@@ -71,7 +71,7 @@ public class HistoryFilter {
         ButterKnife.bind(this, view);
     }
 
-    @OnClick({R.id.selectCurrency, R.id.buyBtn, R.id.sellBtn, R.id.has_finish, R.id.has_withdrawn, R.id.reset, R.id.filterBtn, R.id.emptyClick})
+    @OnClick({R.id.selectCurrency, R.id.buyBtn, R.id.sellBtn, R.id.has_finish, R.id.has_withdrawn, R.id.reset, R.id.filterBtn,R.id.emptyClick})
     public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.selectCurrency:
@@ -217,6 +217,6 @@ public class HistoryFilter {
     }
 
     private void goneView() {
-        AnimatorUtil.collapseVertical(mView, 300);
+        AnimatorUtil.collapseVertical(mView, 100);
     }
 }
