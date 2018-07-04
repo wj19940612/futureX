@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -31,6 +31,7 @@ import com.songbai.futurex.model.mine.CoinAbleAmount;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 
 import java.util.ArrayList;
@@ -56,7 +57,17 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.freezeCoin)
     TextView mFreezeCoin;
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
+    @BindView(R.id.transfer)
+    FrameLayout mTransfer;
+    @BindView(R.id.recharge)
+    FrameLayout mRecharge;
+    @BindView(R.id.withDraw)
+    FrameLayout mWithDraw;
+    @BindView(R.id.operateGroup)
+    LinearLayout mOperateGroup;
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
     private Unbinder mBind;
     private AccountList.AccountBean mAccountBean;
     private int mTransferType;
@@ -79,13 +90,6 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
-            @Override
-            public void onClick() {
-                FragmentActivity activity = CoinPropertyFragment.this.getActivity();
-                activity.finish();
-            }
-        });
         mTitleBar.setTitle(mAccountBean.getCoinType().toUpperCase());
         setAbleCoin(mAccountBean.getAbleCoin());
         SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(getString(R.string.freeze_amount_x,
@@ -93,14 +97,26 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text99)),
                 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mFreezeCoin.setText(freezeCoinStr);
+        boolean isLegal = mAccountBean.getLegal() == AccountList.AccountBean.IS_LEGAL;
+        mTransfer.setVisibility(isLegal ? View.VISIBLE : View.GONE);
+        boolean canRecharge = mAccountBean.getRecharge() == AccountList.AccountBean.CAN_RECHARGE;
+        mRecharge.setVisibility(canRecharge ? View.VISIBLE : View.GONE);
+        boolean canDraw = mAccountBean.getIsCanDraw() == AccountList.AccountBean.CAN_DRAW;
+        mWithDraw.setVisibility(canDraw ? View.VISIBLE : View.GONE);
+        if (!isLegal && !canRecharge && !canDraw) {
+            mOperateGroup.setVisibility(View.GONE);
+        } else {
+            mOperateGroup.setVisibility(View.VISIBLE);
+        }
         mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyFlowAdapter();
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
             public void onItemClick(int id) {
                 UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowDetailFragment.class)
-                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID,id)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
                         .execute();
             }
         });
@@ -142,6 +158,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                     protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
+                        mRecyclerView.hideAll(false);
                     }
                 })
                 .fire();
@@ -185,7 +202,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.recharge:
-                if (mAccountBean.getRecharge() == AccountList.AccountBean.CAN_RECHAREGE) {
+                if (mAccountBean.getRecharge() == AccountList.AccountBean.CAN_RECHARGE) {
                     UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
                             .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType())
                             .execute(this, REQUEST_RECHARGE_COIN);

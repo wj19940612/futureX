@@ -40,7 +40,7 @@ public class AccountList implements Parcelable {
 
     public static class AccountBean implements Parcelable {
         public static final int CANT_RECHAREGE = 0;
-        public static final int CAN_RECHAREGE = 1;
+        public static final int CAN_RECHARGE = 1;
         public static final int CANT_DRAW = 0;
         public static final int CAN_DRAW = 1;
         public static final int IS_LEGAL = 1;
