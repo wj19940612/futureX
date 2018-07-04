@@ -322,6 +322,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         break;
                     case OtcOrderStatus.ORDER_PAIED:
                         mStatus.setText(R.string.wait_sell_transfer_coin);
+                        mDesc.setText(R.string.wait_sell_transfer_coin);
                         break;
                     case OtcOrderStatus.ORDER_COMPLATED:
                         mStatus.setText(R.string.completed);

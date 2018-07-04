@@ -220,7 +220,11 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.property:
-                Launcher.with(this, MyPropertyActivity.class).execute();
+                if (user.isLogin()) {
+                    Launcher.with(this, MyPropertyActivity.class).execute();
+                } else {
+                    login();
+                }
                 break;
             case R.id.tradeOrderLog:
                 if (user.isLogin()) {
@@ -230,7 +234,11 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.legalCurrencyTradeOrder:
-                Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+                if (user.isLogin()) {
+                    Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+                } else {
+                    login();
+                }
                 break;
             case R.id.invite:
                 if (user.isLogin()) {
@@ -249,7 +257,11 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.safetyCenter:
-                UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();
+                if (user.isLogin()) {
+                    UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();
+                } else {
+                    login();
+                }
                 break;
             case R.id.noticeCenter:
                 if (LocalUser.getUser().isLogin())

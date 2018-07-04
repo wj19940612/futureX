@@ -354,6 +354,8 @@
     <string name="delete_poster_hint_msg">您确实要删除广告吗</string>
     <string name="set_draw_cash_pwd_hint">您还未设置资金密码，为了您账户的安全，请先设置</string>
     <string name="go_to_set">去设置</string>
+    <string name="publish_poster_have_not_bind_pay">为了交易的安全和顺利进行，您需先进行法币支付绑定才可发布广告</string>
+    <string name="go_to_bind">去绑定</string>
     <string name="please_select_price_type">请选择价格类型</string>
     <string name="floating_price_rate">溢价比例</string>
     <string name="percent_symbol">%</string>
@@ -410,12 +412,14 @@
     <string name="order_detail_amount_x">数量：%1$s&#160;%2$s</string>
     <string name="you_have_canceled_trade">您已取消这笔交易</string>
     <string name="otc_order_success_wait_pay">您已经成功下单，请及时支付</string>
-    <string name="otc_trade_complete_desc">对方已确认收到您的付款，并已转币到您的帐户</string>
+    <string name="otc_trade_complete_desc">已成交</string>
     <string name="wait_to_pay_and_confirm">待付款并确认</string>
     <string name="wait_sell_transfer_coin">待卖家转币</string>
     <string name="seller_info">卖家信息</string>
     <string name="contact_each_other">联系对方</string>
     <string name="cancel_trade">取消交易</string>
+    <string name="cancel_trade_hin_msg">如果您已经向卖家付款，请千万不要取消交易。取消规则：买方当日累计5笔取消，将会限制当天的买入功能。</string>
+    <string name="confirm_have_not_pay_to_seller">我确认还没有付款给对方</string>
     <string name="appeal">申诉</string>
     <string name="i_have_paid">我已付款</string>
     <string name="confirm_transfer_coin">确认转币</string>

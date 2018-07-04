@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.WebActivity;
+import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragment;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -31,6 +33,9 @@ import com.songbai.futurex.utils.OnItemClickListener;
 import com.songbai.futurex.view.TitleBar;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,9 +110,47 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, Api.getH5Url(url))
                             .execute();
-                    return;
+                } else {
+                    switch (sysMessage.getType()) {
+                        case 1:
+                        case 3:
+                        case 5:
+                            UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, 2)
+                                    .execute();
+                            break;
+                        case 2:
+                        case 4:
+                            UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
+                                    .execute();
+                            break;
+                        case 10:
+                        case 11:
+                            int direct = 0;
+                            String msg = sysMessage.getMsg();
+                            if (msg.contains("direct")) {
+                                try {
+                                    JSONObject object = new JSONObject(msg);
+                                    direct = object.getInt("direct");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                if (direct==0) {
+                                    return;
+                                }
+                                UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
+                                        .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                        .putExtra(ExtraKeys.TRADE_DIRECTION, direct)
+                                        .execute();
+                            }
+                            break;
+                        default:
+                    }
+                    msgRead(sysMessage, position);
                 }
-                msgRead(sysMessage, position);
             }
         });
         mSwipeTarget.setAdapter(mAdapter);
@@ -148,7 +191,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         // TODO: 2018/7/2 字体
         String lang = "";
         String language = Locale.getDefault().getLanguage();
-        Log.d(TAG, "requestNotice: "+language);
+        Log.d(TAG, "requestNotice: " + language);
         Apic.findNewsList(PAGE_TYPE_NOTICE, lang, mOffset, Apic.DEFAULT_PAGE_SIZE)
                 .callback(new Callback<Resp<List<SysMessage>>>() {
                     @Override

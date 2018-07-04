@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.IconTextRow;
@@ -66,9 +68,17 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
             if (data != null) {
                 boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
                 if (shouldRefresh) {
-                    FragmentActivity activity = getActivity();
-                    activity.setResult(SELECT_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                    activity.finish();
+                    LocalUser user = LocalUser.getUser();
+                    if (user.isLogin()) {
+                        UserInfo userInfo = user.getUserInfo();
+                        int payment = userInfo.getPayment();
+                        if (payment<1) {
+                            userInfo.setPayment(1);
+                            LocalUser.getUser().setUserInfo(userInfo);
+                        }
+                    }
+                    setResult(SELECT_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                    finish();
                 }
             }
         }

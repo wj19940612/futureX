@@ -45,6 +45,14 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     RelativeLayout mMailCertification;
     @BindView(R.id.phoneCertification)
     RelativeLayout mPhoneCertification;
+    @BindView(R.id.primaryCertificationState)
+    TextView mPrimaryCertificationState;
+    @BindView(R.id.seniorCertificationState)
+    TextView mSeniorCertificationState;
+    @BindView(R.id.mailCertificationState)
+    TextView mMailCertificationState;
+    @BindView(R.id.phoneCertificationState)
+    TextView mPhoneCertificationState;
     private Unbinder mBind;
     private int mOrderId;
     private int mTradeDirection;
@@ -85,16 +93,24 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
                 .circleCrop()
                 .into(mHeadPortrait);
         int authStatus = waresUserInfo.getAuthStatus();
+        mPrimaryCertificationState.setText(R.string.uncertificated);
+        mPrimaryCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mistake, 0, 0, 0);
+        mSeniorCertificationState.setText(R.string.uncertificated);
+        mSeniorCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mistake, 0, 0, 0);
         switch (authStatus) {
             case 1:
                 mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_primary_star, 0, 0, 0);
                 mAuthenticationStatus.setText(R.string.primary_certification);
+                mPrimaryCertificationState.setText(R.string.certificated);
+                mPrimaryCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
                 mSeniorCertification.setSelected(false);
                 mPrimaryCertification.setSelected(true);
                 break;
             case 2:
                 mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
                 mAuthenticationStatus.setText(R.string.senior_certification);
+                mSeniorCertificationState.setText(R.string.certificated);
+                mSeniorCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
                 mSeniorCertification.setSelected(true);
                 mPrimaryCertification.setSelected(true);
                 break;
@@ -102,9 +118,21 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
         }
         if (waresUserInfo.getBindPhone() == 1) {
             mPhoneCertification.setSelected(true);
+            mPhoneCertificationState.setText(R.string.certificated);
+            mPhoneCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
+        } else {
+            mPhoneCertification.setSelected(false);
+            mPhoneCertificationState.setText(R.string.uncertificated);
+            mPhoneCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mistake, 0, 0, 0);
         }
         if (waresUserInfo.getBindEmail() == 1) {
             mMailCertification.setSelected(true);
+            mMailCertificationState.setText(R.string.certificated);
+            mMailCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
+        } else {
+            mMailCertification.setSelected(false);
+            mMailCertificationState.setText(R.string.uncertificated);
+            mMailCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mistake, 0, 0, 0);
         }
         mUserName.setText(waresUserInfo.getUsername());
         mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,

@@ -101,8 +101,10 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     private void initView() {
         mTitleBar.setTitle(mHsaWithDrawPass ? R.string.change_cash_pwd : R.string.set_cash_pwd);
         mUserInfo = LocalUser.getUser().getUserInfo();
-        mUserPhone = mUserInfo.getUserPhone();
-        mUserEmail = mUserInfo.getUserEmail();
+        if (mUserInfo != null) {
+            mUserPhone = mUserInfo.getUserPhone();
+            mUserEmail = mUserInfo.getUserEmail();
+        }
         mMailMode = TextUtils.isEmpty(mUserPhone);
         mSmsAuthCodeText.setText(mMailMode ? R.string.email_auth_code : R.string.sms_auth_code);
         mSmsAuthCode.setHint(mMailMode ? R.string.please_input_mail_auth_code : R.string.please_input_sms_auth_code);

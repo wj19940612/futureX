@@ -24,6 +24,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcWarePoster;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -65,6 +66,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     private int mPageSize = 20;
     private boolean mShouldRefresh;
     private SmartDialog mSmartDialog;
+    private boolean mRequested;
 
     public static MyPosterFragment newInstance() {
         MyPosterFragment wantBuyOrSellFragment = new MyPosterFragment();
@@ -213,6 +215,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 otcWaresList(mPage, mPageSize);
                 mShouldRefresh = false;
             }
+            if (!mRequested) {
+                otcWaresList(mPage, mPageSize);
+            }
         }
     }
 
@@ -225,7 +230,19 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mRequested) {
+            otcWaresList(mPage, mPageSize);
+        }
+    }
+
     private void otcWaresList(int page, int pageSize) {
+        if (!LocalUser.getUser().isLogin()) {
+            return;
+        }
+        mRequested = true;
         Apic.otcWaresList(page, pageSize)
                 .callback(new Callback<Resp<PagingWrap<OtcWarePoster>>>() {
                     @Override
@@ -313,6 +330,11 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     public void refresh(boolean shouldRefresh) {
         if (!isFirstLoad) {
             mShouldRefresh = shouldRefresh;
+            if (getUserVisibleHint()) {
+                mPage = 0;
+                otcWaresList(mPage, mPageSize);
+                mShouldRefresh = false;
+            }
         }
     }
 
@@ -412,6 +434,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:
                         mEdit.setEnabled(true);
+                        mPosterType.setTextColor(ContextCompat.getColor(getContext(), R.color.text22));
                         mOperateArea.setText(R.string.on_shelf);
                         mStatus.setText(R.string.off_shelf);
                         break;
