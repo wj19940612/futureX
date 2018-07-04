@@ -3,9 +3,6 @@
     android:id="@+id/historyFilter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:visibility="gone">
 
@@ -199,11 +196,11 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        <View
+            android:id="@+id/emptyClick"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <View
-        android:id="@+id/emptyClick"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    </LinearLayout>
 
 </LinearLayout>

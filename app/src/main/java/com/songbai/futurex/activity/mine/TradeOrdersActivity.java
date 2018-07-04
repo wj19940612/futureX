@@ -45,6 +45,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.songbai.futurex.model.Order.DIR_DEFAULT;
 
@@ -76,10 +77,6 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     private OrderAdapter mOrderAdapter;
     private RadioHeader mRadioHeader;
     private TextView mFilter;
-
-    private OptionsPickerView<LegalCoin> mPvOptions;
-
-    private List<LegalCoin> mLegalCoinArrayList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,9 +130,9 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             @Override
             public void onClick(View v) {
                 if (mHistoryFilter.getVisibility() == View.GONE) {
-                    AnimatorUtil.expandVertical(mHistoryFilter,200);
+                    AnimatorUtil.expandVertical(mHistoryFilter, 200, mRootView.getMeasuredHeight() - mTitleBar.getMeasuredHeight());
                 } else {
-                    AnimatorUtil.collapseVertical(mHistoryFilter,200);
+                    AnimatorUtil.collapseVertical(mHistoryFilter, 200);
                 }
             }
         });
