@@ -19,20 +19,25 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.LegalCurrencyOrderActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.legalcurrency.MyPosterFragment;
 import com.songbai.futurex.fragment.legalcurrency.PublishPosterFragment;
 import com.songbai.futurex.fragment.legalcurrency.WantBuyOrSellFragment;
+import com.songbai.futurex.fragment.mine.SelectPayTypeFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CountryCurrency;
 import com.songbai.futurex.model.LegalCoin;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.status.OtcOrderStatus;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
-import com.songbai.futurex.view.dialog.WaresPairFilter;
+import com.songbai.futurex.view.dialog.MsgHintController;
+import com.songbai.futurex.view.popup.WaresPairFilter;
 
 import java.util.ArrayList;
 
@@ -167,6 +172,7 @@ public class LegalCurrencyFragment extends BaseFragment {
 
     @OnClick({R.id.title, R.id.order, R.id.publishPoster})
     public void onViewClicked(View view) {
+        LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
             case R.id.title:
                 if (mLegalCoins != null && mCountryCurrencies != null) {
@@ -177,13 +183,37 @@ public class LegalCurrencyFragment extends BaseFragment {
                 }
                 break;
             case R.id.order:
-                Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+                if (user.isLogin()) {
+                    Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.publishPoster:
-                UniqueActivity.launcher(this, PublishPosterFragment.class)
-                        .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, mSelectedLegalSymbol)
-                        .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
-                        .execute(this, REQUEST_PUBLISH_POSTER);
+                if (user.isLogin()) {
+                    if (user.getUserInfo().getPayment() > 0) {
+                        UniqueActivity.launcher(this, PublishPosterFragment.class)
+                                .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, mSelectedLegalSymbol)
+                                .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
+                                .execute(this, REQUEST_PUBLISH_POSTER);
+                    } else {
+                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
+                            @Override
+                            public void onConfirmClick() {
+                                UniqueActivity.launcher(LegalCurrencyFragment.this, SelectPayTypeFragment.class)
+                                        .execute();
+                            }
+                        });
+                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+                        smartDialog.setCustomViewController(msgHintController)
+                                .show();
+                        msgHintController.setMsg(R.string.publish_poster_have_not_bind_pay);
+                        msgHintController.setConfirmText(R.string.go_to_bind);
+                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
+                    }
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             default:
         }

@@ -1,4 +1,4 @@
-package com.songbai.futurex.view.dialog;
+package com.songbai.futurex.view.popup;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -63,7 +63,7 @@ public class WaresPairFilter {
             @Override
             public void onClick(View v) {
                 if (mOnSelectCallBack != null) {
-                    if (!TextUtils.isEmpty(mTempLegalSymbol)&&!TextUtils.isEmpty(mTempCurrencySymbol)) {
+                    if (!TextUtils.isEmpty(mTempLegalSymbol) && !TextUtils.isEmpty(mTempCurrencySymbol)) {
                         mOnSelectCallBack.onSelected(mTempLegalSymbol, mTempCurrencySymbol);
                     }
                 }

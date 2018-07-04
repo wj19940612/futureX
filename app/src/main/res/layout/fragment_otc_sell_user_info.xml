@@ -47,18 +47,18 @@
             android:drawablePadding="5dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="高级认证"
             android:textColor="@color/white"
-            android:textSize="13sp"/>
+            android:textSize="13sp"
+            tools:text="高级认证"/>
 
         <TextView
             android:id="@+id/countDealRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:text="20001单 完成率98.6%"
             android:textColor="@color/white"
-            android:textSize="17sp"/>
+            android:textSize="17sp"
+            tools:text="20001单 完成率98.6%"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -80,6 +80,7 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/primaryCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -112,6 +113,7 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/seniorCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -144,6 +146,7 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/mailCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -176,6 +179,7 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/phoneCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

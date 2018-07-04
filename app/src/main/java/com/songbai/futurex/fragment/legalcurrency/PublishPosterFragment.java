@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ import com.songbai.futurex.view.dialog.PosterPreviewController;
 import com.songbai.futurex.view.dialog.PriceTypeController;
 import com.songbai.futurex.view.dialog.RemarkInputController;
 import com.songbai.futurex.view.dialog.TradeLimitController;
-import com.songbai.futurex.view.dialog.WaresPairFilter;
+import com.songbai.futurex.view.popup.WaresPairFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,6 +122,12 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     TextView mPriceText;
     @BindView(R.id.priceSymbol)
     TextView mPriceSymbol;
+    @BindView(R.id.confirmRulesGroup)
+    LinearLayout mConfirmRulesGroup;
+    @BindView(R.id.preview)
+    TextView mPreview;
+    @BindView(R.id.check)
+    ImageView mCheck;
     private Unbinder mBind;
     private WaresModel mWaresModel;
     private String mLegalPaySymbol = "";
@@ -153,6 +160,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mWaresModel = new WaresModel();
+        mConfirmRulesGroup.setSelected(false);
         restoreData();
         accountBalance();
         getLegalCoin();
@@ -463,7 +471,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     @OnClick({R.id.waresPair, R.id.preview, R.id.buyIn, R.id.sellOut, R.id.priceType, R.id.tradeLimit, R.id.payType,
-            R.id.remark, R.id.buyerLimit, R.id.primaryCertification, R.id.seniorCertification, R.id.areaCode})
+            R.id.remark, R.id.buyerLimit, R.id.primaryCertification, R.id.seniorCertification, R.id.areaCode, R.id.confirmRulesGroup})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.waresPair:
@@ -510,6 +518,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.areaCode:
                 showAreaCodeSelector();
+                break;
+            case R.id.confirmRulesGroup:
+                mConfirmRulesGroup.setSelected(!mConfirmRulesGroup.isSelected());
+                mPreview.setEnabled(mConfirmRulesGroup.isSelected());
+                mCheck.setImageResource(mConfirmRulesGroup.isSelected() ? R.drawable.ic_common_checkmark : 0);
                 break;
             default:
         }
@@ -709,6 +722,9 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
+                        Intent data = new Intent();
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
+                        setResult(PUBLISH_POSTER_RESULT, data);
                         finish();
                     }
                 })
@@ -743,6 +759,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         payTypeController.setOnItemClickListener(new PayTypeController.OnItemClickListener() {
             @Override
             public void onConfirmClick(String payInfo, String id) {
+                Log.e("wtf", "onConfirmClick: " + payInfo);
                 setPayInfo(payInfo);
                 mWaresModel.setPayIds(id);
             }

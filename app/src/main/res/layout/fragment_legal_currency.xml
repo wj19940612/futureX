@@ -42,8 +42,8 @@
                 android:text="@string/order"
                 android:textColor="@color/text66"
                 android:textSize="9sp"
-                app:badgeTextNum="1"
-                app:badgeTextSize="9sp"/>
+                app:badgeTextSize="9sp"
+                tools:badgeTextNum="1"/>
 
         </RelativeLayout>
     </com.songbai.futurex.view.TitleBar>

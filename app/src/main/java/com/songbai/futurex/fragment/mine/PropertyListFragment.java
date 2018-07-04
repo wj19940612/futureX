@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.httplib.ReqError;
@@ -52,7 +54,9 @@ public class PropertyListFragment extends BaseFragment {
     @BindView(R.id.searchProperty)
     EditText mSearchProperty;
     @BindView(R.id.hideZero)
-    TextView mHideZero;
+    LinearLayout mHideZero;
+    @BindView(R.id.check)
+    ImageView mCheck;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private Unbinder mBind;
@@ -96,27 +100,22 @@ public class PropertyListFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String keyWord = s.toString();
-                filterDataByWord(keyWord);
+                filterData(keyWord);
             }
         });
     }
 
-    private void filterDataByWord(String keyWord) {
+    private void filterData(String keyWord) {
         ArrayList<AccountList.AccountBean> filteredData = new ArrayList<>();
         for (AccountList.AccountBean accountBean : mAccountBeans) {
-            if (TextUtils.isEmpty(keyWord) || accountBean.getCoinType().toUpperCase().contains(keyWord.toUpperCase())) {
-                filteredData.add(accountBean);
-            }
-        }
-        mAdapter.setList(filteredData);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void filterZeroData() {
-        ArrayList<AccountList.AccountBean> filteredData = new ArrayList<>();
-        for (AccountList.AccountBean accountBean : mAccountBeans) {
-            if (Double.valueOf(accountBean.getEstimateBtc()) != 0) {
-                filteredData.add(accountBean);
+            if ((TextUtils.isEmpty(keyWord) || accountBean.getCoinType().toUpperCase().contains(keyWord.toUpperCase()))) {
+                if ((mHideZero.isSelected())) {
+                    if (Double.valueOf(accountBean.getEstimateBtc()) != 0) {
+                        filteredData.add(accountBean);
+                    }
+                } else {
+                    filteredData.add(accountBean);
+                }
             }
         }
         mAdapter.setList(filteredData);
@@ -133,7 +132,15 @@ public class PropertyListFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.hideZero:
-                filterZeroData();
+                mHideZero.setSelected(!mHideZero.isSelected());
+                boolean selected = mHideZero.isSelected();
+                mCheck.setImageResource(selected ? R.drawable.ic_common_checkmark : 0);
+                if (selected) {
+                    filterData(mSearchProperty.getText().toString());
+                } else {
+                    mAdapter.setList(mAccountBeans);
+                    mAdapter.notifyDataSetChanged();
+                }
                 break;
             default:
         }

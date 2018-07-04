@@ -1,5 +1,6 @@
 package com.songbai.futurex.fragment.legalcurrency;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -206,6 +207,12 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
             mIsBuyer = id == order.getBuyerId();
         }
         switch (mStatus) {
+            case OtcOrderStatus.ORDER_CANCLED:
+            case OtcOrderStatus.ORDER_COMPLATED:
+                mAppeal.setVisibility(View.GONE);
+                mCancelOrder.setVisibility(View.GONE);
+                mConfirm.setVisibility(View.GONE);
+                break;
             case OtcOrderStatus.ORDER_UNPAIED:
                 mAppeal.setVisibility(mIsBuyer ? View.GONE : View.VISIBLE);
                 if (mIsBuyer) {
@@ -243,9 +250,19 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .into(mHeadPortrait);
         mUserName.setText(order.getBuyerName());
         switch (order.getStatus()) {
+            case OtcOrderStatus.ORDER_CANCLED:
+            case OtcOrderStatus.ORDER_COMPLATED:
+                mCountDownView.setVisibility(View.GONE);
+                break;
             case OtcOrderStatus.ORDER_UNPAIED:
                 mCountDownView.setVisibility(View.VISIBLE);
-                mCountDownView.setTimes(order.getOrderTime() + 15 * 60 * 1000);
+                long endTime = order.getOrderTime() + 15 * 60 * 1000;
+                if (System.currentTimeMillis() < endTime) {
+                    mCountDownView.setTimes(endTime);
+                    mCountDownView.setVisibility(View.VISIBLE);
+                } else {
+                    mCountDownView.setVisibility(View.GONE);
+                }
                 mCountDownView.setOnStateChangeListener(new CountDownView.OnStateChangeListener() {
                     @Override
                     public void onStateChange(int countDownState) {
@@ -279,10 +296,10 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mBind.unbind();
     }
 
-    @OnClick({R.id.headPortrait, R.id.bankEmptyView, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
+    @OnClick({R.id.sellerInfo, R.id.bankEmptyView, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.headPortrait:
+            case R.id.sellerInfo:
                 UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
                         .putExtra(ExtraKeys.ORDER_ID, mOrderId)
                         .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
@@ -297,7 +314,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                         .execute();
                 break;
             case R.id.cancelOrder:
-                otcOrderCancel();
+                showCancelConfirmView();
                 break;
             case R.id.appeal:
                 Launcher.with(getActivity(), CustomServiceActivity.class).execute();
@@ -313,17 +330,79 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         }
     }
 
-    private void showTransferConfirm() {
-        WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(), new WithDrawPsdViewController.OnClickListener() {
+    private void showCancelConfirmView() {
+        CancelConfirmController cancelConfirmController = new CancelConfirmController(getContext(), new CancelConfirmController.OnConfirmClick() {
             @Override
-            public void onConfirmClick(String cashPwd, String googleAuth) {
-                otcOrderConfirm(mStatus, cashPwd, mNeedGoogle ? googleAuth : "");
+            public void onConfirm() {
+                otcOrderCancel();
             }
         });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(cancelConfirmController)
+                .show();
+    }
+
+    private void showTransferConfirm() {
+        WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
+                new WithDrawPsdViewController.OnClickListener() {
+                    @Override
+                    public void onConfirmClick(String cashPwd, String googleAuth) {
+                        otcOrderConfirm(mStatus, cashPwd, mNeedGoogle ? googleAuth : "");
+                    }
+                });
         withDrawPsdViewController.setShowGoogleAuth(mNeedGoogle);
         mSmartDialog = SmartDialog.solo(getActivity());
         mSmartDialog.setCustomViewController(withDrawPsdViewController)
                 .show();
+    }
+
+    private static class CancelConfirmController extends SmartDialog.CustomViewController {
+        ImageView mClose;
+        TextView mConfirmUnpaid;
+        TextView mConfirm;
+        private Context mContext;
+        private OnConfirmClick mOnConfirmClick;
+        private ImageView mCheck;
+
+        public CancelConfirmController(Context context, OnConfirmClick onConfirmClick) {
+            mContext = context;
+            mOnConfirmClick = onConfirmClick;
+        }
+
+        @Override
+        protected View onCreateView() {
+            return LayoutInflater.from(mContext).inflate(R.layout.view_otc_cancel_confirm, null, false);
+        }
+
+        interface OnConfirmClick {
+            void onConfirm();
+        }
+
+        @Override
+        protected void onInitView(View view, final SmartDialog dialog) {
+            mClose = view.findViewById(R.id.close);
+            mConfirmUnpaid = view.findViewById(R.id.confirmUnpaid);
+            mCheck = view.findViewById(R.id.check);
+            mConfirmUnpaid.setSelected(false);
+            mConfirmUnpaid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mConfirmUnpaid.setSelected(!mConfirmUnpaid.isSelected());
+                    mConfirm.setEnabled(mConfirmUnpaid.isSelected());
+                    mCheck.setImageResource(mConfirmUnpaid.isSelected() ? R.drawable.ic_common_checkmark : 0);
+                }
+            });
+            mConfirm = view.findViewById(R.id.confirm);
+            mConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnConfirmClick != null) {
+                        mOnConfirmClick.onConfirm();
+                    }
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 
     class BankListAdapter extends RecyclerView.Adapter {

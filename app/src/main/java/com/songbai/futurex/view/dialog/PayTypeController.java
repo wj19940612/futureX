@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.view.SmartDialog;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -95,7 +95,11 @@ public class PayTypeController extends SmartDialog.CustomViewController {
 
     public void setPayInfo(String payInfo) {
         String[] split = payInfo.split(",");
-        mPayInfos.addAll(Arrays.asList(split));
+        for (String s : split) {
+            if (!TextUtils.isEmpty(s)) {
+                mPayInfos.add(s);
+            }
+        }
     }
 
     public void setBankList(BindBankList bankList) {
