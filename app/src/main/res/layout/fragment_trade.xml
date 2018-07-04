@@ -183,7 +183,7 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/green"
                                 android:textSize="17sp"
-                                tools:text="9248.36"/>
+                                tools:text="--.--"/>
 
                             <TextView
                                 android:id="@+id/priceChange"
@@ -192,7 +192,7 @@
                                 android:layout_marginLeft="8dp"
                                 android:textColor="@color/green"
                                 android:textSize="12sp"
-                                tools:text="+0.75%"/>
+                                tools:text="--.--"/>
                         </LinearLayout>
 
                         <com.songbai.futurex.view.autofit.AutofitTextView
@@ -240,7 +240,7 @@
                             android:textColor="@color/text99"
                             android:textSize="10sp"
                             app:minTextSize="1sp"
-                            tools:text="0 BTC - 0.03990052 BTC"/>
+                            tools:text="0 - 0.03990052 BTC"/>
 
                         <TextView
                             android:id="@+id/tradeButton"

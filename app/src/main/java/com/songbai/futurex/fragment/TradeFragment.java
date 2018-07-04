@@ -71,6 +71,7 @@ import com.zcmrr.swipelayout.header.RefreshHeaderView;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -371,6 +372,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         }
                     }
                 }.parse();
+
+                new DataParser<Response<Map<String, MarketData>>>(data) {
+                    @Override
+                    public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
+                        if (mPairsPopup == null) return;
+                        mPairsPopup.setMarketDataList(mapResponse.getContent());
+                    }
+                }.parse();
             }
         });
     }
@@ -418,18 +427,29 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private void requestCurrencyPairList(final String counterCurrency) {
-        Apic.getCurrencyPairList(counterCurrency).tag(TAG)
-                .id(counterCurrency)
-                .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
-                    @Override
-                    protected void onRespData(List<CurrencyPair> data) {
-                        if (data.isEmpty()) return;
-
-                        if (getId().equalsIgnoreCase(data.get(0).getSuffixSymbol())) {
-                            mPairsPopup.showDisplayList(counterCurrency, data);
+        if (counterCurrency.equalsIgnoreCase(getString(R.string.optional_text))) {
+            Apic.getOptionalList().tag(TAG)
+                    .id(counterCurrency)
+                    .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
+                        @Override
+                        protected void onRespData(List<CurrencyPair> data) {
+                            if (getId().equalsIgnoreCase(mPairsPopup.getSelectCounterCurrency())) {
+                                mPairsPopup.showDisplayList(counterCurrency, data);
+                            }
                         }
-                    }
-                }).fire();
+                    }).fire();
+        } else {
+            Apic.getCurrencyPairList(counterCurrency).tag(TAG)
+                    .id(counterCurrency)
+                    .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
+                        @Override
+                        protected void onRespData(List<CurrencyPair> data) {
+                            if (getId().equalsIgnoreCase(mPairsPopup.getSelectCounterCurrency())) {
+                                mPairsPopup.showDisplayList(counterCurrency, data);
+                            }
+                        }
+                    }).fire();
+        }
     }
 
     private void showCurrencyPairPopup() {
@@ -438,21 +458,31 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     new CurrencyPairsPopup.OnCurrencyChangeListener() {
                         @Override
                         public void onCounterCurrencyChange(String counterCurrency, List<CurrencyPair> newDisplayList) {
-                            if (newDisplayList == null) {
+                            if (newDisplayList == null || newDisplayList.isEmpty()) {
                                 requestCurrencyPairList(counterCurrency);
                             }
                         }
 
                         @Override
                         public void onBaseCurrencyChange(String baseCurrency, CurrencyPair currencyPair) {
-                            mPairsPopup.showOrDismiss(mOrderListFloatRadio);
-
+                            switchNewCurrencyPair(currencyPair);
                         }
                     });
             mPairsPopup.setDimView(mDimView);
         }
         mPairsPopup.showOrDismiss(mOrderListFloatRadio);
         mPairsPopup.selectCounterCurrency(mCurrencyPair.getSuffixSymbol());
+    }
+
+    private void switchNewCurrencyPair(CurrencyPair currencyPair) {
+        mCurrencyPair = currencyPair;
+
+        unsubscribeMarket();
+        resetView();
+
+        subscribeMarket();
+        requestPairDescription();
+        updateTradeDirectionView();
     }
 
     private void requestRevokeOrder(Order order) {
@@ -527,9 +557,20 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         }
     }
 
+    private void resetView() {
+        mTradeVolumeView.reset();
+        mChangePriceView.reset();
+        mVolumeInput.reset();
+        mPage = 0;
+        mOrderAdapter.setOrderList(new ArrayList<Order>());
+        mLastPrice.setText("--.--");
+        mPriceChange.setText("--.--");
+        mTradeVolumeSeekBar.setProgress(0);
+        mObtainableCurrencyRange.setText("");
+    }
+
     private void updateMarketView(PairMarket pairMarket) {
-        mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(),
-                pairMarket.getDeep().getSellDeep());
+        mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(), pairMarket.getDeep().getSellDeep());
         MarketData quota = pairMarket.getQuota();
         if (mPairDesc != null && quota != null) {
             mLastPrice.setText(NumUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));

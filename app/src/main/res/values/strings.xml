@@ -493,8 +493,9 @@
         <item>USDT</item>
         <item>BTC</item>
         <item>ETH</item>
-        <item>自选</item>
+        <item>@string/optional_text</item>
     </string-array>
+    <string name="optional_text">自选</string>
     <string name="main_area">主区</string>
     <string name="creative_area">创新区</string>
     <string name="new_currency_area">新币区</string>

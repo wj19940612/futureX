@@ -99,6 +99,13 @@ public class VolumeInputView extends FrameLayout {
         onVolumeChange();
     }
 
+    public void reset() {
+        mTextWatcherDisable = true;
+        mVolume.setText("");
+        mTextWatcherDisable = false;
+        mBaseCurrency.setText("");
+    }
+
     private String formatVolume(String number) {
         int pointIndex = number.indexOf('.');
         if (pointIndex > -1) {

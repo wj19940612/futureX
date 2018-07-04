@@ -133,6 +133,13 @@ public class ChangePriceView extends FrameLayout {
         onPriceChange();
     }
 
+    public void reset() {
+        mTextWatcherDisable = true;
+        mPrice.setText("");
+        mTextWatcherDisable = false;
+        mModifiedManually = false;
+    }
+
     public void startScaleAnim() {
         Animation animation = AnimUtils.createSimpleScaleAnim(1.2f, 100);
         mPrice.startAnimation(animation);
