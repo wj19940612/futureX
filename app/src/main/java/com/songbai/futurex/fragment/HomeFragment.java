@@ -26,6 +26,8 @@ import android.widget.ViewSwitcher;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.WebActivity;
+import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
@@ -36,6 +38,7 @@ import com.songbai.futurex.model.home.HomeNews;
 import com.songbai.futurex.model.home.PairRiseListBean;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.LanguageUtils;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.view.HomeBanner;
 
@@ -91,8 +94,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         mIncreaseRank.setAdapter(mIncreaseRankAdapter);
         mHomeBanner.setOnBannerClickListener(this);
         findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
-        findNewsList(1, "", 3, 3);
-        entrustPairsList(0, 9, "");
+        findNewsList(1, "");
+        entrustPairsList();
         indexRiseList();
         mNotice.setTag(0);
         mNotice.setFactory(new ViewSwitcher.ViewFactory() {
@@ -144,8 +147,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 .fire();
     }
 
-    private void findNewsList(int type, String lang, int offset, int size) {
-        Apic.findNewsList(type, lang, offset, size)
+    private void findNewsList(int type, String lang) {
+        Apic.findNewsList(type, lang, 0, 3)
                 .callback(new Callback<Resp<ArrayList<HomeNews>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<HomeNews>> resp) {
@@ -156,8 +159,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 .fire();
     }
 
-    private void entrustPairsList(int page, int pageSize, String suffixSymbol) {
-        Apic.entrustPairsList(page, pageSize, suffixSymbol)
+    private void entrustPairsList() {
+        Apic.entrustPairsList(0, 9, "")
                 .callback(new Callback<Resp<EntrustPair>>() {
                     @Override
                     protected void onRespSuccess(Resp<EntrustPair> resp) {
@@ -187,7 +190,17 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         if (count % 3 == 0) {
             if (mNewsList != null && mNewsList.size() > 0) {
                 int index = (int) mNotice.getTag();
-                mNotice.setText(mNewsList.get(index % mNewsList.size()).getContent());
+                final int position = index % mNewsList.size();
+                mNotice.setText(mNewsList.get(position).getContent());
+                mNotice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String url = String.format(Apic.url.NOTICE_DETAIL_PAGE, mNewsList.get(position).getId());
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_URL, Api.getH5Url(url))
+                                .execute();
+                    }
+                });
                 mNotice.setTag(++index);
             }
         }

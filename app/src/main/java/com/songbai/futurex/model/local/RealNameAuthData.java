@@ -12,6 +12,54 @@ public class RealNameAuthData {
     String handIdcardImg;
     int idType;
 
+    public String getIdcardNum() {
+        return idcardNum;
+    }
+
+    public void setIdcardNum(String idcardNum) {
+        this.idcardNum = idcardNum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIdcardFrontImg() {
+        return idcardFrontImg;
+    }
+
+    public void setIdcardFrontImg(String idcardFrontImg) {
+        this.idcardFrontImg = idcardFrontImg;
+    }
+
+    public String getIdcardBackImg() {
+        return idcardBackImg;
+    }
+
+    public void setIdcardBackImg(String idcardBackImg) {
+        this.idcardBackImg = idcardBackImg;
+    }
+
+    public String getHandIdcardImg() {
+        return handIdcardImg;
+    }
+
+    public void setHandIdcardImg(String handIdcardImg) {
+        this.handIdcardImg = handIdcardImg;
+    }
+
+    public int getIdType() {
+        return idType;
+    }
+
+    public void setIdType(int idType) {
+        this.idType = idType;
+    }
+
     public static final class Builder {
         String idcardNum;
         String name;

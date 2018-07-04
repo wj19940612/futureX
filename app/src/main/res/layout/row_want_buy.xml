@@ -42,6 +42,8 @@
         android:layout_marginLeft="6dp"
         android:textColor="@color/text22"
         android:textSize="13sp"
+        android:singleLine="true"
+        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="@id/headPortrait"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintHorizontal_chainStyle="spread_inside"

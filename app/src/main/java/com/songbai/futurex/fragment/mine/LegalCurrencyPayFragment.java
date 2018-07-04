@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -21,6 +22,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 
@@ -40,10 +42,12 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     public static final int REQUEST_SELECT_PAY = 16524;
 
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     @BindView(R.id.addGathering)
     FrameLayout mAddGathering;
     Unbinder unbinder;
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
     private LegalCurrencyPayAdapter mLegalCurrencyPayAdapter;
     private BindBankList mBindBankList;
     private SmartDialog mSmartDialog;
@@ -64,6 +68,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mLegalCurrencyPayAdapter = new LegalCurrencyPayAdapter();
         mLegalCurrencyPayAdapter.setmOnItemClickListener(new LegalCurrencyPayAdapter.OnItemClickListener() {
@@ -85,7 +90,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     private void showDrawPass(final int id) {
         WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(), new WithDrawPsdViewController.OnClickListener() {
             @Override
-            public void onConfirmClick(String cashPwd,String googleAuth) {
+            public void onConfirmClick(String cashPwd, String googleAuth) {
                 bindUntie(id, md5Encrypt(cashPwd));
             }
         });
@@ -135,6 +140,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         }
         mLegalCurrencyPayAdapter.setList(list);
         mLegalCurrencyPayAdapter.notifyDataSetChanged();
+        mRecyclerView.hideAll(false);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class ModifyNickNameActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         mUserNameInput.addTextChangedListener(mValidationWatcher);
-        mUserNameInput.setFilters(new InputFilter[]{filter, new EmojiFilter()});
+        mUserNameInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20), new EmojiFilter()});
 
         String nickName = getIntent().getStringExtra(ExtraKeys.NICK_NAME);
         mUserNameInput.setText(nickName);
