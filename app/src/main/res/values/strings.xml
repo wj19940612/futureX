@@ -571,7 +571,7 @@
     <string name="over_50">发言不能超过50字符</string>
     <string name="hello_customer_for_you">尊敬的小主您好，我是%1$s，很高兴为您服务。</string>
     <string name="trade_with_market_price">以当前最优价格交易</string>
-    <string name="android_web_agent">ANDROID_AGENT</string>
+    <string name="android_web_agent">ANDROID_AGENT/1.0</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
 
