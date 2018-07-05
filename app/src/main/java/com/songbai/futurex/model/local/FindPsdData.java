@@ -7,7 +7,7 @@ import android.text.TextUtils;
 /**
  * Modified by john on 2018/6/6
  * <p>
- * Description:
+ * Description: 找回密码发生数据对象
  * <p>
  * APIs:
  */
@@ -43,6 +43,10 @@ public class FindPsdData implements Parcelable {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getMsgCode() {
+        return msgCode;
     }
 
     @Override

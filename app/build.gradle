@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.songbai.futurex"
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,11 +27,27 @@ android {
                 UMENG_CHANNEL: "android"
         ]
     }
+
+    signingConfigs {
+        release {
+            storeFile file('../bitfuture.jks')
+            storePassword xStorePassword
+            keyAlias xKeyAlias
+            keyPassword xKeyPassword
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+    }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
     }
 
     flavorDimensions("app")
@@ -57,6 +73,18 @@ android {
                     UMENG_APP_KEY: "5b2ba7b0f43e4873cf000052",
                     UMENG_CHANNEL: "android"
             ]
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "x-${variant.name}-${variant.versionCode}-${variant.versionName}.apk"
+        }
+    }
+
+    productFlavors.all { flavor ->
+        if (flavor.name != 'dev' && flavor.name != 'alpha') {
+            flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
         }
     }
 
