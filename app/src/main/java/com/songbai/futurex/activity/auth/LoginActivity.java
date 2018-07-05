@@ -225,7 +225,7 @@ public class LoginActivity extends BaseActivity {
     private void login(String authCode) {
         mLoginData = new LoginData(RegisterData.PLATFORM_ANDROID);
         mLoginData.setImgCode(authCode);
-        String phoneOrEmail = mPhoneOrEmail.getText().toString();
+        String phoneOrEmail = mPhoneOrEmail.getText().toString().trim();
         if (RegularExpUtils.isValidEmail(phoneOrEmail)) {
             mLoginData.setEmail(phoneOrEmail);
         } else {

@@ -245,7 +245,8 @@ public class RegisterActivity extends BaseActivity {
                 requestEmailAuthCode(null);
                 break;
             case R.id.userAgreement:
-                UniqueActivity.launcher(this, PlatformIntroFragment.class).putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_SERVICE_AGREEMENT).execute();
+                UniqueActivity.launcher(this, PlatformIntroFragment.class)
+                        .putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_SERVICE_AGREEMENT).execute();
                 break;
         }
     }
