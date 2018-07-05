@@ -49,6 +49,14 @@
             android:layout_height="wrap_content"/>
     </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
 
+    <View
+        android:id="@+id/shader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/titleBar"
+        android:background="#66000000"
+        android:visibility="gone"/>
+
     <include
         layout="@layout/view_property_flow_filter"
         android:layout_width="match_parent"

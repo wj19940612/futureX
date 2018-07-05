@@ -42,12 +42,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="68dp"
-                android:background="@drawable/bg_chat_right_content"
+                android:background="@drawable/bg_otc_chat_right_content"
                 android:paddingBottom="8dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="8dp"
-                android:textColor="@color/text22"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 tools:text="尊敬的小主，早您服。如果我说很久不见你在哪里"/>
 

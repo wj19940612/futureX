@@ -49,6 +49,16 @@ public class WaresPairFilter {
         mCurrencyAdapter.setList(mCountryCurrencies);
         mCurrencyAdapter.setOnItemClickListener(mOnItemClickListener);
         legalCurrency.setAdapter(mCurrencyAdapter);
+        View shader = mView.findViewById(R.id.shader);
+        shader.setMinimumHeight(com.songbai.futurex.utils.Display.getScreenHeight());
+        shader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPopupWindow != null && mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+            }
+        });
         TextView cancel = mView.findViewById(R.id.cancel);
         TextView ok = mView.findViewById(R.id.ok);
         cancel.setOnClickListener(new View.OnClickListener() {

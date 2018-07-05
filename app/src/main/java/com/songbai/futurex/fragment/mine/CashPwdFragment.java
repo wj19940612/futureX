@@ -148,10 +148,18 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
 
     @Override
     public void onTimeUp(int count) {
-        mFreezeGetPhoneAuthCode = false;
-        mSendAuthCode.setEnabled(true);
-        mSendAuthCode.setText(R.string.regain);
-        stopScheduleJob();
+        Integer tag = (Integer) mSendAuthCode.getTag();
+        int authCodeCounter = tag != null ? tag.intValue() : 0;
+        authCodeCounter--;
+        if (authCodeCounter <= 0) {
+            mSendAuthCode.setEnabled(true);
+            mSendAuthCode.setText(R.string.regain);
+            mSendAuthCode.setTag(null);
+            stopScheduleJob();
+        } else {
+            mSendAuthCode.setTag(authCodeCounter);
+            mSendAuthCode.setText(getString(R.string.x_seconds, authCodeCounter));
+        }
     }
 
     private void showImageAuthCodeDialog() {
