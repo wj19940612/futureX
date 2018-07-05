@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
@@ -237,8 +238,6 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                             mOptional.setSelected(false);
                             mOptional.setText(R.string.add_optional_no_plus);
                             ToastUtil.show(R.string.optional_cancel);
-
-                            setResult(Activity.RESULT_OK); // refresh optional page
                         }
                     }).fire();
         } else {
@@ -250,10 +249,10 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                             mOptional.setText(R.string.already_added);
                             ToastUtil.show(R.string.optional_added);
 
-                            setResult(Activity.RESULT_OK);
                         }
                     }).fire();
         }
+        Preference.get().setOptionalListRefresh(true);
     }
 
     static class CalcDeepTask extends AsyncTask<Void, Void, Void> {

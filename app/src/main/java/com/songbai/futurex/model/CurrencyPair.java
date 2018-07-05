@@ -100,6 +100,14 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         return prefixSymbol.toUpperCase() + "/" + suffixSymbol.toUpperCase();
     }
 
+    public boolean isAddOptional() {
+        return option == OPTIONAL_ADDED;
+    }
+
+    public void setAddOptional(boolean addOptional) {
+        option = addOptional ? OPTIONAL_ADDED : OPTIONAL_NOT;
+    }
+
     @Override
     public int getGroupNameRes() {
         if (category == CATE_MAIN) {

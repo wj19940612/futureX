@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.sbai.httplib.BitmapCfg;
 import com.sbai.httplib.ReqCallback;
 import com.sbai.httplib.ReqError;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -283,6 +284,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     protected void onRespData(UserInfo data) {
                         LocalUser.getUser().setUserInfo(data, mLoginData.getPhone(), mLoginData.getEmail());
+                        Preference.get().setOptionalListRefresh(true);
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     }

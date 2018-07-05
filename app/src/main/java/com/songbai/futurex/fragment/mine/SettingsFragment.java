@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.model.local.LocalUser;
@@ -94,6 +95,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
 
     private void logout() {
         LocalUser.getUser().logout();
+        Preference.get().setOptionalListRefresh(true);
         FragmentActivity activity = getActivity();
         activity.setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
         activity.finish();

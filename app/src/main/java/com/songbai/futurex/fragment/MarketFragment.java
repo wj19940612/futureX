@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -64,7 +63,6 @@ import butterknife.Unbinder;
 public class MarketFragment extends BaseFragment {
 
     private static final int REQ_CODE_LOGIN = 91;
-    private static final int REQ_CODE_SEARCH = 94;
     private static final int REQ_CODE_MARKET_DETAIL = 95;
 
     Unbinder unbinder;
@@ -167,22 +165,13 @@ public class MarketFragment extends BaseFragment {
     }
 
     private void openSearchPage() {
-        List<CurrencyPair> optionalPairList = mOptionalAdapter.getPairList();
-        UniqueActivity.launcher(getActivity(), SearchCurrencyFragment.class)
-                .putExtra(ExtraKeys.OPTIONAL_LIST, new ArrayList<Parcelable>(optionalPairList))
-                .execute(this, REQ_CODE_SEARCH);
+        UniqueActivity.launcher(getActivity(), SearchCurrencyFragment.class).execute();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
-            updateOptionalList();
-        }
         if (requestCode == REQ_CODE_LOGIN && resultCode == Activity.RESULT_OK) { // 登录，刷新自选列表
-            updateOptionalList();
-        }
-        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
             updateOptionalList();
         }
         if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_FIRST_USER) { // 行情详情选择交易
@@ -203,6 +192,11 @@ public class MarketFragment extends BaseFragment {
         super.onResume();
         mMarketSubscriber.resume();
         mMarketSubscriber.subscribeAll();
+
+        if (Preference.get().getOptionalListRefresh()) {
+            updateOptionalList();
+            Preference.get().setOptionalListRefresh(false);
+        }
     }
 
     @Override
