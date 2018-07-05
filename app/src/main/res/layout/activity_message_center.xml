@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
-    android:background="@color/bgF5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgF5"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
@@ -20,6 +20,12 @@
         app:rightVisible="true"
         app:titleText="@string/message_center"/>
 
+    <include
+        layout="@layout/view_common_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipeToLoadLayout"
         android:layout_width="match_parent"
@@ -30,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <android.support.v7.widget.RecyclerView
+        <com.songbai.futurex.view.EmptyRecyclerView
             android:id="@+id/swipe_target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

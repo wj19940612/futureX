@@ -30,6 +30,7 @@ import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnItemClickListener;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
@@ -55,7 +56,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     public static final int PAGE_TYPE_NOTICE = 1;
 
     @BindView(R.id.swipe_target)
-    RecyclerView mSwipeTarget;
+    EmptyRecyclerView mSwipeTarget;
     @BindView(R.id.rootView)
     LinearLayout mRootView;
     @BindView(R.id.titleBar)
@@ -67,6 +68,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
 
     @BindView(R.id.swipeToLoadLayout)
     SwipeToLoadLayout mSwipeToLoadLayout;
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
 
     private MessageListAdapter mAdapter;
 
@@ -101,6 +104,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
             }
         });
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
+        mSwipeTarget.setEmptyView(mEmptyView);
         mAdapter = new MessageListAdapter();
         mAdapter.setOnItemClickListener(new OnItemClickListener<SysMessage>() {
             @Override
@@ -138,7 +142,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                if (direct==0) {
+                                if (direct == 0) {
                                     return;
                                 }
                                 UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
@@ -239,17 +243,16 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
 
     private void updateMessageList(Resp<PagingWrap<SysMessage>> resp) {
         if (resp.getData() != null) {
-            if (resp.getData().getTotal() > mPage) {
-                mPage++;
-            } else {
-                mSwipeToLoadLayout.setLoadMoreEnabled(false);
-            }
-
             if (mPage == 0) {
                 mAdapter.clear();
+                mSwipeTarget.hideAll(false);
             }
             if (resp.getData().getData() != null) {
                 mAdapter.addAll(resp.getData().getData());
+            }
+            mPage++;
+            if (resp.getData().getTotal() <= mPage) {
+                mSwipeToLoadLayout.setLoadMoreEnabled(false);
             }
         }
     }

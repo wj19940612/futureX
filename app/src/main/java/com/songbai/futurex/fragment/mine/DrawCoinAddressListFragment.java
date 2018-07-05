@@ -21,6 +21,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinAddress;
 import com.songbai.futurex.model.mine.CoinAddressCount;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.CopyDeleteController;
@@ -43,7 +44,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
     private Unbinder mBind;
@@ -68,6 +69,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mCoinAddressCount.getCoinType().toUpperCase());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setEmptyView(mEmptyView);
         mAdapter = new DrawCoinAddressListAdapter();
         mAdapter.setOnItemClickListener(new DrawCoinAddressListAdapter.OnItemClickListener() {
             @Override
@@ -98,15 +100,9 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CoinAddress>> resp) {
                         ArrayList<CoinAddress> data = resp.getData();
-                        if (data.size() < 1) {
-                            mEmptyView.setVisibility(View.VISIBLE);
-                            mRecyclerView.setVisibility(View.GONE);
-                        } else {
-                            mEmptyView.setVisibility(View.GONE);
-                            mRecyclerView.setVisibility(View.VISIBLE);
-                            mAdapter.setList(data);
-                            mAdapter.notifyDataSetChanged();
-                        }
+                        mAdapter.setList(data);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.hideAll(false);
                     }
                 })
                 .fire();
@@ -133,7 +129,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
         mAdapter.removeItem(coinAddress);
         mAdapter.notifyDataSetChanged();
         mModified = true;
-        getActivity().setResult(DRAW_COIN_ADDRESS_RESULT,
+        setResult(DRAW_COIN_ADDRESS_RESULT,
                 new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, mModified));
     }
 
@@ -146,7 +142,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
                 if (shouldRefresh) {
                     getDrawWalletAddrByCoinType(mCoinAddressCount.getCoinType());
                     mModified = shouldRefresh;
-                    getActivity().setResult(DRAW_COIN_ADDRESS_RESULT,
+                    setResult(DRAW_COIN_ADDRESS_RESULT,
                             new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, mModified));
                 }
             }
