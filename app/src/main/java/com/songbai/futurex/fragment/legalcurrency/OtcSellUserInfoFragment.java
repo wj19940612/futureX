@@ -3,6 +3,7 @@ package com.songbai.futurex.fragment.legalcurrency;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,14 @@ import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.StatusBarActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +56,8 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     TextView mMailCertificationState;
     @BindView(R.id.phoneCertificationState)
     TextView mPhoneCertificationState;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private Unbinder mBind;
     private int mOrderId;
     private int mTradeDirection;
@@ -73,6 +78,11 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof StatusBarActivity) {
+            ((StatusBarActivity) activity).translucentStatusBar();
+            ((StatusBarActivity) activity).addStatusBarHeightPaddingTop(mTitleBar);
+        }
         otcWaresMine("", mOrderId, mTradeDirection);
     }
 

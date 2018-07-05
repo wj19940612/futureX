@@ -7,6 +7,7 @@ import java.util.List;
  * @date 2018/6/20
  */
 public class EntrustPair {
+
     private List<LatelyBean> lately;
 
     public List<LatelyBean> getLately() {
@@ -19,30 +20,38 @@ public class EntrustPair {
 
     public static class LatelyBean {
         /**
-         * category : 1
+         * category : 2
+         * highestPrice : 6552.88
          * id : 23
-         * lastPrice : 6714.4
-         * lastVolume : 0.0
+         * lastPrice : 6538.96
+         * lastVolume : 0.10763086
+         * lowestPrice : 6415.55
          * option : 0
          * pairs : btc_usdt
          * prefixSymbol : btc
+         * pricePoint : 2
          * sort : 1
          * suffixSymbol : usdt
-         * upDropPrice : 0.0
-         * upDropSpeed : 0.0
+         * upDropPrice : 24.98
+         * upDropSpeed : 0.0038
+         * volume : 893.58863101
          */
 
         private int category;
+        private double highestPrice;
         private int id;
         private double lastPrice;
         private double lastVolume;
+        private double lowestPrice;
         private int option;
         private String pairs;
         private String prefixSymbol;
+        private int pricePoint;
         private int sort;
         private String suffixSymbol;
         private double upDropPrice;
         private double upDropSpeed;
+        private double volume;
 
         public int getCategory() {
             return category;
@@ -50,6 +59,14 @@ public class EntrustPair {
 
         public void setCategory(int category) {
             this.category = category;
+        }
+
+        public double getHighestPrice() {
+            return highestPrice;
+        }
+
+        public void setHighestPrice(double highestPrice) {
+            this.highestPrice = highestPrice;
         }
 
         public int getId() {
@@ -76,6 +93,14 @@ public class EntrustPair {
             this.lastVolume = lastVolume;
         }
 
+        public double getLowestPrice() {
+            return lowestPrice;
+        }
+
+        public void setLowestPrice(double lowestPrice) {
+            this.lowestPrice = lowestPrice;
+        }
+
         public int getOption() {
             return option;
         }
@@ -98,6 +123,14 @@ public class EntrustPair {
 
         public void setPrefixSymbol(String prefixSymbol) {
             this.prefixSymbol = prefixSymbol;
+        }
+
+        public int getPricePoint() {
+            return pricePoint;
+        }
+
+        public void setPricePoint(int pricePoint) {
+            this.pricePoint = pricePoint;
         }
 
         public int getSort() {
@@ -130,6 +163,14 @@ public class EntrustPair {
 
         public void setUpDropSpeed(double upDropSpeed) {
             this.upDropSpeed = upDropSpeed;
+        }
+
+        public double getVolume() {
+            return volume;
+        }
+
+        public void setVolume(double volume) {
+            this.volume = volume;
         }
     }
 }

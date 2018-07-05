@@ -36,10 +36,10 @@ import com.songbai.futurex.model.home.Banner;
 import com.songbai.futurex.model.home.EntrustPair;
 import com.songbai.futurex.model.home.HomeNews;
 import com.songbai.futurex.model.home.PairRiseListBean;
+import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.view.HomeBanner;
 
 import java.util.ArrayList;
@@ -191,7 +191,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             if (mNewsList != null && mNewsList.size() > 0) {
                 int index = (int) mNotice.getTag();
                 final int position = index % mNewsList.size();
-                mNotice.setText(mNewsList.get(position).getContent());
+                mNotice.setText(mNewsList.get(position).getTitle());
                 mNotice.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -265,6 +265,9 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_home_entrus_pair, parent, false);
+            view.setLayoutParams(new LinearLayout.LayoutParams(
+                    (int) ((Display.getScreenWidth() - Display.dp2Px(26, getResources())) / 3),
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
             return new EntrustPairHolder(view);
         }
 
@@ -306,10 +309,11 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
             public void bindData(final EntrustPair.LatelyBean latelyBean) {
                 mEntrustPairs.setText(latelyBean.getPairs().replace("_", "/").toUpperCase());
-                mPrice.setText(FinanceUtil.formatWithScale(latelyBean.getLastPrice()));
+                mPrice.setText(FinanceUtil.formatWithScale(latelyBean.getLastPrice(), latelyBean.getPricePoint()));
                 double upDropSpeed = latelyBean.getUpDropSpeed();
                 mUpDropSpeed.setSelected(upDropSpeed < 0);
-                mUpDropSpeed.setText(FinanceUtil.formatToPercentage(upDropSpeed));
+                String dropSpeedNum = FinanceUtil.formatToPercentage(upDropSpeed);
+                mUpDropSpeed.setText(upDropSpeed < 0 ? dropSpeedNum : getString(R.string.plus_sign_x, dropSpeedNum));
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -385,11 +389,12 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 stringBuilder.setSpan(new AbsoluteSizeSpan(17, true),
                         0, prefixSymbol.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mPairName.setText(stringBuilder);
-                mTradeVolume.setText(getString(R.string.volume_24h_x, NumUtils.getVolume(pairRiseListBean.getLastVolume())));
-                mPrice.setText(FinanceUtil.formatWithScale(pairRiseListBean.getLastPrice()));
+                mTradeVolume.setText(getString(R.string.volume_24h_x, FinanceUtil.formatWithScale(pairRiseListBean.getVolume(), 0)));
+                mPrice.setText(FinanceUtil.formatWithScale(pairRiseListBean.getLastPrice(), pairRiseListBean.getPricePoint()));
                 double upDropSpeed = pairRiseListBean.getUpDropSpeed();
                 mUpDropSpeed.setBackgroundResource(upDropSpeed < 0 ? R.drawable.bg_red_r2 : R.drawable.bg_green_r2);
-                mUpDropSpeed.setText(FinanceUtil.formatToPercentage(upDropSpeed));
+                String dropSpeedNum = FinanceUtil.formatToPercentage(upDropSpeed);
+                mUpDropSpeed.setText(upDropSpeed < 0 ? dropSpeedNum : getString(R.string.plus_sign_x, dropSpeedNum));
                 mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
