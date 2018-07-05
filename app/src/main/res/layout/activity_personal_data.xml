@@ -70,6 +70,7 @@
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
         app:subTextColor="@color/text99"
+        app:subTextSingleLine="true"
         app:subTextSize="14sp"/>
 
     <com.songbai.futurex.view.IconTextRow

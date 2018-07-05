@@ -417,6 +417,7 @@
     <string name="wait_to_pay_and_confirm">待付款并确认</string>
     <string name="wait_sell_transfer_coin">待卖家转币</string>
     <string name="seller_info">卖家信息</string>
+    <string name="click_to_ask_contract_info">点击咨询支付方式</string>
     <string name="contact_each_other">联系对方</string>
     <string name="cancel_trade">取消交易</string>
     <string name="cancel_trade_hin_msg">如果您已经向卖家付款，请千万不要取消交易。取消规则：买方当日累计5笔取消，将会限制当天的买入功能。</string>

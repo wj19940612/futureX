@@ -1,5 +1,6 @@
 package com.songbai.futurex.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -10,7 +11,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -122,6 +122,14 @@ public class OtcTradeChatActivity extends BaseActivity {
         Intent intent = getIntent();
         mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
         mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
+        LocalUser user = LocalUser.getUser();
+        if (user.isLogin()) {
+            mRightOtcChatUserInfo = new OtcChatUserInfo();
+            mRightOtcChatUserInfo.setId(user.getUserInfo().getId());
+            mRightOtcChatUserInfo.setUserName(user.getUserInfo().getUserName());
+            mRightOtcChatUserInfo.setUserPortrait(user.getUserInfo().getUserPortrait());
+            mRightOtcChatUserInfo.setCertificationLevel(user.getUserInfo().getCertificationLevel());
+        }
         initView();
         loadData();
         initSocketListener();
@@ -140,6 +148,7 @@ public class OtcTradeChatActivity extends BaseActivity {
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mOtcChatMessages = new ArrayList<>();
         mChatAdapter = new ChatAdapter(mOtcChatMessages, getActivity(), getOnRetryClickListener());
@@ -192,7 +201,6 @@ public class OtcTradeChatActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(Response<OtcChatMessage> resp) {
-                        Log.e(TAG, "onSuccess: 收到消息啦");
                         OtcChatMessage otcChatMessage = resp.getContent();
                         if (otcChatMessage.getDirection() == mTradeDirection) {
                             return;
@@ -231,8 +239,8 @@ public class OtcTradeChatActivity extends BaseActivity {
         }
     }
 
-    private void otcWaresMine(int orderId) {
-        Apic.otcWaresMine("", orderId, 1)
+    private void otcWaresMine() {
+        Apic.otcWaresMine("", mOrderId, 1)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -281,11 +289,12 @@ public class OtcTradeChatActivity extends BaseActivity {
                 .callback(new Callback<Resp<List<BankCardBean>>>() {
                     @Override
                     protected void onRespSuccess(Resp<List<BankCardBean>> resp) {
-                        // TODO: 2018/6/30 增加消息类型
                         mBankInfoMsg = new OtcBankInfoMsg();
                         mBankInfoMsg.setTradeDirect(mTradeDirection);
                         mBankInfoMsg.setBankCardBeans(resp.getData());
                         mOtcChatMessages.add(0, mBankInfoMsg);
+                        mChatAdapter.notifyDataSetChanged();
+                        updateRecyclerViewPosition(false);
                     }
                 }).fire();
     }
@@ -335,9 +344,9 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void loadData() {
-        otcWaresMine(mOrderId);
-        otcOrderDetail();
         otcOrderUser();
+        otcWaresMine();
+        otcOrderDetail();
         orderPayInfo();
         loadHistoryData();
     }
@@ -361,7 +370,7 @@ public class OtcTradeChatActivity extends BaseActivity {
             mOtcChatMessages.add(0, mBankInfoMsg);
         }
         mChatAdapter.notifyDataSetChanged();
-        mRecycleView.scrollToPosition(Integer.MAX_VALUE);
+        updateRecyclerViewPosition(false);
     }
 
     private void loadChatData(OtcChatMessage data) {
@@ -487,7 +496,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void resendMsg(OtcChatMessage otcChatMessage) {
-        if (otcChatMessage.getMsgType() == 2) {
+        if (otcChatMessage.getMsgType() == OtcChatMessage.MSG_PHOTO) {
             requestSendPhotoMsg(otcChatMessage.getMessage());
         } else {
             requestSendTxtMsg(otcChatMessage.getMessage());
@@ -507,8 +516,7 @@ public class OtcTradeChatActivity extends BaseActivity {
         public static final int TYPE_LEFT_PHOTO = 2;
         public static final int TYPE_RIGHT = 3;
         public static final int TYPE_RIGHT_PHOTO = 4;
-        public static final int TYPE_SYSTEM = 5;
-        public static final int TYPE_BANKINFO = 6;
+        public static final int TYPE_BANK_INFO = 5;
 
         private List<Object> mList;
         private Context mContext;
@@ -539,16 +547,16 @@ public class OtcTradeChatActivity extends BaseActivity {
             Object obj = mList.get(position);
             if (obj instanceof OtcChatMessage) {
                 OtcChatMessage message = (OtcChatMessage) obj;
-                if (message.getDirection() == mRightDirection && !(message.getMsgType() == 2)) {
+                if (message.getDirection() == mRightDirection && !(message.getMsgType() == OtcChatMessage.MSG_PHOTO)) {
                     return TYPE_RIGHT;
-                } else if (message.getDirection() == mRightDirection && message.getMsgType() == 2) {
+                } else if (message.getDirection() == mRightDirection && message.getMsgType() == OtcChatMessage.MSG_PHOTO) {
                     return TYPE_RIGHT_PHOTO;
-                } else if (message.getMsgType() == 2) {
+                } else if (message.getMsgType() == OtcChatMessage.MSG_PHOTO) {
                     return TYPE_LEFT_PHOTO;
                 }
             }
             if (obj instanceof OtcBankInfoMsg) {
-                return TYPE_BANKINFO;
+                return TYPE_BANK_INFO;
             }
             return TYPE_LEFT;
         }
@@ -560,7 +568,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_left_content, parent, false);
                 return new LeftTextHolder(view);
             } else if (viewType == TYPE_RIGHT) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_right_content, parent, false);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.row_otc_chat_right_content, parent, false);
                 return new RightTextHolder(view);
             } else if (viewType == TYPE_RIGHT_PHOTO) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_right_photo, parent, false);
@@ -568,11 +576,12 @@ public class OtcTradeChatActivity extends BaseActivity {
             } else if (viewType == TYPE_LEFT_PHOTO) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_left_photo, parent, false);
                 return new LeftPhotoHolder(view);
-            } else if (viewType == TYPE_BANKINFO) {
+            } else if (viewType == TYPE_BANK_INFO) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_otc_chat_pay_info, parent, false);
                 return new PayInfoHolder(view);
             }
-            return null;
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_left_content, parent, false);
+            return new LeftTextHolder(view);
         }
 
         @Override
@@ -611,12 +620,14 @@ public class OtcTradeChatActivity extends BaseActivity {
             }
 
             private void bindingData(Context context, OtcChatMessage otcChatMessage) {
-                mName.setText(mLeftOtcChatUserInfo.getUserName());
-                GlideApp.with(context)
-                        .load(mLeftOtcChatUserInfo.getUserPortrait())
-                        .circleCrop()
-                        .into(mHead);
-                mContent.setText(otcChatMessage.getMessage());
+                if (mLeftOtcChatUserInfo != null) {
+                    mName.setText(mLeftOtcChatUserInfo.getUserName());
+                    GlideApp.with(context)
+                            .load(mLeftOtcChatUserInfo.getUserPortrait())
+                            .circleCrop()
+                            .into(mHead);
+                    mContent.setText(otcChatMessage.getMessage());
+                }
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
             }
         }
@@ -637,14 +648,16 @@ public class OtcTradeChatActivity extends BaseActivity {
             }
 
             public void bindingData(Context context, OtcChatMessage otcChatMessage) {
-                mName.setText(mLeftOtcChatUserInfo.getUserName());
-                GlideApp.with(context)
-                        .load(mLeftOtcChatUserInfo.getUserPortrait())
-                        .circleCrop()
-                        .into(mHead);
+                if (mLeftOtcChatUserInfo != null) {
+                    mName.setText(mLeftOtcChatUserInfo.getUserName());
+                    GlideApp.with(context)
+                            .load(mLeftOtcChatUserInfo.getUserPortrait())
+                            .circleCrop()
+                            .into(mHead);
+                }
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
 
-                if (otcChatMessage.getMsgType() == 2) {
+                if (otcChatMessage.getMsgType() == OtcChatMessage.MSG_PHOTO) {
                     GlideApp.with(context).load(otcChatMessage.getMessage())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
@@ -671,11 +684,13 @@ public class OtcTradeChatActivity extends BaseActivity {
             }
 
             public void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage) {
-                mName.setText(mRightOtcChatUserInfo.getUserName());
-                GlideApp.with(context)
-                        .load(mRightOtcChatUserInfo.getUserPortrait())
-                        .circleCrop()
-                        .into(mHead);
+                if (mRightOtcChatUserInfo != null) {
+                    mName.setText(mRightOtcChatUserInfo.getUserName());
+                    GlideApp.with(context)
+                            .load(mRightOtcChatUserInfo.getUserPortrait())
+                            .circleCrop()
+                            .into(mHead);
+                }
                 mContent.setText(otcChatMessage.getMessage());
 
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
@@ -710,15 +725,16 @@ public class OtcTradeChatActivity extends BaseActivity {
             }
 
             public void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage) {
-                mName.setText(mRightOtcChatUserInfo.getUserName());
-                GlideApp.with(context)
-                        .load(mRightOtcChatUserInfo.getUserPortrait())
-                        .circleCrop()
-                        .into(mHead);
-
+                if (mRightOtcChatUserInfo != null) {
+                    mName.setText(mRightOtcChatUserInfo.getUserName());
+                    GlideApp.with(context)
+                            .load(mRightOtcChatUserInfo.getUserPortrait())
+                            .circleCrop()
+                            .into(mHead);
+                }
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
 
-                if (otcChatMessage.getMsgType() == 2) {
+                if (otcChatMessage.getMsgType() == OtcChatMessage.MSG_PHOTO) {
                     GlideApp.with(context).load(otcChatMessage.getMessage())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
@@ -736,7 +752,6 @@ public class OtcTradeChatActivity extends BaseActivity {
                                     return false;
                                 }
                             })
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mPhoto);
                 }
 
@@ -837,7 +852,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                                 break;
                             case BankCardBean.PAYTYPE_BANK:
                                 mAccountType.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pay_unionpay_s, 0, 0, 0);
-                                mAccountType.setText(bankCardBean.getBankName());
+                                mAccountType.setText(R.string.bank_card);
                                 break;
                             default:
                         }

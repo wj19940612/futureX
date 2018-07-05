@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.fragment.legalcurrency.OtcSellUserInfoFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
@@ -156,11 +157,22 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         unbinder.unbind();
     }
 
-    @OnClick(R.id.contractEachOther)
-    public void onViewClicked() {
-        Launcher.with(this, OtcTradeChatActivity.class)
-                .putExtra(ExtraKeys.ORDER_ID, mOrderId)
-                .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
-                .execute();
+    @OnClick({R.id.headPortrait,R.id.contractEachOther})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.headPortrait:
+                UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
+                        .putExtra(ExtraKeys.ORDER_ID, mOrderId)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
+                        .execute();
+                break;
+            case R.id.contractEachOther:
+                Launcher.with(this, OtcTradeChatActivity.class)
+                        .putExtra(ExtraKeys.ORDER_ID, mOrderId)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
+                        .execute();
+                break;
+            default:
+        }
     }
 }

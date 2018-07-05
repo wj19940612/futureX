@@ -28,6 +28,7 @@ import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.model.status.FlowStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadActivity;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.PropertyFlowFilter;
@@ -39,6 +40,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * @author yangguangda
@@ -51,6 +53,8 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     EmptyRecyclerView mSwipeTarget;
     @BindView(R.id.swipeToLoadLayout)
     SwipeToLoadLayout mSwipeToLoadLayout;
+    @BindView(R.id.shader)
+    View shader;
     @BindView(R.id.filtrateGroup)
     LinearLayout mFiltrateGroup;
     private final int TYPE_ALL = 10;
@@ -76,6 +80,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private OptionsPickerView<String> mPvOptions;
     private ArrayList<String> mFlowStatusStr;
     private ArrayList<Integer> mFlowStatus;
+    private PropertyFlowFilter mPropertyFlowFilter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,12 +131,12 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     }
 
     private void showAllPropertyFilter() {
-        PropertyFlowFilter propertyFlowFilter = new PropertyFlowFilter(this, mFiltrateGroup);
-        propertyFlowFilter.restoreData(
+        mPropertyFlowFilter = new PropertyFlowFilter(this, mFiltrateGroup);
+        mPropertyFlowFilter.restoreData(
                 mGetUserFinanceFlowData.getCoinType(), mGetUserFinanceFlowData.getFlowType(),
                 mGetUserFinanceFlowData.getStatus(), mGetUserFinanceFlowData.getStartTime(),
                 mGetUserFinanceFlowData.getEndTime());
-        propertyFlowFilter.setOnSelectCallBack(new PropertyFlowFilter.OnSelectCallBack() {
+        mPropertyFlowFilter.setOnSelectCallBack(new PropertyFlowFilter.OnSelectCallBack() {
             @Override
             public void onSelected(String coinSymbol, int flowType, int flowStatus, String startTime, String endTime) {
                 mGetUserFinanceFlowData.setCoinType(coinSymbol);
@@ -141,6 +146,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                 mGetUserFinanceFlowData.setEndTime(endTime);
                 mPage = 0;
                 getUserFinanceFlow();
+                showOrDismiss();
             }
 
             @Override
@@ -148,9 +154,44 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                 mGetUserFinanceFlowData = new GetUserFinanceFlowData();
                 mPage = 0;
                 getUserFinanceFlow();
+                showOrDismiss();
             }
         });
-        propertyFlowFilter.showOrDismiss();
+        showOrDismiss();
+    }
+
+    public void showOrDismiss() {
+        if (mFiltrateGroup.getVisibility() == View.VISIBLE) {
+            AnimatorUtil.collapseVertical(mFiltrateGroup, new AnimatorUtil.OnAnimatorFactionListener() {
+                @Override
+                public void onFaction(float fraction) {
+                    if (fraction == 1) {
+                        mFiltrateGroup.setVisibility(View.GONE);
+                    }
+                }
+            });
+            shader.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    shader.setVisibility(View.GONE);
+                }
+            }, 200);
+        } else {
+            AnimatorUtil.expandVertical(mFiltrateGroup, new AnimatorUtil.OnAnimatorFactionListener() {
+                @Override
+                public void onFaction(float fraction) {
+                    if (fraction == 1) {
+                        mFiltrateGroup.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            shader.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    shader.setVisibility(View.VISIBLE);
+                }
+            }, 200);
+        }
     }
 
     @Override
@@ -174,6 +215,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                         stopFreshOrLoadAnimation();
                         if (mPage == 0) {
                             mSwipeTarget.hideAll(false);
+                            mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
                         }
                         mPage++;
                         if (mPage >= resp.getData().getTotal()) {
@@ -255,5 +297,10 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     @Override
     public LoadMoreFooterView getLoadMoreFooterView() {
         return mSwipeLoadMoreFooter;
+    }
+
+    @OnClick(R.id.shader)
+    public void onViewClicked() {
+        showOrDismiss();
     }
 }

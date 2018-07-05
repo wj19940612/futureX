@@ -22,7 +22,6 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinInfo;
 import com.songbai.futurex.model.status.FlowStatus;
 import com.songbai.futurex.model.status.FlowType;
-import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -127,7 +126,6 @@ public class PropertyFlowFilter {
                 if (mOnSelectCallBack != null) {
                     mOnSelectCallBack.onResetClick();
                 }
-                showOrDismiss();
             }
         });
         mFiltrate.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +134,6 @@ public class PropertyFlowFilter {
                 if (mOnSelectCallBack != null) {
                     mOnSelectCallBack.onSelected(mTempCoinSymbol, mTempFlowType, mTempFlowStatus, mTempStartTime, mTempEndTime);
                 }
-                showOrDismiss();
             }
         });
         if (!TextUtils.isEmpty(mTempCoinSymbol)) {
@@ -159,28 +156,6 @@ public class PropertyFlowFilter {
             if (timeMillion > 0) {
                 mEndTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
             }
-        }
-    }
-
-    public void showOrDismiss() {
-        if (mView.getVisibility() == View.VISIBLE) {
-            AnimatorUtil.collapseVertical(mView, new AnimatorUtil.OnAnimatorFactionListener() {
-                @Override
-                public void onFaction(float fraction) {
-                    if (fraction==1) {
-                        mView.setVisibility(View.GONE);
-                    }
-                }
-            });
-        } else {
-            AnimatorUtil.expandVertical(mView,new AnimatorUtil.OnAnimatorFactionListener() {
-                @Override
-                public void onFaction(float fraction) {
-                    if (fraction==1) {
-                        mView.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
         }
     }
 

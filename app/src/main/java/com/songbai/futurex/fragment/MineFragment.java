@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,7 +133,7 @@ public class MineFragment extends BaseFragment {
                     .into(mHeadPortrait);
             mUserName.setText(userInfo.getUserName());
             int authenticationStatus = userInfo.getAuthenticationStatus();
-            if (authenticationStatus == 1) {
+            if (authenticationStatus == 1||authenticationStatus == 3||authenticationStatus == 4) {
                 mAuthenticationStatus.setImageResource(R.drawable.ic_certification_primary);
             } else if (authenticationStatus == 2) {
                 mAuthenticationStatus.setImageResource(R.drawable.ic_certification_senior);
