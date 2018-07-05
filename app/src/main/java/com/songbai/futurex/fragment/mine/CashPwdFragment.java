@@ -187,7 +187,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     private void requestPhoneAuthCode(String imageAuthCode) {
         AuthSendOld authSendOld = new AuthSendOld();
         authSendOld.setImgCode(imageAuthCode);
-        authSendOld.setSendType(AuthCodeGet.TYPE_SAFE_PSD);
+        authSendOld.setSmsType(AuthCodeGet.TYPE_SAFE_PSD);
         authSendOld.setSendType(AuthSendOld.TYPE_DEFAULT);
         Apic.sendOld(authSendOld).tag(TAG)
                 .callback(new Callback<Resp>() {
@@ -234,7 +234,15 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(R.string.set_cash_pwd_success);
-                        CashPwdFragment.this.getActivity().finish();
+                        LocalUser user = LocalUser.getUser();
+                        if (user.isLogin()) {
+                            UserInfo userInfo = user.getUserInfo();
+                            if (userInfo.getSafeSetting() == 0) {
+                                userInfo.setSafeSetting(1);
+                                LocalUser.getUser().setUserInfo(userInfo);
+                            }
+                        }
+                        finish();
                     }
                 })
                 .fire();
@@ -250,7 +258,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.sendAuthCode:
-                showImageAuthCodeDialog();
+                requestPhoneAuthCode("");
                 break;
             case R.id.confirm:
                 String password = mPassword.getPassword();

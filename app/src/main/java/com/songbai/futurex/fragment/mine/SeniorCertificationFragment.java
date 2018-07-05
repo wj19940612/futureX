@@ -19,6 +19,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.mine.UserAuth;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.IconTextRow;
@@ -69,7 +70,8 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mCanEdit = mAuthenticationStatus == 4 || mAuthenticationStatus == 1;
+        mCanEdit = mAuthenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL
+                || mAuthenticationStatus == AuthenticationStatus.AUTHENTICATION_PRIMARY;
         mSubmit.setVisibility(mCanEdit ? View.VISIBLE : View.INVISIBLE);
         getUserAuth();
     }

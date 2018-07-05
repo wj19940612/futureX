@@ -848,11 +848,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void setPriceType(int type) {
-        if (type != mWaresModel.getPriceType()) {
-            mPremiumRate.setText("");
-        }
         switch (type) {
             case OtcWarePoster.FIXED_PRICE:
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter()});
+                String fixedPrice = mWaresModel.getFixedPrice();
+                mPremiumRate.setText(fixedPrice);
                 mPriceType.setText(R.string.fixed_price);
                 mPriceText.setText(R.string.price);
                 mPriceSymbol.setText(mLegalPaySymbol.toUpperCase());
@@ -860,6 +860,9 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 mPrice.setVisibility(View.GONE);
                 break;
             case OtcWarePoster.FLOATING_PRICE:
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(true, true)
+                        .filterMin(-1000).filterMax(1000)});
+                mPremiumRate.setText(mWaresModel.getPercent());
                 mPriceType.setText(R.string.floating_price);
                 mPriceText.setText(R.string.floating_price_rate);
                 mPriceSymbol.setText(R.string.percent_symbol);

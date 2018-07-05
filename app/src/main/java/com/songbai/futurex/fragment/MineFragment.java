@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.UnreadMessageCount;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -133,9 +133,11 @@ public class MineFragment extends BaseFragment {
                     .into(mHeadPortrait);
             mUserName.setText(userInfo.getUserName());
             int authenticationStatus = userInfo.getAuthenticationStatus();
-            if (authenticationStatus == 1||authenticationStatus == 3||authenticationStatus == 4) {
+            if (authenticationStatus == AuthenticationStatus.AUTHENTICATION_PRIMARY
+                    || authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_GOING
+                    || authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL) {
                 mAuthenticationStatus.setImageResource(R.drawable.ic_certification_primary);
-            } else if (authenticationStatus == 2) {
+            } else if (authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR) {
                 mAuthenticationStatus.setImageResource(R.drawable.ic_certification_senior);
             }
             mUserInfoGroup.setVisibility(View.VISIBLE);

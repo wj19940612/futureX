@@ -99,7 +99,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
     }
 
     private void legalCurrencyOrderList(final int page, int pageSize, String status) {
-        Apic.legalCurrencyOrderList(page, pageSize, status)
+        Apic.legalCurrencyOrderList(page, pageSize, status).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<LegalCurrencyOrder>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<LegalCurrencyOrder>> resp) {
@@ -109,7 +109,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         mPage++;
                         if (resp.getData().getTotal() <= mPage) {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
-                        }else {
+                        } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         }
                         if (page == 0) {

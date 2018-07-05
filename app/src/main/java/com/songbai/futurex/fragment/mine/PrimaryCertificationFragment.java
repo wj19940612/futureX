@@ -20,7 +20,10 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.RealNameAuthData;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
@@ -110,7 +113,15 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(R.string.primary_certification_complete);
-                        PrimaryCertificationFragment.this.getActivity().finish();
+                        LocalUser user = LocalUser.getUser();
+                        if (user.isLogin()) {
+                            UserInfo userInfo = user.getUserInfo();
+                            if (userInfo.getAuthenticationStatus() == AuthenticationStatus.AUTHENTICATION_NONE) {
+                                userInfo.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_PRIMARY);
+                                LocalUser.getUser().setUserInfo(userInfo);
+                            }
+                        }
+                        finish();
                     }
                 })
                 .fire();
