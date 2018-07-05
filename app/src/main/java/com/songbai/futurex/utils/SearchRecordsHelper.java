@@ -26,13 +26,10 @@ public class SearchRecordsHelper {
     private Gson mGson;
     private Type mType;
 
-    private List<CurrencyPair> mRecordList;
-
     public SearchRecordsHelper() {
         mGson = new Gson();
         mType = new TypeToken<List<CurrencyPair>>() {
         }.getType();
-        mRecordList = getRecordsByUserOrDeviceId();
     }
 
     private List<CurrencyPair> getRecordsByUserOrDeviceId() {
@@ -44,11 +41,10 @@ public class SearchRecordsHelper {
     }
 
     public List<CurrencyPair> getRecordList() {
-        return mRecordList;
+        return getRecordsByUserOrDeviceId();
     }
 
     public void clearRecord() {
-        mRecordList.clear();
         Preference.get().setSearchRecordsForUserOrDeviceId(getId(), null);
     }
 
@@ -58,7 +54,8 @@ public class SearchRecordsHelper {
      * @param currencyPair
      */
     public void addRecord(CurrencyPair currencyPair) {
-        Iterator<CurrencyPair> iterator = mRecordList.iterator();
+        List<CurrencyPair> list = getRecordsByUserOrDeviceId();
+        Iterator<CurrencyPair> iterator = list.iterator();
         while (iterator.hasNext()) {
             CurrencyPair pair = iterator.next();
             if (pair.getPairs().equals(currencyPair.getPairs())) {
@@ -66,8 +63,8 @@ public class SearchRecordsHelper {
                 break;
             }
         }
-        mRecordList.add(0, currencyPair);
-        String json = mGson.toJson(mRecordList);
+        list.add(0, currencyPair);
+        String json = mGson.toJson(list);
         Preference.get().setSearchRecordsForUserOrDeviceId(getId(), json);
     }
 
@@ -75,5 +72,22 @@ public class SearchRecordsHelper {
         return LocalUser.getUser().isLogin() ?
                 LocalUser.getUser().getUserInfo().getUserId() :
                 AppInfo.getDeviceHardwareId(App.getAppContext());
+    }
+
+    /**
+     * 更新本地保存的搜索记录添加自选情况
+     *
+     * @param pair
+     */
+    public void updateRecord(CurrencyPair pair) {
+        List<CurrencyPair> list = getRecordsByUserOrDeviceId();
+        for (CurrencyPair cp : list) {
+            if (cp.getPairs().equals(pair.getPairs())) {
+                cp.setAddOptional(pair.isAddOptional());
+                break;
+            }
+        }
+        String json = mGson.toJson(list);
+        Preference.get().setSearchRecordsForUserOrDeviceId(getId(), json);
     }
 }

@@ -787,6 +787,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         protected void onRespSuccess(Resp resp) {
                             mOptionalStatus.setSelected(false);
                             ToastUtil.show(R.string.optional_cancel);
+                            onOptionalStatusClick();
                         }
                     }).fire();
         } else {
@@ -796,9 +797,13 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         protected void onRespSuccess(Resp resp) {
                             mOptionalStatus.setSelected(true);
                             ToastUtil.show(R.string.optional_added);
+                            onOptionalStatusClick();
                         }
                     }).fire();
         }
+    }
+
+    private void onOptionalStatusClick() {
         if (mOnOptionalClickListener != null) {
             mOnOptionalClickListener.onOptionalClick();
         }
