@@ -491,6 +491,7 @@
     <string name="logining">登录中</string>
     <string name="click_and_refresh_auth_code">点击刷新验证码</string>
     <string name="login_success">登录成功</string>
+    <string name="password_inputs_is_not_same">密码输入不一致</string>
 
     <!--Market&Trade-->
     <string-array name="market_radio_header">

@@ -32,7 +32,6 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.fragment.auth.SetPsdFragment;
 import com.songbai.futurex.fragment.mine.PlatformIntroFragment;
 import com.songbai.futurex.http.Apic;
@@ -40,6 +39,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AreaCode;
+import com.songbai.futurex.model.local.AuthCodeCheck;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.RegisterData;
 import com.songbai.futurex.utils.KeyBoardUtils;
@@ -203,10 +203,16 @@ public class RegisterActivity extends BaseActivity {
             if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(phoneAuthCode) || !mCheckUserAgreement.isChecked()) {
                 return false;
             }
+            if (phoneAuthCode.length() < 4) {
+                return false;
+            }
         } else {
             String email = mEmail.getText().toString().trim();
             String emailAuthCode = mEmailAuthCode.getText().toString().trim();
             if (TextUtils.isEmpty(email) || TextUtils.isEmpty(emailAuthCode) || !mCheckUserAgreement.isChecked()) {
+                return false;
+            }
+            if (emailAuthCode.length() < 4) {
                 return false;
             }
         }
@@ -227,7 +233,7 @@ public class RegisterActivity extends BaseActivity {
                 showAreaCodeSelector();
                 break;
             case R.id.next:
-                openSetPassPage();
+                requestCheckAuthCode();
                 break;
             case R.id.switchToLogin:
                 openLoginPage();
@@ -242,6 +248,32 @@ public class RegisterActivity extends BaseActivity {
                 UniqueActivity.launcher(this, PlatformIntroFragment.class).putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_SERVICE_AGREEMENT).execute();
                 break;
         }
+    }
+
+    private void requestCheckAuthCode() {
+        AuthCodeCheck authCodeCheck = new AuthCodeCheck();
+        authCodeCheck.setType(AuthCodeGet.TYPE_REGISTER);
+        if (isPhoneRegister()) {
+            String areaCode = mAreaCode.getText().toString().trim();
+            String phone = mPhoneNumber.getText().toString().trim();
+            String phoneAuthCode = mPhoneAuthCode.getText().toString().trim();
+            authCodeCheck.setData(phone);
+            authCodeCheck.setTeleCode(areaCode);
+            authCodeCheck.setMsgCode(phoneAuthCode);
+        } else {
+            String email = mEmail.getText().toString().trim();
+            String emailAuthCode = mEmailAuthCode.getText().toString().trim();
+            authCodeCheck.setData(email);
+            authCodeCheck.setMsgCode(emailAuthCode);
+        }
+        Apic.checkAuthCode(authCodeCheck).tag(TAG)
+                .indeterminate(this)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        openSetPassPage();
+                    }
+                }).fire();
     }
 
     private void openSetPassPage() {

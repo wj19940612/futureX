@@ -26,6 +26,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.local.AuthCodeCheck;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.utils.KeyBoardUtils;
@@ -99,7 +100,7 @@ public class AuthCodeFragment extends UniqueActivity.UniFragment {
         }
         mAuthCode.addTextChangedListener(mValidationWatcher);
 
-        freezeGetAuthCodeButton();
+        mGetAuthCode.performClick();
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -162,9 +163,29 @@ public class AuthCodeFragment extends UniqueActivity.UniFragment {
                 requestAuthCode(null);
                 break;
             case R.id.next:
-                openSetPadPage();
+                requestCheckAuthCode();
                 break;
         }
+    }
+
+    private void requestCheckAuthCode() {
+        AuthCodeCheck authCodeCheck = new AuthCodeCheck();
+        authCodeCheck.setType(AuthCodeGet.TYPE_FORGET_PSD);
+        if (mFindPsdData.isFindPhonePassword()) {
+            authCodeCheck.setData(mFindPsdData.getPhone());
+        } else {
+            authCodeCheck.setData(mFindPsdData.getEmail());
+        }
+        String authCode = mAuthCode.getText().toString().trim();
+        authCodeCheck.setMsgCode(authCode);
+        Apic.checkAuthCode(authCodeCheck).tag(TAG)
+                .indeterminate(this)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        openSetPadPage();
+                    }
+                }).fire();
     }
 
     private void openSetPadPage() {

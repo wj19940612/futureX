@@ -3,6 +3,7 @@ package com.songbai.futurex.http;
 import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.App;
 import com.songbai.futurex.model.Order;
+import com.songbai.futurex.model.local.AuthCodeCheck;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.BankBindData;
@@ -954,6 +955,19 @@ public class Apic {
     public static Api login(LoginData loginData) {
         return Api.post("/api/user/user/login.do",
                 new ReqParams(LoginData.class, loginData));
+    }
+
+    /**
+     * 验证码验证正确性
+     * <p>
+     * /api/user/user/checkMsgCode.do
+     *
+     * @param authCodeCheck
+     * @return
+     */
+    public static Api checkAuthCode(AuthCodeCheck authCodeCheck) {
+        return Api.post("/api/user/user/checkMsgCode.do",
+                new ReqParams(AuthCodeCheck.class, authCodeCheck));
     }
 
     /**

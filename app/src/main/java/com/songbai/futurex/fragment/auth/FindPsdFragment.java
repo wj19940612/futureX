@@ -2,7 +2,6 @@ package com.songbai.futurex.fragment.auth;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,21 +16,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sbai.httplib.BitmapCfg;
-import com.sbai.httplib.ReqCallback;
-import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.RegularExpUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
-import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
 import butterknife.BindView;
@@ -121,44 +112,13 @@ public class FindPsdFragment extends UniqueActivity.UniFragment {
                 getActivity().finish();
                 break;
             case R.id.next:
-                requestAuthCode(null);
+                openAuthCodePage();
                 break;
         }
     }
 
-    private void requestAuthCode(String imageAuthCode) {
+    private void openAuthCodePage() {
         final String phoneOrEmail = mPhoneOrEmail.getText().toString().trim();
-        AuthCodeGet.Builder builder = AuthCodeGet.Builder.anAuthCodeGet();
-        if (RegularExpUtils.isValidEmail(phoneOrEmail)) {
-            builder.email(phoneOrEmail);
-        } else {
-            builder.phone(phoneOrEmail);
-        }
-        AuthCodeGet authCodeGet = builder
-                .type(AuthCodeGet.TYPE_FORGET_PSD)
-                .imgCode(imageAuthCode).build();
-
-        Apic.getAuthCode(authCodeGet).tag(TAG)
-                .callback(new Callback<Resp>() {
-                    @Override
-                    protected void onRespSuccess(Resp resp) {
-                        openAuthCodePage(phoneOrEmail);
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_REQUIRED
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
-                                || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
-                            showImageAuthCodeDialog();
-                        } else {
-                            super.onRespFailure(failedResp);
-                        }
-                    }
-                }).fire();
-    }
-
-    private void openAuthCodePage(String phoneOrEmail) {
         FindPsdData findPsdData = new FindPsdData();
         if (RegularExpUtils.isValidEmail(phoneOrEmail)) {
             findPsdData.setEmail(phoneOrEmail);
@@ -174,44 +134,7 @@ public class FindPsdFragment extends UniqueActivity.UniFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_FIND_PSD && resultCode == Activity.RESULT_OK) {
-            getActivity().finish();
+            finish();
         }
-    }
-
-    private void showImageAuthCodeDialog() {
-        mAuthCodeViewController = new AuthCodeViewController(getActivity(), new AuthCodeViewController.OnClickListener() {
-            @Override
-            public void onConfirmClick(String authCode) {
-                requestAuthCode(authCode);
-            }
-
-            @Override
-            public void onImageCodeClick(ImageView imageView) {
-                requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
-            }
-        });
-
-        SmartDialog.solo(getActivity())
-                .setCustomViewController(mAuthCodeViewController)
-                .show();
-
-        ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
-        requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
-    }
-
-    private void requestAuthCodeImage(int width, int height) {
-        Apic.getAuthCodeImage(AuthCodeGet.TYPE_FORGET_PSD).tag(TAG)
-                .bitmapCfg(new BitmapCfg(width, height))
-                .callback(new ReqCallback<Bitmap>() {
-                    @Override
-                    public void onSuccess(Bitmap bitmap) {
-                        mAuthCodeViewController.setAuthCodeBitmap(bitmap);
-                    }
-
-                    @Override
-                    public void onFailure(ReqError reqError) {
-                        mAuthCodeViewController.loadImageFailure();
-                    }
-                }).fireFreely();
     }
 }

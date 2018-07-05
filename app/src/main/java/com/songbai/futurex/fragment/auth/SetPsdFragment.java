@@ -30,6 +30,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.RegisterData;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.RegularExpUtils;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.SmartDialog;
@@ -196,10 +197,6 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
             return false;
         }
 
-        if (!loginPsd.equals(confirmPsd)) {
-            return false;
-        }
-
         return true;
     }
 
@@ -216,6 +213,10 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
                 getActivity().finish();
                 break;
             case R.id.confirm:
+                if (!checkIfPasswordsSame()){
+                    ToastUtil.show(R.string.password_inputs_is_not_same);
+                    return;
+                }
                 if (mFindPsdData != null) {
                     requestUpdatePassword();
                 } else {
@@ -223,6 +224,15 @@ public class SetPsdFragment extends UniqueActivity.UniFragment {
                 }
                 break;
         }
+    }
+
+    private boolean checkIfPasswordsSame() {
+        String loginPsd = mLoginPsd.getPassword();
+        String confirmPsd = mConfirmPsd.getPassword();
+        if (loginPsd.equals(confirmPsd)) {
+            return true;
+        }
+        return false;
     }
 
     private void requestUpdatePassword() {
