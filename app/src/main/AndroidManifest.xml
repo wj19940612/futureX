@@ -51,9 +51,11 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.auth.LoginActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.auth.RegisterActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.PersonalDataActivity"

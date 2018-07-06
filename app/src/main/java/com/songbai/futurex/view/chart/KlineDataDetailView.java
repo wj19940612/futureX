@@ -53,15 +53,15 @@ public class KlineDataDetailView extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_kline_data_detail, this, true);
         ButterKnife.bind(this);
 
-        mSimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        mSimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         mSimpleDate = new Date();
     }
 
     public void setKlineData(Kline.Data data) {
         mOpenPrice.setText(getPrice(R.string.open_price_x, data.getOpenPrice()));
-        mHighestPrice.setText(getPrice(R.string.highest_price_x, data.getOpenPrice()));
-        mLowestPrice.setText(getPrice(R.string.lowest_price_x, data.getOpenPrice()));
-        mClosePrice.setText(getPrice(R.string.close_price_x, data.getOpenPrice()));
+        mHighestPrice.setText(getPrice(R.string.highest_price_x, data.getMaxPrice()));
+        mLowestPrice.setText(getPrice(R.string.lowest_price_x, data.getMinPrice()));
+        mClosePrice.setText(getPrice(R.string.close_price_x, data.getClosePrice()));
         mTradeVolume.setText(getVolume(R.string.trade_volume_x, data.getNowVolume()));
         mSimpleDate.setTime(data.getTimestamp());
         mDate.setText(mSimpleDateFormat.format(mSimpleDate));
