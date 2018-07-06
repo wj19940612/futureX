@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/authentication"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:adjustViewBounds="true"
+    android:background="@drawable/bg_white_pressed_f5"
+    android:clickable="true">
+
+    <TextView
+        android:id="@+id/buyerLimit"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:adjustViewBounds="true"
+        android:gravity="center"
+        android:text="@string/authentication"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"/>
+
+    <ImageView
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_common_checkmark"/>
+</RelativeLayout>

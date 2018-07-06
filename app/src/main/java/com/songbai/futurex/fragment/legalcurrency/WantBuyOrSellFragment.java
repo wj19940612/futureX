@@ -611,7 +611,8 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 mPrice.setText(getString(R.string.x_space_x,
                         FinanceUtil.formatWithScale(legalCurrencyTrade.getFixedPrice()),
                         legalCurrencyTrade.getPayCurrency().toUpperCase()));
-                mSumSection.setText(getString(R.string.amount_limit, String.valueOf(legalCurrencyTrade.getMinTurnover()), String.valueOf(legalCurrencyTrade.getMaxTurnover())));
+                mSumSection.setText(getString(R.string.amount_limit, FinanceUtil.trimTrailingZero(legalCurrencyTrade.getMinTurnover()),
+                        FinanceUtil.trimTrailingZero(legalCurrencyTrade.getMaxTurnover())));
                 mOwnCount.setText(getString(R.string.own_amount, legalCurrencyTrade.getChangeCount()));
                 mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,
                         legalCurrencyTrade.getCountDeal(),

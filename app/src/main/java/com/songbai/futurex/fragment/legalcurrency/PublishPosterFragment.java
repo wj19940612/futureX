@@ -7,10 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
+import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,6 +43,7 @@ import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.StrFormatter;
+import com.songbai.futurex.utils.StrUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.inputfilter.MoneyValueFilter;
 import com.songbai.futurex.view.SmartDialog;
@@ -128,6 +127,8 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     TextView mPreview;
     @BindView(R.id.check)
     ImageView mCheck;
+    @BindView(R.id.tvBalance)
+    TextView mTvBalance;
     private Unbinder mBind;
     private WaresModel mWaresModel;
     private String mLegalPaySymbol = "";
@@ -161,6 +162,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mWaresModel = new WaresModel();
         mConfirmRulesGroup.setSelected(false);
+        mTradeCountLimit.setFilters(new InputFilter[]{new MoneyValueFilter().filterMax(1000)});
         restoreData();
         accountBalance();
         getLegalCoin();
@@ -172,7 +174,6 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
 
     private void restoreData() {
         if (mOtcWarePoster != null) {
-            Log.e(TAG, "restoreData1: " + new Gson().toJson(mOtcWarePoster));
             mLegalPaySymbol = mOtcWarePoster.getPayCurrency();
             mLegalCoinSymbol = mOtcWarePoster.getCoinSymbol();
             mWaresModel.setDealType(mOtcWarePoster.getDealType());
@@ -321,10 +322,18 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         String price = getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale((1 + rate / 100) * mQuotaPrice),
                 mLegalPaySymbol.toUpperCase());
-        SpannableStringBuilder priceText = new SpannableStringBuilder(getString(R.string.quota_price_x_symbol, price));
-        priceText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.red)),
-                priceText.length() - price.length(), priceText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mPrice.setText(priceText);
+        SpannableString priceStr = StrUtil.mergeTextWithColor(getString(R.string.quota_price),
+                price,
+                ContextCompat.getColor(getContext(), R.color.red));
+        mPrice.setText(priceStr);
+    }
+
+    private void setBalance(double balance) {
+        mTvBalance.setVisibility(View.VISIBLE);
+        SpannableString balanceStr = StrUtil.mergeTextWithColor(getString(R.string.account_balance),
+                FinanceUtil.formatWithScale(balance),
+                ContextCompat.getColor(getContext(), R.color.red));
+        mTvBalance.setText(balanceStr);
     }
 
     private void setConditionValue(HashMap<String, String> conditionKeyValue) {
@@ -377,6 +386,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<Double> resp) {
                         mBalance = resp.getData();
+                        setBalance(mBalance);
                     }
                 }).fire();
     }
@@ -488,10 +498,12 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             case R.id.buyIn:
                 setDealType(true);
                 quotaPrice();
+                accountBalance();
                 break;
             case R.id.sellOut:
                 setDealType(false);
                 quotaPrice();
+                accountBalance();
                 break;
             case R.id.priceType:
                 showPriceTypeSelector();
@@ -521,11 +533,17 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.confirmRulesGroup:
                 mConfirmRulesGroup.setSelected(!mConfirmRulesGroup.isSelected());
-                mPreview.setEnabled(mConfirmRulesGroup.isSelected());
+                checkCanPreview();
                 mCheck.setImageResource(mConfirmRulesGroup.isSelected() ? R.drawable.ic_common_checkmark : 0);
                 break;
             default:
         }
+    }
+
+    private void checkCanPreview() {
+        boolean mConfirmRules = mConfirmRulesGroup.isSelected();
+
+        mPreview.setEnabled(mConfirmRules);
     }
 
     private void showWaresPairFilter() {
@@ -622,13 +640,10 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void setConditionType(String conditionType) {
-        if (TextUtils.isEmpty(conditionType)) {
-            return;
-        }
         StringBuilder sb = new StringBuilder();
         if (conditionType.contains(OtcWarePoster.CONDITION_AUTH)) {
             if (!mConditionKeyValue.containsKey(OtcWarePoster.CONDITION_AUTH)) {
-                mConditionKeyValue.put(OtcWarePoster.CONDITION_AUTH, "");
+                mConditionKeyValue.put(OtcWarePoster.CONDITION_AUTH, "1");
             }
             sb.append(getString(R.string.authentication));
             sb.append("、");
@@ -650,8 +665,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         }
         if (sb.length() > 0) {
             mBuyerLimit.setText(sb.toString().substring(0, sb.length() - 1));
-            mWaresModel.setConditionType(conditionType);
+        } else {
+            mBuyerLimit.setText("");
         }
+        mWaresModel.setConditionType(conditionType);
+        setConditionValue(mConditionKeyValue);
     }
 
     private void showAreaCodeSelector() {
@@ -759,7 +777,6 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         payTypeController.setOnItemClickListener(new PayTypeController.OnItemClickListener() {
             @Override
             public void onConfirmClick(String payInfo, String id) {
-                Log.e("wtf", "onConfirmClick: " + payInfo);
                 setPayInfo(payInfo);
                 mWaresModel.setPayIds(id);
             }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -366,7 +367,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     private static class CancelConfirmController extends SmartDialog.CustomViewController {
         ImageView mClose;
-        TextView mConfirmUnpaid;
+        LinearLayout mConfirmUnpaid;
         TextView mConfirm;
         private Context mContext;
         private OnConfirmClick mOnConfirmClick;

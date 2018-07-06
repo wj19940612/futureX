@@ -145,6 +145,9 @@ public class PayTypeController extends SmartDialog.CustomViewController {
         }
 
         public void setList(BindBankList bindBankList) {
+            if (bindBankList == null) {
+                return;
+            }
             ArrayList<BankCardBean> list = new ArrayList<>();
             BankCardBean aliPay = bindBankList.getAliPay();
             if (aliPay.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {

@@ -325,6 +325,7 @@
     <string name="premium_rate">溢价比例</string>
     <string name="trade_limit">交易限制</string>
     <string name="trade_amount">交易数量</string>
+    <string name="account_balance">当前账户余额：</string>
     <string name="pay_type">支付方式</string>
     <string name="optional">（选填）</string>
     <string name="buyer_limit">对方限制</string>
@@ -391,7 +392,7 @@
     <string name="edit_content">编辑内容</string>
     <string name="delete_poster">删除广告</string>
     <string name="pricing_currency">计价货币</string>
-    <string name="quota_price_x_symbol">价格：%1$s</string>
+    <string name="quota_price">价格：</string>
     <string name="passed_primary_certification">必须通过初级认证</string>
     <string name="passed_senior_certification">必须通过高级认证</string>
     <string name="deal_count_more_than_x">交易成功次数大于%1$s</string>
