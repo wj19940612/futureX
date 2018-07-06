@@ -327,7 +327,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
+        mTradeVolumeView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mTradeDealView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mTradeDealView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mKlineDataDetailView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }
 
