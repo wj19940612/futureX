@@ -223,7 +223,7 @@ public class TradeVolumeView extends LinearLayout {
                 BidPriceView view = (BidPriceView) mBidPriceParent.getChildAt(i);
                 view.setRank(i + 1);
                 view.setPrice(NumUtils.getPrice(deepData.getPrice(), scale));
-                view.setVolume(NumUtils.getVolume(deepData.getCount()));
+                view.setVolume(NumUtils.getVolume(deepData.getCount(), mVolumeScale));
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 
@@ -247,7 +247,7 @@ public class TradeVolumeView extends LinearLayout {
                 AskPriceView view = (AskPriceView) mAskPriceParent.getChildAt(i);
                 view.setRank(i + 1);
                 view.setPrice(NumUtils.getPrice(deepData.getPrice(), scale));
-                view.setVolume(NumUtils.getVolume(deepData.getCount()));
+                view.setVolume(NumUtils.getVolume(deepData.getCount(), mVolumeScale));
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 

@@ -1,5 +1,7 @@
 package com.songbai.futurex.utils;
 
+import java.math.RoundingMode;
+
 /**
  * Modified by john on 2018/6/13
  * <p>
@@ -17,6 +19,20 @@ public class NumUtils {
     public static String getVolume(double volume) {
         // TODO: 2018/6/13 how show
         return String.valueOf(volume);
+    }
+
+    public static String getVolume(double volume, int scale) {
+        return FinanceUtil.formatWithScale(volume, scale);
+    }
+
+    /**
+     * 24小时交易量格式化，正无穷舍入
+     *
+     * @param volume
+     * @return
+     */
+    public static String get24HourVolume(double volume) {
+        return FinanceUtil.formatWithScale(volume, 0, RoundingMode.CEILING);
     }
 
     /**

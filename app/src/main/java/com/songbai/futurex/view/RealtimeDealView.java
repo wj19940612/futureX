@@ -37,6 +37,7 @@ public class RealtimeDealView extends LinearLayout {
 
     private List<DealData> mDealDataList;
     private int mPriceScale;
+    private int mVolumeScale;
 
     public RealtimeDealView(Context context) {
         super(context);
@@ -104,7 +105,7 @@ public class RealtimeDealView extends LinearLayout {
                 ((DealFlowView) childAt).setDirection(dealData.getDirection());
                 ((DealFlowView) childAt).setPrice(NumUtils.getPrice(dealData.getLastPrice(), mPriceScale));
                 ((DealFlowView) childAt).setTime(dealData.getUpTime());
-                ((DealFlowView) childAt).setVolume(NumUtils.getVolume(dealData.getLastVolume()));
+                ((DealFlowView) childAt).setVolume(NumUtils.getVolume(dealData.getLastVolume(), mVolumeScale));
             }
         }
 
@@ -116,5 +117,9 @@ public class RealtimeDealView extends LinearLayout {
 
     public void setPriceScale(int priceScale) {
         mPriceScale = priceScale;
+    }
+
+    public void setVolumeScale(int volumeScale) {
+        mVolumeScale = volumeScale;
     }
 }

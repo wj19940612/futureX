@@ -327,19 +327,27 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
+        mTradeVolumeView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mTradeDealView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mTradeDealView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mKlineDataDetailView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }
 
     private void updateMarketDataView(MarketData marketData) {
         if (marketData == null) return;
-        mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+        if (mPairDesc != null) {
+            int scale = mPairDesc.getPairs().getPricePoint();
+            mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice(), scale));
+            mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice(), scale));
+            mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice(), scale));
+        } else {
+            mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+            mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice()));
+            mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice()));
+        }
         mDeepView.setLastPrice(marketData.getLastPrice());
-
         mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
-        mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice()));
-        mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice()));
-        mTradeVolume.setText(NumUtils.getVolume(marketData.getVolume()));
+        mTradeVolume.setText(NumUtils.get24HourVolume(marketData.getVolume()));
     }
 
     @Override
