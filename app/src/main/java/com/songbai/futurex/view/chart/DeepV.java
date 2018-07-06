@@ -14,8 +14,10 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.websocket.model.DeepData;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -172,7 +174,13 @@ public class DeepV extends View {
     }
 
     private String formatVolume(double baseline) {
-        return String.valueOf(baseline);
+        if (baseline < 1000) {
+            return FinanceUtil.formatWithScale(baseline, 1, RoundingMode.DOWN);
+        } else if (baseline < 1000000) {
+            return FinanceUtil.formatWithScale(baseline / 1000, 2, RoundingMode.DOWN) + "k";
+        } else {
+            return FinanceUtil.formatWithScale(baseline / 1000000, 2, RoundingMode.DOWN) + "m";
+        }
     }
 
     private void calculateBaselines() {
