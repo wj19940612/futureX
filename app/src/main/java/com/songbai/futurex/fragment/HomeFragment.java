@@ -221,6 +221,11 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             currencyPair.setCategory(latelyBean.getCategory());
             currencyPair.setOption(latelyBean.getOption());
             currencyPair.setSort(latelyBean.getSort());
+            currencyPair.setUpDropPrice(latelyBean.getUpDropPrice());
+            currencyPair.setUpDropSpeed(latelyBean.getUpDropSpeed());
+            currencyPair.setLastPrice(latelyBean.getLastPrice());
+            currencyPair.setLastVolume(latelyBean.getLastVolume());
+            currencyPair.setPricePoint(latelyBean.getPricePoint());
             UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
                     .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
                     .execute();
@@ -232,6 +237,11 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             currencyPair.setPairs(pairRiseListBean.getPairs());
             currencyPair.setPrefixSymbol(pairRiseListBean.getPrefixSymbol());
             currencyPair.setSuffixSymbol(pairRiseListBean.getSuffixSymbol());
+            currencyPair.setUpDropPrice(pairRiseListBean.getUpDropPrice());
+            currencyPair.setUpDropSpeed(pairRiseListBean.getUpDropSpeed());
+            currencyPair.setLastPrice(pairRiseListBean.getLastPrice());
+            currencyPair.setLastVolume(pairRiseListBean.getVolume());
+            currencyPair.setPricePoint(pairRiseListBean.getPricePoint());
             UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
                     .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
                     .execute();

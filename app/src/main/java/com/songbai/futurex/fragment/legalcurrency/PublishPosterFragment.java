@@ -142,6 +142,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private List<AreaCode> mAreaCodes;
     private OptionsPickerView mPvOptions;
     private Double mBalance;
+    private BindBankList mBindBankList;
 
     @Nullable
     @Override
@@ -170,6 +171,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         getAreaCode();
         otcWaresGet(false);
         quotaPrice();
+        getBindListData(false);
     }
 
     private void restoreData() {
@@ -411,12 +413,15 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 }).fire();
     }
 
-    private void getBindListData() {
+    private void getBindListData(final boolean show) {
         Apic.bindList(0)
                 .callback(new Callback<Resp<BindBankList>>() {
                     @Override
                     protected void onRespSuccess(Resp<BindBankList> resp) {
-                        showPayTypeSelector(resp.getData());
+                        mBindBankList = resp.getData();
+                        if (show) {
+                            showPayTypeSelector(mBindBankList);
+                        }
                     }
                 })
                 .fire();
@@ -512,7 +517,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 showTradeLimitSelector();
                 break;
             case R.id.payType:
-                getBindListData();
+                if (mBindBankList != null) {
+                    showPayTypeSelector(mBindBankList);
+                } else {
+                    getBindListData(true);
+                }
                 break;
             case R.id.remark:
                 showRemarkInput();
@@ -782,8 +791,67 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             }
         });
         String payInfo = mWaresModel.getPayInfo();
-        payTypeController.setPayInfo(payInfo);
-        payTypeController.setSelectedBankId(mWaresModel.getPayIds());
+        String[] split = payInfo.split(",");
+        ArrayList<String> payInfos = new ArrayList<>();
+        for (String s : split) {
+            if (!TextUtils.isEmpty(s)) {
+                payInfos.add(s);
+            }
+        }
+        if (data == null) {
+            return;
+        }
+        ArrayList<BankCardBean> list = new ArrayList<>();
+        BankCardBean aliPay = data.getAliPay();
+        if (aliPay.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
+            list.add(aliPay);
+        }
+        BankCardBean wechat = data.getWechat();
+        if (wechat.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
+            list.add(wechat);
+        }
+        List<BankCardBean> bankCard = data.getBankCard();
+        for (BankCardBean bankCardBean : bankCard) {
+            list.add(bankCardBean);
+        }
+        String payIds = mWaresModel.getPayIds();
+        for (int i = payInfos.size() - 1; i >= 0; i--) {
+            String s = payInfos.get(i);
+            boolean contains = false;
+            for (BankCardBean bankCardBean : list) {
+                String payType = "";
+                switch (bankCardBean.getPayType()) {
+                    case BankCardBean.PAYTYPE_ALIPAY:
+                        payType = PayType.ALIPAY;
+                        break;
+                    case BankCardBean.PAYTYPE_WX:
+                        payType = PayType.WXPAY;
+                        break;
+                    case BankCardBean.PAYTYPE_BANK:
+                        payType = PayType.BANK_PAY;
+                        if (!String.valueOf(bankCardBean.getId()).equals(payIds)) {
+                            payType = "";
+                        }
+                        break;
+                    default:
+                }
+                if (s.equals(payType)) {
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) {
+                payInfos.remove(s);
+            }
+        }
+        setPayInfo(payInfo);
+        StringBuilder sb = new StringBuilder();
+        for (String s : payInfos) {
+            sb.append(s);
+            sb.append(",");
+        }
+        setPayInfo(sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "");
+        payTypeController.setSelectedBankId(payIds);
         payTypeController.setBankList(data);
         SmartDialog smartDialog = SmartDialog.solo(getActivity());
         smartDialog
@@ -816,6 +884,12 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         if (sb.length() > 0) {
             mPayType.setText(sb.toString().substring(0, sb.length() - 1));
             mWaresModel.setPayInfo(payInfo);
+            if (!payInfo.contains(PayType.BANK_PAY)) {
+                mWaresModel.setPayIds("");
+            }
+        } else {
+            mWaresModel.setPayInfo("");
+            mWaresModel.setPayIds("");
         }
     }
 

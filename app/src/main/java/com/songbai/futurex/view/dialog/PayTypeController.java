@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,17 +92,44 @@ public class PayTypeController extends SmartDialog.CustomViewController {
         recyclerView.setAdapter(adapter);
     }
 
-    public void setPayInfo(String payInfo) {
-        String[] split = payInfo.split(",");
-        for (String s : split) {
-            if (!TextUtils.isEmpty(s)) {
-                mPayInfos.add(s);
-            }
-        }
+    public void setPayInfo(ArrayList<String> payInfo) {
+        mPayInfos.clear();
+        mPayInfos.addAll(payInfo);
     }
 
     public void setBankList(BindBankList bankList) {
         mBankList = bankList;
+//        ArrayList<BankCardBean> list = new ArrayList<>();
+//        BankCardBean aliPay = bankList.getAliPay();
+//        if (aliPay.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
+//            list.add(aliPay);
+//        }
+//        BankCardBean wechat = bankList.getWechat();
+//        if (wechat.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
+//            list.add(wechat);
+//        }
+//        List<BankCardBean> bankCard = bankList.getBankCard();
+//        for (BankCardBean bankCardBean : bankCard) {
+//            list.add(bankCardBean);
+//        }
+//        for (BankCardBean bankCardBean : list) {
+//            String payTyp = "";
+//            switch (bankCardBean.getPayType()) {
+//                case BankCardBean.PAYTYPE_ALIPAY:
+//                    payType = PayType.ALIPAY;
+//                    break;
+//                case BankCardBean.PAYTYPE_WX:
+//                    payType = PayType.WXPAY;
+//                    break;
+//                case BankCardBean.PAYTYPE_BANK:
+//                    payType = PayType.BANK_PAY;
+//                    break;
+//                default:
+//            }
+//            if (mPayInfos.contains(payType)) {
+//
+//            }
+//        }
     }
 
     public void setSelectedBankId(String selectedBankId) {
@@ -225,7 +251,7 @@ public class PayTypeController extends SmartDialog.CustomViewController {
                         if (s.equals(payType)) {
                             match = true;
                             if (payType.equals(PayType.BANK_PAY)) {
-                                match = mSelectedBankId.equals(String.valueOf(bankCardBean.getId()));
+                                match = String.valueOf(bankCardBean.getId()).equals(mSelectedBankId);
                             }
                         }
                     }
