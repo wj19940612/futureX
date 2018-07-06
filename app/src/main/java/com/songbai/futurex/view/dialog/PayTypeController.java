@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,9 +93,13 @@ public class PayTypeController extends SmartDialog.CustomViewController {
         recyclerView.setAdapter(adapter);
     }
 
-    public void setPayInfo(ArrayList<String> payInfo) {
-        mPayInfos.clear();
-        mPayInfos.addAll(payInfo);
+    public void setPayInfo(String payInfo) {
+        String[] split = payInfo.split(",");
+        for (String s : split) {
+            if (!TextUtils.isEmpty(s)) {
+                mPayInfos.add(s);
+            }
+        }
     }
 
     public void setBankList(BindBankList bankList) {
