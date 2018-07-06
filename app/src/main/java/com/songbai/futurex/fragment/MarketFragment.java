@@ -358,7 +358,7 @@ public class MarketFragment extends BaseFragment {
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
-                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.get24HourVolume(marketData.getVolume())));
                     mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
@@ -367,7 +367,7 @@ public class MarketFragment extends BaseFragment {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
                     }
                 } else {
-                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(pair.getLastVolume())));
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.get24HourVolume(pair.getLastVolume())));
                     mLastPrice.setText(NumUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(NumUtils.getPrefixPercent(pair.getUpDropSpeed()));
                     if (pair.getUpDropSpeed() < 0) {
@@ -452,7 +452,7 @@ public class MarketFragment extends BaseFragment {
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
-                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.get24HourVolume(marketData.getVolume())));
                     mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
@@ -461,7 +461,7 @@ public class MarketFragment extends BaseFragment {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
                     }
                 } else {
-                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(pair.getLastVolume())));
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.get24HourVolume(pair.getLastVolume())));
                     mLastPrice.setText(NumUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(NumUtils.getPrefixPercent(pair.getUpDropSpeed()));
                     if (pair.getUpDropSpeed() < 0) {
