@@ -26,19 +26,29 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
      * category : 1
      * id : 24
      * option : 0
+     * lastPrice: 0.07,
+     * lastVolume: 0,
      * pairs : eth_btc
+     * pricePoint: 6
      * prefixSymbol : eth
      * sort : 2
      * suffixSymbol : btc
+     * upDropPrice: 0,
+     * upDropSpeed: 0
      */
 
     private int category;
     private int id;
     private int option;
+    private double lastPrice;
+    private double lastVolume;
+    private int pricePoint;
     private String pairs;
     private String prefixSymbol;
     private int sort;
     private String suffixSymbol;
+    private double upDropPrice;
+    private double upDropSpeed;
 
     public int getCategory() {
         return category;
@@ -108,6 +118,26 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         option = addOptional ? OPTIONAL_ADDED : OPTIONAL_NOT;
     }
 
+    public double getLastPrice() {
+        return lastPrice;
+    }
+
+    public double getLastVolume() {
+        return lastVolume;
+    }
+
+    public int getPricePoint() {
+        return pricePoint;
+    }
+
+    public double getUpDropPrice() {
+        return upDropPrice;
+    }
+
+    public double getUpDropSpeed() {
+        return upDropSpeed;
+    }
+
     @Override
     public int getGroupNameRes() {
         if (category == CATE_MAIN) {
@@ -136,6 +166,19 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
     }
 
     @Override
+    public String toString() {
+        return "CurrencyPair{" +
+                "category=" + category +
+                ", id=" + id +
+                ", option=" + option +
+                ", pairs='" + pairs + '\'' +
+                ", prefixSymbol='" + prefixSymbol + '\'' +
+                ", sort=" + sort +
+                ", suffixSymbol='" + suffixSymbol + '\'' +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -145,6 +188,9 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         dest.writeInt(this.category);
         dest.writeInt(this.id);
         dest.writeInt(this.option);
+        dest.writeDouble(this.lastPrice);
+        dest.writeDouble(this.lastVolume);
+        dest.writeInt(this.pricePoint);
         dest.writeString(this.pairs);
         dest.writeString(this.prefixSymbol);
         dest.writeInt(this.sort);
@@ -158,6 +204,9 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         this.category = in.readInt();
         this.id = in.readInt();
         this.option = in.readInt();
+        this.lastPrice = in.readDouble();
+        this.lastVolume = in.readDouble();
+        this.pricePoint = in.readInt();
         this.pairs = in.readString();
         this.prefixSymbol = in.readString();
         this.sort = in.readInt();
@@ -175,17 +224,4 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
             return new CurrencyPair[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "CurrencyPair{" +
-                "category=" + category +
-                ", id=" + id +
-                ", option=" + option +
-                ", pairs='" + pairs + '\'' +
-                ", prefixSymbol='" + prefixSymbol + '\'' +
-                ", sort=" + sort +
-                ", suffixSymbol='" + suffixSymbol + '\'' +
-                '}';
-    }
 }

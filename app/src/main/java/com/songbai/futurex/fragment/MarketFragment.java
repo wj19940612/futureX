@@ -307,10 +307,6 @@ public class MarketFragment extends BaseFragment {
             notifyDataSetChanged();
         }
 
-        public List<CurrencyPair> getPairList() {
-            return mPairList;
-        }
-
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
             mMarketDataList = marketDataList;
             notifyDataSetChanged();
@@ -360,13 +356,21 @@ public class MarketFragment extends BaseFragment {
             public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
-                if (marketDataList != null) {
+                if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
-                    if (marketData == null) return;
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
-                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                    }
+                } else {
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(pair.getLastVolume())));
+                    mLastPrice.setText(NumUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(NumUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    if (pair.getUpDropSpeed() < 0) {
                         mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
                     } else {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
@@ -446,13 +450,21 @@ public class MarketFragment extends BaseFragment {
             public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
-                if (marketDataList != null) {
+                if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
-                    if (marketData == null) return;
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
-                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                    }
+                } else {
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(pair.getLastVolume())));
+                    mLastPrice.setText(NumUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(NumUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    if (pair.getUpDropSpeed() < 0) {
                         mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
                     } else {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
