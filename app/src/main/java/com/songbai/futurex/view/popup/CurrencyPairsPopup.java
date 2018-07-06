@@ -48,6 +48,11 @@ public class CurrencyPairsPopup {
     private CurrencyAdapter mBaseCurrencyAdapter;
     private CurrencyPair mCurCurrencyPair;
     private OnCurrencyChangeListener mOnCurrencyChangeListener;
+    private OnSearchBoxClickListener mOnSearchBoxClickListener;
+
+    public interface OnSearchBoxClickListener {
+        void onSearchBoxClick();
+    }
 
     public interface OnCurrencyChangeListener {
         void onCounterCurrencyChange(String counterCurrency, List<CurrencyPair> newDisplayList);
@@ -55,14 +60,23 @@ public class CurrencyPairsPopup {
         void onBaseCurrencyChange(String baseCurrency, CurrencyPair currencyPair);
     }
 
-    public CurrencyPairsPopup(Context context, CurrencyPair currencyPair, OnCurrencyChangeListener onCurrencyChangeListener) {
+    public CurrencyPairsPopup(Context context, CurrencyPair currencyPair,
+                              OnCurrencyChangeListener onCurrencyChangeListener,
+                              OnSearchBoxClickListener onSearchBoxClickListener) {
         mPairListMap = new HashMap<>();
         mCurCurrencyPair = currencyPair;
         mOnCurrencyChangeListener = onCurrencyChangeListener;
+        mOnSearchBoxClickListener = onSearchBoxClickListener;
 
         mView = LayoutInflater.from(context).inflate(R.layout.view_popup_currency_pairs, null, false);
         mCounterCurrencyList = mView.findViewById(R.id.counterCurrencyList);
         mBaseCurrencyList = mView.findViewById(R.id.baseCurrencyList);
+        mView.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnSearchBoxClickListener.onSearchBoxClick();
+            }
+        });
 
         String[] stringArray = context.getResources().getStringArray(R.array.market_radio_header);
         List<String> counterCurrency = new ArrayList<>(Arrays.asList(stringArray));
@@ -86,12 +100,13 @@ public class CurrencyPairsPopup {
             public void onItemClick(View view, int position, Object obj) {
                 if (obj instanceof CurrencyPair) {
                     mPopupWindow.dismiss();
-                    if (((CurrencyPair) obj).getPairs().equalsIgnoreCase(mCurCurrencyPair.getPairs())) return;
+
+                    if (((CurrencyPair) obj).getPairs().equalsIgnoreCase(mCurCurrencyPair.getPairs()))
+                        return;
 
                     if (mOnCurrencyChangeListener != null) {
                         mOnCurrencyChangeListener.onBaseCurrencyChange(((CurrencyPair) obj).getPrefixSymbol(), (CurrencyPair) obj);
                     }
-                    setCurCurrencyPair((CurrencyPair) obj);
                 }
             }
         });
@@ -113,7 +128,7 @@ public class CurrencyPairsPopup {
         }
     }
 
-    private void setCurCurrencyPair(CurrencyPair currencyPair) {
+    public void setCurCurrencyPair(CurrencyPair currencyPair) {
         mCurCurrencyPair = currencyPair;
         mCounterCurrencyAdapter.setSelectedCurrency(currencyPair.getSuffixSymbol());
         mBaseCurrencyAdapter.setCurCurrencyPair(currencyPair);
@@ -123,27 +138,30 @@ public class CurrencyPairsPopup {
         return mCounterCurrencyAdapter.getSelectedCurrency();
     }
 
-    public void showOrDismiss(View view) {
+    public void show(View view) {
+        mPopupWindow = new PopupWindow(mView, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (mDimView != null && mDimView.getVisibility() == View.VISIBLE) {
+                    mDimView.setVisibility(View.GONE);
+                }
+            }
+        });
+        mPopupWindow.showAsDropDown(view);
+
+        if (mDimView != null && mDimView.getVisibility() != View.VISIBLE) {
+            mDimView.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void dismiss() {
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
-        } else {
-            mPopupWindow = new PopupWindow(mView, ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            mPopupWindow.setFocusable(true);
-            mPopupWindow.setOutsideTouchable(true);
-            mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    if (mDimView != null && mDimView.getVisibility() == View.VISIBLE) {
-                        mDimView.setVisibility(View.GONE);
-                    }
-                }
-            });
-            mPopupWindow.showAsDropDown(view);
-
-            if (mDimView != null && mDimView.getVisibility() != View.VISIBLE) {
-                mDimView.setVisibility(View.VISIBLE);
-            }
         }
     }
 

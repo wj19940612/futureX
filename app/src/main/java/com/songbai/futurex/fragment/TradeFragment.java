@@ -1,6 +1,8 @@
 package com.songbai.futurex.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -90,6 +92,8 @@ import static com.songbai.futurex.model.Order.MARKET_TRADE;
  * APIs:
  */
 public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
+
+    private static final int REQ_CODE_SEARCH = 99;
 
     @BindView(R.id.tradeDirRadio)
     RadioHeader mTradeDirRadio;
@@ -467,16 +471,39 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         public void onBaseCurrencyChange(String baseCurrency, CurrencyPair currencyPair) {
                             switchNewCurrencyPair(currencyPair);
                         }
+                    },
+                    new CurrencyPairsPopup.OnSearchBoxClickListener() {
+                        @Override
+                        public void onSearchBoxClick() {
+                            openSearchPage();
+                        }
                     });
             mPairsPopup.setDimView(mDimView);
         }
-        mPairsPopup.showOrDismiss(mOrderListFloatRadio);
+        mPairsPopup.show(mOrderListFloatRadio);
         mPairsPopup.selectCounterCurrency(mCurrencyPair.getSuffixSymbol());
+    }
+
+    private void openSearchPage() {
+        UniqueActivity.launcher(getActivity(), SearchCurrencyFragment.class)
+                .putExtra(ExtraKeys.SERACH_FOR_TRADE, true)
+                .execute(this, REQ_CODE_SEARCH);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) {
+            mPairsPopup.dismiss();
+            CurrencyPair pair = data.getParcelableExtra(ExtraKeys.CURRENCY_PAIR);
+            switchNewCurrencyPair(pair);
+        }
     }
 
     private void switchNewCurrencyPair(CurrencyPair currencyPair) {
         mCurrencyPair = currencyPair;
 
+        mPairsPopup.setCurCurrencyPair(mCurrencyPair);
         unsubscribeMarket();
         resetView();
 

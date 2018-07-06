@@ -1,5 +1,7 @@
 package com.songbai.futurex.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -65,6 +67,8 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
 
     private SearchRecordsHelper mSearchRecordsHelper;
 
+    private boolean mSearchForTrade;
+
     @OnClick(R.id.cancel)
     public void onViewClicked() {
         finish();
@@ -80,6 +84,7 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
+        mSearchForTrade = extras.getBoolean(ExtraKeys.SERACH_FOR_TRADE);
     }
 
     @Override
@@ -157,7 +162,13 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
                         updateCurrencyList(mSearchRecordsHelper.getRecordList());
                     }
 
-                    openMarketDetailPage(currencyPair);
+                    if (mSearchForTrade) {
+                        Intent intent = new Intent().putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair);
+                        setResult(Activity.RESULT_OK, intent);
+                        finish();
+                    } else {
+                        openMarketDetailPage(currencyPair);
+                    }
                 }
             }
         });

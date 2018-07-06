@@ -8,7 +8,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
@@ -745,20 +744,9 @@ public class Kline extends BaseChart {
     }
 
     public void flush() {
-        if (mBufferDataList.isEmpty()) return;
-
-        if (mDataList.isEmpty()) {
-            mDataList.addAll(mBufferDataList);
-            redraw();
-        } else {
-            Data bufferLast = mBufferDataList.get(mBufferDataList.size() - 1);
-            Data last = mDataList.get(mDataList.size() - 1);
-            if (bufferLast.getTimestamp() != last.getTimestamp()) {
-                mDataList.clear();
-                mDataList.addAll(mBufferDataList);
-                redraw();
-            }
-        }
+        mDataList.clear();
+        mDataList.addAll(mBufferDataList);
+        redraw();
     }
 
     public void addHistoryData(List<Data> data) {

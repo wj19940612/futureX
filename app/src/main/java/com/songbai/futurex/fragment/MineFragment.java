@@ -271,8 +271,9 @@ public class MineFragment extends BaseFragment {
                     Launcher.with(getActivity(), MessageCenterActivity.class)
                             .putExtra(ExtraKeys.TAG, MessageCenterActivity.PAGE_TYPE_NOTICE)
                             .execute();
-                else
+                else {
                     login();
+                }
                 break;
             case R.id.customService:
                 Launcher.with(getActivity(), CustomServiceActivity.class).execute();

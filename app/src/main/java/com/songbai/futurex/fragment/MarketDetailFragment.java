@@ -204,6 +204,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     @OnClick({R.id.buyIn, R.id.sellOut, R.id.optional})
     public void onViewClicked(View view) {
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+            return;
+        }
+
         switch (view.getId()) {
             case R.id.buyIn:
                 Intent intent = new Intent()
@@ -220,11 +225,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 finish();
                 break;
             case R.id.optional:
-                if (LocalUser.getUser().isLogin()) {
-                    toggleOptionalStatus();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
+                toggleOptionalStatus();
                 break;
         }
     }
@@ -403,7 +404,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                             mKline.setDataList(data);
                             mKline.setDateFormatStr(KlineUtils.getDateFormat(mChartRadio.getSelectedPosition()));
 
-                            startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
+                            int refreshInterval = KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition());
+                            if (refreshInterval > 0) {
+                                startScheduleJobNext(refreshInterval);
+                            } else {
+                                stopScheduleJob();
+                            }
                         } else {
                             if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
                             mKline.addHistoryData(data);
@@ -477,6 +483,20 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         trendColor.setClosePriceColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         mTrend.setDateFormatStr("HH:mm");
+        mTrend.setOnCrossLineAppearListener(new Kline.OnCrossLineAppearListener() {
+            @Override
+            public void onAppear(Kline.Data data) {
+                mChartRadio.setVisibility(View.GONE);
+                mKlineDataDetailView.setVisibility(View.VISIBLE);
+                mKlineDataDetailView.setKlineData(data);
+            }
+
+            @Override
+            public void onDisappear() {
+                mChartRadio.setVisibility(View.VISIBLE);
+                mKlineDataDetailView.setVisibility(View.GONE);
+            }
+        });
         mTrend.setOnSidesReachedListener(new Kline.OnSidesReachedListener() {
             @Override
             public void onStartSideReached(Kline.Data data) {
