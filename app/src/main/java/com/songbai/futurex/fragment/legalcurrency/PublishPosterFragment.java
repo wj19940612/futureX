@@ -347,9 +347,9 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private void setConditionValue(HashMap<String, String> conditionKeyValue) {
         String authValue = conditionKeyValue.get(OtcWarePoster.CONDITION_AUTH);
         if (!TextUtils.isEmpty(authValue)) {
-            if (authValue.equals("1")) {
+            if ("1".equals(authValue)) {
                 setCertificationLimit(true);
-            } else if (authValue.equals("2")) {
+            } else if ("2".equals(authValue)) {
                 setCertificationLimit(false);
             }
         } else {
@@ -591,21 +591,6 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private void saveDataAndUpdate() {
         String tradeAmount = mTradeAmount.getText().toString();
         String rateOrPrice = mPremiumRate.getText().toString();
-//        if (TextUtils.isEmpty(tradeAmount) || TextUtils.isEmpty(rateOrPrice)) {
-//            // TODO: 2018/6/27  提示文字
-//            ToastUtil.show(R.string.deal_count_limit_unset);
-//            return;
-//        }
-//        if (TextUtils.isEmpty(mWaresModel.getPayInfo())) {
-//            // TODO: 2018/6/27  提示文字
-//            ToastUtil.show(R.string.deal_count_limit_unset);
-//            return;
-//        }
-//        if (mWaresModel.getMaxTurnover() == 0) {
-//            // TODO: 2018/6/27  提示文字
-//            ToastUtil.show(R.string.deal_count_limit_unset);
-//            return;
-//        }
         mWaresModel.setTradeCount(Double.valueOf(tradeAmount));
         switch (mWaresModel.getPriceType()) {
             case OtcWarePoster.FIXED_PRICE:

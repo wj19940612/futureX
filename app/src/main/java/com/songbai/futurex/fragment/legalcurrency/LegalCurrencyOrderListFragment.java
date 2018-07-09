@@ -190,6 +190,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
             if (view.getId() == R.id.headPortrait) {
                 UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
                         .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
                         .execute();
             } else {
                 switch (legalCurrencyOrder.getStatus()) {

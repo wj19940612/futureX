@@ -98,6 +98,8 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
             mMailAuthCode.setHint(R.string.used_phone_auth_code);
         }
         mPhone.addTextChangedListener(mWatcher);
+        mAuthCode.addTextChangedListener(mWatcher);
+        mMailAuthCode.addTextChangedListener(mWatcher);
         getAreaCode();
     }
 
@@ -116,7 +118,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     }
 
     private void updatePhone(String phoneNum, String phoneMsgCode, String msgCode, String type) {
-        Apic.updatePhone(phoneNum, phoneMsgCode, msgCode, type).tag(TAG)
+        Apic.updatePhone(mAreaCode.getText().toString(), phoneNum, phoneMsgCode, msgCode, type).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
                     @Override
                     protected void onRespData(List<AreaCode> data) {

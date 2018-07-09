@@ -383,9 +383,10 @@ public class Apic {
      * POST
      * 绑定、修改手机号--薛松
      */
-    public static Api updatePhone(String phoneNum, String phoneMsgCode, String msgCode, String type) {
+    public static Api updatePhone(String teleCode, String phoneNum, String phoneMsgCode, String msgCode, String type) {
         return Api.post("/api/user/userSafe/updatePhone.do",
                 new ReqParams()
+                        .put("teleCode", teleCode)
                         .put("phone", phoneNum)
                         .put("phoneMsgCode", phoneMsgCode)
                         .put("msgCode", msgCode)

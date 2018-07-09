@@ -241,7 +241,11 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void otcWaresMine() {
-        Apic.otcWaresMine("", String.valueOf(mOrderId), 1)
+        int direction=0;
+        if (mTradeDirection == OtcOrderStatus.ORDER_DIRECT_SELL) {
+
+        }
+        Apic.otcWaresMine("", String.valueOf(mOrderId), 0)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {

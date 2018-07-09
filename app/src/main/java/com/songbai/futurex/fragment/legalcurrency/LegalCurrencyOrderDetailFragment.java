@@ -90,6 +90,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private OtcOrderDetail mOtcOrderDetail;
     private boolean mIsBuyer;
     private boolean mNeedGoogle;
+    private WaresUserInfo mWaresUserInfo;
 
     @Nullable
     @Override
@@ -127,9 +128,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private void otcWaresMine() {
         Apic.otcWaresMine("", String.valueOf(mOrderId), mTradeDirection)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
+
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
-                        setWaresUserInfo(resp.getData());
+                        mWaresUserInfo = resp.getData();
+                        setWaresUserInfo(mWaresUserInfo);
                     }
                 }).fire();
     }
@@ -212,6 +215,9 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .circleCrop()
                 .into(mHeadPortrait);
         mUserName.setText(order.getBuyerName());
+        if (mWaresUserInfo != null) {
+            setWaresUserInfo(mWaresUserInfo);
+        }
     }
 
     private void setOrderInfoCard(OtcOrderDetail.OrderBean order, String coinSymbol) {
