@@ -153,7 +153,9 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             break;
                         default:
                     }
-                    msgRead(sysMessage, position);
+                    if (sysMessage.getStatus() == SysMessage.UNREAD) {
+                        msgRead(sysMessage, position);
+                    }
                 }
             }
         });
@@ -214,7 +216,9 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     }
 
     private void updateNoticeList(List<SysMessage> data) {
-        if (mOffset == 0) mAdapter.clear();
+        if (mOffset == 0) {
+            mAdapter.clear();
+        }
         if (data != null) {
             if (data.size() < Apic.DEFAULT_PAGE_SIZE) {
                 mOffset += data.size();
