@@ -346,6 +346,7 @@
     <string name="floating_price_x_symbol">溢价&#160;%1$s&#160;%%</string>
     <string name="fixed_price">固定价格</string>
     <string name="floating_price">浮动价格</string>
+    <string name="deal_count_limit_unset">交易次数限制未填写</string>
     <string name="limit_range_x">%1$s-%2$s</string>
     <string name="buy_blank_symbol_x">买入&#160;%1$s</string>
     <string name="sell_blank_symbol_x">卖出&#160;%1$s</string>

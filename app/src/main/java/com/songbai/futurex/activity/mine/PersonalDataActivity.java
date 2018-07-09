@@ -25,6 +25,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.AuthenticationName;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.Launcher;
@@ -64,6 +65,7 @@ public class PersonalDataActivity extends BaseActivity {
     private boolean mHasPhone;
     private boolean mHasEmail;
     private int mAuthenticationStatus;
+    private String mName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,7 +88,12 @@ public class PersonalDataActivity extends BaseActivity {
                     .circleCrop()
                     .into(mUserHeadImage);
             mNickName.setSubText(userInfo.getUserName());
-            mRealName.setSubText(userInfo.getRealName());
+            if (TextUtils.isEmpty(mName)) {
+                authenticationName();
+                mRealName.setSubText(userInfo.getRealName());
+            } else {
+                mRealName.setSubText(mName);
+            }
             String userPhone = userInfo.getUserPhone();
             mHasPhone = !TextUtils.isEmpty(userPhone);
             if (mHasPhone) {
@@ -251,6 +258,18 @@ public class PersonalDataActivity extends BaseActivity {
                         LocalUser.getUser().setUserInfo(resp.getData());
                         setUserInfo();
                         setResult(PERSONAL_DATA_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                    }
+                })
+                .fire();
+    }
+
+    private void authenticationName() {
+        Apic.authenticationName()
+                .callback(new Callback<Resp<AuthenticationName>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AuthenticationName> resp) {
+                        mName = resp.getData().getName();
+                        mRealName.setSubText(mName);
                     }
                 })
                 .fire();

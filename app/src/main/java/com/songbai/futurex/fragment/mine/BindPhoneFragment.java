@@ -164,6 +164,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 mGetMessageAuthCode.setEnabled(true);
                 mGetMessageAuthCode.setText(R.string.regain);
                 mGetMessageAuthCode.setTag(null);
+                mFreezeGetEmailAuthCode = false;
                 timeUp = true;
             } else {
                 timeUp = false;
@@ -179,6 +180,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 mGetMailAuthCode.setEnabled(true);
                 mGetMailAuthCode.setText(R.string.regain);
                 mGetMailAuthCode.setTag(null);
+                mFreezeGetPhoneAuthCode = false;
                 timeUp = true;
             } else {
                 timeUp = false;
@@ -332,7 +334,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                mAreaCode.setText(codes.get(options1));
+                mAreaCode.setText(StrFormatter.getFormatAreaCode(codes.get(options1)));
             }
         }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
             @Override
