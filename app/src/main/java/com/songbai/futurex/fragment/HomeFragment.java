@@ -70,6 +70,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     private EntrustPairAdapter mAdapter;
     private IncreaseRankAdapter mIncreaseRankAdapter;
     private ArrayList<HomeNews> mNewsList;
+    private boolean mPrepared;
 
     @Nullable
     @Override
@@ -112,19 +113,28 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 return tv;
             }
         });
+        mPrepared = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
+        findNewsList(1, "");
+        entrustPairsList();
+        indexRiseList();
         startScheduleJobRightNow(1000);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (isVisibleToUser && mPrepared) {
             startScheduleJobRightNow(1000);
+            findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
+            findNewsList(1, "");
+            entrustPairsList();
+            indexRiseList();
         } else {
             stopScheduleJob();
         }

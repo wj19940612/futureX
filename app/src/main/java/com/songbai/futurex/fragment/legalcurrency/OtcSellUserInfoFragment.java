@@ -61,6 +61,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     private Unbinder mBind;
     private int mOrderId;
     private int mTradeDirection;
+    private int mWaresId;
 
     @Nullable
     @Override
@@ -72,6 +73,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
+        mWaresId = extras.getInt(ExtraKeys.WARES_ID);
         mOrderId = extras.getInt(ExtraKeys.ORDER_ID);
         mTradeDirection = extras.getInt(ExtraKeys.TRADE_DIRECTION);
     }
@@ -83,10 +85,14 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
             ((StatusBarActivity) activity).translucentStatusBar();
             ((StatusBarActivity) activity).addStatusBarHeightPaddingTop(mTitleBar);
         }
-        otcWaresMine("", mOrderId, mTradeDirection);
+        if (mWaresId != 0) {
+            otcWaresMine(String.valueOf(mWaresId), "", mTradeDirection);
+        } else {
+            otcWaresMine("", String.valueOf(mOrderId), mTradeDirection);
+        }
     }
 
-    private void otcWaresMine(String waresId, int orderId, int orientation) {
+    private void otcWaresMine(String waresId, String orderId, int orientation) {
         Apic.otcWaresMine(waresId, orderId, orientation)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override

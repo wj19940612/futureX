@@ -668,11 +668,13 @@ public class Apic {
      * GET
      * 广告管理--(v1.2)
      */
-    public static Api otcWaresList(int page, int pageSize) {
+    public static Api otcWaresList(int page, int pageSize, String coinType, String payCurrency) {
         return Api.get("/api/otc/wares/list",
                 new ReqParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("coinType", coinType)
+                        .put("payCurrency", payCurrency));
     }
 
     /**
@@ -825,7 +827,7 @@ public class Apic {
      * GET
      * (改)个人广告主页-个人信息(V1.2)
      */
-    public static Api otcWaresMine(String waresId, int orderId, int orientation) {
+    public static Api otcWaresMine(String waresId, String orderId, int orientation) {
         return Api.get("/api/otc/wares/mine",
                 new ReqParams()
                         .put("waresId", waresId)
@@ -1227,6 +1229,16 @@ public class Apic {
      */
     public static Api requestChatHistory() {
         return Api.post("/api/user/chat/page.do", new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())).put("startTime", System.currentTimeMillis()).put("pageDir", 0).put("pageSize", 200));
+    }
+
+    /**
+     * /api/user/chat/online.do
+     * POST
+     * 获取客服状态
+     */
+    public static Api chatOnline() {
+        return Api.post("/api/user/chat/online.do",
+                new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())));
     }
 
     /**

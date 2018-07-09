@@ -50,6 +50,7 @@ public interface ExtraKeys {
     String INTRODUCE_STYLE = "introduce_style";
     String APP_VERSION = "app_version";
     String IS_CANCELEDONTOUCHOUTSIDE = "is_canceledontouchoutside";
+    String WARES_ID = "wares_id";
     String ORDER_ID = "order_id";
     String SERACH_FOR_TRADE = "search_for_trade";
 }

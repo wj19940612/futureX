@@ -428,6 +428,7 @@
     <string name="cancel_trade">取消交易</string>
     <string name="cancel_trade_hin_msg">如果您已经向卖家付款，请千万不要取消交易。取消规则：买方当日累计5笔取消，将会限制当天的买入功能。</string>
     <string name="confirm_have_not_pay_to_seller">我确认还没有付款给对方</string>
+    <string name="colon_symbol">:</string>
     <string name="appeal">申诉</string>
     <string name="i_have_paid">我已付款</string>
     <string name="confirm_transfer_coin">确认转币</string>
@@ -572,6 +573,7 @@
     <string name="trade_amt">交易额</string>
 
 
+    <string name="input_msg_hell">在此输入您的对话...</string>
     <string name="input_msg_enter_to_send">输入信息，按Enter发送</string>
 
     <string name="over_50">发言不能超过50字符</string>

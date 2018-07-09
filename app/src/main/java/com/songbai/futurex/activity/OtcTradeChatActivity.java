@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -240,7 +241,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void otcWaresMine() {
-        Apic.otcWaresMine("", mOrderId, 1)
+        Apic.otcWaresMine("", String.valueOf(mOrderId), 1)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -305,18 +306,23 @@ public class OtcTradeChatActivity extends BaseActivity {
                 FinanceUtil.formatWithScale(order.getOrderAmount()),
                 order.getPayCurrency().toUpperCase()));
         mCountDownView.setVisibility(View.INVISIBLE);
+        mCountDownView.setColonColor(ContextCompat.getColor(this, R.color.text22));
         switch (order.getStatus()) {
             case OtcOrderStatus.ORDER_UNPAIED:
                 mCountDownView.setVisibility(View.VISIBLE);
-                mCountDownView.setTimes(order.getOrderTime() + 15 * 60 * 1000);
-                mCountDownView.setOnStateChangeListener(new CountDownView.OnStateChangeListener() {
-                    @Override
-                    public void onStateChange(int countDownState) {
-                        if (countDownState == CountDownView.STOPPED) {
-                            mCountDownView.setVisibility(View.GONE);
+                long endTime = order.getOrderTime() + 15 * 60 * 1000;
+                if (System.currentTimeMillis() < endTime) {
+                    mCountDownView.setTimes(endTime);
+                    mCountDownView.beginRun();
+                    mCountDownView.setOnStateChangeListener(new CountDownView.OnStateChangeListener() {
+                        @Override
+                        public void onStateChange(int countDownState) {
+                            if (countDownState == CountDownView.STOPPED) {
+                                mCountDownView.setVisibility(View.GONE);
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 mOrderStatus.setText(R.string.wait_to_pay_and_confirm);
                 break;
             case OtcOrderStatus.ORDER_PAIED:

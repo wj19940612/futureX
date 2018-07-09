@@ -1,5 +1,6 @@
 package com.songbai.futurex.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -100,6 +101,25 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        startScheduleJobRightNow(30 * 1000);
+        chatOnline();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        chatOnline();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mIMProcessor != null) {
@@ -108,6 +128,7 @@ public class CustomServiceActivity extends BaseActivity {
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mCustomServiceChats = new ArrayList<>();
         mChatAdapter = new ChatAdapter(mCustomServiceChats, getActivity(), getOnRetryClickListener());
@@ -178,7 +199,9 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     private void showKeyboard() {
-        if (!mKeyboardInit) mKeyboardInit = true;
+        if (!mKeyboardInit) {
+            mKeyboardInit = true;
+        }
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mEditText, 0);
     }
 
@@ -219,6 +242,14 @@ public class CustomServiceActivity extends BaseActivity {
                     loadChatData(resp.getData());
                     loadSystemData(data);
                 }
+            }
+        }).fireFreely();
+    }
+
+    private void chatOnline() {
+        Apic.chatOnline().tag(TAG).callback(new Callback<Resp<Object>>() {
+            @Override
+            protected void onRespSuccess(Resp<Object> resp) {
             }
         }).fireFreely();
     }
@@ -452,8 +483,9 @@ public class CustomServiceActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             CustomServiceChat lastChat = null;
-            if (position > 0)
+            if (position > 0) {
                 lastChat = mCustomServiceChats.get(position - 1);
+            }
             if (holder instanceof LeftTextHolder) {
                 ((LeftTextHolder) holder).bindingData(mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof RightTextHolder) {
@@ -461,7 +493,7 @@ public class CustomServiceActivity extends BaseActivity {
             } else if (holder instanceof RightPhotoHolder) {
                 ((RightPhotoHolder) holder).bindingData(mOnRetryClickListener, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof LeftPhotoHolder) {
-                ((LeftPhotoHolder) holder).bindingData(mOnRetryClickListener,mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
+                ((LeftPhotoHolder) holder).bindingData(mOnRetryClickListener, mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof SystemHolder) {
                 ((SystemHolder) holder).bindingData(mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             }

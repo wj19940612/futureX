@@ -165,7 +165,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     }
 
     private void otcWaresCommend(GetOtcWaresHome getOtcWaresHome) {
-        Apic.otcWaresHome(getOtcWaresHome)
+        Apic.otcWaresHome(getOtcWaresHome).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<LegalCurrencyTrade>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<LegalCurrencyTrade>> resp) {
@@ -243,18 +243,24 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     @Override
     public void onItemClick(View view, int position, Object obj) {
         LegalCurrencyTrade legalCurrencyTrade = (LegalCurrencyTrade) obj;
-        if (LocalUser.getUser().isLogin()) {
-            if (legalCurrencyTrade.getOperate() == 0) {
-                ToastUtil.show(R.string.can_not_trade_with_self);
-                return;
-            }
-            if (mType == OtcOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
-                showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
-                return;
-            }
-            showBuyOrSellView(mType, legalCurrencyTrade);
+        if (view.getId() == R.id.headPortrait) {
+            UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
+                    .putExtra(ExtraKeys.WARES_ID, legalCurrencyTrade.getId())
+                    .execute();
         } else {
-            Launcher.with(getActivity(), LoginActivity.class).execute();
+            if (LocalUser.getUser().isLogin()) {
+                if (legalCurrencyTrade.getOperate() == 0) {
+                    ToastUtil.show(R.string.can_not_trade_with_self);
+                    return;
+                }
+                if (mType == OtcOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+                    showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
+                    return;
+                }
+                showBuyOrSellView(mType, legalCurrencyTrade);
+            } else {
+                Launcher.with(getActivity(), LoginActivity.class).execute();
+            }
         }
     }
 
@@ -286,13 +292,13 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
-                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
-                                .execute();
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
+                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
+                                .putExtra(ExtraKeys.TRADE_DIRECTION, OtcOrderStatus.ORDER_DIRECT_BUY)
+                                .execute();
                     }
 
                     @Override
@@ -313,13 +319,13 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
-                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, 2)
-                                .execute();
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
+                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
+                                .putExtra(ExtraKeys.TRADE_DIRECTION, OtcOrderStatus.ORDER_DIRECT_SELL)
+                                .execute();
                     }
 
                     @Override
@@ -419,7 +425,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
         private OnConfirmClickListener mOnConfirmClickListener;
 
-        public BuyOrSellController(Context context) {
+        BuyOrSellController(Context context) {
             mContext = context;
         }
 
@@ -476,7 +482,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                     }
                 }
             });
-            mCurrencyAmount.setHint(mContext.getString(R.string.max_buy_amount, FinanceUtil.formatWithScale(maxTurnover)));
+            double maxAmount = maxTurnover;
+            maxAmount = Math.min(maxAmount, Double.valueOf(mData.getChangeCount()) * mData.getFixedPrice());
+            mCurrencyAmount.setHint(mContext.getString(R.string.max_buy_amount, FinanceUtil.formatWithScale(maxAmount)));
             mClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -508,7 +516,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             void onConfirmClick(String coinAmount, String currencyAmout, String cashPwd);
         }
 
-        public void setOnConfirmClickListener(OnConfirmClickListener onConfirmClickListener) {
+        void setOnConfirmClickListener(OnConfirmClickListener onConfirmClickListener) {
             mOnConfirmClickListener = onConfirmClickListener;
         }
 
@@ -535,7 +543,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof WantBuyHolder) {
-                ((WantBuyHolder) holder).bindData(mList.get(position));
+                ((WantBuyHolder) holder).bindData(position, mList.get(position));
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -559,7 +567,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             mList.addAll(list);
         }
 
-        public void setOnRVItemClickListener(OnRVItemClickListener onRVItemClickListener) {
+        void setOnRVItemClickListener(OnRVItemClickListener onRVItemClickListener) {
             mOnRVItemClickListener = onRVItemClickListener;
         }
 
@@ -590,7 +598,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindData(LegalCurrencyTrade legalCurrencyTrade) {
+            public void bindData(final int position, final LegalCurrencyTrade legalCurrencyTrade) {
                 GlideApp
                         .with(getContext())
                         .load(legalCurrencyTrade.getUserPortrait())
@@ -621,6 +629,14 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 mWechatPayIcon.setVisibility(payInfo.contains(PayType.WXPAY) ? View.VISIBLE : View.GONE);
                 mAliPayIcon.setVisibility(payInfo.contains(PayType.ALIPAY) ? View.VISIBLE : View.GONE);
                 mUnionPayIcon.setVisibility(payInfo.contains(PayType.BANK_PAY) ? View.VISIBLE : View.GONE);
+                mHeadPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnRVItemClickListener != null) {
+                            mOnRVItemClickListener.onItemClick(mHeadPortrait, position, legalCurrencyTrade);
+                        }
+                    }
+                });
             }
         }
     }
