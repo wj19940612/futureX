@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,11 +68,11 @@ public class KlineDataDetailView extends FrameLayout {
     }
 
     private String getPrice(int res, double value) {
-        return getContext().getString(res, NumUtils.getPrice(value, mPriceScale));
+        return getContext().getString(res, CurrencyUtils.getPrice(value, mPriceScale));
     }
 
     private String getVolume(int res, double volume) {
-        return getContext().getString(res, NumUtils.getVolume(volume));
+        return getContext().getString(res, CurrencyUtils.getVolume(volume));
     }
 
     public void setPriceScale(int pricePoint) {

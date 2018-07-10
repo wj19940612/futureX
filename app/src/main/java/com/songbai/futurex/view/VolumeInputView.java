@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -66,7 +66,7 @@ public class VolumeInputView extends FrameLayout {
     }
 
     public double getVolume() {
-        return NumUtils.getDouble(mVolume.getText().toString());
+        return CurrencyUtils.getDouble(mVolume.getText().toString());
     }
 
     private void init() {

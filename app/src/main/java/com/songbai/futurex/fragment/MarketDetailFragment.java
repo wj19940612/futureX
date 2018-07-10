@@ -28,7 +28,7 @@ import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.ChartsRadio;
 import com.songbai.futurex.view.RadioHeader;
@@ -337,17 +337,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         if (marketData == null) return;
         if (mPairDesc != null) {
             int scale = mPairDesc.getPairs().getPricePoint();
-            mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice(), scale));
-            mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice(), scale));
-            mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice(), scale));
+            mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), scale));
+            mHighestPrice.setText(CurrencyUtils.getPrice(marketData.getHighestPrice(), scale));
+            mLowestPrice.setText(CurrencyUtils.getPrice(marketData.getLowestPrice(), scale));
         } else {
-            mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
-            mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice()));
-            mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice()));
+            mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice()));
+            mHighestPrice.setText(CurrencyUtils.getPrice(marketData.getHighestPrice()));
+            mLowestPrice.setText(CurrencyUtils.getPrice(marketData.getLowestPrice()));
         }
         mDeepView.setLastPrice(marketData.getLastPrice());
-        mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
-        mTradeVolume.setText(NumUtils.get24HourVolume(marketData.getVolume()));
+        mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+        mTradeVolume.setText(CurrencyUtils.get24HourVolume(marketData.getVolume()));
     }
 
     @Override

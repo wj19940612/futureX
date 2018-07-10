@@ -37,17 +37,17 @@ import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
-import com.songbai.futurex.model.Order;
+import com.songbai.futurex.model.order.Order;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.MakeOrder;
 import com.songbai.futurex.model.local.SysTime;
 import com.songbai.futurex.model.mine.CoinAbleAmount;
-import com.songbai.futurex.model.status.OrderStatus;
+import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
@@ -81,8 +81,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.songbai.futurex.model.Order.LIMIT_TRADE;
-import static com.songbai.futurex.model.Order.MARKET_TRADE;
+import static com.songbai.futurex.model.order.Order.LIMIT_TRADE;
+import static com.songbai.futurex.model.order.Order.MARKET_TRADE;
 
 /**
  * Modified by john on 2018/5/30
@@ -544,7 +544,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             double amt = price * volume;
             String tradeAmt = "0";
             if (amt != 0) {
-                tradeAmt = NumUtils.getPrice(amt, scale);
+                tradeAmt = CurrencyUtils.getPrice(amt, scale);
             }
             mTradeAmount.setText(tradeAmt + " " + unit.toUpperCase());
         }
@@ -600,8 +600,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(), pairMarket.getDeep().getSellDeep());
         MarketData quota = pairMarket.getQuota();
         if (mPairDesc != null && quota != null) {
-            mLastPrice.setText(NumUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
-            mPriceChange.setText(NumUtils.getPrefixPercent(quota.getUpDropSpeed()));
+            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
+            mPriceChange.setText(CurrencyUtils.getPrefixPercent(quota.getUpDropSpeed()));
             if (!mChangePriceView.isModifiedManually()) {
                 mChangePriceView.setPrice(quota.getLastPrice());
             }
@@ -643,11 +643,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             mObtainableCurrencyVolume = getObtainableCurrencyAmt(availableCurrencyVolume);
 
             mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
-                    NumUtils.getPrice(availableCurrencyVolume, availableCurrencyScale), availableCurrencySign.toUpperCase()));
+                    CurrencyUtils.getPrice(availableCurrencyVolume, availableCurrencyScale), availableCurrencySign.toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
-                    NumUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
+                    CurrencyUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
             mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
-                    NumUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
+                    CurrencyUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
         } else {
             String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
             String obtainableCurrencySign = mCurrencyPair.getPrefixSymbol();
@@ -1057,14 +1057,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mTradePair.setText(tradeDir + " " + order.getPairs().toUpperCase());
                 mTradePair.setTextColor(color);
                 mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
-                mEntrustPrice.setText(NumUtils.getPrice(order.getEntrustPrice()));
-                mEntrustVolume.setText(NumUtils.getVolume(order.getEntrustCount()));
+                mEntrustPrice.setText(CurrencyUtils.getPrice(order.getEntrustPrice()));
+                mEntrustVolume.setText(CurrencyUtils.getVolume(order.getEntrustCount()));
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
                 mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
                 mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix()));
-                mDealTotalAmt.setText(NumUtils.getAmt(order.getDealCount() * order.getDealPrice(), suffixScale));
-                mDealAveragePrice.setText(NumUtils.getPrice(order.getDealPrice()));
-                mDealVolume.setText(NumUtils.getVolume(order.getDealCount()));
+                mDealTotalAmt.setText(CurrencyUtils.getAmt(order.getDealCount() * order.getDealPrice(), suffixScale));
+                mDealAveragePrice.setText(CurrencyUtils.getPrice(order.getDealPrice()));
+                mDealVolume.setText(CurrencyUtils.getVolume(order.getDealCount()));
                 mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix()));
                 mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix()));
                 mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix()));
@@ -1075,13 +1075,13 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     case OrderStatus.REVOKED:
                         return R.string.revoked;
                     case OrderStatus.ALL_DEAL:
-                        return R.string.deal;
+                        return R.string.deal_with_arrow;
                     case OrderStatus.PART_DEAL:
-                        return R.string.part_deal;
+                        return R.string.part_deal_with_arrow;
                     case OrderStatus.SYSTEM_REVOKED:
                         return R.string.system_revoked;
                     case OrderStatus.PART_DEAL_PART_REVOKED:
-                        return R.string.part_deal_part_revoked;
+                        return R.string.part_deal_part_revoked_with_arrow;
                     default:
                         return R.string.unknown_operation;
                 }
@@ -1123,9 +1123,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mTradePair.setText(tradeDir + " " + order.getPairs().toUpperCase());
                 mTradePair.setTextColor(color);
                 mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
-                mEntrustPrice.setText(NumUtils.getPrice(order.getEntrustPrice()));
-                mEntrustVolume.setText(NumUtils.getVolume(order.getEntrustCount()));
-                mActualDealVolume.setText(NumUtils.getVolume(order.getDealCount()));
+                mEntrustPrice.setText(CurrencyUtils.getPrice(order.getEntrustPrice()));
+                mEntrustVolume.setText(CurrencyUtils.getVolume(order.getEntrustCount()));
+                mActualDealVolume.setText(CurrencyUtils.getVolume(order.getDealCount()));
                 mRevoke.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

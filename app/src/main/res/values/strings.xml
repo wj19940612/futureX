@@ -601,12 +601,14 @@
     <string name="actual_deal_x">实际成交 (%1$s)</string>
     <string name="deal_total_amt_x">成交总额 (%1$s)</string>
     <string name="deal_average_price_x">成交均价 (%1$s)</string>
+    <string name="deal_price">成交价</string>
     <string name="deal_volume_x">成交量 (%1$s)</string>
-    <string name="deal">已成交</string>
+    <string name="deal_volume">成交量</string>
+    <string name="deal_with_arrow">已成交></string>
     <string name="revoked">已撤销</string>
-    <string name="part_deal">部分成交</string>
+    <string name="part_deal_with_arrow">部分成交></string>
     <string name="system_revoked">系统撤销</string>
-    <string name="part_deal_part_revoked">部分成交部分撤单</string>
+    <string name="part_deal_part_revoked_with_arrow">部分成交部分撤单></string>
     <string name="unknown_operation">未知操作</string>
     <string name="filter">筛选</string>
     <string name="trading_on">交易对</string>
@@ -614,9 +616,8 @@
     <string name="order_status">订单状态</string>
     <string name="has_finish">已完成</string>
     <string name="has_withdrawn">已撤销</string>
-    <string name="please_input_currency">请输入币种</string>
-    <string name="please_select_currency">请选择计价货币</string>
-    <string name="please_select_direction">请选择买卖方向</string>
     <string name="search_currency_pairs">搜索币种</string>
-
+    <string name="deal_fee_x">手续费 (%1$s)</string>
+    <string name="time_x">时间 %1$s</string>
+    <string name="deal_detail">成交明细</string>
 </resources>
