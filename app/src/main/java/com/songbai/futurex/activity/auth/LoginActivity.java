@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -217,9 +218,10 @@ public class LoginActivity extends BaseActivity {
 
         SmartDialog.solo(getActivity())
                 .setCustomViewController(mAuthCodeViewController)
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
                 .show();
 
-        ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
+        final ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
         requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
     }
 

@@ -37,6 +37,8 @@
             android:hint="@string/graphic_auth_code"
             android:maxLength="6"
             android:maxLines="1"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
             android:textColor="@color/text66"
             android:textCursorDrawable="@drawable/cursor_primary"
             android:textSize="13sp"/>
