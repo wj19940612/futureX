@@ -347,6 +347,13 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         }
         mDeepView.setLastPrice(marketData.getLastPrice());
         mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+        if (marketData.getUpDropSpeed() >= 0) {
+            mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
+            mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
+        } else {
+            mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+            mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+        }
         mTradeVolume.setText(CurrencyUtils.get24HourVolume(marketData.getVolume()));
     }
 
