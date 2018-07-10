@@ -177,22 +177,27 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
-                            <TextView
+                            <com.songbai.futurex.view.autofit.AutofitTextView
                                 android:id="@+id/lastPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
                                 android:textColor="@color/green"
                                 android:textSize="17sp"
-                                tools:text="--.--"/>
+                                app:maxViewWidth="85dp"
+                                app:minTextSize="10sp"
+                                tools:text="0.00000000"/>
 
                             <TextView
                                 android:id="@+id/priceChange"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="8dp"
+                                android:maxLines="1"
+                                android:text="0.00%"
                                 android:textColor="@color/green"
-                                android:textSize="12sp"
-                                tools:text="--.--"/>
+                                android:textSize="12sp"/>
                         </LinearLayout>
 
                         <com.songbai.futurex.view.autofit.AutofitTextView

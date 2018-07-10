@@ -600,8 +600,16 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(), pairMarket.getDeep().getSellDeep());
         MarketData quota = pairMarket.getQuota();
         if (mPairDesc != null && quota != null) {
-            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
+            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), 8));
+//            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
             mPriceChange.setText(CurrencyUtils.getPrefixPercent(quota.getUpDropSpeed()));
+            if (quota.getUpDropSpeed() >= 0) {
+                mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
+                mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
+            } else {
+                mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+                mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+            }
             if (!mChangePriceView.isModifiedManually()) {
                 mChangePriceView.setPrice(quota.getLastPrice());
             }
@@ -1054,9 +1062,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 if (order.getStatus() == OrderStatus.REVOKED) {
                     color = ContextCompat.getColor(context, R.color.text49);
                 }
-                mTradePair.setText(tradeDir + " " + order.getPairs().toUpperCase());
+                mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
-                mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
+                mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
                 mEntrustPrice.setText(CurrencyUtils.getPrice(order.getEntrustPrice()));
                 mEntrustVolume.setText(CurrencyUtils.getVolume(order.getEntrustCount()));
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
@@ -1120,9 +1128,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     color = ContextCompat.getColor(context, R.color.red);
                     tradeDir = context.getString(R.string.sell_out);
                 }
-                mTradePair.setText(tradeDir + " " + order.getPairs().toUpperCase());
+                mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
-                mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
+                mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
                 mEntrustPrice.setText(CurrencyUtils.getPrice(order.getEntrustPrice()));
                 mEntrustVolume.setText(CurrencyUtils.getVolume(order.getEntrustCount()));
                 mActualDealVolume.setText(CurrencyUtils.getVolume(order.getDealCount()));
