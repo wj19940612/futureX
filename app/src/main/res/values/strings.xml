@@ -56,6 +56,8 @@
     <string name="certification_number">证件号码</string>
     <string name="please_input_real_name">请输入该证件的真实姓名</string>
     <string name="please_input_certification_number">请输入该证件号码</string>
+    <string name="passport_code">护照编码</string>
+    <string name="see_passport_sample_image_below">参考下边示例查看护照编码</string>
     <string name="senior_certification">高级认证</string>
     <string name="add_certification_pic">添加证件照片</string>
     <string name="certification_front_pic">证件正面照</string>
@@ -151,7 +153,7 @@
 
     <string name="language">语言</string>
     <string name="about_us">关于我们</string>
-    <string name="feedback">建议反馈</string>
+    <string name="feedback">意见反馈</string>
     <string name="logout">退出登录</string>
     <string name="confirm_logout">要确定退出吗？</string>
     <string name="platform_introduction">平台介绍</string>
@@ -185,6 +187,7 @@
     <string name="send_sms_auth_code_phone_hint_x">已发送至您的手机号：%1$s，请注意查收</string>
     <string name="send_mail_auth_code_hint_x">已发送至您的邮箱：%1$s，请注意查收</string>
     <string name="the_two_passwords_differ">两次密码输入不一致</string>
+    <string name="draw_cash_pwd_can_not_short_than_8">资金密码不能小于8位</string>
     <string name="auth_code_error">验证码错误</string>
     <string name="change_login_pwd">修改登录密码</string>
     <string name="new_login_pwd">新登录密码</string>
@@ -225,6 +228,7 @@
     <string name="most_transfer_amount_type_x">最多可转%1$s&#160;%2$s</string>
     <string name="transfer_all">全部划转</string>
     <string name="confirm_transfer">确认划转</string>
+    <string name="transfer_success">划转成功</string>
     <string name="recharge_coin">充币</string>
     <string name="available_amount_x">可用&#160;%1$s</string>
     <string name="freeze_amount_x">冻结&#160;%1$s</string>
@@ -425,6 +429,7 @@
     <string name="wait_sell_transfer_coin">待卖家转币</string>
     <string name="seller_info">卖家信息</string>
     <string name="buyer_info">买家信息</string>
+    <string name="register_time">注册时间：%1$s</string>
     <string name="click_to_ask_contract_info">点击咨询支付方式</string>
     <string name="contact_each_other">联系对方</string>
     <string name="cancel_trade">取消交易</string>
@@ -578,7 +583,7 @@
     <string name="input_msg_hell">在此输入您的对话...</string>
     <string name="input_msg_enter_to_send">输入信息，按Enter发送</string>
 
-    <string name="over_50">发言不能超过50字符</string>
+    <string name="over_500">发言不能超过500字符</string>
     <string name="hello_customer_for_you">尊敬的小主您好，我是%1$s，很高兴为您服务。</string>
     <string name="trade_with_market_price">以当前最优价格交易</string>
     <string name="android_web_agent">ANDROID_AGENT/1.0</string>
@@ -590,6 +595,7 @@
     <string name="please_not_download_again">请勿重复下载</string>
     <string name="download_fail">下载失败</string>
     <string name="check_new_version">发现最新版本</string>
+    <string name="is_latest_version_now">已经是最新版本</string>
     <string name="version">v%1$s</string>
     <string name="download_complete">下载完成</string>
     <string name="now_update">立即更新</string>

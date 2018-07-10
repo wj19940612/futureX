@@ -113,7 +113,7 @@ public class PropertyListFragment extends BaseFragment {
         for (AccountList.AccountBean accountBean : mAccountBeans) {
             if ((TextUtils.isEmpty(keyWord) || accountBean.getCoinType().toUpperCase().contains(keyWord.toUpperCase()))) {
                 if ((mHideZero.isSelected())) {
-                    if (Double.valueOf(accountBean.getEstimateBtc()) != 0) {
+                    if (accountBean.getEstimateBtc() != 0 || accountBean.getAbleCoin() != 0 || accountBean.getFreezeCoin() != 0) {
                         filteredData.add(accountBean);
                     }
                 } else {

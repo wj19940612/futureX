@@ -38,6 +38,7 @@ public interface ExtraKeys {
     String CURRENCY_PAIR = "currency_pair";
     String COIN_TYPE = "coin_type";
     String PROPERTY_FLOW_FILTER_TYPE_ALL = "property_flow_filter_type_all";
+    String PROPERTY_FLOW_ACCOUNT_TYPE = "property_flow_account_type";
 
     String HAS_BIND_PHONE = "has_bind_phone";
     String OTC_WARE_POSTER = "otc_ware_poster";

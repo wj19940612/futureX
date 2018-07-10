@@ -1,10 +1,15 @@
 package com.songbai.futurex.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -12,11 +17,14 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
@@ -25,6 +33,7 @@ import android.widget.ViewSwitcher;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.StatusBarActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.http.Api;
@@ -65,12 +74,15 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     RecyclerView mEntrustPairs;
     @BindView(R.id.increaseRank)
     RecyclerView mIncreaseRank;
+    @BindView(R.id.nestedScrollView)
+    NestedScrollView mNestedScrollView;
 
     private Unbinder mBind;
     private EntrustPairAdapter mAdapter;
     private IncreaseRankAdapter mIncreaseRankAdapter;
     private ArrayList<HomeNews> mNewsList;
     private boolean mPrepared;
+    private int mBannerHeight;
 
     @Nullable
     @Override
@@ -114,6 +126,30 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             }
         });
         mPrepared = true;
+        mHomeBanner.post(new Runnable() {
+            @Override
+            public void run() {
+                mBannerHeight = mHomeBanner.getMeasuredHeight();
+            }
+        });
+        mNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                FragmentActivity activity = getActivity();
+                if (activity instanceof StatusBarActivity) {
+                    ((StatusBarActivity) activity).setStatusBarDarkModeForM(scrollY > mBannerHeight);
+                }
+                setStatusBarColor(scrollY > mBannerHeight ? R.color.white : android.R.color.transparent);
+            }
+        });
+    }
+
+    private void setStatusBarColor(@ColorRes int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(getContext(), color));
+        }
     }
 
     @Override
@@ -196,8 +232,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        mHomeBanner.nextAdvertisement();
         if (count % 3 == 0) {
+            mHomeBanner.nextAdvertisement();
             if (mNewsList != null && mNewsList.size() > 0) {
                 int index = (int) mNotice.getTag();
                 final int position = index % mNewsList.size();
@@ -407,6 +443,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 stringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text49)),
                         0, prefixSymbol.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 stringBuilder.setSpan(new AbsoluteSizeSpan(17, true),
+                        0, prefixSymbol.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                stringBuilder.setSpan(new StyleSpan(Typeface.BOLD),
                         0, prefixSymbol.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mPairName.setText(stringBuilder);
                 mTradeVolume.setText(getString(R.string.volume_24h_x, FinanceUtil.formatWithScale(pairRiseListBean.getVolume(), 0)));

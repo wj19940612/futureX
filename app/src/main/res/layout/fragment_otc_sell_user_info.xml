@@ -36,6 +36,8 @@
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:includeFontPadding="false"
             android:textColor="@color/white"
             android:textSize="17sp"
             tools:text="用户306"/>
@@ -58,9 +60,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
+            android:includeFontPadding="false"
             android:textColor="@color/white"
             android:textSize="17sp"
             tools:text="20001单 完成率98.6%"/>
+
+        <TextView
+            android:id="@+id/registerTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"
+            android:layout_marginTop="6dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            tools:text="注册时间：2017-11-11"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -69,6 +83,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/bg_seller_certification_item">
 
         <TextView

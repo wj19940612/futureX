@@ -55,10 +55,24 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        setView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setView();
+    }
+
+    private void setView() {
         isDrawPass();
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
             UserInfo userInfo = user.getUserInfo();
+            if (userInfo.getSafeSetting() == 0) {
+                hasWithDrawPass = false;
+                mSetCashPwd.setSubText(R.string.not_set);
+            }
             if (userInfo.getGoogleAuth() == AUTH) {
                 mGoogleAuthenticator.setSubText(userInfo.getGoogleAuth() == AUTH ? R.string.certificated : R.string.uncertificated);
             }
@@ -94,7 +108,9 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.setCashPwd:
-                UniqueActivity.launcher(this, CashPwdFragment.class).putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, hasWithDrawPass).execute();
+                UniqueActivity.launcher(this, CashPwdFragment.class)
+                        .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, hasWithDrawPass)
+                        .execute();
                 break;
             case R.id.changeLoginPwd:
                 UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();

@@ -20,6 +20,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.view.TitleBar;
 
@@ -59,6 +60,8 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     TextView mPhoneCertificationState;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
+    @BindView(R.id.registerTime)
+    TextView mRegisterTime;
     private Unbinder mBind;
     private int mOrderId;
     private int mTradeDirection;
@@ -81,21 +84,21 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mTitleBar.setTitle(mTradeDirection == OtcOrderStatus.ORDER_DIRECT_BUY ? R.string.seller_info : R.string.buyer_info);
+        mTitleBar.setTitle(mTradeDirection == OtcOrderStatus.ORDER_DIRECT_SELL ? R.string.seller_info : R.string.buyer_info);
         FragmentActivity activity = getActivity();
         if (activity instanceof StatusBarActivity) {
             ((StatusBarActivity) activity).translucentStatusBar();
             ((StatusBarActivity) activity).addStatusBarHeightPaddingTop(mTitleBar);
         }
         if (mWaresId != 0) {
-            otcWaresMine(String.valueOf(mWaresId), "");
+            otcWaresMine(String.valueOf(mWaresId), "", 0);
         } else {
-            otcWaresMine("", String.valueOf(mOrderId));
+            otcWaresMine("", String.valueOf(mOrderId), 1);
         }
     }
 
-    private void otcWaresMine(String waresId, String orderId) {
-        Apic.otcWaresMine(waresId, orderId, 0)
+    private void otcWaresMine(String waresId, String orderId, int orientation) {
+        Apic.otcWaresMine(waresId, orderId, orientation)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -110,29 +113,27 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
                 .load(waresUserInfo.getUserPortrait())
                 .circleCrop()
                 .into(mHeadPortrait);
+        mRegisterTime.setText(getString(R.string.register_time, DateUtil.format(waresUserInfo.getRegisterTime(), "yyyy-MM-dd")));
         int authStatus = waresUserInfo.getAuthStatus();
         mPrimaryCertificationState.setText(R.string.uncertificated);
         mPrimaryCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mistake, 0, 0, 0);
         mSeniorCertificationState.setText(R.string.uncertificated);
         mSeniorCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mistake, 0, 0, 0);
-        switch (authStatus) {
-            case 1:
-                mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_primary_star, 0, 0, 0);
-                mAuthenticationStatus.setText(R.string.primary_certification);
-                mPrimaryCertificationState.setText(R.string.certificated);
-                mPrimaryCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
-                mSeniorCertification.setSelected(false);
-                mPrimaryCertification.setSelected(true);
-                break;
-            case 2:
-                mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
-                mAuthenticationStatus.setText(R.string.senior_certification);
-                mSeniorCertificationState.setText(R.string.certificated);
-                mSeniorCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
-                mSeniorCertification.setSelected(true);
-                mPrimaryCertification.setSelected(true);
-                break;
-            default:
+        if (authStatus > 0) {
+            mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_primary_star, 0, 0, 0);
+            mAuthenticationStatus.setText(R.string.primary_certification);
+            mPrimaryCertificationState.setText(R.string.certificated);
+            mPrimaryCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
+            mSeniorCertification.setSelected(false);
+            mPrimaryCertification.setSelected(true);
+        }
+        if (authStatus == 2) {
+            mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
+            mAuthenticationStatus.setText(R.string.senior_certification);
+            mSeniorCertificationState.setText(R.string.certificated);
+            mSeniorCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
+            mSeniorCertification.setSelected(true);
+            mPrimaryCertification.setSelected(true);
         }
         if (waresUserInfo.getBindPhone() == 1) {
             mPhoneCertification.setSelected(true);

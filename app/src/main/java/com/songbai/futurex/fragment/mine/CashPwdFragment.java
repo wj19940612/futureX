@@ -115,7 +115,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
         public void afterTextChanged(Editable s) {
             String password = mPassword.getPassword();
             String confirmPassword = mConfirmPassword.getPassword();
-            String authCode = mSmsAuthCode.getText().toString();
+            String authCode = mSmsAuthCode.getText().toString().trim();
             if (TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(authCode)) {
                 mConfirm.setEnabled(false);
             } else {
@@ -266,6 +266,10 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                 String msgCode = mSmsAuthCode.getText().toString();
                 if (!password.equals(confirmPassword)) {
                     ToastUtil.show(R.string.the_two_passwords_differ);
+                    return;
+                }
+                if (password.length()<8) {
+                    ToastUtil.show(R.string.draw_cash_pwd_can_not_short_than_8);
                     return;
                 }
                 if (mNeedGoogle && TextUtils.isEmpty(mGoogleAuthCode.getText().toString())) {

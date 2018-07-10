@@ -73,11 +73,11 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
         mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
         otcOrderDetail(mOrderId, mTradeDirection);
-        otcWaresMine("", String.valueOf(mOrderId), 1);
+        otcWaresMine("", String.valueOf(mOrderId));
     }
 
-    private void otcWaresMine(String waresId, String orderId, int orientation) {
-        Apic.otcWaresMine(waresId, orderId, orientation)
+    private void otcWaresMine(String waresId, String orderId) {
+        Apic.otcWaresMine(waresId, orderId, 1)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -157,13 +157,14 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.headPortrait,R.id.contractEachOther})
+    @OnClick({R.id.headPortrait, R.id.contractEachOther})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headPortrait:
                 UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
                         .putExtra(ExtraKeys.ORDER_ID, mOrderId)
-                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection == OtcOrderStatus.ORDER_DIRECT_BUY ?
+                                OtcOrderStatus.ORDER_DIRECT_SELL : OtcOrderStatus.ORDER_DIRECT_BUY)
                         .execute();
                 break;
             case R.id.contractEachOther:

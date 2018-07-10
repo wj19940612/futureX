@@ -64,7 +64,7 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
     private ValidationWatcher mWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            mAddressText = mAddress.getText().toString();
+            mAddressText = mAddress.getText().toString().trim();
             boolean enable = !TextUtils.isEmpty(mAddressText);
             mConfirm.setEnabled(enable);
         }

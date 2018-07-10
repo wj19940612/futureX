@@ -81,6 +81,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private ArrayList<String> mFlowStatusStr;
     private ArrayList<Integer> mFlowStatus;
     private PropertyFlowFilter mPropertyFlowFilter;
+    private int mAccountType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
 
     private void initView() {
         mAllType = getIntent().getBooleanExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, false);
+        mAccountType = getIntent().getIntExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, 0);
         mCoinType = getIntent().getStringExtra(ExtraKeys.COIN_TYPE);
         mTitleBar.setTitle(mAllType ? R.string.property_flow : R.string.history_record);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
@@ -206,24 +208,69 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     }
 
     private void getUserFinanceFlow() {
-        Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize)
-                .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
-                        mAdapter.setList(resp.getData());
-                        mAdapter.notifyDataSetChanged();
-                        stopFreshOrLoadAnimation();
-                        if (mPage == 0) {
-                            mSwipeTarget.hideAll(false);
-                            mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
-                        }
-                        mPage++;
-                        if (mPage >= resp.getData().getTotal()) {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
-                        }
-                    }
-                })
-                .fire();
+        switch (mAccountType) {
+            case 0:
+                Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize)
+                        .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                                mAdapter.setList(resp.getData());
+                                mAdapter.notifyDataSetChanged();
+                                stopFreshOrLoadAnimation();
+                                if (mPage == 0) {
+                                    mSwipeTarget.hideAll(false);
+                                    mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
+                                }
+                                mPage++;
+                                if (mPage >= resp.getData().getTotal()) {
+                                    mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                                }
+                            }
+                        })
+                        .fire();
+                break;
+            case 1:
+                Apic.otcAccountDetail(mGetUserFinanceFlowData, mPage, mPageSize)
+                        .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                                mAdapter.setList(resp.getData());
+                                mAdapter.notifyDataSetChanged();
+                                stopFreshOrLoadAnimation();
+                                if (mPage == 0) {
+                                    mSwipeTarget.hideAll(false);
+                                    mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
+                                }
+                                mPage++;
+                                if (mPage >= resp.getData().getTotal()) {
+                                    mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                                }
+                            }
+                        })
+                        .fire();
+                break;
+            case 2:
+                Apic.userFinanceDetail(mGetUserFinanceFlowData, mPage, mPageSize)
+                        .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                                mAdapter.setList(resp.getData());
+                                mAdapter.notifyDataSetChanged();
+                                stopFreshOrLoadAnimation();
+                                if (mPage == 0) {
+                                    mSwipeTarget.hideAll(false);
+                                    mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
+                                }
+                                mPage++;
+                                if (mPage >= resp.getData().getTotal()) {
+                                    mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                                }
+                            }
+                        })
+                        .fire();
+                break;
+            default:
+        }
     }
 
     private void showSelector(final List<String> item, final ArrayList<Integer> origin) {

@@ -10,7 +10,7 @@ public class AuthSendOld {
     public static final int TYPE_MAIL = 2;//邮箱验证码
     String imgCode;
     int smsType;
-    int sendType;
+    int type;
 
     public String getImgCode() {
         return imgCode;
@@ -29,10 +29,10 @@ public class AuthSendOld {
     }
 
     public int getSendType() {
-        return sendType;
+        return type;
     }
 
     public void setSendType(int sendType) {
-        this.sendType = sendType;
+        this.type = sendType;
     }
 }

@@ -97,9 +97,9 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
     };
 
     private boolean checkConfirmButtonEnable() {
-        String email = this.mEmail.getText().toString();
-        String mailAuthCode = mMailAuthCode.getText().toString();
-        String smsAuthCode = mSmsAuthCode.getText().toString();
+        String email = this.mEmail.getText().toString().trim();
+        String mailAuthCode = mMailAuthCode.getText().toString().trim();
+        String smsAuthCode = mSmsAuthCode.getText().toString().trim();
         return !TextUtils.isEmpty(email) && !TextUtils.isEmpty(mailAuthCode) && !TextUtils.isEmpty(smsAuthCode);
     }
 

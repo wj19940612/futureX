@@ -330,6 +330,30 @@ public class Apic {
     }
 
     /**
+     * /api/otc/account/detail
+     * GET
+     * 法币账户资产明细--(v1.1)
+     */
+    public static Api otcAccountDetail(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
+        return Api.get("/api/otc/account/detail",
+                new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * /api/user/user/financeDetail
+     * GET
+     * 推广资产明细
+     */
+    public static Api userFinanceDetail(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
+        return Api.get("/api/user/user/financeDetail",
+                new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
      * /api/user/wallet/getUserFinanceFlowDetail.do
      * GET
      * 获取资产流水的详细信息

@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/bg_white_r10"
         android:gravity="center"
         android:orientation="vertical"
@@ -29,6 +29,7 @@
             android:includeFontPadding="false"
             android:textColor="@color/text22"
             android:textSize="14sp"
+            android:textStyle="bold"
             tools:text="BTC/USDT"/>
 
         <TextView
@@ -39,6 +40,7 @@
             android:includeFontPadding="false"
             android:textColor="@color/text22"
             android:textSize="17sp"
+            android:textStyle="bold"
             tools:text="9426.99"/>
 
         <TextView
@@ -50,6 +52,7 @@
             android:includeFontPadding="false"
             android:textColor="@color/green_selected_red_color"
             android:textSize="12sp"
+            android:textStyle="bold"
             tools:text="9426.99"/>
     </LinearLayout>
 
