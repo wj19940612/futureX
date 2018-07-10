@@ -299,7 +299,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             public void afterTextChanged(Editable s) {
                 if (mWaresModel.getPriceType() == OtcWarePoster.FLOATING_PRICE) {
                     String string = mPremiumRate.getText().toString();
-                    if (string.equals("-")) {
+                    if ("-".equals(string)) {
                         return;
                     }
                     if (string.length() > 0) {
@@ -688,6 +688,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             } else {
                 mBuyerLimit.setText("");
             }
+        } else {
+            mBuyerLimit.setText("");
+            mConditionKeyValue = new HashMap<>();
+            mBuyerAuthLimitGroup.setVisibility(View.GONE);
+            mBuyerCountLimitGroup.setVisibility(View.GONE);
         }
         mWaresModel.setConditionType(conditionType);
         setConditionValue(mConditionKeyValue);

@@ -131,9 +131,9 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     private ValidationWatcher mWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            mPhoneNum = mPhone.getText().toString();
-            mMailAuth = mMailAuthCode.getText().toString();
-            mSmsAuth = mAuthCode.getText().toString();
+            mPhoneNum = mPhone.getText().toString().trim();
+            mMailAuth = mMailAuthCode.getText().toString().trim();
+            mSmsAuth = mAuthCode.getText().toString().trim();
             boolean enable = !TextUtils.isEmpty(mPhoneNum) && !TextUtils.isEmpty(mMailAuth) && !TextUtils.isEmpty(mSmsAuth);
             mConfirmBind.setEnabled(enable);
         }

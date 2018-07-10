@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
@@ -47,6 +48,10 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
     EditText mRealName;
     @BindView(R.id.certificationNumber)
     EditText mCertificationNumber;
+    @BindView(R.id.passportSample)
+    ImageView mPassportSample;
+    @BindView(R.id.certificationNumHint)
+    TextView mCertificationNumHint;
     private Integer[] type = new Integer[]{R.string.mainland_id_card, R.string.tw_id_card, R.string.passport};
     private Unbinder mBind;
     private SmartDialog mSmartDialog;
@@ -71,13 +76,14 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mRealName.addTextChangedListener(mWatcher);
         mCertificationNumber.addTextChangedListener(mWatcher);
+        mType.setText(R.string.mainland_id_card);
     }
 
     private ValidationWatcher mWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            mName = mRealName.getText().toString();
-            mNumber = mCertificationNumber.getText().toString();
+            mName = mRealName.getText().toString().trim();
+            mNumber = mCertificationNumber.getText().toString().trim();
             boolean enabled = !TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mNumber);
             mConfirmSubmit.setEnabled(enabled);
         }
@@ -138,12 +144,21 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
                 switch (id) {
                     case R.string.mainland_id_card:
                         mCertificationType = 0;
+                        mPassportSample.setVisibility(View.GONE);
+                        mCertificationNumHint.setText(R.string.certification_number);
+                        mCertificationNumber.setHint(R.string.please_input_certification_number);
                         break;
                     case R.string.tw_id_card:
                         mCertificationType = 1;
+                        mPassportSample.setVisibility(View.GONE);
+                        mCertificationNumHint.setText(R.string.certification_number);
+                        mCertificationNumber.setHint(R.string.please_input_certification_number);
                         break;
                     case R.string.passport:
                         mCertificationType = 2;
+                        mPassportSample.setVisibility(View.VISIBLE);
+                        mCertificationNumHint.setText(R.string.passport_code);
+                        mCertificationNumber.setHint(R.string.see_passport_sample_image_below);
                         break;
                     default:
                 }

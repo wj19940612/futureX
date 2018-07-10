@@ -48,6 +48,7 @@ import com.songbai.futurex.websocket.im.IMProcessor;
 import com.songbai.futurex.websocket.model.CustomServiceChat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -260,12 +261,16 @@ public class CustomServiceActivity extends BaseActivity {
         customServiceChat.setContent(getString(R.string.hello_customer_for_you, data.getName()));
         mCustomServiceChats.add(customServiceChat);
         mChatAdapter.notifyDataSetChanged();
+        updateRecyclerViewPosition(false);
     }
 
 
     private void loadChatData(List<CustomServiceChat> data) {
+        mCustomServiceChats.clear();
+        Collections.reverse(data);
         mCustomServiceChats.addAll(data);
         mChatAdapter.notifyDataSetChanged();
+        updateRecyclerViewPosition(false);
     }
 
     private void loadChatData(CustomServiceChat data) {
@@ -291,6 +296,7 @@ public class CustomServiceActivity extends BaseActivity {
             case R.id.addPic:
                 sendPicToCustomer();
                 break;
+            default:
         }
     }
 
@@ -299,8 +305,8 @@ public class CustomServiceActivity extends BaseActivity {
             ToastUtil.show(R.string.http_error_network);
         } else if (!LocalUser.getUser().isLogin()) {
             Launcher.with(getActivity(), LoginActivity.class).execute();
-        } else if (mEditText.getText().length() > 50) {
-            ToastUtil.show(R.string.over_50);
+        } else if (mEditText.getText().length() > 500) {
+            ToastUtil.show(R.string.over_500);
         } else if (!TextUtils.isEmpty(mEditText.getText())) {
             requestSendTxtMsg(mEditText.getText().toString());
             mEditText.setText("");
@@ -424,11 +430,11 @@ public class CustomServiceActivity extends BaseActivity {
         private OnRetryClickListener mOnRetryClickListener;
 
         interface OnRetryClickListener {
-            public void onRetry(CustomServiceChat customServiceChat);
+            void onRetry(CustomServiceChat customServiceChat);
 
-            public void onRightReScroll();
+            void onRightReScroll();
 
-            public void onLeftReScroll();
+            void onLeftReScroll();
         }
 
         public ChatAdapter(List<CustomServiceChat> customServiceChats, Context context, OnRetryClickListener onRetryClickListener) {
@@ -465,7 +471,7 @@ public class CustomServiceActivity extends BaseActivity {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_left_content, parent, false);
                 return new LeftTextHolder(view);
             } else if (viewType == TYPE_RIGHT) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_right_content, parent, false);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.row_otc_chat_right_content, parent, false);
                 return new RightTextHolder(view);
             } else if (viewType == TYPE_RIGHT_PHOTO) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_right_photo, parent, false);

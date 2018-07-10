@@ -246,8 +246,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
         if (view.getId() == R.id.headPortrait) {
             UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
                     .putExtra(ExtraKeys.WARES_ID, legalCurrencyTrade.getId())
-                    .putExtra(ExtraKeys.TRADE_DIRECTION, mType == OtcOrderStatus.ORDER_DIRECT_BUY ?
-                            OtcOrderStatus.ORDER_DIRECT_SELL : OtcOrderStatus.ORDER_DIRECT_BUY)
+                    .putExtra(ExtraKeys.TRADE_DIRECTION, mType)
                     .execute();
         } else {
             if (LocalUser.getUser().isLogin()) {

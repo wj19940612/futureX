@@ -73,10 +73,8 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         mPicAdapter.setList(mImages);
         mPicAdapter.setOnImageClickListener(new FeedbackPicAdapter.OnImageClickListener() {
             @Override
-            public void onImageClick(boolean selectImage) {
-                if (selectImage) {
-                    selectImage();
-                }
+            public void onImageClick(int position) {
+                selectImage(position);
             }
         });
         mRecyclerView.setAdapter(mPicAdapter);
@@ -93,13 +91,16 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         }
     };
 
-    private void selectImage() {
+    private void selectImage(final int position) {
         UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY,
                 "", -1, "", MAX_IMAGE_SIZE - mImages.size())
                 .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
                     public void onImagePath(int index, String imagePath) {
                         String[] split = imagePath.split(",");
+                        if (mImages.size()>position) {
+                            mImages.remove(position);
+                        }
                         for (String aSplit : split) {
                             if (!mImages.contains(aSplit)) {
                                 mImages.add(aSplit);
@@ -112,7 +113,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
     }
 
     public void uploadImages(String data) {
-        Apic.uploadImages(data)
+        Apic.uploadImages(data).indeterminate(this).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<String>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<String>> resp) {
@@ -235,7 +236,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
                     @Override
                     public void onClick(View v) {
                         if (mOnImageClickListener != null) {
-                            mOnImageClickListener.onImageClick(position >= list.size());
+                            mOnImageClickListener.onImageClick(position);
                         }
                     }
                 });
@@ -243,7 +244,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         }
 
         interface OnImageClickListener {
-            void onImageClick(boolean selectImage);
+            void onImageClick(int position);
         }
     }
 }

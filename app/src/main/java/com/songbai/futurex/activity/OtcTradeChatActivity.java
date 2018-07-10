@@ -241,11 +241,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void otcWaresMine() {
-        int direction=0;
-        if (mTradeDirection == OtcOrderStatus.ORDER_DIRECT_SELL) {
-
-        }
-        Apic.otcWaresMine("", String.valueOf(mOrderId), 0)
+        Apic.otcWaresMine("", String.valueOf(mOrderId), 1)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -414,8 +410,8 @@ public class OtcTradeChatActivity extends BaseActivity {
             ToastUtil.show(R.string.http_error_network);
         } else if (!LocalUser.getUser().isLogin()) {
             Launcher.with(getActivity(), LoginActivity.class).execute();
-        } else if (mEditText.getText().length() > 50) {
-            ToastUtil.show(R.string.over_50);
+        } else if (mEditText.getText().length() > 500) {
+            ToastUtil.show(R.string.over_500);
         } else if (!TextUtils.isEmpty(mEditText.getText())) {
             requestSendTxtMsg(mEditText.getText().toString());
             mEditText.setText("");

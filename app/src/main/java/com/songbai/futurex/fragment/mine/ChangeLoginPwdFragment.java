@@ -95,7 +95,7 @@ public class ChangeLoginPwdFragment extends UniqueActivity.UniFragment {
         public void afterTextChanged(Editable s) {
             String password = mPassword.getPassword();
             String confirmPassword = mConfirmPassword.getPassword();
-            String authCode = mSmsAuthCode.getText().toString();
+            String authCode = mSmsAuthCode.getText().toString().trim();
             if (TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(authCode)) {
                 mConfirm.setEnabled(false);
             } else {

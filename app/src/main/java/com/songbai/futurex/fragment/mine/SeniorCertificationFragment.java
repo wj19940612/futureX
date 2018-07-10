@@ -49,6 +49,8 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     ImageView mHandIdCardImg;
     @BindView(R.id.submit)
     TextView mSubmit;
+    @BindView(R.id.backImgText)
+    TextView mBackImgText;
     private Unbinder mBind;
     private UserAuth mUserAuth;
     private int mAuthenticationStatus;
@@ -106,6 +108,8 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
                 break;
             case 2:
                 idCardTypeText = R.string.passport;
+                mBackImg.setVisibility(View.GONE);
+                mBackImgText.setVisibility(View.GONE);
                 break;
             default:
                 idCardTypeText = R.string.mainland_id_card;
@@ -158,7 +162,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
             getHIntImage(view);
             UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
                     UploadUserImageDialogFragment.IMAGE_TYPE_NOT_DEAL, "",
-                    -1, getString(getHIntStiring(view)),
+                    -1, getString(getHintString(view)),
                     1, getHIntImage(view));
             uploadUserImageDialogFragment.setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                 @Override
@@ -211,7 +215,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
         return R.drawable.ic_authentication_idcard_front;
     }
 
-    private int getHIntStiring(View view) {
+    private int getHintString(View view) {
         switch (view.getId()) {
             case R.id.frontImg:
                 return R.string.please_add_certification_front_pic;
@@ -237,7 +241,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     }
 
     private void uploadImage(String image, final View view) {
-        Apic.uploadImage(image)
+        Apic.uploadImage(image).indeterminate(this).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -269,7 +273,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
 
     private void checkIsEnable() {
         if (!TextUtils.isEmpty(mRealNameAuthData.getIdcardFrontImg())
-                && !TextUtils.isEmpty(mRealNameAuthData.getIdcardBackImg())
+                && (!TextUtils.isEmpty(mRealNameAuthData.getIdcardBackImg()) || mUserAuth.getIdType() == 2)
                 && !TextUtils.isEmpty(mRealNameAuthData.getHandIdcardImg())) {
             mSubmit.setEnabled(true);
         } else {

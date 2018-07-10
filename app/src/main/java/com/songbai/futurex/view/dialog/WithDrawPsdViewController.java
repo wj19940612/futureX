@@ -34,7 +34,7 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
     private boolean showGoogleAuth = false;
 
     public interface OnClickListener {
-        void onConfirmClick(String cashPwd,String googleAuth);
+        void onConfirmClick(String cashPwd, String googleAuth);
     }
 
     public WithDrawPsdViewController(Context context, OnClickListener onClickListener) {
@@ -58,15 +58,8 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
         TextView forgetCashPwd = (TextView) view.findViewById(R.id.forgetCashPwd);
         forgetCashPwd.setVisibility(showCashPwd ? View.VISIBLE : View.GONE);
 
-        mCashPwd.addTextChangedListener(new ValidationWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                boolean enable = checkConfirmButtonEnable();
-                if (enable != mConfirm.isEnabled()) {
-                    mConfirm.setEnabled(enable);
-                }
-            }
-        });
+        mCashPwd.addTextChangedListener(mWatcher);
+        mGoogleAuthCode.addTextChangedListener(mWatcher);
 
         forgetCashPwd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,16 +74,26 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
             public void onClick(View v) {
                 dialog.dismiss();
                 String authCode = mCashPwd.getText().toString();
-                mOnClickListener.onConfirmClick(authCode,mGoogleAuthCode.getText().toString());
+                mOnClickListener.onConfirmClick(authCode, mGoogleAuthCode.getText().toString());
             }
         });
     }
 
+    private ValidationWatcher mWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            boolean enable = checkConfirmButtonEnable();
+            if (enable != mConfirm.isEnabled()) {
+                mConfirm.setEnabled(enable);
+            }
+        }
+    };
+
     private boolean checkConfirmButtonEnable() {
-        if (showCashPwd && TextUtils.isEmpty(mCashPwd.getText().toString())) {
+        if (showCashPwd && TextUtils.isEmpty(mCashPwd.getText().toString().trim())) {
             return false;
         }
-        if (showGoogleAuth && TextUtils.isEmpty(mGoogleAuthCode.getText().toString())) {
+        if (showGoogleAuth && TextUtils.isEmpty(mGoogleAuthCode.getText().toString().trim())) {
             return false;
         }
         return true;

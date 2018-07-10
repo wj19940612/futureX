@@ -72,12 +72,14 @@ public class LegalCurrencyFragment extends BaseFragment {
     private String mSelectedCurrencySymbol;
     private String mSelectedLegalSymbol;
     private ArrayList<BaseFragment> mFragments;
+    private boolean isPrepared;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_legal_currency, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        isPrepared = true;
         return view;
     }
 
@@ -124,6 +126,26 @@ public class LegalCurrencyFragment extends BaseFragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isPrepared) {
+            if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+                getLegalCoin();
+                getCountryCurrency();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+            getLegalCoin();
+            getCountryCurrency();
+        }
     }
 
     private void getLegalCoin() {

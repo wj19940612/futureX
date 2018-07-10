@@ -72,6 +72,9 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
             if (mAuthenticated) {
                 String googleAuthString = userInfo.getGoogleAuthString();
                 mGoogleAuthVerify = new Gson().fromJson(googleAuthString, GoogleAuthVerify.class);
+                if (mGoogleAuthVerify == null) {
+                    mGoogleAuthVerify = new GoogleAuthVerify();
+                }
                 mDraw = mGoogleAuthVerify.getDRAW();
                 mSetDrawPass = mGoogleAuthVerify.getSET_DRAW_PASS();
                 mCnyTrade = mGoogleAuthVerify.getCNY_TRADE();

@@ -1,5 +1,7 @@
 package com.songbai.futurex.model.local;
 
+import android.text.TextUtils;
+
 /**
  * @author yangguangda
  * @date 2018/6/12
@@ -7,6 +9,8 @@ package com.songbai.futurex.model.local;
 public class GetUserFinanceFlowData {
     String coinType;//币种
     String flowType;//类型
+    String type;//类型
+    String flowCode;//类型
     String status;//结束时间
     String startTime;//开始时间
     String endTime;//结束时间
@@ -20,11 +24,22 @@ public class GetUserFinanceFlowData {
     }
 
     public String getFlowType() {
-        return flowType;
+        if (!TextUtils.isEmpty(flowType)) {
+            return flowType;
+        }
+        if (!TextUtils.isEmpty(type)) {
+            return type;
+        }
+        if (!TextUtils.isEmpty(flowCode)) {
+            return flowCode;
+        }
+        return "";
     }
 
     public void setFlowType(String flowType) {
         this.flowType = flowType;
+        this.type = flowType;
+        this.flowCode = flowType;
     }
 
     public String getStatus() {
