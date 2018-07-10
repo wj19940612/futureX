@@ -1,10 +1,6 @@
 package com.songbai.futurex.utils;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
@@ -29,15 +25,19 @@ public class AnimUtils {
     }
 
     public static Animation createExpendY(final View view, long duration) {
-        view.measure(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        view.measure(widthMeasureSpec, heightMeasureSpec);
         final int targetHeight = view.getMeasuredHeight();
         view.getLayoutParams().height = 0;
-        view.setVisibility(View.VISIBLE);
+        //view.setVisibility(View.VISIBLE);
         Animation animation = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 super.applyTransformation(interpolatedTime, t);
+                if (interpolatedTime > 0 && view.getVisibility() == View.GONE) {
+                    view.setVisibility(View.VISIBLE);
+                }
                 view.getLayoutParams().height = (int) (targetHeight * interpolatedTime);
                 view.requestLayout();
             }
@@ -52,8 +52,9 @@ public class AnimUtils {
     }
 
     public static Animation createCollapseY(final View view, long duration) {
-        view.measure(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        view.measure(widthMeasureSpec, heightMeasureSpec);
         final int targetHeight = view.getMeasuredHeight();
         Animation animation = new Animation() {
             @Override

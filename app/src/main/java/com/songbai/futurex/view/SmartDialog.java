@@ -33,6 +33,7 @@ public class SmartDialog {
     private float mHeightScale;
     private int mWindowGravity;
     private int mWindowAnim;
+    private int mSoftInputMode;
 
     private OnCancelListener mOnCancelListener;
     private OnDismissListener mDismissListener;
@@ -141,6 +142,7 @@ public class SmartDialog {
 
         mWindowGravity = -1;
         mWindowAnim = -1;
+        mSoftInputMode = -1;
     }
 
     private void scaleDialog() {
@@ -187,6 +189,11 @@ public class SmartDialog {
 
     public SmartDialog setWindowGravity(int windowGravity) {
         mWindowGravity = windowGravity;
+        return this;
+    }
+
+    public SmartDialog setSoftInputMode(int softInputMode) {
+        mSoftInputMode = softInputMode;
         return this;
     }
 
@@ -332,6 +339,10 @@ public class SmartDialog {
             WindowManager.LayoutParams params = mAlertDialog.getWindow().getAttributes();
             params.windowAnimations = mWindowAnim;
             mAlertDialog.getWindow().setAttributes(params);
+        }
+
+        if (mSoftInputMode != -1) {
+            mAlertDialog.getWindow().setSoftInputMode(mSoftInputMode);
         }
 
         if (mCustomViewController != null) {

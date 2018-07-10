@@ -53,5 +53,6 @@ public interface ExtraKeys {
     String IS_CANCELEDONTOUCHOUTSIDE = "is_canceledontouchoutside";
     String WARES_ID = "wares_id";
     String ORDER_ID = "order_id";
+    String ORDER = "order";
     String SERACH_FOR_TRADE = "search_for_trade";
 }

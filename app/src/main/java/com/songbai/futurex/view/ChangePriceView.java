@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import com.songbai.futurex.R;
 import com.songbai.futurex.utils.AnimUtils;
 import com.songbai.futurex.utils.KeyBoardUtils;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -197,7 +197,7 @@ public class ChangePriceView extends FrameLayout {
             e.printStackTrace();
         }
         value += mChangeSize;
-        mPrice.setText(NumUtils.getPrice(value, mScale));
+        mPrice.setText(CurrencyUtils.getPrice(value, mScale));
         mPrice.setSelection(mPrice.getText().toString().length());
     }
 
@@ -211,7 +211,7 @@ public class ChangePriceView extends FrameLayout {
         }
         value -= mChangeSize;
         value = Math.max(0, value);
-        mPrice.setText(NumUtils.getPrice(value, mScale));
+        mPrice.setText(CurrencyUtils.getPrice(value, mScale));
         mPrice.setSelection(mPrice.getText().toString().length());
     }
 

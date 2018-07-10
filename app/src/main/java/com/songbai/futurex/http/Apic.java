@@ -2,7 +2,6 @@ package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.App;
-import com.songbai.futurex.model.Order;
 import com.songbai.futurex.model.local.AuthCodeCheck;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
@@ -1199,20 +1198,19 @@ public class Apic {
      * @param endDate
      * @param prefixSymbol
      * @param suffixSymbol
+     * @param direction
      * @return
      */
-    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, int direction) {
-        ReqParams reqParams = new ReqParams();
-        reqParams.put("pageSize", DEFAULT_PAGE_SIZE)
-                .put("page", page)
-                .put("current", type)
-                .put("endDate", endDate)
-                .put("suffixSymbol", suffixSymbol)
-                .put("prefixSymbol", prefixSymbol);
-        if (direction != Order.DIR_DEFAULT) {
-            reqParams.put("direction", direction);
-        }
-        return Api.get("/api/entrust/entrust/mine", reqParams);
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, Integer direction) {
+        return Api.get("/api/entrust/entrust/mine",
+                new ReqParams()
+                        .put("pageSize", DEFAULT_PAGE_SIZE)
+                        .put("page", page)
+                        .put("current", type)
+                        .put("endDate", endDate)
+                        .put("prefixSymbol", prefixSymbol)
+                        .put("suffixSymbol", suffixSymbol)
+                        .put("direction", direction));
     }
 
     /**
@@ -1289,6 +1287,18 @@ public class Apic {
      */
     public static Api requestPlatformIntroduce(String code) {
         return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
+    }
+
+    /**
+     * 获取订单交易详情
+     *
+     * @param orderId
+     * @return
+     */
+    public static Api getOrderDealDetail(String orderId) {
+        return Api.get("/api/entrust/entrust/dealLog",
+                new ReqParams()
+                        .put("entrustId", orderId));
     }
 
 }

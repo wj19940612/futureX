@@ -1,4 +1,4 @@
-package com.songbai.futurex.model.status;
+package com.songbai.futurex.model.order;
 
 /**
  * Modified by john on 2018/6/30

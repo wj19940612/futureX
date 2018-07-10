@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.utils.FinanceUtil;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.websocket.model.DeepData;
 
 import java.math.RoundingMode;
@@ -141,7 +141,7 @@ public class TradeVolumeView extends LinearLayout {
     public double getAskPrice1() {
         View childAt = mAskPriceParent.getChildAt(0);
         if (childAt instanceof AskPriceView) {
-            return NumUtils.getDouble(((AskPriceView) childAt).getPrice());
+            return CurrencyUtils.getDouble(((AskPriceView) childAt).getPrice());
         }
         return 0;
     }
@@ -149,7 +149,7 @@ public class TradeVolumeView extends LinearLayout {
     public double getBidPrice1() {
         View childAt = mBidPriceParent.getChildAt(0);
         if (childAt instanceof BidPriceView) {
-            return NumUtils.getDouble(((BidPriceView) childAt).getPrice());
+            return CurrencyUtils.getDouble(((BidPriceView) childAt).getPrice());
         }
         return 0;
     }
@@ -222,8 +222,8 @@ public class TradeVolumeView extends LinearLayout {
                 DeepData deepData = buyDeepList.get(i);
                 BidPriceView view = (BidPriceView) mBidPriceParent.getChildAt(i);
                 view.setRank(i + 1);
-                view.setPrice(NumUtils.getPrice(deepData.getPrice(), scale));
-                view.setVolume(NumUtils.getVolume(deepData.getCount(), mVolumeScale));
+                view.setPrice(CurrencyUtils.getPrice(deepData.getPrice(), scale));
+                view.setVolume(CurrencyUtils.getVolume(deepData.getCount(), mVolumeScale));
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 
@@ -246,8 +246,8 @@ public class TradeVolumeView extends LinearLayout {
                 DeepData deepData = sellDeepList.get(i);
                 AskPriceView view = (AskPriceView) mAskPriceParent.getChildAt(i);
                 view.setRank(i + 1);
-                view.setPrice(NumUtils.getPrice(deepData.getPrice(), scale));
-                view.setVolume(NumUtils.getVolume(deepData.getCount(), mVolumeScale));
+                view.setPrice(CurrencyUtils.getPrice(deepData.getPrice(), scale));
+                view.setVolume(CurrencyUtils.getVolume(deepData.getCount(), mVolumeScale));
                 view.setValueAndMax(deepData.getCount(), maxVolume);
             }
 

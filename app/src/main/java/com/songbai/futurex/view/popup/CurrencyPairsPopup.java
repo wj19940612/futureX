@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.model.CurrencyPair;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.recycler.DividerItemDecor;
 import com.songbai.futurex.websocket.model.MarketData;
@@ -319,8 +319,8 @@ public class CurrencyPairsPopup {
                 if (marketDataList != null) {
                     MarketData marketData = marketDataList.get(currencyPair.getPairs());
                     if (marketData != null) {
-                        mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
-                        mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+                        mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice()));
+                        mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                         if (marketData.getUpDropSpeed() < 0) {
                             mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                         } else {

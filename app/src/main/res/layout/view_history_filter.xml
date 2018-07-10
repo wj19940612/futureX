@@ -1,206 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/historyFilter"
+<android.support.constraint.ConstraintLayout
+    android:id="@+id/filterView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:visibility="gone">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/currencyTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/trading_on"
+        android:textColor="@color/text66"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/trading_on"
-            android:textColor="@color/text66"
-            android:textSize="15sp" />
+    <EditText
+        android:id="@+id/currency"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_f5_r4"
+        android:gravity="center_vertical"
+        android:hint="@string/coin_type"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:textColor="@color/text22"
+        android:textColorHint="@color/text99"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/splitLine1"
+        app:layout_constraintTop_toBottomOf="@id/currencyTitle"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+    <TextView
+        android:id="@+id/splitLine1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:maxLines="1"
+        android:text="/"
+        android:textColor="@color/text22"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/currency"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/currency"/>
 
-            <EditText
-                android:id="@+id/currency"
-                android:layout_width="150dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_currency_edit"
-                android:gravity="center_vertical"
-                android:hint="@string/coin_type"
-                android:paddingLeft="10dp"
-                android:textColor="@color/text22"
-                android:textColorHint="@color/text99"
-                android:textSize="15sp" />
+    <TextView
+        android:id="@+id/counterCurrency"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_f5_r4"
+        android:drawableRight="@drawable/ic_common_s_triangle"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:text="请选择计价货币"
+        android:textColor="@color/text22"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toRightOf="@id/splitLine1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/currency"/>
 
-            <TextView
-                android:layout_width="33dp"
-                android:layout_height="15dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:text="/"
-                android:textColor="@color/text22"
-                android:textSize="15sp" />
+    <TextView
+        android:id="@+id/directionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/direction"
+        android:textColor="@color/text66"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currency"/>
 
-            <RelativeLayout
-                android:id="@+id/selectCurrencyLayout"
-                android:layout_width="150dp"
-                android:layout_height="44dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+    <TextView
+        android:id="@+id/buyBtn"
+        android:layout_width="90dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_buy_sell"
+        android:gravity="center"
+        android:text="@string/buy_in"
+        android:textColor="@color/text49_selected_primary"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="@id/directionTitle"
+        app:layout_constraintTop_toBottomOf="@id/directionTitle"/>
 
-                <TextView
-                    android:id="@+id/selectCurrency"
-                    android:layout_width="150dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_currency_edit"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/select_currency"
-                    android:textColor="@color/text22"
-                    android:textSize="15sp" />
+    <TextView
+        android:id="@+id/sellBtn"
+        android:layout_width="90dp"
+        android:layout_height="36dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/btn_buy_sell"
+        android:gravity="center"
+        android:text="@string/sell_out"
+        android:textColor="@color/text49_selected_primary"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toRightOf="@id/buyBtn"
+        app:layout_constraintTop_toTopOf="@id/buyBtn"/>
 
-                <ImageView
-                    android:id="@+id/selectIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_common_s_triangle" />
+    <View
+        android:id="@+id/splitLine2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/bgF5"
+        app:layout_constraintTop_toBottomOf="@id/sellBtn"/>
 
-            </RelativeLayout>
-        </LinearLayout>
+    <TextView
+        android:id="@+id/reset"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/reset"
+        android:textColor="@color/text49"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/filterBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/splitLine2"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/direction"
-            android:textColor="@color/text66"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/buyBtn"
-                android:layout_width="90dp"
-                android:layout_height="36dp"
-                android:background="@drawable/btn_buy_sell"
-                android:gravity="center"
-                android:text="@string/buy_in"
-                android:textColor="@color/text49"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/sellBtn"
-                android:layout_width="90dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/btn_buy_sell"
-                android:gravity="center"
-                android:text="@string/sell_out"
-                android:textColor="@color/text49"
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/order_status"
-            android:textColor="@color/text66"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/has_finish"
-                android:layout_width="90dp"
-                android:layout_height="36dp"
-                android:background="@drawable/btn_buy_sell"
-                android:gravity="center"
-                android:text="@string/has_finish"
-                android:textColor="@color/text49"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/has_withdrawn"
-                android:layout_width="90dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/btn_buy_sell"
-                android:gravity="center"
-                android:text="@string/has_withdrawn"
-                android:textColor="@color/text49"
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/bgF5" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/reset"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/reset"
-                android:textColor="@color/text49"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/filterBtn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="@string/filter"
-                android:textColor="@color/text49"
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/emptyClick"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-</LinearLayout>
+    <TextView
+        android:id="@+id/filterBtn"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="@string/filter"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/reset"
+        app:layout_constraintTop_toTopOf="@id/reset"/>
+</android.support.constraint.ConstraintLayout>

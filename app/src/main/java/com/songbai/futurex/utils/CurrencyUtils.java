@@ -1,5 +1,7 @@
 package com.songbai.futurex.utils;
 
+import android.text.TextUtils;
+
 import java.math.RoundingMode;
 
 /**
@@ -9,7 +11,15 @@ import java.math.RoundingMode;
  * <p>
  * APIs:
  */
-public class NumUtils {
+public class CurrencyUtils {
+
+    public static String formatPairName(String pairName) {
+        if (!TextUtils.isEmpty(pairName) && pairName.indexOf('_') > -1) {
+            String[] split = pairName.split("_", 2);
+            return split[0].toUpperCase() + "/" + split[1].toUpperCase();
+        }
+        return pairName.toUpperCase();
+    }
 
     /**
      * 交易量
