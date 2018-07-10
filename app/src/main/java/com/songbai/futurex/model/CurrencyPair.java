@@ -98,6 +98,26 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         this.sort = sort;
     }
 
+    public void setLastPrice(double lastPrice) {
+        this.lastPrice = lastPrice;
+    }
+
+    public void setLastVolume(double lastVolume) {
+        this.lastVolume = lastVolume;
+    }
+
+    public void setPricePoint(int pricePoint) {
+        this.pricePoint = pricePoint;
+    }
+
+    public void setUpDropPrice(double upDropPrice) {
+        this.upDropPrice = upDropPrice;
+    }
+
+    public void setUpDropSpeed(double upDropSpeed) {
+        this.upDropSpeed = upDropSpeed;
+    }
+
     public String getSuffixSymbol() {
         return suffixSymbol;
     }

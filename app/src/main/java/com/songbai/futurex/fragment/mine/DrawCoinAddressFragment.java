@@ -30,7 +30,7 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
-    public static final int REQUEST_ADDRESSLIST = 12312;
+    public static final int REQUEST_ADDRESS_LIST = 12312;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private Unbinder mBind;
@@ -46,7 +46,6 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
     }
 
     @Override
@@ -58,7 +57,7 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
             public void onAddressTypeClick(CoinAddressCount coinAddressCount) {
                 UniqueActivity.launcher(getActivity(), DrawCoinAddressListFragment.class)
                         .putExtra(ExtraKeys.COIN_ADDRESS_INFO, coinAddressCount)
-                        .execute(DrawCoinAddressFragment.this, REQUEST_ADDRESSLIST);
+                        .execute(DrawCoinAddressFragment.this, REQUEST_ADDRESS_LIST);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -80,7 +79,7 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADDRESSLIST) {
+        if (requestCode == REQUEST_ADDRESS_LIST) {
             if (data != null) {
                 boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
                 if (shouldRefresh) {

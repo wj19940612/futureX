@@ -99,7 +99,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
     }
 
     private void legalCurrencyOrderList(final int page, int pageSize, String status) {
-        Apic.legalCurrencyOrderList(page, pageSize, status)
+        Apic.legalCurrencyOrderList(page, pageSize, status).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<LegalCurrencyOrder>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<LegalCurrencyOrder>> resp) {
@@ -109,7 +109,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         mPage++;
                         if (resp.getData().getTotal() <= mPage) {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
-                        }else {
+                        } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         }
                         if (page == 0) {
@@ -187,22 +187,29 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
     public void onItemClick(View view, int position, Object obj) {
         if (obj instanceof LegalCurrencyOrder) {
             LegalCurrencyOrder legalCurrencyOrder = (LegalCurrencyOrder) obj;
-            switch (legalCurrencyOrder.getStatus()) {
-                case OtcOrderStatus.ORDER_CANCLED:
-                case OtcOrderStatus.ORDER_COMPLATED:
-                    Launcher.with(this, OtcOrderCompletedActivity.class)
-                            .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
-                            .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
-                            .execute();
-                    break;
-                case OtcOrderStatus.ORDER_PAIED:
-                case OtcOrderStatus.ORDER_UNPAIED:
-                    UniqueActivity.launcher(this, LegalCurrencyOrderDetailFragment.class)
-                            .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
-                            .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
-                            .execute(this, REQUEST_ORDER_DETAIL);
-                    break;
-                default:
+            if (view.getId() == R.id.headPortrait) {
+                UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
+                        .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
+                        .execute();
+            } else {
+                switch (legalCurrencyOrder.getStatus()) {
+                    case OtcOrderStatus.ORDER_CANCLED:
+                    case OtcOrderStatus.ORDER_COMPLATED:
+                        Launcher.with(this, OtcOrderCompletedActivity.class)
+                                .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
+                                .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
+                                .execute();
+                        break;
+                    case OtcOrderStatus.ORDER_PAIED:
+                    case OtcOrderStatus.ORDER_UNPAIED:
+                        UniqueActivity.launcher(this, LegalCurrencyOrderDetailFragment.class)
+                                .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
+                                .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
+                                .execute(this, REQUEST_ORDER_DETAIL);
+                        break;
+                    default:
+                }
             }
         }
     }
@@ -224,7 +231,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof LegalCurrencyOrderHolder) {
-                ((LegalCurrencyOrderHolder) holder).bindData(mList.get(position));
+                ((LegalCurrencyOrderHolder) holder).bindData(position, mList.get(position));
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -277,7 +284,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindData(LegalCurrencyOrder legalCurrencyOrder) {
+            public void bindData(final int position, final LegalCurrencyOrder legalCurrencyOrder) {
                 GlideApp
                         .with(mContext)
                         .load(legalCurrencyOrder.getChangePortrait())
@@ -330,6 +337,14 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         break;
                     default:
                 }
+                mHeadPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnRVItemClickListener != null) {
+                            mOnRVItemClickListener.onItemClick(mHeadPortrait, position, legalCurrencyOrder);
+                        }
+                    }
+                });
             }
         }
     }

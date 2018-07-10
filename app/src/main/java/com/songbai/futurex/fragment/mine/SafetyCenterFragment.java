@@ -103,7 +103,9 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
                 UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
                 break;
             case R.id.googleAuthenticatorSettings:
-                UniqueActivity.launcher(this, GoogleAuthenticatorSettingsFragment.class).execute();
+                if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
+                    UniqueActivity.launcher(this, GoogleAuthenticatorSettingsFragment.class).execute();
+                }
                 break;
             case R.id.gesturePwd:
                 Launcher.with(this, SetGesturePwdActivity.class).execute();

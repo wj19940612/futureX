@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
@@ -120,9 +122,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="0.5dp"
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:layout_marginTop="0.5dp"
             android:background="@color/white">
 
             <TextView

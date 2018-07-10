@@ -15,34 +15,19 @@
         app:backFeature="true"
         tools:titleText="USDRT地址"/>
 
-    <android.support.v7.widget.RecyclerView
+    <include
+        layout="@layout/view_common_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <com.songbai.futurex.view.EmptyRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/titleBar"
         android:clipToPadding="false"
         android:paddingTop="12dp"/>
-
-    <LinearLayout
-        android:id="@+id/emptyView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_common_none_w"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_record"
-            android:textColor="#56636B"
-            android:textSize="12sp"/>
-    </LinearLayout>
 
     <TextView
         android:id="@+id/addAddress"

@@ -25,6 +25,8 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.mine.CashPwdFragment;
+import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
+import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
@@ -33,6 +35,7 @@ import com.songbai.futurex.model.LegalCurrencyTrade;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -77,8 +80,8 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     private GetOtcWaresHome mGetOtcWaresHome;
     private int mPage;
     private boolean isPrepared;
-    private boolean isFirstLoad;
     private boolean mPairChanged;
+    private SmartDialog mSmartDialog;
 
     public static WantBuyOrSellFragment newInstance(int type, String coinType, String payCurrency) {
         WantBuyOrSellFragment wantBuyOrSellFragment = new WantBuyOrSellFragment();
@@ -93,7 +96,6 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        isFirstLoad = true;
         View view = inflater.inflate(R.layout.fragment_want_buy, container, false);
         mBind = ButterKnife.bind(this, view);
         isPrepared = true;
@@ -138,10 +140,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
     private void lazyLoad() {
         if (isPrepared && getUserVisibleHint()) {
-            if (isFirstLoad) {
-                isFirstLoad = false;
-                otcWaresCommend(mGetOtcWaresHome);
-            }
+            otcWaresCommend(mGetOtcWaresHome);
         }
     }
 
@@ -166,7 +165,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     }
 
     private void otcWaresCommend(GetOtcWaresHome getOtcWaresHome) {
-        Apic.otcWaresHome(getOtcWaresHome)
+        Apic.otcWaresHome(getOtcWaresHome).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<LegalCurrencyTrade>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<LegalCurrencyTrade>> resp) {
@@ -243,39 +242,31 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
     @Override
     public void onItemClick(View view, int position, Object obj) {
-        if (LocalUser.getUser().isLogin()) {
-            if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
-                showSetDrawCashPwdHint();
-            }
-            showBuyOrSellView(mType, obj);
+        LegalCurrencyTrade legalCurrencyTrade = (LegalCurrencyTrade) obj;
+        if (view.getId() == R.id.headPortrait) {
+            UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
+                    .putExtra(ExtraKeys.WARES_ID, legalCurrencyTrade.getId())
+                    .putExtra(ExtraKeys.TRADE_DIRECTION, mType == OtcOrderStatus.ORDER_DIRECT_BUY ?
+                            OtcOrderStatus.ORDER_DIRECT_SELL : OtcOrderStatus.ORDER_DIRECT_BUY)
+                    .execute();
         } else {
-            Launcher.with(getActivity(), LoginActivity.class).execute();
-        }
-    }
-
-    private void showSetDrawCashPwdHint() {
-        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
-            @Override
-            public void onConfirmClick() {
-                UniqueActivity.launcher(WantBuyOrSellFragment.this, CashPwdFragment.class)
-                        .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
-                        .execute();
+            if (LocalUser.getUser().isLogin()) {
+                if (legalCurrencyTrade.getOperate() == 0) {
+                    ToastUtil.show(R.string.can_not_trade_with_self);
+                    return;
+                }
+                if (mType == OtcOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+                    showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
+                    return;
+                }
+                showBuyOrSellView(mType, legalCurrencyTrade);
+            } else {
+                Launcher.with(getActivity(), LoginActivity.class).execute();
             }
-        });
-        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-        smartDialog.setCustomViewController(withDrawPsdViewController)
-                .show();
-        withDrawPsdViewController.setConfirmText(R.string.go_to_set);
-        withDrawPsdViewController.setMsg(R.string.set_draw_cash_pwd_hint);
-        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
+        }
     }
 
-    private void showBuyOrSellView(final int type, Object obj) {
-        final LegalCurrencyTrade legalCurrencyTrade = (LegalCurrencyTrade) obj;
-        if (legalCurrencyTrade.getOperate() == 0) {
-            ToastUtil.show(R.string.can_not_trade_with_self);
-            return;
-        }
+    private void showBuyOrSellView(final int type, final LegalCurrencyTrade legalCurrencyTrade) {
         BuyOrSellController buyOrSellController = new BuyOrSellController(getContext());
         buyOrSellController.setData(legalCurrencyTrade);
         buyOrSellController.setType(type);
@@ -289,8 +280,8 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 }
             }
         });
-        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-        smartDialog
+        mSmartDialog = SmartDialog.solo(getActivity());
+        mSmartDialog
                 .setWidthScale(0.8f)
                 .setWindowGravity(Gravity.CENTER)
                 .setWindowAnim(R.style.BottomDialogAnimation)
@@ -303,10 +294,24 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
+                        if (mSmartDialog != null) {
+                            mSmartDialog.dismiss();
+                        }
                         UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
                                 .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
+                                .putExtra(ExtraKeys.TRADE_DIRECTION, OtcOrderStatus.ORDER_DIRECT_BUY)
                                 .execute();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        int code = failedResp.getCode();
+                        if (code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
+                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
+                            showAlertMsgHint(code);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
                     }
                 }).fire();
     }
@@ -316,12 +321,78 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
+                        if (mSmartDialog != null) {
+                            mSmartDialog.dismiss();
+                        }
                         UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
                                 .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, 2)
+                                .putExtra(ExtraKeys.TRADE_DIRECTION, OtcOrderStatus.ORDER_DIRECT_SELL)
                                 .execute();
                     }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        int code = failedResp.getCode();
+                        if (code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
+                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
+                            showAlertMsgHint(code);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
+                    }
                 }).fire();
+    }
+
+    private void showAlertMsgHint(final int code) {
+        int msg = 0;
+        int confirmText = R.string.ok;
+        switch (code) {
+            case Resp.Code.CASH_PWD_NONE:
+                msg = R.string.set_draw_cash_pwd_hint;
+                confirmText = R.string.go_to_set;
+                break;
+            case Resp.Code.NEEDS_PRIMARY_CERTIFICATION:
+                msg = R.string.poster_owner_set_needs_primary_certification;
+                confirmText = R.string.go_to;
+                break;
+            case Resp.Code.NEEDS_SENIOR_CERTIFICATION:
+                msg = R.string.poster_owner_set_needs_senior_certification;
+                confirmText = R.string.go_to;
+                break;
+            case Resp.Code.NEEDS_MORE_DEAL_COUNT:
+                msg = R.string.your_deal_count_is_less_than_limit;
+                confirmText = R.string.got_it;
+                break;
+            default:
+        }
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                switch (code) {
+                    case Resp.Code.CASH_PWD_NONE:
+                        UniqueActivity.launcher(WantBuyOrSellFragment.this, CashPwdFragment.class)
+                                .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
+                                .execute();
+                        break;
+                    case Resp.Code.NEEDS_PRIMARY_CERTIFICATION:
+                        UniqueActivity.launcher(WantBuyOrSellFragment.this, PrimaryCertificationFragment.class)
+                                .execute();
+                        break;
+                    case Resp.Code.NEEDS_SENIOR_CERTIFICATION:
+                        UniqueActivity.launcher(WantBuyOrSellFragment.this, SeniorCertificationFragment.class)
+                                .putExtra(ExtraKeys.AUTHENTICATION_STATUS, LocalUser.getUser().getUserInfo().getAuthenticationStatus())
+                                .execute();
+                        break;
+                    default:
+                }
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setConfirmText(confirmText);
+        withDrawPsdViewController.setMsg(msg);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     static class BuyOrSellController extends SmartDialog.CustomViewController {
@@ -356,7 +427,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
         private OnConfirmClickListener mOnConfirmClickListener;
 
-        public BuyOrSellController(Context context) {
+        BuyOrSellController(Context context) {
             mContext = context;
         }
 
@@ -413,7 +484,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                     }
                 }
             });
-            mCurrencyAmount.setHint(mContext.getString(R.string.max_buy_amount, FinanceUtil.formatWithScale(maxTurnover)));
+            double maxAmount = maxTurnover;
+            maxAmount = Math.min(maxAmount, Double.valueOf(mData.getChangeCount()) * mData.getFixedPrice());
+            mCurrencyAmount.setHint(mContext.getString(R.string.max_buy_amount, FinanceUtil.formatWithScale(maxAmount)));
             mClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -445,7 +518,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             void onConfirmClick(String coinAmount, String currencyAmout, String cashPwd);
         }
 
-        public void setOnConfirmClickListener(OnConfirmClickListener onConfirmClickListener) {
+        void setOnConfirmClickListener(OnConfirmClickListener onConfirmClickListener) {
             mOnConfirmClickListener = onConfirmClickListener;
         }
 
@@ -472,7 +545,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof WantBuyHolder) {
-                ((WantBuyHolder) holder).bindData(mList.get(position));
+                ((WantBuyHolder) holder).bindData(position, mList.get(position));
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -496,7 +569,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             mList.addAll(list);
         }
 
-        public void setOnRVItemClickListener(OnRVItemClickListener onRVItemClickListener) {
+        void setOnRVItemClickListener(OnRVItemClickListener onRVItemClickListener) {
             mOnRVItemClickListener = onRVItemClickListener;
         }
 
@@ -527,7 +600,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindData(LegalCurrencyTrade legalCurrencyTrade) {
+            public void bindData(final int position, final LegalCurrencyTrade legalCurrencyTrade) {
                 GlideApp
                         .with(getContext())
                         .load(legalCurrencyTrade.getUserPortrait())
@@ -548,15 +621,24 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 mPrice.setText(getString(R.string.x_space_x,
                         FinanceUtil.formatWithScale(legalCurrencyTrade.getFixedPrice()),
                         legalCurrencyTrade.getPayCurrency().toUpperCase()));
-                mSumSection.setText(getString(R.string.amount_limit, String.valueOf(legalCurrencyTrade.getMinTurnover()), String.valueOf(legalCurrencyTrade.getMaxTurnover())));
+                mSumSection.setText(getString(R.string.amount_limit, FinanceUtil.trimTrailingZero(legalCurrencyTrade.getMinTurnover()),
+                        FinanceUtil.trimTrailingZero(legalCurrencyTrade.getMaxTurnover())));
                 mOwnCount.setText(getString(R.string.own_amount, legalCurrencyTrade.getChangeCount()));
                 mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,
                         legalCurrencyTrade.getCountDeal(),
                         FinanceUtil.formatToPercentage(legalCurrencyTrade.getDoneRate())));
                 String payInfo = legalCurrencyTrade.getPayInfo();
-                mWechatPayIcon.setVisibility(payInfo.contains("wxPay") ? View.VISIBLE : View.GONE);
-                mAliPayIcon.setVisibility(payInfo.contains("aliPay") ? View.VISIBLE : View.GONE);
-                mUnionPayIcon.setVisibility(payInfo.contains("bankPay") ? View.VISIBLE : View.GONE);
+                mWechatPayIcon.setVisibility(payInfo.contains(PayType.WXPAY) ? View.VISIBLE : View.GONE);
+                mAliPayIcon.setVisibility(payInfo.contains(PayType.ALIPAY) ? View.VISIBLE : View.GONE);
+                mUnionPayIcon.setVisibility(payInfo.contains(PayType.BANK_PAY) ? View.VISIBLE : View.GONE);
+                mHeadPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnRVItemClickListener != null) {
+                            mOnRVItemClickListener.onItemClick(mHeadPortrait, position, legalCurrencyTrade);
+                        }
+                    }
+                });
             }
         }
     }

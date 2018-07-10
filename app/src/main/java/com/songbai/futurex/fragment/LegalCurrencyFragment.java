@@ -100,7 +100,7 @@ public class LegalCurrencyFragment extends BaseFragment {
         mFragments = new ArrayList<>();
         mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_SELL, mSelectedLegalSymbol, mSelectedCurrencySymbol));
         mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_BUY, mSelectedLegalSymbol, mSelectedCurrencySymbol));
-        mFragments.add(MyPosterFragment.newInstance());
+        mFragments.add(MyPosterFragment.newInstance(mSelectedLegalSymbol, mSelectedCurrencySymbol));
         LegalCurrencyPager adapter = new LegalCurrencyPager(getChildFragmentManager(), mFragments);
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(2);
@@ -233,6 +233,10 @@ public class LegalCurrencyFragment extends BaseFragment {
                 for (BaseFragment fragment : mFragments) {
                     if (fragment instanceof WantBuyOrSellFragment) {
                         ((WantBuyOrSellFragment) fragment).
+                                setRequestParamAndRefresh(mSelectedLegalSymbol, mSelectedCurrencySymbol);
+                    }
+                    if (fragment instanceof MyPosterFragment) {
+                        ((MyPosterFragment) fragment).
                                 setRequestParamAndRefresh(mSelectedLegalSymbol, mSelectedCurrencySymbol);
                     }
                 }

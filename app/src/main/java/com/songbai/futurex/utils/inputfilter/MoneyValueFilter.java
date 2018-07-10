@@ -5,6 +5,7 @@ import android.text.Spanned;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
 
 /**
@@ -91,11 +92,11 @@ public class MoneyValueFilter extends DigitsKeyListener {
             if (!source.toString().equals(MINUS_SIGN)) {
                 double dold = Double.parseDouble(dest.toString() + source.toString());
                 if (dold > mMaxValue) {
-                    ToastUtil.show("最大不能大于" + mMaxValue);
+                    ToastUtil.show("最大不能大于" + FinanceUtil.trimTrailingZero(mMaxValue));
                     return dest.subSequence(dstart, dend);
                 } else if (dold == mMaxValue) {
                     if (DECIMAIL_POINT.equals(source.toString())) {
-                        ToastUtil.show("最大不能大于" + mMaxValue);
+                        ToastUtil.show("最大不能大于" + FinanceUtil.trimTrailingZero(mMaxValue));
                         return dest.subSequence(dstart, dend);
                     }
                 }
@@ -107,11 +108,11 @@ public class MoneyValueFilter extends DigitsKeyListener {
             if (!source.toString().equals(MINUS_SIGN)) {
                 double dold = Double.parseDouble(dest.toString() + source.toString());
                 if (dold < mMinValue) {
-                    ToastUtil.show("最小不能小于" + mMinValue);
+                    ToastUtil.show("最小不能小于" + FinanceUtil.trimTrailingZero(mMinValue));
                     return dest.subSequence(dstart, dend);
                 } else if (dold == mMinValue) {
                     if (DECIMAIL_POINT.equals(source.toString())) {
-                        ToastUtil.show("最小不能小于" + mMinValue);
+                        ToastUtil.show("最小不能小于" + FinanceUtil.trimTrailingZero(mMinValue));
                         return dest.subSequence(dstart, dend);
                     }
                 }

@@ -325,6 +325,7 @@
     <string name="premium_rate">溢价比例</string>
     <string name="trade_limit">交易限制</string>
     <string name="trade_amount">交易数量</string>
+    <string name="account_balance">当前账户余额：</string>
     <string name="pay_type">支付方式</string>
     <string name="optional">（选填）</string>
     <string name="buyer_limit">对方限制</string>
@@ -345,6 +346,7 @@
     <string name="floating_price_x_symbol">溢价&#160;%1$s&#160;%%</string>
     <string name="fixed_price">固定价格</string>
     <string name="floating_price">浮动价格</string>
+    <string name="deal_count_limit_unset">交易次数限制未填写</string>
     <string name="limit_range_x">%1$s-%2$s</string>
     <string name="buy_blank_symbol_x">买入&#160;%1$s</string>
     <string name="sell_blank_symbol_x">卖出&#160;%1$s</string>
@@ -355,6 +357,11 @@
     <string name="delete_poster_hint_msg">您确实要删除广告吗</string>
     <string name="set_draw_cash_pwd_hint">您还未设置资金密码，为了您账户的安全，请先设置</string>
     <string name="go_to_set">去设置</string>
+    <string name="poster_owner_set_needs_primary_certification">广告主设置交易需完成初级认证</string>
+    <string name="poster_owner_set_needs_senior_certification">广告主设置交易需完成高级认证</string>
+    <string name="go_to">前往</string>
+    <string name="your_deal_count_is_less_than_limit">您的历史交易笔数未达到对方要求</string>
+    <string name="got_it">知道了</string>
     <string name="publish_poster_have_not_bind_pay">为了交易的安全和顺利进行，您需先进行法币支付绑定才可发布广告</string>
     <string name="go_to_bind">去绑定</string>
     <string name="please_select_price_type">请选择价格类型</string>
@@ -386,7 +393,7 @@
     <string name="edit_content">编辑内容</string>
     <string name="delete_poster">删除广告</string>
     <string name="pricing_currency">计价货币</string>
-    <string name="quota_price_x_symbol">价格：%1$s</string>
+    <string name="quota_price">价格：</string>
     <string name="passed_primary_certification">必须通过初级认证</string>
     <string name="passed_senior_certification">必须通过高级认证</string>
     <string name="deal_count_more_than_x">交易成功次数大于%1$s</string>
@@ -417,11 +424,13 @@
     <string name="wait_to_pay_and_confirm">待付款并确认</string>
     <string name="wait_sell_transfer_coin">待卖家转币</string>
     <string name="seller_info">卖家信息</string>
+    <string name="buyer_info">买家信息</string>
     <string name="click_to_ask_contract_info">点击咨询支付方式</string>
     <string name="contact_each_other">联系对方</string>
     <string name="cancel_trade">取消交易</string>
     <string name="cancel_trade_hin_msg">如果您已经向卖家付款，请千万不要取消交易。取消规则：买方当日累计5笔取消，将会限制当天的买入功能。</string>
     <string name="confirm_have_not_pay_to_seller">我确认还没有付款给对方</string>
+    <string name="colon_symbol">:</string>
     <string name="appeal">申诉</string>
     <string name="i_have_paid">我已付款</string>
     <string name="confirm_transfer_coin">确认转币</string>
@@ -566,6 +575,7 @@
     <string name="trade_amt">交易额</string>
 
 
+    <string name="input_msg_hell">在此输入您的对话...</string>
     <string name="input_msg_enter_to_send">输入信息，按Enter发送</string>
 
     <string name="over_50">发言不能超过50字符</string>

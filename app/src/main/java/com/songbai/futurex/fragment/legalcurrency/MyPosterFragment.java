@@ -64,13 +64,18 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     private boolean isPrepared;
     private boolean isFirstLoad;
     private int mPageSize = 20;
+    private String mCoinType;
+    private String mPayCurrency;
     private boolean mShouldRefresh;
     private SmartDialog mSmartDialog;
     private boolean mRequested;
+    private boolean mPairChanged;
 
-    public static MyPosterFragment newInstance() {
+    public static MyPosterFragment newInstance(String coinType, String payCurrency) {
         MyPosterFragment wantBuyOrSellFragment = new MyPosterFragment();
         Bundle bundle = new Bundle();
+        bundle.putString("coinType", coinType);
+        bundle.putString("payCurrency", payCurrency);
         wantBuyOrSellFragment.setArguments(bundle);
         return wantBuyOrSellFragment;
     }
@@ -90,7 +95,8 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-
+            mCoinType = arguments.getString("coinType");
+            mPayCurrency = arguments.getString("payCurrency");
         }
         mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -219,6 +225,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 otcWaresList(mPage, mPageSize);
             }
         }
+        if (isVisibleToUser && isPrepared && mPairChanged) {
+            otcWaresList(mPage, mPageSize);
+        }
     }
 
     private void lazyLoad() {
@@ -227,6 +236,16 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 isFirstLoad = false;
                 otcWaresList(mPage, mPageSize);
             }
+        }
+    }
+
+    public void setRequestParamAndRefresh(String coinType, String payCurrency) {
+        mPage = 0;
+        mCoinType = coinType;
+        mPayCurrency = payCurrency;
+        mPairChanged = true;
+        if (getUserVisibleHint() && isPrepared && mPairChanged) {
+            otcWaresList(mPage, mPageSize);
         }
     }
 
@@ -243,10 +262,13 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
             return;
         }
         mRequested = true;
-        Apic.otcWaresList(page, pageSize)
+        Apic.otcWaresList(page, pageSize, mCoinType, mPayCurrency)
                 .callback(new Callback<Resp<PagingWrap<OtcWarePoster>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<OtcWarePoster>> resp) {
+                        if (mPairChanged) {
+                            mPairChanged = false;
+                        }
                         mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         mAdapter.setList(resp.getData().getData());
                         mAdapter.notifyDataSetChanged();

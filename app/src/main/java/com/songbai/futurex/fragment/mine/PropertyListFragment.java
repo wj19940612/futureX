@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -34,6 +33,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
+import com.songbai.futurex.view.EmptyRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,9 @@ public class PropertyListFragment extends BaseFragment {
     @BindView(R.id.check)
     ImageView mCheck;
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
+    @BindView(R.id.emptyView)
+    LinearLayout mEmptyView;
     private Unbinder mBind;
     private int mPropertyType;
     private PropertyListAdapter mAdapter;
@@ -94,6 +96,7 @@ public class PropertyListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyListAdapter();
+        mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setAdapter(mAdapter);
         requestData();
         mSearchProperty.addTextChangedListener(new ValidationWatcher() {
@@ -173,11 +176,6 @@ public class PropertyListFragment extends BaseFragment {
                 .callback(new Callback<Resp<AccountList>>() {
 
                     @Override
-                    public void onFailure(ReqError reqError) {
-
-                    }
-
-                    @Override
                     protected void onRespSuccess(Resp<AccountList> resp) {
                         setAdapter(2, resp.getData());
                     }
@@ -191,6 +189,7 @@ public class PropertyListFragment extends BaseFragment {
         mAdapter.setList(mAccountBeans);
         mAdapter.setType(position);
         mAdapter.notifyDataSetChanged();
+        mRecyclerView.hideAll(false);
     }
 
     public void requestData() {

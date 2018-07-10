@@ -31,11 +31,12 @@
         tools:text="1"/>
 
     <TextView
+        android:id="@+id/colon"
         android:layout_width="4dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text=":"
+        android:text="@string/colon_symbol"
         android:textColor="@color/white"
         android:textSize="13sp"/>
 

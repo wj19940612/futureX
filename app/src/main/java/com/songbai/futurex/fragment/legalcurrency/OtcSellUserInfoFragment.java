@@ -19,6 +19,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.WaresUserInfo;
+import com.songbai.futurex.model.status.OtcOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.view.TitleBar;
 
@@ -61,6 +62,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     private Unbinder mBind;
     private int mOrderId;
     private int mTradeDirection;
+    private int mWaresId;
 
     @Nullable
     @Override
@@ -72,22 +74,28 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
+        mWaresId = extras.getInt(ExtraKeys.WARES_ID);
         mOrderId = extras.getInt(ExtraKeys.ORDER_ID);
         mTradeDirection = extras.getInt(ExtraKeys.TRADE_DIRECTION);
     }
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        mTitleBar.setTitle(mTradeDirection == OtcOrderStatus.ORDER_DIRECT_BUY ? R.string.seller_info : R.string.buyer_info);
         FragmentActivity activity = getActivity();
         if (activity instanceof StatusBarActivity) {
             ((StatusBarActivity) activity).translucentStatusBar();
             ((StatusBarActivity) activity).addStatusBarHeightPaddingTop(mTitleBar);
         }
-        otcWaresMine("", mOrderId, mTradeDirection);
+        if (mWaresId != 0) {
+            otcWaresMine(String.valueOf(mWaresId), "");
+        } else {
+            otcWaresMine("", String.valueOf(mOrderId));
+        }
     }
 
-    private void otcWaresMine(String waresId, int orderId, int orientation) {
-        Apic.otcWaresMine(waresId, orderId, orientation)
+    private void otcWaresMine(String waresId, String orderId) {
+        Apic.otcWaresMine(waresId, orderId, 0)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {

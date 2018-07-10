@@ -25,6 +25,8 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.AuthenticationName;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
@@ -63,6 +65,7 @@ public class PersonalDataActivity extends BaseActivity {
     private boolean mHasPhone;
     private boolean mHasEmail;
     private int mAuthenticationStatus;
+    private String mName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +88,12 @@ public class PersonalDataActivity extends BaseActivity {
                     .circleCrop()
                     .into(mUserHeadImage);
             mNickName.setSubText(userInfo.getUserName());
-            mRealName.setSubText(userInfo.getRealName());
+            if (TextUtils.isEmpty(mName)) {
+                authenticationName();
+                mRealName.setSubText(userInfo.getRealName());
+            } else {
+                mRealName.setSubText(mName);
+            }
             String userPhone = userInfo.getUserPhone();
             mHasPhone = !TextUtils.isEmpty(userPhone);
             if (mHasPhone) {
@@ -103,24 +111,24 @@ public class PersonalDataActivity extends BaseActivity {
             // 认证状态:0未完成任何认证,1初级认证,2高级认证成功,3高级认证审核中,4高级认证失败
             mAuthenticationStatus = userInfo.getAuthenticationStatus();
             switch (mAuthenticationStatus) {
-                case 0:
+                case AuthenticationStatus.AUTHENTICATION_NONE:
                     setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_unautherized);
                     setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_unautherized);
                     break;
-                case 1:
+                case AuthenticationStatus.AUTHENTICATION_PRIMARY:
                     setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
                     setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_unautherized);
                     break;
-                case 2:
+                case AuthenticationStatus.AUTHENTICATION_SENIOR:
                     setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
                     setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_autherized);
                     break;
-                case 3:
+                case AuthenticationStatus.AUTHENTICATION_SENIOR_GOING:
                     setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
                     setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_inreview);
                     mSeniorCertification.setSubText(R.string.certificating);
                     break;
-                case 4:
+                case AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL:
                     setIconTextRowSubDrawable(mPrimaryCertification, R.drawable.ic_common_autherized);
                     setIconTextRowSubDrawable(mSeniorCertification, R.drawable.ic_common_unautherized);
                     break;
@@ -174,14 +182,14 @@ public class PersonalDataActivity extends BaseActivity {
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.primaryCertification:
-                if (mAuthenticationStatus > 0) {
+                if (mAuthenticationStatus > AuthenticationStatus.AUTHENTICATION_NONE) {
                     return;
                 }
                 UniqueActivity.launcher(this, PrimaryCertificationFragment.class)
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.seniorCertification:
-                if (userInfo.getAuthenticationStatus() < 1) {
+                if (userInfo.getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
                     ToastUtil.show(R.string.passed_primary_certification);
                     return;
                 }
@@ -190,7 +198,7 @@ public class PersonalDataActivity extends BaseActivity {
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.legalCurrencyPayManagement:
-                if (userInfo.getAuthenticationStatus() < 1) {
+                if (userInfo.getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
                     ToastUtil.show(R.string.passed_primary_certification);
                 } else {
                     UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
@@ -250,6 +258,18 @@ public class PersonalDataActivity extends BaseActivity {
                         LocalUser.getUser().setUserInfo(resp.getData());
                         setUserInfo();
                         setResult(PERSONAL_DATA_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                    }
+                })
+                .fire();
+    }
+
+    private void authenticationName() {
+        Apic.authenticationName()
+                .callback(new Callback<Resp<AuthenticationName>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AuthenticationName> resp) {
+                        mName = resp.getData().getName();
+                        mRealName.setSubText(mName);
                     }
                 })
                 .fire();

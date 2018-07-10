@@ -1,6 +1,7 @@
 package com.songbai.futurex.fragment.mine;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.model.mine.CoinAbleAmount;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
+import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -68,6 +70,8 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     LinearLayout mOperateGroup;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
+    @BindView(R.id.history)
+    TextView mHistory;
     private Unbinder mBind;
     private AccountList.AccountBean mAccountBean;
     private int mTransferType;
@@ -109,6 +113,14 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             mOperateGroup.setVisibility(View.VISIBLE);
         }
         mRecyclerView.setNestedScrollingEnabled(false);
+        mHistory.post(new Runnable() {
+            @Override
+            public void run() {
+                Rect r = new Rect();
+                mHistory.getGlobalVisibleRect(r);
+                mEmptyView.setMinimumHeight((int) (Display.getScreenHeight() - r.bottom - Display.dp2Px(49, getResources())));
+            }
+        });
         mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyFlowAdapter();

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -89,6 +90,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private OtcOrderDetail mOtcOrderDetail;
     private boolean mIsBuyer;
     private boolean mNeedGoogle;
+    private WaresUserInfo mWaresUserInfo;
 
     @Nullable
     @Override
@@ -108,13 +110,13 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mPayInfo.setEmptyView(mBankEmptyView);
         needGoogle();
-        otcOrderDetail(mOrderId, mTradeDirection);
-        otcWaresMine("", mOrderId, 1);
+        otcOrderDetail();
+        otcWaresMine();
         orderPayInfo();
     }
 
-    private void otcOrderDetail(int id, int direct) {
-        Apic.otcOrderDetail(id, direct)
+    private void otcOrderDetail() {
+        Apic.otcOrderDetail(mOrderId, mTradeDirection)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
                     @Override
                     protected void onRespSuccess(Resp<OtcOrderDetail> resp) {
@@ -123,12 +125,14 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 }).fire();
     }
 
-    private void otcWaresMine(String waresId, int orderId, int orientation) {
-        Apic.otcWaresMine(waresId, orderId, orientation)
+    private void otcWaresMine() {
+        Apic.otcWaresMine("", String.valueOf(mOrderId), mTradeDirection)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
+
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
-                        setWaresUserInfo(resp.getData());
+                        mWaresUserInfo = resp.getData();
+                        setWaresUserInfo(mWaresUserInfo);
                     }
                 }).fire();
     }
@@ -148,6 +152,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
+                        otcOrderDetail();
                     }
                 }).fire();
     }
@@ -168,7 +173,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        otcOrderDetail(mOrderId, mTradeDirection);
+                        otcOrderDetail();
                     }
                 }).fire();
     }
@@ -210,6 +215,9 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .circleCrop()
                 .into(mHeadPortrait);
         mUserName.setText(order.getBuyerName());
+        if (mWaresUserInfo != null) {
+            setWaresUserInfo(mWaresUserInfo);
+        }
     }
 
     private void setOrderInfoCard(OtcOrderDetail.OrderBean order, String coinSymbol) {
@@ -225,7 +233,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mOrderNo.setText(order.getOrderId());
         switch (order.getStatus()) {
             case OtcOrderStatus.ORDER_CANCLED:
+                mOrderStatus.setText(R.string.canceled);
+                mCountDownView.setVisibility(View.GONE);
+                break;
             case OtcOrderStatus.ORDER_COMPLATED:
+                mOrderStatus.setText(R.string.completed);
                 mCountDownView.setVisibility(View.GONE);
                 break;
             case OtcOrderStatus.ORDER_UNPAIED:
@@ -234,6 +246,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 if (System.currentTimeMillis() < endTime) {
                     mCountDownView.setTimes(endTime);
                     mCountDownView.setVisibility(View.VISIBLE);
+                    mCountDownView.beginRun();
                 } else {
                     mCountDownView.setVisibility(View.GONE);
                 }
@@ -242,6 +255,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                     public void onStateChange(int countDownState) {
                         if (countDownState == CountDownView.STOPPED) {
                             mCountDownView.setVisibility(View.GONE);
+                            otcOrderDetail();
                         }
                     }
                 });
@@ -366,7 +380,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     private static class CancelConfirmController extends SmartDialog.CustomViewController {
         ImageView mClose;
-        TextView mConfirmUnpaid;
+        LinearLayout mConfirmUnpaid;
         TextView mConfirm;
         private Context mContext;
         private OnConfirmClick mOnConfirmClick;

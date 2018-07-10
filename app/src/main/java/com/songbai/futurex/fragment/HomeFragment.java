@@ -70,6 +70,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     private EntrustPairAdapter mAdapter;
     private IncreaseRankAdapter mIncreaseRankAdapter;
     private ArrayList<HomeNews> mNewsList;
+    private boolean mPrepared;
 
     @Nullable
     @Override
@@ -112,19 +113,28 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 return tv;
             }
         });
+        mPrepared = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
+        findNewsList(1, "");
+        entrustPairsList();
+        indexRiseList();
         startScheduleJobRightNow(1000);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (isVisibleToUser && mPrepared) {
             startScheduleJobRightNow(1000);
+            findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
+            findNewsList(1, "");
+            entrustPairsList();
+            indexRiseList();
         } else {
             stopScheduleJob();
         }
@@ -221,6 +231,11 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             currencyPair.setCategory(latelyBean.getCategory());
             currencyPair.setOption(latelyBean.getOption());
             currencyPair.setSort(latelyBean.getSort());
+            currencyPair.setUpDropPrice(latelyBean.getUpDropPrice());
+            currencyPair.setUpDropSpeed(latelyBean.getUpDropSpeed());
+            currencyPair.setLastPrice(latelyBean.getLastPrice());
+            currencyPair.setLastVolume(latelyBean.getLastVolume());
+            currencyPair.setPricePoint(latelyBean.getPricePoint());
             UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
                     .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
                     .execute();
@@ -232,6 +247,11 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             currencyPair.setPairs(pairRiseListBean.getPairs());
             currencyPair.setPrefixSymbol(pairRiseListBean.getPrefixSymbol());
             currencyPair.setSuffixSymbol(pairRiseListBean.getSuffixSymbol());
+            currencyPair.setUpDropPrice(pairRiseListBean.getUpDropPrice());
+            currencyPair.setUpDropSpeed(pairRiseListBean.getUpDropSpeed());
+            currencyPair.setLastPrice(pairRiseListBean.getLastPrice());
+            currencyPair.setLastVolume(pairRiseListBean.getVolume());
+            currencyPair.setPricePoint(pairRiseListBean.getPricePoint());
             UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
                     .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
                     .execute();

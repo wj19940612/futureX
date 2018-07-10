@@ -129,7 +129,7 @@
                 android:layout_toLeftOf="@+id/send"
                 android:background="@drawable/bg_chat_edit"
                 android:gravity="left|center_vertical"
-                android:hint="@string/input_msg_enter_to_send"
+                android:hint="@string/input_msg_hell"
                 android:minHeight="33dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="36dp"
