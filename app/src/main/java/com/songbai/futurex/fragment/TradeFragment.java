@@ -600,8 +600,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(), pairMarket.getDeep().getSellDeep());
         MarketData quota = pairMarket.getQuota();
         if (mPairDesc != null && quota != null) {
-            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), 8));
-//            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
+//            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), 8));
+            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
             mPriceChange.setText(CurrencyUtils.getPrefixPercent(quota.getUpDropSpeed()));
             if (quota.getUpDropSpeed() >= 0) {
                 mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
