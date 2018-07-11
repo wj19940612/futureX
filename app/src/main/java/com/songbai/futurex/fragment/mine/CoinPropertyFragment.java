@@ -77,6 +77,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     private int mTransferType;
     private PropertyFlowAdapter mAdapter;
     private GetUserFinanceFlowData mGetUserFinanceFlowData;
+    private int mAccountType;
 
     @Nullable
     @Override
@@ -90,6 +91,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
         mTransferType = extras.getInt(ExtraKeys.TRANSFER_TYPE);
         mAccountBean = extras.getParcelable(ExtraKeys.ACCOUNT_BEAN);
+        mAccountType = extras.getInt(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, 0);
     }
 
     @Override
@@ -201,6 +203,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             case R.id.history:
                 Launcher.with(getContext(), PropertyFlowActivity.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, false)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mAccountType)
                         .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType()).execute();
                 break;
             case R.id.transfer:

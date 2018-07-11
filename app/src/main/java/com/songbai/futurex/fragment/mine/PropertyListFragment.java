@@ -32,6 +32,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.EmptyRecyclerView;
 
@@ -97,6 +98,16 @@ public class PropertyListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyListAdapter();
         mRecyclerView.setEmptyView(mEmptyView);
+        mAdapter.setOnRVItemClickListener(new OnRVItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, Object obj) {
+                AccountList.AccountBean accountBean = (AccountList.AccountBean) obj;
+                UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class)
+                        .putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE,mPropertyType)
+                        .execute(PropertyListFragment.this, PropertyListFragment.REQUEST_COIN_PROPERTY);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
         requestData();
         mSearchProperty.addTextChangedListener(new ValidationWatcher() {
@@ -222,6 +233,7 @@ public class PropertyListFragment extends BaseFragment {
     }
 
     class PropertyListAdapter extends RecyclerView.Adapter {
+        private OnRVItemClickListener mOnRVItemClickListener;
         private List<AccountList.AccountBean> mList;
         private Context mContext;
         private int mType;
@@ -237,7 +249,7 @@ public class PropertyListFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof PropertyListHolder) {
-                ((PropertyListHolder) holder).bindData(mType, mContext, mList.get(position));
+                ((PropertyListHolder) holder).bindData(mType, mContext, position,mList.get(position));
             }
         }
 
@@ -251,6 +263,10 @@ public class PropertyListFragment extends BaseFragment {
 
         public void setList(List<AccountList.AccountBean> list) {
             mList = list;
+        }
+
+        public void setOnRVItemClickListener(OnRVItemClickListener onRVItemClickListener) {
+            mOnRVItemClickListener = onRVItemClickListener;
         }
 
         public void setType(int type) {
@@ -274,9 +290,9 @@ public class PropertyListFragment extends BaseFragment {
                 mRootView = itemView;
             }
 
-            private void bindData(int type, final Context context, final AccountList.AccountBean accountBean) {
+            private void bindData(int type, final Context context, final int position, final AccountList.AccountBean accountBean) {
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
-                double ableCoin = accountBean.getAbleCoin();
+                final double ableCoin = accountBean.getAbleCoin();
                 String formattedAbleCoin = FinanceUtil.formatWithScale(ableCoin, 8);
                 SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_available_x, formattedAbleCoin));
                 ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
@@ -296,9 +312,9 @@ public class PropertyListFragment extends BaseFragment {
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class)
-                                .putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean)
-                                .execute(PropertyListFragment.this, PropertyListFragment.REQUEST_COIN_PROPERTY);
+                        if (mOnRVItemClickListener != null) {
+                            mOnRVItemClickListener.onItemClick(mRootView,position,accountBean);
+                        }
                     }
                 });
             }
