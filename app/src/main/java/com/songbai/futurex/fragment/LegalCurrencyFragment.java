@@ -32,6 +32,7 @@ import com.songbai.futurex.model.LegalCoin;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.status.OtcOrderStatus;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
@@ -73,6 +74,15 @@ public class LegalCurrencyFragment extends BaseFragment {
     private String mSelectedLegalSymbol;
     private ArrayList<BaseFragment> mFragments;
     private boolean isPrepared;
+    private Network.NetworkChangeReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+                getOtcPair();
+            }
+        }
+    };
+
 
     @Nullable
     @Override
@@ -87,9 +97,14 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
+        getOtcPair();
+        initView();
+        Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+    }
+
+    private void getOtcPair() {
         getLegalCoin();
         getCountryCurrency();
-        initView();
     }
 
     private void initView() {
@@ -133,8 +148,7 @@ public class LegalCurrencyFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isPrepared) {
             if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
-                getLegalCoin();
-                getCountryCurrency();
+                getOtcPair();
             }
         }
     }
@@ -143,8 +157,7 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
-            getLegalCoin();
-            getCountryCurrency();
+            getOtcPair();
         }
     }
 
@@ -190,6 +203,7 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+        Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
     @OnClick({R.id.title, R.id.order, R.id.publishPoster})
@@ -200,8 +214,7 @@ public class LegalCurrencyFragment extends BaseFragment {
                 if (mLegalCoins != null && mCountryCurrencies != null) {
                     showWaresPairFilter();
                 } else {
-                    getLegalCoin();
-                    getCountryCurrency();
+                    getOtcPair();
                 }
                 break;
             case R.id.order:
