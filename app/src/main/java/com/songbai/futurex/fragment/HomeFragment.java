@@ -49,6 +49,7 @@ import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.view.HomeBanner;
 
 import java.util.ArrayList;
@@ -83,6 +84,16 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     private ArrayList<HomeNews> mNewsList;
     private boolean mPrepared;
     private int mBannerHeight;
+    private Network.NetworkChangeReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                if (mNewsList == null) {
+                    requestData();
+                }
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -106,10 +117,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         mIncreaseRankAdapter.setOnItemClickListener(mOnItemClickListener);
         mIncreaseRank.setAdapter(mIncreaseRankAdapter);
         mHomeBanner.setOnBannerClickListener(this);
-        findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
-        findNewsList(1, "");
-        entrustPairsList();
-        indexRiseList();
+        requestData();
         mNotice.setTag(0);
         mNotice.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
@@ -142,6 +150,14 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 setStatusBarColor(scrollY > mBannerHeight ? R.color.white : android.R.color.transparent);
             }
         });
+        Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+    }
+
+    private void requestData() {
+        findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
+        findNewsList(1, "");
+        entrustPairsList();
+        indexRiseList();
     }
 
     private void setStatusBarColor(@ColorRes int color) {
@@ -155,10 +171,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     @Override
     public void onResume() {
         super.onResume();
-        findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
-        findNewsList(1, "");
-        entrustPairsList();
-        indexRiseList();
+        requestData();
         startScheduleJobRightNow(1000);
     }
 
@@ -167,10 +180,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && mPrepared) {
             startScheduleJobRightNow(1000);
-            findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
-            findNewsList(1, "");
-            entrustPairsList();
-            indexRiseList();
+            requestData();
         } else {
             stopScheduleJob();
         }
@@ -304,6 +314,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
+        Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
     private interface OnItemClickListener {
