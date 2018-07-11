@@ -461,7 +461,6 @@ public class MarketFragment extends BaseFragment {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
                     }
                 } else {
-                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(pair.getLastVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
                     if (pair.getUpDropSpeed() < 0) {

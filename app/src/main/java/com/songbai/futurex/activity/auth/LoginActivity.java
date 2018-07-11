@@ -218,7 +218,7 @@ public class LoginActivity extends BaseActivity {
 
         SmartDialog.solo(getActivity())
                 .setCustomViewController(mAuthCodeViewController)
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
                 .show();
 
         final ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
