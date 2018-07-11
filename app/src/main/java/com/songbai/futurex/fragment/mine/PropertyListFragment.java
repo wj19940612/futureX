@@ -109,6 +109,9 @@ public class PropertyListFragment extends BaseFragment {
     }
 
     private void filterData(String keyWord) {
+        if (mAccountBeans == null) {
+            return;
+        }
         ArrayList<AccountList.AccountBean> filteredData = new ArrayList<>();
         for (AccountList.AccountBean accountBean : mAccountBeans) {
             if ((TextUtils.isEmpty(keyWord) || accountBean.getCoinType().toUpperCase().contains(keyWord.toUpperCase()))) {
@@ -150,29 +153,29 @@ public class PropertyListFragment extends BaseFragment {
     }
 
     private void getAccountByUser() {
-        Apic.getAccountByUser("")
+        Apic.getAccountByUser("").tag(TAG)
                 .callback(new Callback<Resp<AccountList>>() {
                     @Override
                     protected void onRespSuccess(Resp<AccountList> resp) {
                         setAdapter(0, resp.getData());
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void accountList() {
-        Apic.otcAccountList()
+        Apic.otcAccountList().tag(TAG)
                 .callback(new Callback<Resp<AccountList>>() {
                     @Override
                     protected void onRespSuccess(Resp<AccountList> resp) {
                         setAdapter(1, resp.getData());
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void userAccount() {
-        Apic.userAccount()
+        Apic.userAccount().tag(TAG)
                 .callback(new Callback<Resp<AccountList>>() {
 
                     @Override
@@ -180,13 +183,15 @@ public class PropertyListFragment extends BaseFragment {
                         setAdapter(2, resp.getData());
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void setAdapter(int position, AccountList accountList) {
         ((MyPropertyActivity) getActivity()).setAccountAmount(position, accountList);
         mAccountBeans = accountList.getAccount();
-        mAdapter.setList(mAccountBeans);
+        if (mAccountBeans != null) {
+            mAdapter.setList(mAccountBeans);
+        }
         mAdapter.setType(position);
         mAdapter.notifyDataSetChanged();
         mRecyclerView.hideAll(false);

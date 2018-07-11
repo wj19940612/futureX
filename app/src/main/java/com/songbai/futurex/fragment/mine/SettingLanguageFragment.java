@@ -69,7 +69,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
     }
 
     private void getSupportLocal() {
-        Apic.getSupportLang()
+        Apic.getSupportLang().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<SupportLang>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<SupportLang>> resp) {
@@ -77,7 +77,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
                         mLanguageAdapter.notifyDataSetChanged();
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     @Override

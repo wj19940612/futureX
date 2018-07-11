@@ -59,7 +59,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
     }
 
     private void queryVersion() {
-        Apic.queryForceVersion()
+        Apic.queryForceVersion().tag(TAG)
                 .callback(new Callback<Resp<AppVersion>>() {
                     @Override
                     protected void onRespSuccess(Resp<AppVersion> resp) {
@@ -74,7 +74,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
 
     private void queryForceVersion() {
         if (mAppVersion == null) {
-            Apic.queryForceVersion()
+            Apic.queryForceVersion().tag(TAG)
                     .callback(new Callback<Resp<AppVersion>>() {
                         @Override
                         protected void onRespSuccess(Resp<AppVersion> resp) {

@@ -4,7 +4,7 @@ package com.songbai.futurex.model.status;
  * @author yangguangda
  * @date 2018/6/14
  */
-public interface FlowType {
+public interface CurrencyFlowType {
     /**
      * 充币
      */

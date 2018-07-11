@@ -113,7 +113,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     }
 
     private void authenticationName() {
-        Apic.authenticationName()
+        Apic.authenticationName().tag(TAG)
                 .callback(new Callback<Resp<AuthenticationName>>() {
                     @Override
                     protected void onRespSuccess(Resp<AuthenticationName> resp) {
@@ -125,7 +125,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     }
 
     private void bankBand(BankBindData bankBindData) {
-        Apic.bankBind(bankBindData)
+        Apic.bankBind(bankBindData).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -134,17 +134,16 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                         activity.finish();
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void updateBankAccount(String type, String account, String name, String withDrawPass) {
-        Apic.updateBankAccount(type, account, name, withDrawPass)
+        Apic.updateBankAccount(type, account, name, withDrawPass).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        FragmentActivity activity = AddPayFragment.this.getActivity();
-                        activity.setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                        activity.finish();
+                        setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        finish();
                     }
                 })
                 .fire();

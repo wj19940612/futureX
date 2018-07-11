@@ -42,7 +42,7 @@ import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.OtcBankInfoMsg;
 import com.songbai.futurex.model.mine.BankCardBean;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -241,7 +241,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void otcWaresMine() {
-        Apic.otcWaresMine("", String.valueOf(mOrderId), 1)
+        Apic.otcWaresMine("", String.valueOf(mOrderId), 1).tag(TAG)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -251,7 +251,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void otcOrderDetail() {
-        Apic.otcOrderDetail(mOrderId, mTradeDirection)
+        Apic.otcOrderDetail(mOrderId, mTradeDirection).tag(TAG)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
                     @Override
                     protected void onRespSuccess(Resp<OtcOrderDetail> resp) {
@@ -261,7 +261,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void otcOrderUser() {
-        Apic.otcChatUser(mOrderId)
+        Apic.otcChatUser(mOrderId).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<OtcChatUserInfo>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<OtcChatUserInfo>> resp) {
@@ -286,7 +286,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void orderPayInfo() {
-        Apic.orderPayInfo(mOrderId)
+        Apic.orderPayInfo(mOrderId).tag(TAG)
                 .callback(new Callback<Resp<List<BankCardBean>>>() {
                     @Override
                     protected void onRespSuccess(Resp<List<BankCardBean>> resp) {
@@ -308,9 +308,9 @@ public class OtcTradeChatActivity extends BaseActivity {
         mCountDownView.setVisibility(View.INVISIBLE);
         mCountDownView.setColonColor(ContextCompat.getColor(this, R.color.text22));
         switch (order.getStatus()) {
-            case OtcOrderStatus.ORDER_UNPAIED:
+            case OTCOrderStatus.ORDER_UNPAIED:
                 mCountDownView.setVisibility(View.VISIBLE);
-                long endTime = order.getOrderTime() + 15 * 60 * 1000;
+                long endTime = System.currentTimeMillis() + order.getCountDown() * 1000;
                 if (System.currentTimeMillis() < endTime) {
                     mCountDownView.setTimes(endTime);
                     mCountDownView.beginRun();
@@ -323,25 +323,25 @@ public class OtcTradeChatActivity extends BaseActivity {
                         }
                     });
                 }
-                mOrderStatus.setText(R.string.wait_to_pay_and_confirm);
+                mOrderStatus.setText(R.string.unpaid);
                 break;
-            case OtcOrderStatus.ORDER_PAIED:
-                mOrderStatus.setText(R.string.wait_sell_transfer_coin);
+            case OTCOrderStatus.ORDER_PAIED:
+                mOrderStatus.setText(R.string.paid);
                 break;
-            case OtcOrderStatus.ORDER_CANCLED:
+            case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
                 break;
-            case OtcOrderStatus.ORDER_COMPLATED:
+            case OTCOrderStatus.ORDER_COMPLATED:
                 mOrderStatus.setText(R.string.completed);
                 break;
             default:
         }
         switch (mTradeDirection) {
-            case OtcOrderStatus.ORDER_DIRECT_BUY:
+            case OTCOrderStatus.ORDER_DIRECT_BUY:
                 mTradeType.setText(getString(R.string.buy_x,
                         order.getCoinSymbol().toUpperCase()));
                 break;
-            case OtcOrderStatus.ORDER_DIRECT_SELL:
+            case OTCOrderStatus.ORDER_DIRECT_SELL:
                 mTradeType.setText(getString(R.string.sold_x,
                         order.getCoinSymbol().toUpperCase()));
                 break;
@@ -472,7 +472,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
     private void sendImage(final String path) {
         String image = ImageUtils.compressImageToBase64(path, getActivity());
-        Apic.uploadImage(image)
+        Apic.uploadImage(image).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -790,11 +790,11 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
                 mRecyclerView.setAdapter(new BankInfoAdapter(otcBankInfoMsg.getBankCardBeans()));
                 switch (otcBankInfoMsg.getTradeDirect()) {
-                    case OtcOrderStatus.ORDER_DIRECT_BUY:
+                    case OTCOrderStatus.ORDER_DIRECT_BUY:
                         mStatusHint.setText(R.string.pay_info_hint_to_buyer);
                         mPayInfoHint.setText(R.string.pay_info_safety_hint_to_buyer);
                         break;
-                    case OtcOrderStatus.ORDER_DIRECT_SELL:
+                    case OTCOrderStatus.ORDER_DIRECT_SELL:
                         mStatusHint.setText(R.string.pay_info_hint_to_seller);
                         mPayInfoHint.setText(R.string.pay_info_safety_hint_to_seller);
                         break;

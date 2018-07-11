@@ -1,6 +1,7 @@
 package com.songbai.futurex.fragment.legalcurrency;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +27,7 @@ import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.CountDownView;
@@ -49,6 +50,7 @@ import sbai.com.glide.GlideApp;
  * @date 2018/6/28
  */
 public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment {
+    private static final int LEGAL_CURRENCY_ORDER_RESULT = 15432;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -115,7 +117,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void otcOrderDetail() {
-        Apic.otcOrderDetail(mOrderId, mTradeDirection)
+        Apic.otcOrderDetail(mOrderId, mTradeDirection).tag(TAG)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
                     @Override
                     protected void onRespSuccess(Resp<OtcOrderDetail> resp) {
@@ -125,7 +127,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void otcWaresMine() {
-        Apic.otcWaresMine("", String.valueOf(mOrderId), 1)
+        Apic.otcWaresMine("", String.valueOf(mOrderId), 1).tag(TAG)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -136,7 +138,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void orderPayInfo() {
-        Apic.orderPayInfo(mOrderId)
+        Apic.orderPayInfo(mOrderId).tag(TAG)
                 .callback(new Callback<Resp<List<BankCardBean>>>() {
                     @Override
                     protected void onRespSuccess(Resp<List<BankCardBean>> resp) {
@@ -146,40 +148,46 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void otcOrderCancel() {
-        Apic.otcOrderCancel(mOrderId)
+        Apic.otcOrderCancel(mOrderId).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (mOtcOrderDetail != null) {
-                            mOtcOrderDetail.getOrder().setStatus(OtcOrderStatus.ORDER_CANCLED);
+                            mOtcOrderDetail.getOrder().setStatus(OTCOrderStatus.ORDER_CANCLED);
                             setView(mOtcOrderDetail);
                         }
                         otcOrderDetail();
+                        Intent data = new Intent();
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH,true);
+                        setResult(LEGAL_CURRENCY_ORDER_RESULT,data);
                     }
                 }).fire();
     }
 
     private void needGoogle() {
-        Apic.needGoogle("DRAW")
+        Apic.needGoogle("DRAW").tag(TAG)
                 .callback(new Callback<Resp<Boolean>>() {
                     @Override
                     protected void onRespSuccess(Resp<Boolean> resp) {
                         mNeedGoogle = resp.getData();
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void otcOrderConfirm(int status, String drawPass, String googleCode) {
-        Apic.otcOrderConfirm(mOrderId, status, drawPass, googleCode)
+        Apic.otcOrderConfirm(mOrderId, status, drawPass, googleCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (mOtcOrderDetail != null) {
-                            mOtcOrderDetail.getOrder().setStatus(mIsBuyer ? OtcOrderStatus.ORDER_PAIED : OtcOrderStatus.ORDER_COMPLATED);
+                            mOtcOrderDetail.getOrder().setStatus(mIsBuyer ? OTCOrderStatus.ORDER_PAIED : OTCOrderStatus.ORDER_COMPLATED);
                             setView(mOtcOrderDetail);
                         }
                         otcOrderDetail();
+                        Intent data = new Intent();
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH,true);
+                        setResult(LEGAL_CURRENCY_ORDER_RESULT,data);
                     }
                 }).fire();
     }
@@ -211,7 +219,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mOtcOrderDetail = otcOrderDetail;
         OtcOrderDetail.OrderBean order = otcOrderDetail.getOrder();
         String coinSymbol = order.getCoinSymbol();
-        mTitleBar.setTitle(getString(mTradeDirection == OtcOrderStatus.ORDER_DIRECT_BUY ?
+        mTitleBar.setTitle(getString(mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY ?
                 R.string.buy_x : R.string.sell_x, coinSymbol.toUpperCase()));
         setBottomButtonStatus(order);
         setOrderInfoCard(order, coinSymbol);
@@ -239,17 +247,17 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 coinSymbol.toUpperCase()));
         mOrderNo.setText(order.getOrderId());
         switch (order.getStatus()) {
-            case OtcOrderStatus.ORDER_CANCLED:
+            case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
                 mCountDownView.setVisibility(View.GONE);
                 break;
-            case OtcOrderStatus.ORDER_COMPLATED:
+            case OTCOrderStatus.ORDER_COMPLATED:
                 mOrderStatus.setText(R.string.completed);
                 mCountDownView.setVisibility(View.GONE);
                 break;
-            case OtcOrderStatus.ORDER_UNPAIED:
+            case OTCOrderStatus.ORDER_UNPAIED:
                 mCountDownView.setVisibility(View.VISIBLE);
-                long endTime = order.getOrderTime() + 15 * 60 * 1000;
+                long endTime = System.currentTimeMillis() + order.getCountDown() * 1000;
                 if (System.currentTimeMillis() < endTime) {
                     mCountDownView.setTimes(endTime);
                     mCountDownView.setVisibility(View.VISIBLE);
@@ -266,11 +274,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                         }
                     }
                 });
-                mOrderStatus.setText(R.string.wait_to_pay_and_confirm);
+                mOrderStatus.setText(R.string.wait_buyer_to_pay);
                 break;
-            case OtcOrderStatus.ORDER_PAIED:
+            case OTCOrderStatus.ORDER_PAIED:
                 mCountDownView.setVisibility(View.GONE);
-                mOrderStatus.setText(R.string.wait_sell_transfer_coin);
+                mOrderStatus.setText(R.string.buyer_have_paid);
                 break;
             default:
         }
@@ -284,20 +292,20 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
             mIsBuyer = id == order.getBuyerId();
         }
         switch (mStatus) {
-            case OtcOrderStatus.ORDER_CANCLED:
-            case OtcOrderStatus.ORDER_COMPLATED:
+            case OTCOrderStatus.ORDER_CANCLED:
+            case OTCOrderStatus.ORDER_COMPLATED:
                 mAppeal.setVisibility(View.GONE);
                 mCancelOrder.setVisibility(View.GONE);
                 mConfirm.setVisibility(View.GONE);
                 break;
-            case OtcOrderStatus.ORDER_UNPAIED:
+            case OTCOrderStatus.ORDER_UNPAIED:
                 mAppeal.setVisibility(View.GONE);
                 mCancelOrder.setVisibility(mIsBuyer ? View.VISIBLE : View.GONE);
                 mConfirm.setVisibility(mIsBuyer ? View.VISIBLE : View.GONE);
                 mConfirm.setText(mIsBuyer ? R.string.i_have_paid : R.string.confirm_transfer_coin);
                 mCancelOrder.setVisibility(mIsBuyer ? View.VISIBLE : View.GONE);
                 break;
-            case OtcOrderStatus.ORDER_PAIED:
+            case OTCOrderStatus.ORDER_PAIED:
                 mAppeal.setVisibility(View.VISIBLE);
                 mCancelOrder.setVisibility(View.GONE);
                 mConfirm.setVisibility(mIsBuyer ? View.GONE : View.VISIBLE);
@@ -328,8 +336,8 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
             case R.id.sellerInfo:
                 UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
                         .putExtra(ExtraKeys.ORDER_ID, mOrderId)
-                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection == OtcOrderStatus.ORDER_DIRECT_BUY ?
-                                OtcOrderStatus.ORDER_DIRECT_SELL : OtcOrderStatus.ORDER_DIRECT_BUY)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY ?
+                                OTCOrderStatus.ORDER_DIRECT_SELL : OTCOrderStatus.ORDER_DIRECT_BUY)
                         .execute();
                 break;
             case R.id.bankEmptyView:

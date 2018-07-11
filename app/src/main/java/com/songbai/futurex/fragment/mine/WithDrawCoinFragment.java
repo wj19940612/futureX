@@ -122,7 +122,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     }
 
     private void needGoogle() {
-        Apic.needGoogle("DRAW")
+        Apic.needGoogle("DRAW").tag(TAG)
                 .callback(new Callback<Resp<Boolean>>() {
                     @Override
                     protected void onRespSuccess(Resp<Boolean> resp) {
@@ -134,7 +134,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     }
 
     private void getCoinTypeDrawLimit() {
-        Apic.getCoinTypeDrawLimit(mAccountBean.getCoinType())
+        Apic.getCoinTypeDrawLimit(mAccountBean.getCoinType()).tag(TAG)
                 .callback(new Callback<Resp<DrawLimit>>() {
                     @Override
                     protected void onRespSuccess(Resp<DrawLimit> resp) {
@@ -179,7 +179,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     }
 
     private void drawCoin(String coinType, String toAddr, double withdrawAmount, String googleCode, String drawPassword) {
-        Apic.drawCoin(coinType, toAddr, withdrawAmount, googleCode, drawPassword)
+        Apic.drawCoin(coinType, toAddr, withdrawAmount, googleCode, drawPassword).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -194,7 +194,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     }
 
     private void getDrawWalletAddrByCoinType(String coinType) {
-        Apic.getDrawWalletAddrByCoinType(coinType)
+        Apic.getDrawWalletAddrByCoinType(coinType).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CoinAddress>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CoinAddress>> resp) {

@@ -149,7 +149,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     }
 
     private void getAccountByUserForMuti(String coinType) {
-        Apic.getAccountByUserForMuti(coinType)
+        Apic.getAccountByUserForMuti(coinType).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CoinAbleAmount>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CoinAbleAmount>> resp) {
@@ -160,11 +160,11 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         }
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData) {
-        Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5)
+        Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
@@ -173,7 +173,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         mRecyclerView.hideAll(false);
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     @Override

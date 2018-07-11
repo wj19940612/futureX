@@ -19,7 +19,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.WaresUserInfo;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.view.TitleBar;
@@ -84,7 +84,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mTitleBar.setTitle(mTradeDirection == OtcOrderStatus.ORDER_DIRECT_SELL ? R.string.seller_info : R.string.buyer_info);
+        mTitleBar.setTitle(mTradeDirection == OTCOrderStatus.ORDER_DIRECT_SELL ? R.string.seller_info : R.string.buyer_info);
         FragmentActivity activity = getActivity();
         if (activity instanceof StatusBarActivity) {
             ((StatusBarActivity) activity).translucentStatusBar();
@@ -98,13 +98,13 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     }
 
     private void otcWaresMine(String waresId, String orderId, int orientation) {
-        Apic.otcWaresMine(waresId, orderId, orientation)
+        Apic.otcWaresMine(waresId, orderId, orientation).tag(TAG)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
                         setWaresUserInfo(resp.getData());
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void setWaresUserInfo(WaresUserInfo waresUserInfo) {

@@ -6,9 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinAddress;
 import com.songbai.futurex.view.SmartDialog;
 
@@ -38,14 +35,17 @@ public class CopyDeleteController extends SmartDialog.CustomViewController {
         copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onCopyClick(mCoinAddress);
+                    dialog.dismiss();
+                }
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeDrawWalletAddr(mCoinAddress.getId());
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onCopyClick();
+                    mOnItemClickListener.onDeleteClick(mCoinAddress);
                     dialog.dismiss();
                 }
             }
@@ -63,7 +63,7 @@ public class CopyDeleteController extends SmartDialog.CustomViewController {
     }
 
     public interface OnItemClickListener {
-        void onCopyClick();
+        void onCopyClick(CoinAddress coinAddress);
 
         void onDeleteClick(CoinAddress coinAddress);
     }
@@ -71,18 +71,5 @@ public class CopyDeleteController extends SmartDialog.CustomViewController {
     public CopyDeleteController setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
         return this;
-    }
-
-    private void removeDrawWalletAddr(int id) {
-        Apic.removeDrawWalletAddr(id)
-                .callback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (mOnItemClickListener != null) {
-                            mOnItemClickListener.onDeleteClick(mCoinAddress);
-                        }
-                    }
-                })
-                .fire();
     }
 }

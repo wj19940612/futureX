@@ -82,7 +82,7 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
     }
 
     private void addDrawWalletAddrByCoinType(String coinType, String toAddr, String remark) {
-        Apic.addDrawWalletAddrByCoinType(coinType, toAddr, remark)
+        Apic.addDrawWalletAddrByCoinType(coinType, toAddr, remark).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

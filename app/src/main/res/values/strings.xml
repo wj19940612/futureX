@@ -72,6 +72,7 @@
     <string name="legal_currency_pay_management">法币支付管理</string>
     <string name="legal_currency_pay">法币支付</string>
     <string name="delete">删除</string>
+    <string name="confirm_delete">确认删除</string>
     <string name="add_gathering_account">添加收款方式</string>
     <string name="add_ali_pay">添加支付宝</string>
     <string name="ali_pay_account">支付宝账号</string>
@@ -179,7 +180,7 @@
     <string name="create_customization_poster">生成专属海报</string>
 
     <string name="change_cash_pwd">修改资金密码</string>
-    <string name="set_cash_pwd">资金密码设置</string>
+    <string name="set_cash_pwd">设置资金密码</string>
     <string name="set_cash_pwd_success">资金密码设置成功</string>
     <string name="please_input_set_cash_pwd">请输入资金密码</string>
     <string name="forget_cash_pwd">忘记资金密码?</string>
@@ -196,7 +197,8 @@
     <string name="please_input_sms_auth_code">请输入短信验证码</string>
     <string name="google_authenticator">Google认证</string>
     <string name="bind_google_authenticator_success">谷歌验证绑定成功</string>
-    <string name="google_authenticator_settings">谷歌验证设置</string>
+    <string name="google_authenticator_settings">Google验证设置</string>
+    <string name="please_set_google_authenticator_first">请先绑定Google验证</string>
     <string name="google_authenticator_code">谷歌验证码</string>
     <string name="please_input_google_authenticator_code">请输入谷歌验证码</string>
     <string name="google_authenticator_hint">1.安装在“Google Authenticator”应用程序中，点击右上角“+”号，然后选择“手动输入验证码”或“扫描条形码”。\n2.扫描下方二维码或手动输入下述密钥添加验证令牌。\n3.密钥用于手机更换或遗失时找回谷歌验证器，绑定前请务必将下述密钥备份保存。</string>
@@ -277,15 +279,20 @@
     <string name="deal_fee">交易手续费</string>
     <string name="promoter_account_transfer_into">推广账户转入</string>
     <string name="otc_trade_in">OTC交易转入</string>
+    <string name="otc_trade_out">OTC交易转出</string>
     <string name="agency_to">代理账户转入</string>
     <string name="legal_account_in">法币账户转入</string>
-    <string name="coin_account_out">币币账户转入</string>
+    <string name="legal_account_out">法币账户转出</string>
+    <string name="coin_account_in">币币账户转入</string>
 
     <string name="completed">已完成</string>
     <string name="freeze">冻结</string>
     <string name="withdraw_coin_rejected">提币驳回</string>
     <string name="entrust_return">用户撤单</string>
     <string name="freeze_deduct">冻结扣除</string>
+    <string name="cancel_trade_freeze">取消交易解冻</string>
+    <string name="sys_cancel_trade_freeze">系统取消交易解冻</string>
+    <string name="poster_off_shelf_return">广告下架返还</string>
     <string name="sys_withdraw">系统撤单</string>
     <string name="freeze_return">冻结返还</string>
 
@@ -422,11 +429,10 @@
     <string name="trade_rules_description">请务必向对方询问交易方式，并且与平台所留方式进行对比，若不一致，请慎重付款\n\n1.转帐时请备注「订单编号后4位」以加快确认速度\n\n2.请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n3.订单有效期为15分钟，请您在有效期内及时付款并点击「已转账」按钮，数字币才可以释放给您\n\n4.如果您无法在15分钟内完成付款，该笔订单将被取消\n\n5.开始交易后数字币由系统锁定托管，请安心下单</string>
     <string name="order_detail_price_x">价格：%1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">数量：%1$s&#160;%2$s</string>
-    <string name="you_have_canceled_trade">您已取消这笔交易</string>
     <string name="otc_order_success_wait_pay">您已经成功下单，请及时支付</string>
     <string name="otc_trade_complete_desc">已成交</string>
-    <string name="wait_to_pay_and_confirm">待付款并确认</string>
-    <string name="wait_sell_transfer_coin">待卖家转币</string>
+    <string name="wait_buyer_to_pay">待买家付款</string>
+    <string name="buyer_have_paid">买家已付款</string>
     <string name="seller_info">卖家信息</string>
     <string name="buyer_info">买家信息</string>
     <string name="register_time">注册时间：%1$s</string>
@@ -581,7 +587,6 @@
 
 
     <string name="input_msg_hell">在此输入您的对话...</string>
-    <string name="input_msg_enter_to_send">输入信息，按Enter发送</string>
 
     <string name="over_500">发言不能超过500字符</string>
     <string name="hello_customer_for_you">尊敬的小主您好，我是%1$s，很高兴为您服务。</string>

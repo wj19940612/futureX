@@ -199,9 +199,9 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
                 .type(AuthCodeGet.TYPE_MODIFY_PHONE)
                 .imgCode(authCode)
+                .teleCode(mAreaCode.getText().toString())
                 .phone(phoneNum)
                 .build();
-
         Apic.getAuthCode(authCodeGet).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
@@ -273,7 +273,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         authSendOld.setSendType(type);
         authSendOld.setSmsType(AuthCodeGet.TYPE_MODIFY_PHONE);
         authSendOld.setImgCode(authCode);
-        Apic.sendOld(authSendOld)
+        Apic.sendOld(authSendOld).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

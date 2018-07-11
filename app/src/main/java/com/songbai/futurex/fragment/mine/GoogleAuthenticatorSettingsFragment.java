@@ -89,7 +89,7 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
     }
 
     public void setAuthVerify(String authCode, String googleCode) {
-        Apic.setAuthVerify(authCode, googleCode)
+        Apic.setAuthVerify(authCode, googleCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -100,7 +100,7 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
     }
 
     private void getUserInfo() {
-        Apic.getUserInfo().tag(TAG).indeterminate(this)
+        Apic.getUserInfo().tag(TAG).indeterminate(this).tag(TAG)
                 .callback(new Callback<Resp<UserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<UserInfo> resp) {

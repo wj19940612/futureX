@@ -374,7 +374,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         if (mPosterId == 0) {
             return;
         }
-        Apic.otcWaresGet(mPosterId)
+        Apic.otcWaresGet(mPosterId).tag(TAG)
                 .callback(new Callback<Resp<OtcWarePoster>>() {
                     @Override
                     protected void onRespSuccess(Resp<OtcWarePoster> resp) {
@@ -389,38 +389,38 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void accountBalance() {
-        Apic.accountBalance(mLegalCoinSymbol)
+        Apic.accountBalance(mLegalCoinSymbol).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
                         mBalance = resp.getData();
                         setBalance(mBalance);
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getLegalCoin() {
-        Apic.getLegalCoin()
+        Apic.getLegalCoin().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
                         mLegalCoins = resp.getData();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getCountryCurrency() {
-        Apic.getCountryCurrency()
+        Apic.getCountryCurrency().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CountryCurrency>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CountryCurrency>> resp) {
                         mCountryCurrencies = resp.getData();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getBindListData() {
-        Apic.bindList(0)
+        Apic.bindList(0).tag(TAG)
                 .callback(new Callback<Resp<BindBankList>>() {
                     @Override
                     protected void onRespSuccess(Resp<BindBankList> resp) {
@@ -431,18 +431,18 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void quotaPrice() {
-        Apic.quotaPrice(mWaresModel.getCoinSymbol(), mWaresModel.getPayCurrency(), mWaresModel.getDealType())
+        Apic.quotaPrice(mWaresModel.getCoinSymbol(), mWaresModel.getPayCurrency(), mWaresModel.getDealType()).tag(TAG)
                 .callback(new Callback<Resp<QuotaPrice>>() {
                     @Override
                     protected void onRespSuccess(Resp<QuotaPrice> resp) {
                         mQuotaPrice = resp.getData().getPrice();
                         setFloatingPrice(0);
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void otcWaresAdd(WaresModel otcWaresAdd) {
-        Apic.otcWaresAdd(otcWaresAdd)
+        Apic.otcWaresAdd(otcWaresAdd).tag(TAG)
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
@@ -456,7 +456,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void otcWaresUpdate(final WaresModel otcWaresAdd) {
-        Apic.otcWaresUpdate(otcWaresAdd)
+        Apic.otcWaresUpdate(otcWaresAdd).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -469,7 +469,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void getAreaCode() {
-        Apic.getAreaCodes().tag(TAG)
+        Apic.getAreaCodes().tag(TAG).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
                     @Override
                     protected void onRespData(List<AreaCode> data) {

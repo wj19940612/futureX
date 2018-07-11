@@ -15,7 +15,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
-import com.songbai.futurex.model.status.FlowType;
+import com.songbai.futurex.model.status.CurrencyFlowType;
 import com.songbai.futurex.utils.DateUtil;
 
 import butterknife.BindView;
@@ -58,7 +58,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
     }
 
     private void getPropertyFlowDetail(int id) {
-        Apic.getUserFinanceFlowDetail(id)
+        Apic.getUserFinanceFlowDetail(id).tag(TAG)
                 .callback(new Callback<Resp<CoinPropertyFlow>>() {
                     @Override
                     protected void onRespSuccess(Resp<CoinPropertyFlow> resp) {
@@ -68,43 +68,46 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
     }
 
     private void setView(CoinPropertyFlow data) {
+        if (data == null) {
+            return;
+        }
         int flowType = data.getFlowType();
         switch (flowType) {
-            case FlowType.DRAW:
+            case CurrencyFlowType.DRAW:
                 mFlowType.setText(R.string.withdraw_cash);
                 break;
-            case FlowType.DEPOSITE:
+            case CurrencyFlowType.DEPOSITE:
                 mFlowType.setText(R.string.recharge_coin);
                 break;
-            case FlowType.ENTRUST_BUY:
+            case CurrencyFlowType.ENTRUST_BUY:
                 mFlowType.setText(R.string.buy_order);
                 break;
-            case FlowType.ENTRUST_SELL:
+            case CurrencyFlowType.ENTRUST_SELL:
                 mFlowType.setText(R.string.sell_order);
                 break;
-            case FlowType.OTC_TRADE_OUT:
+            case CurrencyFlowType.OTC_TRADE_OUT:
                 mFlowType.setText(R.string.otc_transfer_out);
                 break;
-            case FlowType.DRAW_FEE:
+            case CurrencyFlowType.DRAW_FEE:
                 mFlowType.setText(R.string.withdraw_fee);
                 break;
-            case FlowType.TRADE_FEE:
+            case CurrencyFlowType.TRADE_FEE:
                 mFlowType.setText(R.string.deal_fee);
                 break;
-            case FlowType.PROMOTER_TO:
+            case CurrencyFlowType.PROMOTER_TO:
                 mFlowType.setText(R.string.promoter_account_transfer_into);
                 break;
-            case FlowType.OTC_TRADE_IN:
+            case CurrencyFlowType.OTC_TRADE_IN:
                 mFlowType.setText(R.string.otc_trade_in);
                 break;
-            case FlowType.AGENCY_TO:
+            case CurrencyFlowType.AGENCY_TO:
                 mFlowType.setText(R.string.agency_to);
                 break;
-            case FlowType.LEGAL_ACCOUNT_IN:
+            case CurrencyFlowType.LEGAL_ACCOUNT_IN:
                 mFlowType.setText(R.string.legal_account_in);
                 break;
-            case FlowType.COIN_ACCOUNT_OUT:
-                mFlowType.setText(R.string.coin_account_out);
+            case CurrencyFlowType.COIN_ACCOUNT_OUT:
+                mFlowType.setText(R.string.coin_account_in);
                 break;
             default:
         }

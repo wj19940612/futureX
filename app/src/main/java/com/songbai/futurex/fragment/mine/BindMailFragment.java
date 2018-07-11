@@ -128,7 +128,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
                 .email(email)
                 .type(AuthCodeGet.BINDING_EMAIL)
                 .build();
-        Apic.getAuthCode(authCodeGet)
+        Apic.getAuthCode(authCodeGet).tag(TAG)
                 .callback(new Callback<Object>() {
                     @Override
                     protected void onRespSuccess(Object resp) {
@@ -255,7 +255,7 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
     }
 
     private void bindMail(String email, String emailMsgCode, String phoneMsgCode) {
-        Apic.bindEmail(email, emailMsgCode, phoneMsgCode)
+        Apic.bindEmail(email, emailMsgCode, phoneMsgCode).tag(TAG)
                 .callback(new Callback<Object>() {
                     @Override
                     protected void onRespSuccess(Object resp) {

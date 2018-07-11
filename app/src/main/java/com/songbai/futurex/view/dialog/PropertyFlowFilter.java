@@ -20,8 +20,10 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinInfo;
-import com.songbai.futurex.model.status.FlowStatus;
-import com.songbai.futurex.model.status.FlowType;
+import com.songbai.futurex.model.status.CurrencyFlowStatus;
+import com.songbai.futurex.model.status.CurrencyFlowType;
+import com.songbai.futurex.model.status.OTCFlowStatus;
+import com.songbai.futurex.model.status.OTCFlowType;
 import com.songbai.futurex.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -61,26 +63,42 @@ public class PropertyFlowFilter {
     private OptionsPickerView<String> mPvOptions;
     private ArrayList<CoinInfo> mCoinInfos;
 
-    private final int[] flowType = new int[]{ALL,
-            FlowType.DRAW, FlowType.DEPOSITE, FlowType.ENTRUST_BUY,
-            FlowType.ENTRUST_SELL, FlowType.OTC_TRADE_OUT, FlowType.DRAW_FEE,
-            FlowType.TRADE_FEE, FlowType.PROMOTER_TO, FlowType.OTC_TRADE_IN,
-            FlowType.AGENCY_TO, FlowType.LEGAL_ACCOUNT_IN, FlowType.COIN_ACCOUNT_OUT
+    private final int[] currencyFlowType = new int[]{ALL,
+            CurrencyFlowType.DRAW, CurrencyFlowType.DEPOSITE, CurrencyFlowType.ENTRUST_BUY,
+            CurrencyFlowType.ENTRUST_SELL, CurrencyFlowType.OTC_TRADE_OUT, CurrencyFlowType.DRAW_FEE,
+            CurrencyFlowType.TRADE_FEE, CurrencyFlowType.PROMOTER_TO, CurrencyFlowType.OTC_TRADE_IN,
+            CurrencyFlowType.AGENCY_TO, CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT
     };
-    private final int[] flowTypeStrRes = new int[]{
+    private final int[] currencyFlowTypeStrRes = new int[]{
             R.string.all_type, R.string.withdraw_cash, R.string.recharge_coin,
             R.string.buy_order, R.string.sell_order, R.string.otc_transfer_out,
             R.string.withdraw_fee, R.string.deal_fee, R.string.promoter_account_transfer_into,
-            R.string.otc_trade_in, R.string.agency_to, R.string.legal_account_in, R.string.coin_account_out};
+            R.string.otc_trade_in, R.string.agency_to, R.string.legal_account_in, R.string.coin_account_in};
 
-    private final int[] flowStatus = new int[]{ALL,
-            FlowStatus.SUCCESS, FlowStatus.FREEZE, FlowStatus.DRAW_REJECT,
-            FlowStatus.ENTRUS_RETURN, FlowStatus.FREEZE_DEDUCT, FlowStatus.ENTRUSE_RETURN_SYS,
-            FlowStatus.FREEZE_RETURN};
+    private final int[] otcFlowType = new int[]{ALL,
+            OTCFlowType.COIN_ACCOUNT_IN, OTCFlowType.LEGAL_CURRENCY_ACCOUNT_OUT,
+            OTCFlowType.OTC_TRADE_IN, OTCFlowType.OTC_TRADE_OUT
+    };
+    private final int[] otcFlowTypeStrRes = new int[]{R.string.all_type,
+            R.string.coin_account_in, R.string.legal_account_out,
+            R.string.otc_trade_in, R.string.otc_trade_out};
 
-    private final int[] flowStatusStrRes = new int[]{
+    private final int[] currencyFlowStatus = new int[]{ALL,
+            CurrencyFlowStatus.SUCCESS, CurrencyFlowStatus.FREEZE, CurrencyFlowStatus.DRAW_REJECT,
+            CurrencyFlowStatus.ENTRUS_RETURN, CurrencyFlowStatus.FREEZE_DEDUCT, CurrencyFlowStatus.ENTRUSE_RETURN_SYS,
+            CurrencyFlowStatus.FREEZE_RETURN};
+
+    private final int[] currencyFlowStatusStrRes = new int[]{
             R.string.all_status, R.string.completed, R.string.freeze, R.string.withdraw_coin_rejected,
             R.string.entrust_return, R.string.freeze_deduct, R.string.sys_withdraw, R.string.freeze_return};
+
+    private final int[] otcFlowStatus = new int[]{ALL,
+            OTCFlowStatus.SUCCESS, OTCFlowStatus.FREEZE, OTCFlowStatus.FREEZE_DEDUCT,
+            OTCFlowStatus.CANCEL_TRADE_FREEZE, OTCFlowStatus.SYS_CANCEL_TRADE_FREEZE, OTCFlowStatus.POSTER_OFF_SHELF_RETURN,};
+
+    private final int[] otcFlowStatusStrRes = new int[]{
+            R.string.all_status, R.string.completed, R.string.freeze, R.string.freeze_deduct,
+            R.string.cancel_trade_freeze, R.string.sys_cancel_trade_freeze, R.string.poster_off_shelf_return};
 
     private ArrayList<String> mFlowTypeStr;
     private ArrayList<String> mFlowStatusStr;
@@ -94,27 +112,19 @@ public class PropertyFlowFilter {
     private final ArrayList<Integer> mFlowStatus;
     private ArrayList<String> mCoinSymbols;
     private TimePickerView mPvTime;
+    private int mAccountType;
 
-    public PropertyFlowFilter(Context context, View view) {
-        mContext = context;
-        mFlowTypeStr = new ArrayList<>();
-        for (int flowTypeStrRe : flowTypeStrRes) {
-            mFlowTypeStr.add(mContext.getString(flowTypeStrRe));
-        }
-        mFlowStatusStr = new ArrayList<>();
-        for (int flowStatusStrRe : flowStatusStrRes) {
-            mFlowStatusStr.add(mContext.getString(flowStatusStrRe));
-        }
-        mFlowTypes = new ArrayList<>();
-        for (int i : flowType) {
-            mFlowTypes.add(i);
-        }
-        mFlowStatus = new ArrayList<>();
-        for (int status : flowStatus) {
-            mFlowStatus.add(status);
-        }
+    public PropertyFlowFilter(Context context, View view, int accountType) {
         mView = view;
         ButterKnife.bind(this, mView);
+        mAccountType = accountType;
+        mContext = context;
+        mFlowTypeStr = new ArrayList<>();
+        mFlowStatusStr = new ArrayList<>();
+        mFlowStatus = new ArrayList<>();
+        mFlowTypes = new ArrayList<>();
+        createStr();
+        restoreView();
         mReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,14 +146,17 @@ public class PropertyFlowFilter {
                 }
             }
         });
+    }
+
+    private void restoreView() {
         if (!TextUtils.isEmpty(mTempCoinSymbol)) {
             mSelectCoinType.setText(mTempCoinSymbol.toUpperCase());
         }
         if (mTempFlowType != 0) {
-            mFlowType.setText(flowTypeStrRes[mFlowTypes.indexOf(mTempFlowType)]);
+            mFlowType.setText(mFlowTypeStr.get(mFlowTypes.indexOf(mTempFlowType)));
         }
         if (mTempFlowStatus != 0) {
-            mStatus.setText(flowStatusStrRes[mFlowStatus.indexOf(mTempFlowStatus)]);
+            mStatus.setText(mFlowStatusStr.get(mFlowStatus.indexOf(mTempFlowStatus)));
         }
         if (!TextUtils.isEmpty(mTempStartTime)) {
             long timeMillion = getTimeMillion(mTempStartTime);
@@ -156,6 +169,42 @@ public class PropertyFlowFilter {
             if (timeMillion > 0) {
                 mEndTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
             }
+        }
+    }
+
+    private void createStr() {
+        switch (mAccountType) {
+            case 0:
+                for (int flowTypeStrRe : currencyFlowTypeStrRes) {
+                    mFlowTypeStr.add(mContext.getString(flowTypeStrRe));
+                }
+                for (int flowStatusStrRe : currencyFlowStatusStrRes) {
+                    mFlowStatusStr.add(mContext.getString(flowStatusStrRe));
+                }
+                for (int i : currencyFlowType) {
+                    mFlowTypes.add(i);
+                }
+                for (int status : currencyFlowStatus) {
+                    mFlowStatus.add(status);
+                }
+                break;
+            case 1:
+                for (int flowTypeStrRe : otcFlowTypeStrRes) {
+                    mFlowTypeStr.add(mContext.getString(flowTypeStrRe));
+                }
+                for (int flowStatusStrRe : otcFlowStatusStrRes) {
+                    mFlowStatusStr.add(mContext.getString(flowStatusStrRe));
+                }
+                for (int i : otcFlowType) {
+                    mFlowTypes.add(i);
+                }
+                for (int status : otcFlowStatus) {
+                    mFlowStatus.add(status);
+                }
+                break;
+            case 2:
+                break;
+            default:
         }
     }
 
@@ -195,6 +244,7 @@ public class PropertyFlowFilter {
         }
         mTempStartTime = startTime;
         mTempEndTime = endTime;
+        restoreView();
     }
 
     public interface OnSelectCallBack {

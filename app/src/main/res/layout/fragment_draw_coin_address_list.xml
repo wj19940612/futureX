@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,14 +18,15 @@
     <include
         layout="@layout/view_common_empty_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:visibility="gone"/>
 
     <com.songbai.futurex.view.EmptyRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/titleBar"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingTop="12dp"/>
 
@@ -33,13 +34,13 @@
         android:id="@+id/addAddress"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="14dp"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
+        android:layout_marginTop="14dp"
         android:background="@drawable/btn_primary"
         android:gravity="center"
         android:text="@string/add_address"
         android:textColor="@android:color/white"
         android:textSize="15sp"/>
-</RelativeLayout>
+</LinearLayout>

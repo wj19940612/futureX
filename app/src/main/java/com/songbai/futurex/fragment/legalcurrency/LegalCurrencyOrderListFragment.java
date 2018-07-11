@@ -26,7 +26,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.LegalCurrencyOrder;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -125,7 +125,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                             mRecyclerView.hideAll(false);
                         }
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     @Override
@@ -190,20 +190,20 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
             if (view.getId() == R.id.headPortrait) {
                 UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
                         .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
-                        .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect() == OtcOrderStatus.ORDER_DIRECT_BUY ?
-                                OtcOrderStatus.ORDER_DIRECT_SELL : OtcOrderStatus.ORDER_DIRECT_BUY)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect() == OTCOrderStatus.ORDER_DIRECT_BUY ?
+                                OTCOrderStatus.ORDER_DIRECT_SELL : OTCOrderStatus.ORDER_DIRECT_BUY)
                         .execute();
             } else {
                 switch (legalCurrencyOrder.getStatus()) {
-                    case OtcOrderStatus.ORDER_CANCLED:
-                    case OtcOrderStatus.ORDER_COMPLATED:
+                    case OTCOrderStatus.ORDER_CANCLED:
+                    case OTCOrderStatus.ORDER_COMPLATED:
                         Launcher.with(this, OtcOrderCompletedActivity.class)
                                 .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
                                 .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
                                 .execute();
                         break;
-                    case OtcOrderStatus.ORDER_PAIED:
-                    case OtcOrderStatus.ORDER_UNPAIED:
+                    case OTCOrderStatus.ORDER_PAIED:
+                    case OTCOrderStatus.ORDER_UNPAIED:
                         UniqueActivity.launcher(this, LegalCurrencyOrderDetailFragment.class)
                                 .putExtra(ExtraKeys.ORDER_ID, legalCurrencyOrder.getId())
                                 .putExtra(ExtraKeys.TRADE_DIRECTION, legalCurrencyOrder.getDirect())
@@ -293,11 +293,11 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         .into(mHeadPortrait);
                 mUserName.setText(legalCurrencyOrder.getChangeName());
                 switch (legalCurrencyOrder.getDirect()) {
-                    case OtcOrderStatus.ORDER_DIRECT_BUY:
+                    case OTCOrderStatus.ORDER_DIRECT_BUY:
                         mDealType.setText(mContext.getString(R.string.buy_x,
                                 legalCurrencyOrder.getCoinSymbol().toUpperCase()));
                         break;
-                    case OtcOrderStatus.ORDER_DIRECT_SELL:
+                    case OTCOrderStatus.ORDER_DIRECT_SELL:
                         mDealType.setText(mContext.getString(R.string.sell_x,
                                 legalCurrencyOrder.getCoinSymbol().toUpperCase()));
                         break;
@@ -320,19 +320,19 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
                 switch (legalCurrencyOrder.getStatus()) {
-                    case OtcOrderStatus.ORDER_CANCLED:
+                    case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
-                        mDesc.setText(R.string.you_have_canceled_trade);
+                        mDesc.setText(R.string.canceled);
                         break;
-                    case OtcOrderStatus.ORDER_UNPAIED:
-                        mStatus.setText(R.string.wait_to_pay_and_confirm);
-                        mDesc.setText(R.string.otc_order_success_wait_pay);
+                    case OTCOrderStatus.ORDER_UNPAIED:
+                        mStatus.setText(R.string.unpaid);
+                        mDesc.setText(R.string.unpaid);
                         break;
-                    case OtcOrderStatus.ORDER_PAIED:
-                        mStatus.setText(R.string.wait_sell_transfer_coin);
-                        mDesc.setText(R.string.wait_sell_transfer_coin);
+                    case OTCOrderStatus.ORDER_PAIED:
+                        mStatus.setText(R.string.paid);
+                        mDesc.setText(R.string.paid);
                         break;
-                    case OtcOrderStatus.ORDER_COMPLATED:
+                    case OTCOrderStatus.ORDER_COMPLATED:
                         mStatus.setText(R.string.completed);
                         mDesc.setText(R.string.otc_trade_complete_desc);
                         break;

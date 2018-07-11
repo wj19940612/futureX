@@ -4,7 +4,7 @@ package com.songbai.futurex.model.status;
  * @author yangguangda
  * @date 2018/6/29
  */
-public interface OtcOrderStatus {
+public interface OTCOrderStatus {
     int ORDER_DIRECT_BUY = 1;//买入
     int ORDER_DIRECT_SELL = 2;//卖出
 

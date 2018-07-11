@@ -29,7 +29,7 @@ import com.songbai.futurex.model.status.MessageType;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.OnItemClickListener;
+import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
@@ -106,9 +106,10 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
         mSwipeTarget.setEmptyView(mEmptyView);
         mAdapter = new MessageListAdapter();
-        mAdapter.setOnItemClickListener(new OnItemClickListener<SysMessage>() {
+        mAdapter.setOnItemClickListener(new OnRVItemClickListener() {
             @Override
-            public void onItemClick(SysMessage sysMessage, int position) {
+            public void onItemClick(View view, int position, Object obj) {
+                SysMessage sysMessage = (SysMessage) obj;
                 if (mPageType == PAGE_TYPE_NOTICE) {
                     String url = String.format(Apic.url.NOTICE_DETAIL_PAGE, sysMessage.getId());
                     Launcher.with(getActivity(), WebActivity.class)
@@ -131,6 +132,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
                                     .execute();
                             break;
+                        case 7:
+                        case 8:
                         case 10:
                         case 11:
                             int direct = 0;
@@ -151,6 +154,11 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                         .execute();
                             }
                             break;
+                        case 6:
+                            UniqueActivity.launcher(getActivity(), SeniorCertificationFragment.class).execute();
+                            break;
+                        case 9:
+                            break;
                         default:
                     }
                     if (sysMessage.getStatus() == SysMessage.UNREAD) {
@@ -170,7 +178,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     }
 
     private void msgRead(final SysMessage sysMessage, final int position) {
-        Apic.msgRead(sysMessage.getId())
+        Apic.msgRead(sysMessage.getId()).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -183,7 +191,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     }
 
     private void readAll() {
-        Apic.msgReadAll()
+        Apic.msgReadAll().tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -198,7 +206,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         String lang = "";
         String language = Locale.getDefault().getLanguage();
         Log.d(TAG, "requestNotice: " + language);
-        Apic.findNewsList(PAGE_TYPE_NOTICE, lang, mOffset, Apic.DEFAULT_PAGE_SIZE)
+        Apic.findNewsList(PAGE_TYPE_NOTICE, lang, mOffset, Apic.DEFAULT_PAGE_SIZE).tag(TAG)
                 .callback(new Callback<Resp<List<SysMessage>>>() {
                     @Override
                     protected void onRespSuccess(Resp<List<SysMessage>> resp) {
@@ -230,7 +238,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     }
 
     private void getMessageList() {
-        Apic.msgList(mPage, Apic.DEFAULT_PAGE_SIZE)
+        Apic.msgList(mPage, Apic.DEFAULT_PAGE_SIZE).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<SysMessage>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<SysMessage>> resp) {
@@ -283,7 +291,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     static class MessageListAdapter extends RecyclerView.Adapter {
         private List<SysMessage> mList = new ArrayList<>();
 
-        private OnItemClickListener<SysMessage> mOnItemClickListener;
+        private OnRVItemClickListener mOnItemClickListener;
 
         private boolean allIsRead;
         private int mPageType;
@@ -316,9 +324,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
             return mList.size();
         }
 
-        public void setOnItemClickListener(OnItemClickListener<SysMessage> onItemClickListener) {
+        public void setOnItemClickListener(OnRVItemClickListener onItemClickListener) {
             mOnItemClickListener = onItemClickListener;
-
         }
 
         public void clear() {
@@ -415,7 +422,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                     @Override
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
-                            mOnItemClickListener.onItemClick(sysMessage, position);
+                            mOnItemClickListener.onItemClick(mRootView, position, sysMessage);
                         }
                     }
                 });

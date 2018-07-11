@@ -102,13 +102,13 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
         if (TextUtils.isEmpty(amount)) {
             return;
         }
-        if (Double.valueOf(amount) > Double.valueOf(mSelectedAccountBean.getAbleCoin())) {
+        if (Double.valueOf(amount) > mSelectedAccountBean.getAbleCoin()) {
             mTransferAmount.setText("");
         }
     }
 
     private void accountTransfer(String coinType, int type, String count) {
-        Apic.accountTransfer(coinType, type, count)
+        Apic.accountTransfer(coinType, type, count).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

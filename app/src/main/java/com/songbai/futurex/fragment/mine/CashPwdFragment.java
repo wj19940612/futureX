@@ -125,7 +125,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     };
 
     private void needGoogle() {
-        Apic.needGoogle("SET_DRAW_PASS")
+        Apic.needGoogle("SET_DRAW_PASS").tag(TAG)
                 .callback(new Callback<Resp<Boolean>>() {
 
                     @Override
@@ -135,7 +135,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                         mGoogleAuthCode.setVisibility(mNeedGoogle ? View.VISIBLE : View.GONE);
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void freezeGetPhoneAuthCodeButton() {
@@ -229,7 +229,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     }
 
     private void setDrawPass(String drawPass, String affirmPass, String msgCode, String type, String googleCode) {
-        Apic.setDrawPass(drawPass, affirmPass, msgCode, type, googleCode)
+        Apic.setDrawPass(drawPass, affirmPass, msgCode, type, googleCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

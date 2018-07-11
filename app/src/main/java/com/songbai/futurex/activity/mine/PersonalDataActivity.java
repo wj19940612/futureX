@@ -227,7 +227,7 @@ public class PersonalDataActivity extends BaseActivity {
     }
 
     private void uploadImage(String image) {
-        Apic.uploadImage(image)
+        Apic.uploadImage(image).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -238,7 +238,7 @@ public class PersonalDataActivity extends BaseActivity {
     }
 
     private void submitPortraitPath(String image) {
-        Apic.submitPortraitPath(image)
+        Apic.submitPortraitPath(image).tag(TAG)
                 .callback(new Callback<Object>() {
                     @Override
                     protected void onRespSuccess(Object resp) {
@@ -264,7 +264,7 @@ public class PersonalDataActivity extends BaseActivity {
     }
 
     private void authenticationName() {
-        Apic.authenticationName()
+        Apic.authenticationName().tag(TAG)
                 .callback(new Callback<Resp<AuthenticationName>>() {
                     @Override
                     protected void onRespSuccess(Resp<AuthenticationName> resp) {

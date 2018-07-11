@@ -367,7 +367,7 @@ public class CustomServiceActivity extends BaseActivity {
 
     private void sendImage(final String path) {
         String image = ImageUtils.compressImageToBase64(path, getActivity());
-        Apic.uploadImage(image)
+        Apic.uploadImage(image).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {

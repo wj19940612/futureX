@@ -70,7 +70,7 @@ public class ReChargeCoinFragment extends UniqueActivity.UniFragment {
     }
 
     public void getDepositWalletAddrByCoinType(String coinType) {
-        Apic.getDepositWalletAddrByCoinType(coinType)
+        Apic.getDepositWalletAddrByCoinType(coinType).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {

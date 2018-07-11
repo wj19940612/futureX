@@ -22,6 +22,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
+import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
@@ -40,6 +41,7 @@ import butterknife.Unbinder;
  */
 public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     public static final int REQUEST_SELECT_PAY = 16524;
+    public static final int REQUEST_ADD_PAY = 12432;
 
     @BindView(R.id.recyclerView)
     EmptyRecyclerView mRecyclerView;
@@ -71,16 +73,22 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mLegalCurrencyPayAdapter = new LegalCurrencyPayAdapter();
-        mLegalCurrencyPayAdapter.setmOnItemClickListener(new LegalCurrencyPayAdapter.OnItemClickListener() {
+        mLegalCurrencyPayAdapter.setmOnItemClickListener(new OnRVItemClickListener() {
             @Override
-            public void onItemClick() {
-
-            }
-
-            @Override
-            public void onDeleteClick(BankCardBean bankCardBean) {
-                int id = bankCardBean.getId();
-                showDrawPass(id);
+            public void onItemClick(View view, int position, Object obj) {
+                BankCardBean bankCardBean = (BankCardBean) obj;
+                if (view.getId() == R.id.delete) {
+                    int id = bankCardBean.getId();
+                    showDrawPass(id);
+                } else {
+                    int payType = bankCardBean.getPayType();
+                    if (payType != BankCardBean.PAYTYPE_BANK) {
+                        UniqueActivity.launcher(LegalCurrencyPayFragment.this, AddPayFragment.class)
+                                .putExtra(ExtraKeys.IS_ALIPAY, payType == BankCardBean.PAYTYPE_ALIPAY)
+                                .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
+                                .execute(LegalCurrencyPayFragment.this, REQUEST_ADD_PAY);
+                    }
+                }
             }
         });
         mRecyclerView.setAdapter(mLegalCurrencyPayAdapter);
@@ -98,21 +106,22 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         mSmartDialog = SmartDialog.solo(getActivity());
         mSmartDialog.setCustomViewController(withDrawPsdViewController)
                 .show();
+        withDrawPsdViewController.setTitle(R.string.confirm_delete);
     }
 
     private void getBindListData() {
-        Apic.bindList(0)
+        Apic.bindList(0).tag(TAG)
                 .callback(new Callback<Resp<BindBankList>>() {
                     @Override
                     protected void onRespSuccess(Resp<BindBankList> resp) {
                         setBindBankList(resp.getData());
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void bindUntie(int id, String withDrawPass) {
-        Apic.bindUntie(id, withDrawPass)
+        Apic.bindUntie(id, withDrawPass).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -120,7 +129,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                         getBindListData();
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void setBindBankList(BindBankList bindBankList) {
@@ -141,12 +150,13 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         mLegalCurrencyPayAdapter.setList(list);
         mLegalCurrencyPayAdapter.notifyDataSetChanged();
         mRecyclerView.hideAll(false);
+        mAddGathering.setVisibility(mLegalCurrencyPayAdapter.getItemCount() >= 7 ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_SELECT_PAY) {
+        if (requestCode == REQUEST_SELECT_PAY || requestCode == REQUEST_ADD_PAY) {
             if (data != null) {
                 boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
                 if (shouldRefresh) {
@@ -172,7 +182,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     static class LegalCurrencyPayAdapter extends RecyclerView.Adapter {
 
         private ArrayList<BankCardBean> mList = new ArrayList<>();
-        private static OnItemClickListener mOnItemClickListener;
+        private static OnRVItemClickListener mOnItemClickListener;
 
         @NonNull
         @Override
@@ -184,7 +194,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof LegalCurrencyHolder) {
-                ((LegalCurrencyHolder) holder).bindData(mList.get(position));
+                ((LegalCurrencyHolder) holder).bindData(position, mList.get(position));
             }
         }
 
@@ -198,13 +208,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
             mList.addAll(list);
         }
 
-        interface OnItemClickListener {
-            void onItemClick();
-
-            void onDeleteClick(BankCardBean bankCardBean);
-        }
-
-        void setmOnItemClickListener(OnItemClickListener onItemClickListener) {
+        void setmOnItemClickListener(OnRVItemClickListener onItemClickListener) {
             mOnItemClickListener = onItemClickListener;
         }
 
@@ -225,7 +229,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                 mRootView = view;
             }
 
-            void bindData(final BankCardBean bankCardBean) {
+            void bindData(final int position, final BankCardBean bankCardBean) {
                 switch (bankCardBean.getPayType()) {
                     case BankCardBean.PAYTYPE_ALIPAY:
                         mIcon.setImageResource(R.drawable.ic_legaltender_icon_alipay);
@@ -248,7 +252,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                     @Override
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
-                            mOnItemClickListener.onItemClick();
+                            mOnItemClickListener.onItemClick(mRootView, position, bankCardBean);
                         }
                     }
                 });
@@ -256,7 +260,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                     @Override
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
-                            mOnItemClickListener.onDeleteClick(bankCardBean);
+                            mOnItemClickListener.onItemClick(mDelete, position, bankCardBean);
                         }
                     }
                 });

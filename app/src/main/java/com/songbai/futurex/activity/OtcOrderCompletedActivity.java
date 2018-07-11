@@ -15,7 +15,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -77,7 +77,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
     }
 
     private void otcWaresMine(String waresId, String orderId) {
-        Apic.otcWaresMine(waresId, orderId, 1)
+        Apic.otcWaresMine(waresId, orderId, 1).tag(TAG)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -87,7 +87,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
     }
 
     private void otcOrderDetail(int id, int direct) {
-        Apic.otcOrderDetail(id, direct)
+        Apic.otcOrderDetail(id, direct).tag(TAG)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
                     @Override
                     protected void onRespSuccess(Resp<OtcOrderDetail> resp) {
@@ -115,11 +115,11 @@ public class OtcOrderCompletedActivity extends BaseActivity {
                 .into(mHeadPortrait);
         mUserName.setText(order.getBuyerName());
         switch (order.getStatus()) {
-            case OtcOrderStatus.ORDER_CANCLED:
+            case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
                 mTitleBar.setTitle(R.string.canceled);
                 break;
-            case OtcOrderStatus.ORDER_COMPLATED:
+            case OTCOrderStatus.ORDER_COMPLATED:
                 mOrderStatus.setText(R.string.completed);
                 mTitleBar.setTitle(R.string.completed);
                 break;
@@ -163,8 +163,8 @@ public class OtcOrderCompletedActivity extends BaseActivity {
             case R.id.headPortrait:
                 UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
                         .putExtra(ExtraKeys.ORDER_ID, mOrderId)
-                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection == OtcOrderStatus.ORDER_DIRECT_BUY ?
-                                OtcOrderStatus.ORDER_DIRECT_SELL : OtcOrderStatus.ORDER_DIRECT_BUY)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY ?
+                                OTCOrderStatus.ORDER_DIRECT_SELL : OTCOrderStatus.ORDER_DIRECT_BUY)
                         .execute();
                 break;
             case R.id.contractEachOther:

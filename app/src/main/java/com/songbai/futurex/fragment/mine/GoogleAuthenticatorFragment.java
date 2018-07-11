@@ -73,7 +73,7 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
     }
 
     private void createGoogleKey() {
-        Apic.createGoogleKey()
+        Apic.createGoogleKey().tag(TAG)
                 .callback(new Callback<Resp<CreateGoogleKey>>() {
                     @Override
                     protected void onRespSuccess(Resp<CreateGoogleKey> resp) {
@@ -84,7 +84,7 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
     }
 
     private void bindGoogleKey(String googleCode, String drawPass, String googleKey) {
-        Apic.bindGoogleKey(googleCode, drawPass, googleKey)
+        Apic.bindGoogleKey(googleCode, drawPass, googleKey).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

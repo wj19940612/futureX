@@ -79,7 +79,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     }
 
     private void getUserAuth() {
-        Apic.getUserAuth()
+        Apic.getUserAuth().tag(TAG)
                 .callback(new Callback<Resp<UserAuth>>() {
                     @Override
                     protected void onRespSuccess(Resp<UserAuth> resp) {
@@ -229,7 +229,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     }
 
     private void confirmAuth() {
-        Apic.realNameAuth(mRealNameAuthData)
+        Apic.realNameAuth(mRealNameAuthData).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

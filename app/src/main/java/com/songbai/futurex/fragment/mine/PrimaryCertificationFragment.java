@@ -114,7 +114,7 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
                 .name(name)
                 .idcardNum(idcardNum)
                 .build();
-        Apic.realNameAuth(realNameAuthData)
+        Apic.realNameAuth(realNameAuthData).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

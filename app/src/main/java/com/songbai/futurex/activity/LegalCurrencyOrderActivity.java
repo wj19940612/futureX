@@ -10,7 +10,7 @@ import android.support.v4.view.ViewPager;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.BaseFragment;
 import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderListFragment;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.view.RadioHeader;
 
 import java.util.ArrayList;
@@ -37,10 +37,10 @@ public class LegalCurrencyOrderActivity extends BaseActivity {
         mBind = ButterKnife.bind(this);
         ArrayList<BaseFragment> fragments = new ArrayList<>();
         fragments.add(LegalCurrencyOrderListFragment.newInstance(""));
-        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OtcOrderStatus.ORDER_UNPAIED)));
-        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OtcOrderStatus.ORDER_PAIED)));
-        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OtcOrderStatus.ORDER_CANCLED)));
-        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OtcOrderStatus.ORDER_COMPLATED)));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OTCOrderStatus.ORDER_UNPAIED)));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OTCOrderStatus.ORDER_PAIED)));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OTCOrderStatus.ORDER_CANCLED)));
+        fragments.add(LegalCurrencyOrderListFragment.newInstance(String.valueOf(OTCOrderStatus.ORDER_COMPLATED)));
         mViewPager.setAdapter(new LegalCurrencyOrderPager(getSupportFragmentManager(), fragments));
         mViewPager.setOffscreenPageLimit(fragments.size() - 1);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

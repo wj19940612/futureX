@@ -30,7 +30,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CountryCurrency;
 import com.songbai.futurex.model.LegalCoin;
 import com.songbai.futurex.model.local.LocalUser;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.view.BadgeTextView;
@@ -115,8 +115,8 @@ public class LegalCurrencyFragment extends BaseFragment {
                 mSelectedLegalSymbol.toUpperCase(),
                 mSelectedCurrencySymbol.toUpperCase()));
         mFragments = new ArrayList<>();
-        mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_SELL, mSelectedLegalSymbol, mSelectedCurrencySymbol));
-        mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_BUY, mSelectedLegalSymbol, mSelectedCurrencySymbol));
+        mFragments.add(WantBuyOrSellFragment.newInstance(OTCOrderStatus.ORDER_DIRECT_SELL, mSelectedLegalSymbol, mSelectedCurrencySymbol));
+        mFragments.add(WantBuyOrSellFragment.newInstance(OTCOrderStatus.ORDER_DIRECT_BUY, mSelectedLegalSymbol, mSelectedCurrencySymbol));
         mFragments.add(MyPosterFragment.newInstance(mSelectedLegalSymbol, mSelectedCurrencySymbol));
         LegalCurrencyPager adapter = new LegalCurrencyPager(getChildFragmentManager(), mFragments);
         mViewPager.setAdapter(adapter);
@@ -162,7 +162,7 @@ public class LegalCurrencyFragment extends BaseFragment {
     }
 
     private void getLegalCoin() {
-        Apic.getLegalCoin()
+        Apic.getLegalCoin().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
@@ -170,11 +170,11 @@ public class LegalCurrencyFragment extends BaseFragment {
                         mSelectedLegalSymbol = mLegalCoins.get(0).getSymbol().toLowerCase();
                         initView();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getCountryCurrency() {
-        Apic.getCountryCurrency()
+        Apic.getCountryCurrency().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CountryCurrency>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CountryCurrency>> resp) {
@@ -182,7 +182,7 @@ public class LegalCurrencyFragment extends BaseFragment {
                         mSelectedCurrencySymbol = mCountryCurrencies.get(0).getEnglishName().toLowerCase();
                         initView();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     @Override

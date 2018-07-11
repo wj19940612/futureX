@@ -168,7 +168,7 @@ public class MyPropertyActivity extends BaseActivity {
     }
 
     private void findCommissionOfSubordinate() {
-        Apic.findCommissionOfSubordinate()
+        Apic.findCommissionOfSubordinate().tag(TAG)
                 .callback(new Callback<Resp<InviteSubordinate>>() {
 
                     @Override

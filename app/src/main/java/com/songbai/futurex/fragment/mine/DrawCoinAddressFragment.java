@@ -65,7 +65,7 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
     }
 
     private void countDrawWalletAddrByCoinType() {
-        Apic.countDrawWalletAddrByCoinType("")
+        Apic.countDrawWalletAddrByCoinType("").tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CoinAddressCount>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CoinAddressCount>> resp) {
@@ -73,7 +73,7 @@ public class DrawCoinAddressFragment extends UniqueActivity.UniFragment {
                         mAdapter.notifyDataSetChanged();
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     @Override

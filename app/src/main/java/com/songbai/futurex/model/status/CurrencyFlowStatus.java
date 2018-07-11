@@ -4,7 +4,7 @@ package com.songbai.futurex.model.status;
  * @author yangguangda
  * @date 2018/6/14
  */
-public interface FlowStatus {
+public interface CurrencyFlowStatus {
     /**
      * 已完成
      */

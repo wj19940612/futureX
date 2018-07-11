@@ -187,7 +187,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     }
 
     private void findBannerList(String locale) {
-        Apic.findBannerList(locale)
+        Apic.findBannerList(locale).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<Banner>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<Banner>> resp) {
@@ -204,7 +204,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     }
 
     private void findNewsList(int type, String lang) {
-        Apic.findNewsList(type, lang, 0, 3)
+        Apic.findNewsList(type, lang, 0, 3).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<HomeNews>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<HomeNews>> resp) {
@@ -216,7 +216,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     }
 
     private void entrustPairsList() {
-        Apic.entrustPairsList(0, 9, "")
+        Apic.entrustPairsList(0, 9, "").tag(TAG)
                 .callback(new Callback<Resp<EntrustPair>>() {
                     @Override
                     protected void onRespSuccess(Resp<EntrustPair> resp) {
@@ -228,7 +228,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     }
 
     private void indexRiseList() {
-        Apic.indexRiseList()
+        Apic.indexRiseList().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<PairRiseListBean>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<PairRiseListBean>> resp) {

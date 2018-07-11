@@ -192,7 +192,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     }
 
     private void updateStatus(final OtcWarePoster otcWarePoster, int onShelf) {
-        Apic.otcWaresUpdateStatus(otcWarePoster.getId(), onShelf)
+        Apic.otcWaresUpdateStatus(otcWarePoster.getId(), onShelf).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -262,7 +262,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
             return;
         }
         mRequested = true;
-        Apic.otcWaresList(page, pageSize, mCoinType, mPayCurrency)
+        Apic.otcWaresList(page, pageSize, mCoinType, mPayCurrency).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<OtcWarePoster>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<OtcWarePoster>> resp) {
@@ -290,7 +290,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                             mRecyclerView.hideAll(false);
                         }
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     @Override
