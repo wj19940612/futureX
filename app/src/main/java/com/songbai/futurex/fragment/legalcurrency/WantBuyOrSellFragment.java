@@ -98,13 +98,13 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_want_buy, container, false);
         mBind = ButterKnife.bind(this, view);
-        isPrepared = true;
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        isPrepared = true;
         Bundle arguments = getArguments();
         if (arguments != null) {
             mType = arguments.getInt("type", 2);

@@ -21,6 +21,7 @@ android {
 
         buildConfigField('String', 'HOST', '\"ex.bitfutu.re\"')
         buildConfigField('boolean', 'IS_PROD', 'true')
+        buildConfigField('String', 'PUSH_SECRET', '\"a1eddf08c530b6109ffed1b516e3934e\"')
 
         manifestPlaceholders = [
                 UMENG_APP_KEY: "",
@@ -59,6 +60,7 @@ android {
             minSdkVersion 21
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
+            buildConfigField('String', 'PUSH_SECRET', '\"bf708983112c150a7e548b95bef83075\"')
             manifestPlaceholders = [
                     UMENG_APP_KEY: "5b2ba7b0f43e4873cf000052",
                     UMENG_CHANNEL: "android"
@@ -69,6 +71,7 @@ android {
             versionName alphaVersionName
             buildConfigField('String', 'HOST', '\"ex.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
+            buildConfigField('String', 'PUSH_SECRET', '\"bf708983112c150a7e548b95bef83075\"')
             manifestPlaceholders = [
                     UMENG_APP_KEY: "5b2ba7b0f43e4873cf000052",
                     UMENG_CHANNEL: "android"

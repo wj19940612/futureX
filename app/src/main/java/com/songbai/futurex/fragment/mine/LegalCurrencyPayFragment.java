@@ -24,8 +24,6 @@ import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
-import com.songbai.futurex.view.SmartDialog;
-import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +50,6 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
     LinearLayout mEmptyView;
     private LegalCurrencyPayAdapter mLegalCurrencyPayAdapter;
     private BindBankList mBindBankList;
-    private SmartDialog mSmartDialog;
 
     @Nullable
     @Override
@@ -64,7 +61,6 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
     }
 
     @Override
@@ -79,7 +75,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                 BankCardBean bankCardBean = (BankCardBean) obj;
                 if (view.getId() == R.id.delete) {
                     int id = bankCardBean.getId();
-                    showDrawPass(id);
+                    bindUntie(id);
                 } else {
                     int payType = bankCardBean.getPayType();
                     if (payType != BankCardBean.PAYTYPE_BANK) {
@@ -95,20 +91,6 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         getBindListData();
     }
 
-    private void showDrawPass(final int id) {
-        WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(), new WithDrawPsdViewController.OnClickListener() {
-            @Override
-            public void onConfirmClick(String cashPwd, String googleAuth) {
-                bindUntie(id, md5Encrypt(cashPwd));
-            }
-        });
-
-        mSmartDialog = SmartDialog.solo(getActivity());
-        mSmartDialog.setCustomViewController(withDrawPsdViewController)
-                .show();
-        withDrawPsdViewController.setTitle(R.string.confirm_delete);
-    }
-
     private void getBindListData() {
         Apic.bindList(0).tag(TAG)
                 .callback(new Callback<Resp<BindBankList>>() {
@@ -120,12 +102,11 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                 .fireFreely();
     }
 
-    private void bindUntie(int id, String withDrawPass) {
-        Apic.bindUntie(id, withDrawPass).tag(TAG)
+    private void bindUntie(int id) {
+        Apic.bindUntie(id).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        mSmartDialog.dismiss();
                         getBindListData();
                     }
                 })

@@ -5,15 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -329,7 +325,7 @@ public class PropertyListFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof PropertyListHolder) {
-                ((PropertyListHolder) holder).bindData(mType, mContext, position, mList.get(position));
+                ((PropertyListHolder) holder).bindData(mType, position, mList.get(position));
             }
         }
 
@@ -362,7 +358,9 @@ public class PropertyListFragment extends BaseFragment {
             @BindView(R.id.freezeAmount)
             TextView mFreezeAmount;
             @BindView(R.id.transfer)
-            TextView mTransfer;
+            RelativeLayout mTransfer;
+            @BindView(R.id.freezeAmountGroup)
+            LinearLayout mFreezeAmountGroup;
 
             PropertyListHolder(View itemView) {
                 super(itemView);
@@ -370,26 +368,12 @@ public class PropertyListFragment extends BaseFragment {
                 mRootView = itemView;
             }
 
-            private void bindData(int type, final Context context, final int position, final AccountBean accountBean) {
+            private void bindData(int type, final int position, final AccountBean accountBean) {
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
-                final double ableCoin = accountBean.getAbleCoin();
-                String formattedAbleCoin = FinanceUtil.formatWithScale(ableCoin, 8);
-                SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_available_x, formattedAbleCoin));
-                ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
-                        0, formattedAbleCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ableCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
-                        0, formattedAbleCoin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mAvailableAmount.setText(ableCoinStr);
-                double freezeCoin = accountBean.getFreezeCoin();
-                String formattedFreeze = FinanceUtil.formatWithScale(freezeCoin, 8);
-                SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(context.getString(R.string.amount_freeze_x, formattedFreeze));
-                freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text22)),
-                        0, formattedFreeze.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                freezeCoinStr.setSpan(new AbsoluteSizeSpan(16, true),
-                        0, formattedFreeze.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mFreezeAmount.setText(freezeCoinStr);
+                mAvailableAmount.setText(FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
+                mFreezeAmount.setText(FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));
                 mTransfer.setVisibility(type < 2 ? View.GONE : View.VISIBLE);
-                mFreezeAmount.setVisibility(type < 2 ? View.VISIBLE : View.GONE);
+                mFreezeAmountGroup.setVisibility(type < 2 ? View.VISIBLE : View.GONE);
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

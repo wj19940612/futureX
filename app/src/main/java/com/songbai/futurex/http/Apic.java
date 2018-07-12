@@ -163,11 +163,10 @@ public class Apic {
      * POST
      * 解绑银行卡
      */
-    public static Api bindUntie(int id, String withDrawPass) {
+    public static Api bindUntie(int id) {
         return Api.post("/api/otc/bank/untie",
                 new ReqParams()
-                        .put("id", id)
-                        .put("withDrawPass", withDrawPass));
+                        .put("id", id));
     }
 
     /**

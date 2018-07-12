@@ -5,18 +5,18 @@ package com.songbai.futurex.model.local;
  * @date 2018/6/21
  */
 public class GetOtcWaresHome {
-    int page;
-    int pageSize;
-    String coinType;
-    String orderId;
-    String sortName;
-    String sort;
-    int type;
-    String payCurrency;
-    int orientation;
-    String waresId;
-    String payType;
-    String cost;
+    private int page;
+    private int pageSize;
+    private String coinType;
+    private String orderId;
+    private String sortName;
+    private String sort;
+    private int type;
+    private String payCurrency;
+    private int orientation;
+    private String waresId;
+    private String payType;
+    private String cost;
 
     public int getPage() {
         return page;

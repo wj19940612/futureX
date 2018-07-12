@@ -74,6 +74,7 @@ public class LegalCurrencyFragment extends BaseFragment {
     private String mSelectedLegalSymbol;
     private ArrayList<BaseFragment> mFragments;
     private boolean isPrepared;
+    private boolean mInited;
     private Network.NetworkChangeReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
@@ -82,7 +83,6 @@ public class LegalCurrencyFragment extends BaseFragment {
             }
         }
     };
-
 
     @Nullable
     @Override
@@ -97,9 +97,9 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
+        Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
         getOtcPair();
         initView();
-        Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
     private void getOtcPair() {
@@ -108,9 +108,10 @@ public class LegalCurrencyFragment extends BaseFragment {
     }
 
     private void initView() {
-        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol) || mInited) {
             return;
         }
+        mInited = true;
         mTitle.setText(getString(R.string.x_faction_str_x,
                 mSelectedLegalSymbol.toUpperCase(),
                 mSelectedCurrencySymbol.toUpperCase()));
@@ -203,6 +204,7 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+        mInited = false;
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 

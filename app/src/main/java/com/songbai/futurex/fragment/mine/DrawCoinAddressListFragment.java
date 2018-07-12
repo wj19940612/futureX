@@ -224,13 +224,12 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
             void bindHolder(final CoinAddress coinAddress) {
                 mRemark.setText(coinAddress.getRemark());
                 mToAddress.setText(coinAddress.getToAddr());
-                mRootView.setOnLongClickListener(new View.OnLongClickListener() {
+                mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onLongClick(View v) {
+                    public void onClick(View v) {
                         if (sOnItemClickListener != null) {
                             sOnItemClickListener.onItemLongClick(coinAddress);
                         }
-                        return true;
                     }
                 });
             }
