@@ -107,7 +107,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         mTradeAmount.setText(getString(R.string.order_detail_amount_x,
                 FinanceUtil.formatWithScale(order.getOrderCount()),
                 order.getCoinSymbol().toUpperCase()));
-        mOrderNo.setText(order.getOrderId());
+        mOrderNo.setText(getString(R.string.pound_sign_x,order.getOrderId()));
         GlideApp
                 .with(this)
                 .load(order.getBuyerPortrait())

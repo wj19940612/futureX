@@ -324,7 +324,12 @@ public class MyPropertyActivity extends BaseActivity {
             mTransfer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    List<AccountBean> accountBeans = accountList.getAccount();
+                    List<AccountBean> accountBeans;
+                    if (accountList != null) {
+                        accountBeans = accountList.getAccount();
+                    } else {
+                        accountBeans = new ArrayList<>();
+                    }
                     switch (position) {
                         case 0:
                             ArrayList<AccountBean> list = new ArrayList<>();

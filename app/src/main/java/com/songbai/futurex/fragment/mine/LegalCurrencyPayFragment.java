@@ -23,6 +23,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.utils.OnRVItemClickListener;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
 
 import java.util.ArrayList;
@@ -107,6 +108,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(R.string.delete_success);
                         getBindListData();
                     }
                 })

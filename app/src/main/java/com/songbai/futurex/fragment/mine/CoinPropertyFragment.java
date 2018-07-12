@@ -121,6 +121,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyFlowAdapter();
+        mAdapter.setSingleType(true);
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
             public void onItemClick(int id) {
@@ -130,7 +131,6 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
         getAccountByUser(mAccountBean.getCoinType());

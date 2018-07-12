@@ -19,25 +19,60 @@
         tools:text="@string/recharge_coin"/>
 
     <TextView
-        android:id="@+id/amountText"
+        android:id="@+id/coinTypeText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="18dp"
+        android:text="@string/coin_type"
+        android:textColor="@color/text99"
+        android:visibility="gone"
+        android:textSize="13sp"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="0.6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/amountText"
+        app:layout_constraintTop_toBottomOf="@id/type"/>
+
+    <TextView
+        android:id="@+id/coinType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:textColor="@color/text22"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="@id/coinTypeText"
+        app:layout_constraintRight_toLeftOf="@id/amount"
+        app:layout_constraintTop_toBottomOf="@id/coinTypeText"
+        tools:text="BTC"/>
+
+    <TextView
+        android:id="@+id/amountText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="18dp"
+        android:gravity="end"
         android:text="@string/amount"
         android:textColor="@color/text99"
         android:textSize="13sp"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_weight="0.8"
+        app:layout_constraintLeft_toRightOf="@id/coinTypeText"
         app:layout_constraintRight_toLeftOf="@id/statusText"
-        app:layout_constraintTop_toBottomOf="@id/type"/>
+        app:layout_constraintTop_toBottomOf="@id/type"
+        app:layout_goneMarginLeft="12dp"/>
 
     <TextView
         android:id="@+id/statusText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="end"
         android:text="@string/status"
         android:textColor="@color/text99"
         android:textSize="13sp"
@@ -59,7 +94,8 @@
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toRightOf="@id/statusText"
-        app:layout_constraintRight_toRightOf="@id/ivArrow"/>
+        app:layout_constraintRight_toLeftOf="@id/ivArrow"
+        app:layout_goneMarginRight="12dp"/>
 
     <ImageView
         android:id="@+id/ivArrow"
@@ -68,46 +104,58 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="12dp"
         android:src="@drawable/ic_common_right_arrow"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/timestamp"
         app:layout_constraintLeft_toRightOf="@id/timeText"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/timeText"/>
 
-    <TextView
+    <com.songbai.futurex.view.ScaleTextView
         android:id="@+id/amount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
+        android:gravity="end"
+        app:layout_goneMarginLeft="12dp"
+        android:singleLine="true"
         android:textColor="@color/text22"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/amountText"
+        app:layout_constraintLeft_toRightOf="@id/coinType"
+        app:layout_constraintRight_toRightOf="@id/amountText"
         app:layout_constraintTop_toBottomOf="@id/amountText"
         tools:text="514.54304"/>
 
-    <TextView
+    <com.songbai.futurex.view.ScaleTextView
         android:id="@+id/status"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
+        android:gravity="end"
+        android:singleLine="true"
         android:textColor="@color/text22"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/statusText"
         app:layout_constraintRight_toRightOf="@id/statusText"
         app:layout_constraintTop_toBottomOf="@id/amountText"
         tools:text="已完成"/>
 
-    <TextView
+    <com.songbai.futurex.view.ScaleTextView
         android:id="@+id/timestamp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
+        android:gravity="end"
+        android:singleLine="true"
         android:textColor="@color/text22"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/timeText"
         app:layout_constraintRight_toRightOf="@id/timeText"
         app:layout_constraintTop_toBottomOf="@id/amountText"
         tools:text="09:45 05/02"/>

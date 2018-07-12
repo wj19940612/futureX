@@ -2,6 +2,8 @@ package com.songbai.futurex.fragment.mine.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.songbai.futurex.model.status.CurrencyFlowStatus;
 import com.songbai.futurex.model.status.CurrencyFlowType;
 import com.songbai.futurex.model.status.OTCFlowStatus;
 import com.songbai.futurex.model.status.OTCFlowType;
+import com.songbai.futurex.model.status.PromoterFlowType;
 import com.songbai.futurex.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -27,9 +30,11 @@ import butterknife.ButterKnife;
  * @date 2018/6/14
  */
 public class PropertyFlowAdapter extends RecyclerView.Adapter {
+
     private List<CoinPropertyFlow> mList = new ArrayList<>();
     private OnClickListener mOnClickListener;
     private int mAccount;
+    private boolean mSingleType;
 
     @NonNull
     @Override
@@ -65,6 +70,10 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
         mAccount = account;
     }
 
+    public void setSingleType(boolean singleType) {
+        mSingleType = singleType;
+    }
+
     public interface OnClickListener {
         void onItemClick(int id);
     }
@@ -75,10 +84,18 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
         TextView mType;
         @BindView(R.id.amount)
         TextView mAmount;
+        @BindView(R.id.amountText)
+        TextView mAmountText;
+        @BindView(R.id.statusText)
+        TextView mStatusText;
         @BindView(R.id.status)
         TextView mStatus;
         @BindView(R.id.timestamp)
         TextView mTimestamp;
+        @BindView(R.id.coinTypeText)
+        TextView mCoinTypeText;
+        @BindView(R.id.coinType)
+        TextView mCoinType;
 
         PropertyFlowHolder(View view) {
             super(view);
@@ -87,6 +104,14 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
         }
 
         void bindData(final CoinPropertyFlow coinPropertyFlow) {
+            mCoinType.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            mAmount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            mStatus.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            mTimestamp.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            mCoinType.setVisibility(mSingleType ? View.GONE : View.VISIBLE);
+            mCoinTypeText.setVisibility(mSingleType ? View.GONE : View.VISIBLE);
+            mAmount.setGravity(mSingleType ? Gravity.START : Gravity.END);
+            mAmountText.setGravity(mSingleType? Gravity.START : Gravity.END);
             switch (mAccount) {
                 case 0:
                     bindCurrencyFlowData(coinPropertyFlow);
@@ -95,6 +120,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     bindOTCFlowData(coinPropertyFlow);
                     break;
                 case 2:
+                    bindPromoterFlowData(coinPropertyFlow);
                     break;
                 default:
             }
@@ -109,6 +135,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
         }
 
         private void bindCurrencyFlowData(CoinPropertyFlow coinPropertyFlow) {
+            mCoinType.setText(coinPropertyFlow.getCoinType().toUpperCase());
             int flowType = coinPropertyFlow.getFlowType();
             switch (flowType) {
                 case CurrencyFlowType.DRAW:
@@ -179,6 +206,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
         }
 
         private void bindOTCFlowData(CoinPropertyFlow coinPropertyFlow) {
+            mCoinType.setText(coinPropertyFlow.getCoinType().toUpperCase());
             int flowType = coinPropertyFlow.getFlowType();
             switch (flowType) {
                 case OTCFlowType.COIN_ACCOUNT_IN:
@@ -218,6 +246,25 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     break;
                 default:
             }
+            mTimestamp.setText(DateUtil.format(coinPropertyFlow.getCreateTime(), "HH:mm MM/dd"));
+        }
+
+        private void bindPromoterFlowData(CoinPropertyFlow coinPropertyFlow) {
+            mCoinType.setText(coinPropertyFlow.getCoinType().toUpperCase());
+            mStatusText.setText(R.string.type);
+            int flowType = coinPropertyFlow.getFlowType();
+            switch (flowType) {
+                case PromoterFlowType.TRADE_REBATE:
+                    mType.setText(R.string.trade_rebate);
+                    mStatus.setText(R.string.trade_rebate);
+                    break;
+                case PromoterFlowType.TRANSFER_TO_PERSONAL_ACCOUNT:
+                    mType.setText(R.string.transfer_to_personal_account);
+                    mStatus.setText(R.string.transfer_to_personal_account);
+                    break;
+                default:
+            }
+            mAmount.setText(String.valueOf(coinPropertyFlow.getValue()));
             mTimestamp.setText(DateUtil.format(coinPropertyFlow.getCreateTime(), "HH:mm MM/dd"));
         }
     }

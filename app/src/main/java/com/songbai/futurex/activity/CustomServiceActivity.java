@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -155,21 +154,6 @@ public class CustomServiceActivity extends BaseActivity {
                 }
             }
         });
-        mEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    checkUserStatus();
-                }
-                return false;
-            }
-        });
-    }
-
-    private void checkUserStatus() {
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(CustomServiceActivity.this, LoginActivity.class).executeForResult(REQ_LOGIN);
-        }
     }
 
     private void initSocketListener() {

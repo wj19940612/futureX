@@ -103,6 +103,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
         mAccountType = getIntent().getIntExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, 0);
         mCoinType = getIntent().getStringExtra(ExtraKeys.COIN_TYPE);
         mTitleBar.setTitle(mAllType ? R.string.property_flow : R.string.history_record);
+        mTitleBar.setRightVisible(mAccountType != 2);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +120,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
         mSwipeTarget.setEmptyView(mEmptyView);
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PropertyFlowAdapter();
+        mAdapter.setSingleType(!mAllType);
         mAdapter.setAccount(mAccountType);
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
@@ -152,6 +154,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                 }
                 break;
             case 2:
+
                 break;
             default:
         }

@@ -13,6 +13,7 @@ public class CoinPropertyFlow {
     @SerializedName(value = "flowType", alternate = {"flowCode"})
     private int flowType;
     private int status;
+    @SerializedName(value = "value", alternate = {"commission"})
     private double value;
 
     public int getId() {

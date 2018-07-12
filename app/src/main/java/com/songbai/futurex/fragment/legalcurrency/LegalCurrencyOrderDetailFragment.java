@@ -245,7 +245,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mTradeAmount.setText(getString(R.string.order_detail_amount_x,
                 FinanceUtil.formatWithScale(order.getOrderCount()),
                 coinSymbol.toUpperCase()));
-        mOrderNo.setText(order.getOrderId());
+        mOrderNo.setText(getString(R.string.pound_sign_x,order.getOrderId()));
         switch (order.getStatus()) {
             case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);

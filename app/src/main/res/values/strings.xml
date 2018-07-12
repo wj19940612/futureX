@@ -71,6 +71,7 @@
     <string name="upload_pic_rules">照片要求：\n1. 照片文件大小不能超过4M！文件格式须为jpg或者png！\n2. 请确保照片无水印，无污渍，身份信息清晰，头像完整且非文字反向照片！\n3. 需您提供本人双手手持证件照的照片，请确保照片上证件照清晰可见，无妆容完整露出双手手臂，手持位置未遮挡证件信息，且证件未遮挡您的脸部！\n点击添加可查看示例，请提交您本人的身份材料照片。照片请勿进行PS处理！</string>
     <string name="legal_currency_pay_management">法币支付管理</string>
     <string name="legal_currency_pay">法币支付</string>
+    <string name="delete_success">删除成功</string>
     <string name="delete">删除</string>
     <string name="confirm_delete">确认删除</string>
     <string name="add_gathering_account">添加收款方式</string>
@@ -286,6 +287,9 @@
     <string name="legal_account_in">法币账户转入</string>
     <string name="legal_account_out">法币账户转出</string>
     <string name="coin_account_in">币币账户转入</string>
+    <string name="type">类型</string>
+    <string name="trade_rebate">交易返佣</string>
+    <string name="transfer_to_personal_account">转至个人账户</string>
 
     <string name="completed">已完成</string>
     <string name="freeze">冻结</string>
@@ -426,6 +430,7 @@
     <string name="trade_amount_empty_hint">您还未输入交易数量</string>
     <string name="cash_pwd_empty_hint">您还未输入资金密码</string>
     <string name="turnover">交易金额</string>
+    <string name="pound_sign_x">#%1$s</string>
     <string name="trade_count_symbol_x">交易金额：%1$s&#160;%2$s</string>
     <string name="pay_info">支付信息</string>
     <string name="trade_rules_description">请务必向对方询问交易方式，并且与平台所留方式进行对比，若不一致，请慎重付款\n\n1.转帐时请备注「订单编号后4位」以加快确认速度\n\n2.请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n3.订单有效期为15分钟，请您在有效期内及时付款并点击「已转账」按钮，数字币才可以释放给您\n\n4.如果您无法在15分钟内完成付款，该笔订单将被取消\n\n5.开始交易后数字币由系统锁定托管，请安心下单</string>
