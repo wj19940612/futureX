@@ -18,6 +18,7 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.WebActivity;
+import com.songbai.futurex.activity.mine.PersonalDataActivity;
 import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragment;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Apic;
@@ -155,9 +156,10 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             }
                             break;
                         case 6:
-                            UniqueActivity.launcher(getActivity(), SeniorCertificationFragment.class).execute();
+                            Launcher.with(getActivity(), PersonalDataActivity.class).execute();
                             break;
                         case 9:
+                            // TODO: 2018/7/12  
                             break;
                         default:
                     }

@@ -19,11 +19,16 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.DrawLimit;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ZXingUtils;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.TitleBar;
+import com.umeng.commonsdk.statistics.common.MLog;
+
+import java.text.NumberFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +46,8 @@ public class ReChargeCoinFragment extends UniqueActivity.UniFragment {
     ImageView mQcCode;
     @BindView(R.id.address)
     TextView mAddress;
+    @BindView(R.id.rechargeCoinRule)
+    TextView mRechargeCoinRule;
     private Unbinder mBind;
     private String mCoinType;
 
@@ -60,13 +67,8 @@ public class ReChargeCoinFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Launcher.with(ReChargeCoinFragment.this, RechargeHistoryActivity.class).putExtra(ExtraKeys.COIN_TYPE, mCoinType).execute();
-            }
-        });
         getDepositWalletAddrByCoinType(mCoinType);
+        getCoinTypeDrawLimit(mCoinType);
     }
 
     public void getDepositWalletAddrByCoinType(String coinType) {
@@ -85,6 +87,22 @@ public class ReChargeCoinFragment extends UniqueActivity.UniFragment {
                                 return true;
                             }
                         });
+                    }
+                })
+                .fire();
+    }
+
+    private void getCoinTypeDrawLimit(String coinType) {
+        Apic.getCoinTypeDrawLimit(coinType).tag(TAG)
+                .callback(new Callback<Resp<DrawLimit>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<DrawLimit> resp) {
+                        DrawLimit drawLimit = resp.getData();
+                        mRechargeCoinRule.setText(getString(R.string.recharge_coin_rules,
+                                mCoinType.toUpperCase(),
+                                drawLimit.getConfirm(),
+                                getString(R.string.amount_space_coin_x,
+                                        String.valueOf(drawLimit.getMinWithdrawAmount()), mCoinType.toUpperCase())));
                     }
                 })
                 .fire();

@@ -25,7 +25,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.mine.AccountList;
+import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.CoinAddress;
 import com.songbai.futurex.model.mine.DrawLimit;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -65,7 +65,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.googleAuthCode)
     EditText mGoogleAuthCode;
     private Unbinder mBind;
-    private AccountList.AccountBean mAccountBean;
+    private AccountBean mAccountBean;
     private double mWithdrawRate;
     private OptionsPickerView mPvOptions;
     private ArrayList<CoinAddress> mCoinAddresses;

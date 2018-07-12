@@ -263,17 +263,6 @@ public class Apic {
     }
 
     /**
-     * /user/wallet/getAccountByUser.do
-     * GET
-     * 账户查询（叶海啸）
-     * 币币账户
-     */
-    public static Api getAccountByUser(String coinType) {
-        return Api.get("/api/user/wallet/getAccountByUser.do",
-                new ReqParams().put("coinType", coinType));
-    }
-
-    /**
      * /api/otc/account/list
      * GET
      * 法币账户
@@ -305,6 +294,17 @@ public class Apic {
     }
 
     /**
+     * /api/user/user/transfer
+     * POST
+     * 划转至个人账户
+     */
+    public static Api userTransfer(String coins) {
+        return Api.post("/api/user/user/transfer",
+                new ReqParams()
+                        .put("coins", coins));
+    }
+
+    /**
      * /api/user/wallet/getAccountByUserForMuti.do
      * GET
      * 获取多个品种账户可用资金
@@ -313,6 +313,17 @@ public class Apic {
      */
     public static Api getAccountByUserForMuti(String coinType) {
         return Api.get("/api/user/wallet/getAccountByUserForMuti.do",
+                new ReqParams()
+                        .put("coinType", coinType));
+    }
+
+    /**
+     * /api/user/wallet/getAccountByUser.do
+     * GET
+     * 账户查询--(v1.1)（齐慕伟）
+     */
+    public static Api getAccountByUser(String coinType) {
+        return Api.get("/api/user/wallet/getAccountByUser.do",
                 new ReqParams()
                         .put("coinType", coinType));
     }

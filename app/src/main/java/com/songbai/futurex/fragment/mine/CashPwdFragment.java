@@ -94,6 +94,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
         mPassword.addTextChangedListener(mTextWatcher);
         mConfirmPassword.addTextChangedListener(mTextWatcher);
         mSmsAuthCode.addTextChangedListener(mTextWatcher);
+        mGoogleAuthCode.addTextChangedListener(mTextWatcher);
         initView();
         needGoogle();
     }
@@ -116,9 +117,15 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
             String password = mPassword.getPassword();
             String confirmPassword = mConfirmPassword.getPassword();
             String authCode = mSmsAuthCode.getText().toString().trim();
-            if (TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(authCode)) {
+            if (TextUtils.isEmpty(password)
+                    || TextUtils.isEmpty(confirmPassword)
+                    || TextUtils.isEmpty(authCode)) {
                 mConfirm.setEnabled(false);
             } else {
+                if (mNeedGoogle) {
+                    mConfirm.setEnabled(!TextUtils.isEmpty(mGoogleAuthCode.getText().toString().trim()));
+                    return;
+                }
                 mConfirm.setEnabled(true);
             }
         }
@@ -268,7 +275,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                     ToastUtil.show(R.string.the_two_passwords_differ);
                     return;
                 }
-                if (password.length()<8) {
+                if (password.length() < 8) {
                     ToastUtil.show(R.string.draw_cash_pwd_can_not_short_than_8);
                     return;
                 }

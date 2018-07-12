@@ -7,9 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +25,18 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
-import com.songbai.futurex.model.mine.AccountList;
-import com.songbai.futurex.model.mine.CoinAbleAmount;
+import com.songbai.futurex.model.mine.AccountBean;
+import com.songbai.futurex.model.mine.CoinAccountBalance;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.StrUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +73,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.history)
     TextView mHistory;
     private Unbinder mBind;
-    private AccountList.AccountBean mAccountBean;
+    private AccountBean mAccountBean;
     private int mTransferType;
     private PropertyFlowAdapter mAdapter;
     private GetUserFinanceFlowData mGetUserFinanceFlowData;
@@ -97,17 +97,12 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mAccountBean.getCoinType().toUpperCase());
-        setAbleCoin(mAccountBean.getAbleCoin());
-        SpannableStringBuilder freezeCoinStr = new SpannableStringBuilder(getString(R.string.freeze_amount_x,
-                FinanceUtil.formatWithScale(mAccountBean.getFreezeCoin(), 8)));
-        freezeCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text99)),
-                0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mFreezeCoin.setText(freezeCoinStr);
-        boolean isLegal = mAccountBean.getLegal() == AccountList.AccountBean.IS_LEGAL;
+        setCoinAccountInfo(mAccountBean);
+        boolean isLegal = mAccountBean.getLegal() == AccountBean.IS_LEGAL;
         mTransfer.setVisibility(isLegal ? View.VISIBLE : View.GONE);
-        boolean canRecharge = mAccountBean.getRecharge() == AccountList.AccountBean.CAN_RECHARGE;
+        boolean canRecharge = mAccountBean.getRecharge() == AccountBean.CAN_RECHARGE;
         mRecharge.setVisibility(canRecharge ? View.VISIBLE : View.GONE);
-        boolean canDraw = mAccountBean.getIsCanDraw() == AccountList.AccountBean.CAN_DRAW;
+        boolean canDraw = mAccountBean.getIsCanDraw() == AccountBean.CAN_DRAW;
         mWithDraw.setVisibility(canDraw ? View.VISIBLE : View.GONE);
         if (!isLegal && !canRecharge && !canDraw) {
             mOperateGroup.setVisibility(View.GONE);
@@ -138,27 +133,31 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
-        getAccountByUserForMuti(mAccountBean.getCoinType());
+        getAccountByUser(mAccountBean.getCoinType());
         getUserFinanceFlow(mGetUserFinanceFlowData);
     }
 
-    private void setAbleCoin(double ableCoin) {
-        SpannableStringBuilder ableCoinStr = new SpannableStringBuilder(getString(R.string.available_amount_x,
-                FinanceUtil.formatWithScale(ableCoin, 8)));
-        ableCoinStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.text99)),
-                0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    private void setCoinAccountInfo(AccountBean accountBean) {
+        SpannableString ableCoinStr = StrUtil.mergeTextWithColor(getString(R.string.available_amount_space),
+                ContextCompat.getColor(getContext(), R.color.text99),
+                FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
         mAbleCoin.setText(ableCoinStr);
+        SpannableString freezeCoinStr = StrUtil.mergeTextWithColor(getString(R.string.freeze_amount_space),
+                ContextCompat.getColor(getContext(), R.color.text99),
+                FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));
+        mFreezeCoin.setText(freezeCoinStr);
     }
 
-    private void getAccountByUserForMuti(String coinType) {
-        Apic.getAccountByUserForMuti(coinType).tag(TAG)
-                .callback(new Callback<Resp<ArrayList<CoinAbleAmount>>>() {
+    private void getAccountByUser(String coinType) {
+        Apic.getAccountByUser(coinType).tag(TAG)
+                .callback(new Callback<Resp<CoinAccountBalance>>() {
                     @Override
-                    protected void onRespSuccess(Resp<ArrayList<CoinAbleAmount>> resp) {
-                        ArrayList<CoinAbleAmount> data = resp.getData();
-                        if (data.size() > 0) {
-                            CoinAbleAmount coinAbleAmount = data.get(0);
-                            setAbleCoin(coinAbleAmount.getAbleCoin());
+                    protected void onRespSuccess(Resp<CoinAccountBalance> resp) {
+                        CoinAccountBalance data = resp.getData();
+                        List<AccountBean> account = data.getAccount();
+                        if (account.size() > 0) {
+                            AccountBean coinAbleAmount = account.get(0);
+                            setCoinAccountInfo(coinAbleAmount);
                         }
                     }
                 })
@@ -185,8 +184,8 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
             if (shouldRefresh) {
                 getUserFinanceFlow(mGetUserFinanceFlowData);
-                getAccountByUserForMuti(mAccountBean.getCoinType());
-                getActivity().setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                getAccountByUser(mAccountBean.getCoinType());
+                setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
             }
         }
     }
@@ -207,8 +206,8 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType()).execute();
                 break;
             case R.id.transfer:
-                if (mAccountBean.getLegal() == AccountList.AccountBean.IS_LEGAL) {
-                    ArrayList<AccountList.AccountBean> accountBeans = new ArrayList<>();
+                if (mAccountBean.getLegal() == AccountBean.IS_LEGAL) {
+                    ArrayList<AccountBean> accountBeans = new ArrayList<>();
                     accountBeans.add(mAccountBean);
                     UniqueActivity.launcher(getContext(), FundsTransferFragment.class)
                             .putExtra(ExtraKeys.TRANSFER_TYPE, mTransferType)
@@ -217,14 +216,14 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.recharge:
-                if (mAccountBean.getRecharge() == AccountList.AccountBean.CAN_RECHARGE) {
+                if (mAccountBean.getRecharge() == AccountBean.CAN_RECHARGE) {
                     UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
                             .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType())
                             .execute(this, REQUEST_RECHARGE_COIN);
                 }
                 break;
             case R.id.withDraw:
-                if (mAccountBean.getIsCanDraw() == AccountList.AccountBean.CAN_DRAW) {
+                if (mAccountBean.getIsCanDraw() == AccountBean.CAN_DRAW) {
                     UniqueActivity.launcher(getContext(), WithDrawCoinFragment.class)
                             .putExtra(ExtraKeys.ACCOUNT_BEAN, mAccountBean)
                             .execute(this, REQUEST_WITHDRAW_COIN);

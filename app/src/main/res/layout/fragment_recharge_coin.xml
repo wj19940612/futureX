@@ -13,10 +13,6 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:hasBottomSplitLine="true"
-        app:rightText="@string/recharge_history"
-        app:rightTextColor="@color/text49"
-        app:rightTextSize="13sp"
-        app:rightVisible="true"
         app:titleText="@string/recharge_coin"/>
 
     <android.support.constraint.ConstraintLayout
@@ -71,6 +67,7 @@
             app:layout_constraintTop_toBottomOf="@+id/address"/>
 
         <TextView
+            android:id="@+id/rechargeCoinRule"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="35dp"

@@ -17,10 +17,12 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,12 +36,15 @@ import com.songbai.futurex.fragment.mine.PropertyListFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.model.mine.InviteSubordinate;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 
 import java.util.ArrayList;
@@ -73,6 +78,7 @@ public class MyPropertyActivity extends BaseActivity {
     private int mScrollWidth;
     private SparseArray<AccountList> mAccountLists = new SparseArray<>(3);
     private ArrayList<PropertyListFragment> mFragments;
+    private SmartDialog mSmartDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -225,7 +231,7 @@ public class MyPropertyActivity extends BaseActivity {
         return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
     }
 
-    static class PropertyCardAdapter extends PagerAdapter {
+    class PropertyCardAdapter extends PagerAdapter {
         private final Context mContext;
         @BindView(R.id.accountType)
         TextView mAccountType;
@@ -318,12 +324,12 @@ public class MyPropertyActivity extends BaseActivity {
             mTransfer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    List<AccountList.AccountBean> accountBeans = accountList.getAccount();
+                    List<AccountBean> accountBeans = accountList.getAccount();
                     switch (position) {
                         case 0:
-                            ArrayList<AccountList.AccountBean> list = new ArrayList<>();
-                            for (AccountList.AccountBean accountBean : accountBeans) {
-                                if (accountBean.getLegal() == AccountList.AccountBean.IS_LEGAL) {
+                            ArrayList<AccountBean> list = new ArrayList<>();
+                            for (AccountBean accountBean : accountBeans) {
+                                if (accountBean.getLegal() == AccountBean.IS_LEGAL) {
                                     list.add(accountBean);
                                 }
                             }
@@ -343,9 +349,6 @@ public class MyPropertyActivity extends BaseActivity {
             });
         }
 
-        private void showTransferPop() {
-        }
-
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
@@ -357,6 +360,77 @@ public class MyPropertyActivity extends BaseActivity {
 
         public void setInviteCount(int inviteCount) {
             mInviteCount = inviteCount;
+        }
+    }
+
+    private void showTransferPop() {
+        TransferController transferController = new TransferController(this, new TransferController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                userTransfer();
+            }
+        });
+        mSmartDialog = SmartDialog.solo(this);
+        mSmartDialog
+                .setWidthScale(0.8f)
+                .setWindowGravity(Gravity.CENTER)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setCustomViewController(transferController)
+                .show();
+    }
+
+    private void userTransfer() {
+        Apic.userTransfer("").tag(TAG).callback(new Callback<Resp>() {
+            @Override
+            protected void onRespSuccess(Resp resp) {
+                ToastUtil.show(R.string.transfer_success);
+                if (mSmartDialog != null) {
+                    mSmartDialog.dismiss();
+                }
+            }
+        }).fire();
+    }
+
+    static class TransferController extends SmartDialog.CustomViewController {
+        @BindView(R.id.close)
+        ImageView mClose;
+        @BindView(R.id.confirm)
+        TextView mConfirm;
+        private Context mContext;
+        private OnClickListener mOnClickListener;
+
+        public interface OnClickListener {
+            void onConfirmClick();
+        }
+
+        public TransferController(Context context, OnClickListener onClickListener) {
+            mContext = context;
+            mOnClickListener = onClickListener;
+        }
+
+        @Override
+        protected View onCreateView() {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.view_transfer, null);
+            ButterKnife.bind(this, view);
+            return view;
+        }
+
+        @Override
+        protected void onInitView(View view, final SmartDialog dialog) {
+            mClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            mConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickListener != null) {
+                        mOnClickListener.onConfirmClick();
+                    }
+                }
+            });
         }
     }
 

@@ -23,7 +23,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.mine.AccountList;
+import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
 
@@ -56,10 +56,10 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.confirmTransfer)
     TextView mConfirmTransfer;
     private Unbinder mBind;
-    private List<AccountList.AccountBean> mAccountBeans;
+    private List<AccountBean> mAccountBeans;
     private OptionsPickerView mPvOptions;
     private int mTransferType;
-    private AccountList.AccountBean mSelectedAccountBean;
+    private AccountBean mSelectedAccountBean;
 
     @Nullable
     @Override
@@ -156,7 +156,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
 
     private void showSelector() {
         ArrayList<String> coinTypes = new ArrayList<>();
-        for (AccountList.AccountBean accountBean : mAccountBeans) {
+        for (AccountBean accountBean : mAccountBeans) {
             coinTypes.add(accountBean.getCoinType().toUpperCase());
         }
         mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
