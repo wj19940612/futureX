@@ -3,7 +3,6 @@ package com.songbai.futurex.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,10 +23,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
@@ -45,13 +41,13 @@ import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.ThumbTransform;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.CountDownView;
-import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Response;
@@ -67,8 +63,9 @@ import butterknife.OnClick;
 import sbai.com.glide.GlideApp;
 
 public class OtcTradeChatActivity extends BaseActivity {
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
+    private static final int CONTENT_MAX_LENGTH = 500;
+
+
     @BindView(R.id.recycleView)
     RecyclerView mRecycleView;
     @BindView(R.id.send)
@@ -91,6 +88,8 @@ public class OtcTradeChatActivity extends BaseActivity {
     CountDownView mCountDownView;
     @BindView(R.id.orderInfo)
     ConstraintLayout mOrderInfo;
+    @BindView(R.id.title)
+    TextView mTitle;
 
     private boolean mKeyboardInit = false;
 
@@ -245,7 +244,8 @@ public class OtcTradeChatActivity extends BaseActivity {
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
-                        mTitleBar.setTitle(resp.getData().getUsername());
+                        mTitle.setText(resp.getData().getUsername());
+                        mTitle.setSelected(true);
                     }
                 }).fire();
     }
@@ -392,9 +392,12 @@ public class OtcTradeChatActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.send, R.id.addPic})
+    @OnClick({R.id.ivBack, R.id.send, R.id.addPic})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.ivBack:
+                finish();
+                break;
             case R.id.send:
                 sendMsg();
                 break;
@@ -410,11 +413,13 @@ public class OtcTradeChatActivity extends BaseActivity {
             ToastUtil.show(R.string.http_error_network);
         } else if (!LocalUser.getUser().isLogin()) {
             Launcher.with(getActivity(), LoginActivity.class).execute();
-        } else if (mEditText.getText().length() > 500) {
-            ToastUtil.show(R.string.over_500);
-        } else if (!TextUtils.isEmpty(mEditText.getText())) {
-            requestSendTxtMsg(mEditText.getText().toString());
-            mEditText.setText("");
+        } else {
+            if (mEditText.getText().length() > CONTENT_MAX_LENGTH) {
+                ToastUtil.show(R.string.over_500);
+            } else if (!TextUtils.isEmpty(mEditText.getText().toString().trim())) {
+                requestSendTxtMsg(mEditText.getText().toString().trim());
+                mEditText.setText("");
+            }
         }
     }
 
@@ -496,7 +501,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
             @Override
             public void onReScroll() {
-                updateRecyclerViewPosition(true);
+//                updateRecyclerViewPosition(false);
             }
         };
     }
@@ -511,25 +516,27 @@ public class OtcTradeChatActivity extends BaseActivity {
 
     private void updateRecyclerViewPosition(boolean isSend) {
         if (isSend) {
-            mRecycleView.smoothScrollToPosition(Integer.MAX_VALUE);
+            mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount() - 1);
+            Log.e("wtf", "updateRecyclerViewPosition: " + "send");
         } else if (((LinearLayoutManager) mRecycleView.getLayoutManager()).findLastCompletelyVisibleItemPosition() == mChatAdapter.getItemCount() - 2) {
-            mRecycleView.smoothScrollToPosition(Integer.MAX_VALUE);
+            mRecycleView.scrollToPosition(mChatAdapter.getItemCount() - 1);
+            Log.e("wtf", "updateRecyclerViewPosition: " + "not send");
         }
     }
 
     static class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        public static final int TYPE_LEFT = 1;
-        public static final int TYPE_LEFT_PHOTO = 2;
-        public static final int TYPE_RIGHT = 3;
-        public static final int TYPE_RIGHT_PHOTO = 4;
-        public static final int TYPE_BANK_INFO = 5;
+        static final int TYPE_LEFT = 1;
+        static final int TYPE_LEFT_PHOTO = 2;
+        static final int TYPE_RIGHT = 3;
+        static final int TYPE_RIGHT_PHOTO = 4;
+        static final int TYPE_BANK_INFO = 5;
 
         private List<Object> mList;
         private Context mContext;
         private OnRetryClickListener mOnRetryClickListener;
         private int mRightDirection;
 
-        public void setRightDirection(int rightDirection) {
+        void setRightDirection(int rightDirection) {
             mRightDirection = rightDirection;
         }
 
@@ -553,7 +560,7 @@ public class OtcTradeChatActivity extends BaseActivity {
             Object obj = mList.get(position);
             if (obj instanceof OtcChatMessage) {
                 OtcChatMessage message = (OtcChatMessage) obj;
-                if (message.getDirection() == mRightDirection && !(message.getMsgType() == OtcChatMessage.MSG_PHOTO)) {
+                if (message.getDirection() == mRightDirection && (message.getMsgType() != OtcChatMessage.MSG_PHOTO)) {
                     return TYPE_RIGHT;
                 } else if (message.getDirection() == mRightDirection && message.getMsgType() == OtcChatMessage.MSG_PHOTO) {
                     return TYPE_RIGHT_PHOTO;
@@ -653,7 +660,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(Context context, OtcChatMessage otcChatMessage) {
+            void bindingData(Context context, OtcChatMessage otcChatMessage) {
                 if (mLeftOtcChatUserInfo != null) {
                     mName.setText(mLeftOtcChatUserInfo.getUserName());
                     GlideApp.with(context)
@@ -689,7 +696,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage) {
+            void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage) {
                 if (mRightOtcChatUserInfo != null) {
                     mName.setText(mRightOtcChatUserInfo.getUserName());
                     GlideApp.with(context)
@@ -730,7 +737,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage) {
+            void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage) {
                 if (mRightOtcChatUserInfo != null) {
                     mName.setText(mRightOtcChatUserInfo.getUserName());
                     GlideApp.with(context)
@@ -744,20 +751,6 @@ public class OtcTradeChatActivity extends BaseActivity {
                     GlideApp.with(context).load(otcChatMessage.getMessage())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    if (onRetryClickListener != null) {
-                                        onRetryClickListener.onReScroll();
-                                    }
-                                    return false;
-                                }
-                            })
                             .into(mPhoto);
                 }
 
@@ -846,7 +839,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                         ButterKnife.bind(this, view);
                     }
 
-                    public void bandData(BankCardBean bankCardBean) {
+                    void bandData(BankCardBean bankCardBean) {
                         switch (bankCardBean.getPayType()) {
                             case BankCardBean.PAYTYPE_ALIPAY:
                                 mAccountType.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pay_alipay_s, 0, 0, 0);
@@ -888,5 +881,20 @@ public class OtcTradeChatActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (KeyBoardUtils.isOutside(ev, mBottomLayout)) {
+                if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
+                    KeyBoardUtils.closeOrOpenKeyBoard();
+                    v.clearFocus();
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
     }
 }

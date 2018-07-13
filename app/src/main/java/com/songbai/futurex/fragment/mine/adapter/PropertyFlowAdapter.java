@@ -111,7 +111,9 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
             mCoinType.setVisibility(mSingleType ? View.GONE : View.VISIBLE);
             mCoinTypeText.setVisibility(mSingleType ? View.GONE : View.VISIBLE);
             mAmount.setGravity(mSingleType ? Gravity.START : Gravity.END);
-            mAmountText.setGravity(mSingleType? Gravity.START : Gravity.END);
+            mAmountText.setGravity(mSingleType ? Gravity.START : Gravity.END);
+            mStatus.setGravity(mSingleType ? Gravity.CENTER : Gravity.END);
+            mStatusText.setGravity(mSingleType ? Gravity.CENTER : Gravity.END);
             switch (mAccount) {
                 case 0:
                     bindCurrencyFlowData(coinPropertyFlow);

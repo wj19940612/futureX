@@ -35,6 +35,10 @@ import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
+import com.songbai.futurex.websocket.DataParser;
+import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.Response;
+import com.songbai.futurex.websocket.otc.OtcProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +96,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private boolean mIsBuyer;
     private boolean mNeedGoogle;
     private WaresUserInfo mWaresUserInfo;
+    private OtcProcessor mOtcProcessor;
 
     @Nullable
     @Override
@@ -114,6 +119,25 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         otcOrderDetail();
         otcWaresMine();
         orderPayInfo();
+        initImPush();
+    }
+    private void initSocketListener() {
+        //初始化推送回调
+        mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(String data, int code) {
+                new DataParser<Response<Object>>(data) {
+
+                    @Override
+                    public void onSuccess(Response<Object> resp) {
+                    }
+                }.parse();
+            }
+        });
+        mOtcProcessor.resume();
+    }
+    private void initImPush() {
+        mOtcProcessor.registerEntrust();
     }
 
     private void otcOrderDetail() {
@@ -416,6 +440,12 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         @Override
         protected void onInitView(View view, final SmartDialog dialog) {
             mClose = view.findViewById(R.id.close);
+            mClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
             mConfirmUnpaid = view.findViewById(R.id.confirmUnpaid);
             mCheck = view.findViewById(R.id.check);
             mConfirmUnpaid.setSelected(false);

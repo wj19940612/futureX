@@ -447,11 +447,11 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         mPrice.setText(getString(R.string.fixed_price_x, FinanceUtil.trimTrailingZero(otcWarePoster.getFixedPrice())));
                         break;
                     case OtcWarePoster.FLOATING_PRICE:
-                        mPrice.setText(getString(R.string.floating_price_x, FinanceUtil.formatToPercentage(otcWarePoster.getPercent())));
+                        mPrice.setText(getString(R.string.floating_price_x, FinanceUtil.trimTrailingZero(otcWarePoster.getPercent())));
                         break;
                     default:
                 }
-                mLegalAmount.setText(FinanceUtil.formatWithScale(otcWarePoster.getTradeCount(), 4));
+                mLegalAmount.setText(otcWarePoster.getPayCurrency().toUpperCase());
                 mLimit.setText(getString(R.string.limit_range_x, FinanceUtil.trimTrailingZero(otcWarePoster.getMinTurnover()), FinanceUtil.trimTrailingZero(otcWarePoster.getMaxTurnover())));
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:

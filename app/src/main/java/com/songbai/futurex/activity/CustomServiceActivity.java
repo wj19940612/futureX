@@ -3,7 +3,6 @@ package com.songbai.futurex.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -20,10 +20,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.auth.LoginActivity;
@@ -34,6 +30,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CustomerService;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.ThumbTransform;
@@ -68,6 +65,8 @@ public class CustomServiceActivity extends BaseActivity {
     ImageButton mAddPic;
     @BindView(R.id.bottomLayout)
     RelativeLayout mBottomLayout;
+    @BindView(R.id.inputGroup)
+    RelativeLayout mInputGroup;
 
     private boolean mKeyboardInit = false;
 
@@ -291,7 +290,7 @@ public class CustomServiceActivity extends BaseActivity {
             Launcher.with(getActivity(), LoginActivity.class).execute();
         } else if (mEditText.getText().length() > 500) {
             ToastUtil.show(R.string.over_500);
-        } else if (!TextUtils.isEmpty(mEditText.getText())) {
+        } else if (!TextUtils.isEmpty(mEditText.getText().toString().trim())) {
             requestSendTxtMsg(mEditText.getText().toString());
             mEditText.setText("");
         }
@@ -560,21 +559,20 @@ public class CustomServiceActivity extends BaseActivity {
                     GlideApp.with(context).load(customServiceChat.getContent())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    if (onRetryClickListener != null) {
-                                        onRetryClickListener.onLeftReScroll();
-                                    }
-                                    return false;
-                                }
-                            })
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                            .listener(new RequestListener<Drawable>() {
+//                                @Override
+//                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                                    if (onRetryClickListener != null && isFirstResource) {
+//                                        onRetryClickListener.onLeftReScroll();
+//                                    }
+//                                    return false;
+//                                }
+//                            })
                             .into(mPhoto);
                 }
             }
@@ -666,20 +664,20 @@ public class CustomServiceActivity extends BaseActivity {
                     GlideApp.with(context).load(customServiceChat.getContent())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    if (onRetryClickListener != null) {
-                                        onRetryClickListener.onRightReScroll();
-                                    }
-                                    return false;
-                                }
-                            })
+//                            .listener(new RequestListener<Drawable>() {
+//                                @Override
+//                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                                    if (onRetryClickListener != null && isFirstResource) {
+//                                        onRetryClickListener.onRightReScroll();
+//                                    }
+//                                    return false;
+//                                }
+//                            })
 //                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mPhoto);
                 }
@@ -709,5 +707,20 @@ public class CustomServiceActivity extends BaseActivity {
                 mContent.setText(customServiceChat.getContent());
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (KeyBoardUtils.isOutside(ev, mInputGroup)) {
+                if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
+                    KeyBoardUtils.closeOrOpenKeyBoard();
+                    v.clearFocus();
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
     }
 }

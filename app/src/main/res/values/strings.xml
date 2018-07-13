@@ -242,6 +242,7 @@
     <string name="long_press_to_save_qr_code">长按保存二维码</string>
     <string name="copy_success">复制成功</string>
     <string name="save_qr_code">保存二维码</string>
+    <string name="save_success">保存成功</string>
     <string name="copy_address">复制地址</string>
     <string name="recharge_coin_rules">请勿向上述地址充值任何非%1$s资产，否则资产将不可找回。\n您充值至上述地址后，需要整个网络节点的确认，%2$d次网络确认后到账。\n最小充值金额：%3$s ，小于最小金额的充值将不会上账。\n您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。\n请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="select_coin_type">选择币种</string>
@@ -263,7 +264,7 @@
     <string name="cash_pwd">资金密码</string>
     <string name="set_cash_pwd_rules">注意：您的资金密码是用来交易和提现和账户安全设置，建议您不要设置与登录密码一致，由此产生的账户被盗，本站概不负责。</string>
     <string name="confirm_with_draw">确认提币</string>
-    <string name="with_draw_rules_x">1.最小提币数量为：%1$s\n2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
+    <string name="with_draw_rules_x">1.最小提币数量为：%1$s\n2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n3.您提币至上述地址后，需要整个网络节点的确认，%2$S次网络确认后方可到账提币。\n4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="filtrate">筛选</string>
     <string name="coin_type">币种</string>
     <string name="flow_type">流水类型</string>
@@ -359,7 +360,7 @@
     <string name="limit">限制</string>
     <string name="update_time">更新时间</string>
     <string name="fixed_price_x">固定价格 %1$s</string>
-    <string name="floating_price_x">溢价 %1$s</string>
+    <string name="floating_price_x">溢价 %1$s%%</string>
     <string name="floating_price_x_symbol">溢价&#160;%1$s&#160;%%</string>
     <string name="fixed_price">固定价格</string>
     <string name="floating_price">浮动价格</string>

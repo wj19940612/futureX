@@ -154,16 +154,17 @@ public class MineFragment extends BaseFragment {
     }
 
     private void getMessageCount() {
-        Apic.getMsgCount().callback(new Callback<Resp<UnreadMessageCount>>() {
-            @Override
-            protected void onRespSuccess(Resp<UnreadMessageCount> resp) {
-                setUnreadMessageCount(resp.getData().getCount());
-            }
-        }).fire();
+        Apic.getMsgCount().tag(TAG)
+                .callback(new Callback<Resp<UnreadMessageCount>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<UnreadMessageCount> resp) {
+                        setUnreadMessageCount(resp.getData().getCount());
+                    }
+                }).fire();
     }
 
     private void getUserInfo() {
-        Apic.findUserInfo()
+        Apic.findUserInfo().tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -173,7 +174,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void toBePromoter() {
-        Apic.toBePromoter()
+        Apic.toBePromoter().tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -184,8 +185,10 @@ public class MineFragment extends BaseFragment {
     }
 
     private void setUnreadMessageCount(Integer count) {
-        mMsgCenter.getSubTextView().setVisibility(count == 0 ? View.INVISIBLE : View.VISIBLE);
-        mMsgCenter.setSubText(String.valueOf(count));
+        if (mMsgCenter != null) {
+            mMsgCenter.getSubTextView().setVisibility(count == 0 ? View.INVISIBLE : View.VISIBLE);
+            mMsgCenter.setSubText(String.valueOf(count));
+        }
     }
 
     @Override

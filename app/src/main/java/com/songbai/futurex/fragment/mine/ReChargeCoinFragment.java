@@ -84,6 +84,7 @@ public class ReChargeCoinFragment extends UniqueActivity.UniFragment {
                             @Override
                             public boolean onLongClick(View v) {
                                 ImageUtils.saveImageToGallery(getContext(), bitmap);
+                                ToastUtil.show(R.string.save_success);
                                 return true;
                             }
                         });
