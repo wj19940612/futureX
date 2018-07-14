@@ -237,7 +237,7 @@
                             android:thumbOffset="0dp"/>
 
                         <com.songbai.futurex.view.autofit.AutofitTextView
-                            android:id="@+id/obtainableCurrencyRange"
+                            android:id="@+id/tradeCurrencyRange"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"

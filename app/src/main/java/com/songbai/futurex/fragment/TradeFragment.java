@@ -125,8 +125,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     TextView mTradeButton;
     @BindView(R.id.marketPriceView)
     TextView mMarketPriceView;
-    @BindView(R.id.obtainableCurrencyRange)
-    TextView mObtainableCurrencyRange;
+    @BindView(R.id.tradeCurrencyRange)
+    TextView mTradeCurrencyRange;
     @BindView(R.id.orderListRadio)
     RadioHeader mOrderListRadio;
     @BindView(R.id.volumeInput)
@@ -169,7 +169,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private OnOptionalClickListener mOnOptionalClickListener;
     private OptionsPickerView mPickerView;
     private List<CoinAbleAmount> mAvailableCurrencyList;
-    private double mObtainableCurrencyVolume;
+    private double mTradeCurrencyVolume;
 
     private int mPage;
     private OrderAdapter mOrderAdapter;
@@ -244,10 +244,12 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     mTradeDir = TradeDir.DIR_BUY_IN;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    mVolumeInput.reset();
                 } else {
                     mTradeDir = TradeDir.DIR_SELL_OUT;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    mVolumeInput.reset();
                 }
             }
         });
@@ -526,14 +528,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void updateVolumeSeekBar() {
         int max = mTradeVolumeSeekBar.getMax();
-        int progress = (int) (mVolumeInput.getVolume() / mObtainableCurrencyVolume * max);
+        int progress = (int) (mVolumeInput.getVolume() / mTradeCurrencyVolume * max);
         mTradeVolumeSeekBar.setProgress(progress);
     }
 
     private void updateVolumeInputView() {
         int progress = mTradeVolumeSeekBar.getProgress();
         int max = mTradeVolumeSeekBar.getMax();
-        double tradeVolume = mObtainableCurrencyVolume * progress / max;
+        double tradeVolume = mTradeCurrencyVolume * progress / max;
         mVolumeInput.setVolume(tradeVolume);
     }
 
@@ -595,7 +597,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mLastPrice.setText("--.--");
         mPriceChange.setText("--.--");
         mTradeVolumeSeekBar.setProgress(0);
-        mObtainableCurrencyRange.setText("");
+        mTradeCurrencyRange.setText("");
     }
 
     private void updateMarketView(PairMarket pairMarket) {
@@ -637,27 +639,33 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void updateTradeCurrencyView() {
         if (LocalUser.getUser().isLogin() && mAvailableCurrencyList != null) {
+            // 默认买入
             String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
             String obtainableCurrencySign = mCurrencyPair.getPrefixSymbol();
+            String tradeCurrencySign = obtainableCurrencySign;
             int availableCurrencyScale = mPairDesc.getSuffixSymbol().getBalancePoint();
             int obtainableCurrencyScale = mPairDesc.getPrefixSymbol().getBalancePoint();
+            int tradeCurrencyScale = obtainableCurrencyScale;
 
             if (mTradeDir == TradeDir.DIR_SELL_OUT) {
                 availableCurrencySign = mCurrencyPair.getPrefixSymbol();
                 obtainableCurrencySign = mCurrencyPair.getSuffixSymbol();
+                tradeCurrencySign = availableCurrencySign;
                 availableCurrencyScale = mPairDesc.getPrefixSymbol().getBalancePoint();
                 obtainableCurrencyScale = mPairDesc.getSuffixSymbol().getBalancePoint();
+                tradeCurrencyScale = availableCurrencyScale;
             }
 
             double availableCurrencyVolume = getAvailableCurrencyAmt(mAvailableCurrencyList, availableCurrencySign);
-            mObtainableCurrencyVolume = getObtainableCurrencyAmt(availableCurrencyVolume);
+            double obtainableCurrencyVolume = getObtainableCurrencyAmt(availableCurrencyVolume);
+            mTradeCurrencyVolume = mTradeDir == TradeDir.DIR_BUY_IN ? obtainableCurrencyVolume : availableCurrencyVolume;
 
             mAvailableCurrency.setText(getString(R.string.available_currency_x_x,
                     CurrencyUtils.getPrice(availableCurrencyVolume, availableCurrencyScale), availableCurrencySign.toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
-                    CurrencyUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
-            mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
-                    CurrencyUtils.getPrice(mObtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
+                    CurrencyUtils.getPrice(obtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
+            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
+                    CurrencyUtils.getPrice(mTradeCurrencyVolume, tradeCurrencyScale), tradeCurrencySign.toUpperCase()));
         } else {
             String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
             String obtainableCurrencySign = mCurrencyPair.getPrefixSymbol();
@@ -671,7 +679,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     "--", availableCurrencySign.toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
                     "--", obtainableCurrencySign.toUpperCase()));
-            mObtainableCurrencyRange.setText(getString(R.string.obtainable_currency_range_0_to_x_x,
+            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
                     "0", obtainableCurrencySign.toUpperCase()));
         }
     }

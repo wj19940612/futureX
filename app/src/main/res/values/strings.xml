@@ -623,7 +623,7 @@
     </string-array>
     <string name="available_currency_x_x">可用&#160;%1$s&#160;%2$s</string>
     <string name="obtainable_currency_x_x">可得&#160;%1$s&#160;%2$s</string>
-    <string name="obtainable_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
+    <string name="trade_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
     <string name="please_choose_limited_condition">请选择限制条件</string>
     <string name="entrust_price_x">委托价 (%1$s)</string>
     <string name="entrust_volume_x">委托量 (%1$s)</string>
