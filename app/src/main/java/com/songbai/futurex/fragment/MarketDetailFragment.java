@@ -393,6 +393,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         Collections.sort(data);
                         if (TextUtils.isEmpty(endTime)) {
                             mTrend.setDataList(data);
+                            mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
 
                             startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
                         } else {
@@ -418,6 +419,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         if (TextUtils.isEmpty(endTime)) {
                             mKline.setDataList(data);
                             mKline.setDateFormatStr(KlineUtils.getDateFormat(mChartRadio.getSelectedPosition()));
+                            mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
 
                             int refreshInterval = KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition());
                             if (refreshInterval > 0) {

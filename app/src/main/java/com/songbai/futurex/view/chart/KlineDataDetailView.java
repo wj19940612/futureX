@@ -43,6 +43,7 @@ public class KlineDataDetailView extends FrameLayout {
 
     private SimpleDateFormat mSimpleDateFormat;
     private Date mSimpleDate;
+    private String mDateFormatStr;
 
     public KlineDataDetailView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -53,8 +54,14 @@ public class KlineDataDetailView extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_kline_data_detail, this, true);
         ButterKnife.bind(this);
 
-        mSimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        mDateFormatStr = "yyyy/MM/dd HH:mm";
+        mSimpleDateFormat = new SimpleDateFormat(mDateFormatStr);
         mSimpleDate = new Date();
+    }
+
+    public void setDateFormatStr(String dateFormatStr) {
+        mDateFormatStr = dateFormatStr;
+        mSimpleDateFormat.applyPattern(mDateFormatStr);
     }
 
     public void setKlineData(Kline.Data data) {

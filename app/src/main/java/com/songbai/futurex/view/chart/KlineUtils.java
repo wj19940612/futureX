@@ -34,6 +34,25 @@ public class KlineUtils {
         }
     }
 
+    public static String getHeaderDateFormat(int selectedTabPosition) {
+        switch (selectedTabPosition) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 5:
+            case 6:
+            case 7:
+                return "yyyy/MM/dd HH:mm";
+            case 4:
+            case 8:
+            case 9:
+                return "yyyy/MM/dd";
+            default:
+                return null;
+        }
+    }
+
     public static String getKlineType(int selectedTabPosition) {
         switch (selectedTabPosition) {
             case 0:
