@@ -633,7 +633,9 @@
     <string name="deal_price">成交价</string>
     <string name="deal_volume_x">成交量 (%1$s)</string>
     <string name="deal_volume">成交量</string>
+    <string name="pending_deal">等待成交</string>
     <string name="deal_with_arrow">已成交></string>
+    <string name="revoking">正在撤单</string>
     <string name="revoked">已撤销</string>
     <string name="part_deal_with_arrow">部分成交></string>
     <string name="system_revoked">系统撤销</string>

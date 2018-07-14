@@ -260,15 +260,15 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 }
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
-                mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
-                mEntrustPrice.setText(CurrencyUtils.getPrice(order.getEntrustPrice()));
-                mEntrustVolume.setText(CurrencyUtils.getVolume(order.getEntrustCount()));
+                mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
+                mEntrustPrice.setText(order.getEntrustPrice());
+                mEntrustVolume.setText(order.getEntrustCount());
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
                 mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix().toUpperCase()));
                 mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix().toUpperCase()));
-                mDealTotalAmt.setText(CurrencyUtils.getAmt(order.getDealCount() * order.getDealPrice()));
-                mDealAveragePrice.setText(CurrencyUtils.getPrice(order.getDealPrice()));
-                mDealVolume.setText(CurrencyUtils.getVolume(order.getDealCount()));
+                mDealTotalAmt.setText(CurrencyUtils.getAmt(order.getDealCountDouble() * order.getDealPriceDouble()));
+                mDealAveragePrice.setText(order.getDealPrice());
+                mDealVolume.setText(order.getDealCount());
                 mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix().toUpperCase()));
                 mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix().toUpperCase()));
                 mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix().toUpperCase()));
@@ -276,6 +276,10 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
 
             private int getStatusTextRes(int status) {
                 switch (status) {
+                    case OrderStatus.PENDING_DEAL:
+                        return R.string.pending_deal;
+                    case OrderStatus.REVOKING:
+                        return R.string.revoking;
                     case OrderStatus.REVOKED:
                         return R.string.revoked;
                     case OrderStatus.ALL_DEAL:
@@ -326,10 +330,10 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 }
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
-                mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
-                mEntrustPrice.setText(CurrencyUtils.getPrice(order.getEntrustPrice()));
-                mEntrustVolume.setText(CurrencyUtils.getVolume(order.getEntrustCount()));
-                mActualDealVolume.setText(CurrencyUtils.getVolume(order.getDealCount()));
+                mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
+                mEntrustPrice.setText(order.getEntrustPrice());
+                mEntrustVolume.setText(order.getEntrustCount());
+                mActualDealVolume.setText(order.getDealCount());
                 mRevoke.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
