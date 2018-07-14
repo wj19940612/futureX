@@ -1082,6 +1082,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
             private int getStatusTextRes(int status) {
                 switch (status) {
+                    case OrderStatus.PENDING_DEAL:
+                        return R.string.pending_deal;
+                    case OrderStatus.REVOKING:
+                        return R.string.revoking;
                     case OrderStatus.REVOKED:
                         return R.string.revoked;
                     case OrderStatus.ALL_DEAL:
