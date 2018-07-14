@@ -37,17 +37,17 @@ import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
-import com.songbai.futurex.model.order.Order;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.MakeOrder;
 import com.songbai.futurex.model.local.SysTime;
 import com.songbai.futurex.model.mine.CoinAbleAmount;
+import com.songbai.futurex.model.order.Order;
 import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
@@ -411,7 +411,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             public void onClick(View v) {
                 if (mCurrencyPair == null) return;
 
-                showCurrencyPairPopup();
+                if (mPairsPopup != null && mPairsPopup.isShowing()) {
+                    mPairsPopup.dismiss();
+                } else {
+                    showCurrencyPairPopup();
+                }
             }
         });
         mPairArrow.setOnClickListener(new View.OnClickListener() {
@@ -462,9 +466,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     new CurrencyPairsPopup.OnCurrencyChangeListener() {
                         @Override
                         public void onCounterCurrencyChange(String counterCurrency, List<CurrencyPair> newDisplayList) {
-                            if (newDisplayList == null || newDisplayList.isEmpty()) {
-                                requestCurrencyPairList(counterCurrency);
-                            }
+                            requestCurrencyPairList(counterCurrency);
                         }
 
                         @Override
@@ -602,7 +604,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (mPairDesc != null && quota != null) {
 //            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), 8));
             mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
-                mPriceChange.setText(CurrencyUtils.getPrefixPercent(quota.getUpDropSpeed()));
+            mPriceChange.setText(CurrencyUtils.getPrefixPercent(quota.getUpDropSpeed()));
             if (quota.getUpDropSpeed() >= 0) {
                 mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
                 mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));

@@ -45,7 +45,7 @@ public class CurrencyPairsPopup {
     private RecyclerView mBaseCurrencyList;
 
     private CounterCurrencyAdapter mCounterCurrencyAdapter;
-    private CurrencyAdapter mBaseCurrencyAdapter;
+    private BaseCurrencyAdapter mBaseBaseCurrencyAdapter;
     private CurrencyPair mCurCurrencyPair;
     private OnCurrencyChangeListener mOnCurrencyChangeListener;
     private OnSearchBoxClickListener mOnSearchBoxClickListener;
@@ -95,7 +95,7 @@ public class CurrencyPairsPopup {
 
         mBaseCurrencyList.setLayoutManager(new LinearLayoutManager(context));
         mBaseCurrencyList.addItemDecoration(new DividerItemDecor(context, DividerItemDecor.VERTICAL));
-        mBaseCurrencyAdapter = new CurrencyAdapter(mCurCurrencyPair, new OnRVItemClickListener() {
+        mBaseBaseCurrencyAdapter = new BaseCurrencyAdapter(mCurCurrencyPair, new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
                 if (obj instanceof CurrencyPair) {
@@ -110,18 +110,24 @@ public class CurrencyPairsPopup {
                 }
             }
         });
-        mBaseCurrencyList.setAdapter(mBaseCurrencyAdapter);
+        mBaseCurrencyList.setAdapter(mBaseBaseCurrencyAdapter);
     }
 
     public void setDimView(View dimView) {
         mDimView = dimView;
+        mDimView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public void selectCounterCurrency(String counterCurrency) {
         mCounterCurrencyAdapter.setSelectedCurrency(counterCurrency);
         List<CurrencyPair> pairList = mPairListMap.get(counterCurrency);
         if (pairList != null) {
-            mBaseCurrencyAdapter.setCurrencyPairList(pairList);
+            mBaseBaseCurrencyAdapter.setCurrencyPairList(pairList);
         }
         if (mOnCurrencyChangeListener != null) {
             mOnCurrencyChangeListener.onCounterCurrencyChange(counterCurrency, pairList);
@@ -131,7 +137,7 @@ public class CurrencyPairsPopup {
     public void setCurCurrencyPair(CurrencyPair currencyPair) {
         mCurCurrencyPair = currencyPair;
         mCounterCurrencyAdapter.setSelectedCurrency(currencyPair.getSuffixSymbol());
-        mBaseCurrencyAdapter.setCurCurrencyPair(currencyPair);
+        mBaseBaseCurrencyAdapter.setCurCurrencyPair(currencyPair);
     }
 
     public String getSelectCounterCurrency() {
@@ -156,7 +162,13 @@ public class CurrencyPairsPopup {
         if (mDimView != null && mDimView.getVisibility() != View.VISIBLE) {
             mDimView.setVisibility(View.VISIBLE);
         }
+    }
 
+    public boolean isShowing() {
+        if (mPopupWindow != null && mPopupWindow.isShowing()) {
+            return true;
+        }
+        return false;
     }
 
     public void dismiss() {
@@ -167,12 +179,12 @@ public class CurrencyPairsPopup {
 
     public void showDisplayList(String counterCurrency, List<CurrencyPair> pairList) {
         mPairListMap.put(counterCurrency, pairList);
-        mBaseCurrencyAdapter.setCurrencyPairList(pairList);
+        mBaseBaseCurrencyAdapter.setCurrencyPairList(pairList);
     }
 
     public void setMarketDataList(Map<String, MarketData> marketDataList) {
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
-            mBaseCurrencyAdapter.setMarketDataList(marketDataList);
+            mBaseBaseCurrencyAdapter.setMarketDataList(marketDataList);
         }
     }
 
@@ -240,7 +252,7 @@ public class CurrencyPairsPopup {
         }
     }
 
-    static class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.VHolder> {
+    static class BaseCurrencyAdapter extends RecyclerView.Adapter<BaseCurrencyAdapter.VHolder> {
 
         private Context mContext;
         private OnRVItemClickListener mOnRVItemClickListener;
@@ -248,7 +260,7 @@ public class CurrencyPairsPopup {
         private CurrencyPair mCurCurrencyPair;
         private Map<String, MarketData> mMarketDataList;
 
-        public CurrencyAdapter(CurrencyPair currencyPair, OnRVItemClickListener onRVItemClickListener) {
+        public BaseCurrencyAdapter(CurrencyPair currencyPair, OnRVItemClickListener onRVItemClickListener) {
             mOnRVItemClickListener = onRVItemClickListener;
             mCurrencyPairList = new ArrayList<>();
             mCurCurrencyPair = currencyPair;
@@ -268,7 +280,7 @@ public class CurrencyPairsPopup {
         @Override
         public VHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_currency, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_base_currency, parent, false);
             return new VHolder(view);
         }
 
@@ -299,6 +311,8 @@ public class CurrencyPairsPopup {
             ImageView mMark;
             @BindView(R.id.currencyName)
             TextView mCurrencyName;
+            @BindView(R.id.counterCurrencyName)
+            TextView mCounterCurrencyName;
             @BindView(R.id.priceChange)
             TextView mPriceChange;
             @BindView(R.id.lastPrice)
@@ -311,6 +325,7 @@ public class CurrencyPairsPopup {
 
             public void bind(CurrencyPair currencyPair, CurrencyPair selectedPair, Map<String, MarketData> marketDataList, Context context) {
                 mCurrencyName.setText(currencyPair.getPrefixSymbol().toUpperCase());
+                mCounterCurrencyName.setText(currencyPair.getSuffixSymbol().toUpperCase());
                 if (currencyPair.getPairs().equalsIgnoreCase(selectedPair.getPairs())) {
                     mMark.setVisibility(View.VISIBLE);
                 } else {
@@ -319,7 +334,7 @@ public class CurrencyPairsPopup {
                 if (marketDataList != null) {
                     MarketData marketData = marketDataList.get(currencyPair.getPairs());
                     if (marketData != null) {
-                        mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice()));
+                        mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), currencyPair.getPricePoint()));
                         mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                         if (marketData.getUpDropSpeed() < 0) {
                             mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
