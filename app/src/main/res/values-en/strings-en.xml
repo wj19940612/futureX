@@ -300,12 +300,13 @@
     <string name="otc_sell_pay">The seller has recieved the money and released token. Check it now>></string>
     <string name="otc_order_msg">Your order is responded. Check it now>></string>
     <string name="user_auth_fail">Fail to pass authentication. Click to check details</string>
-    <string name="arbitrage_pass">Platform arbitration-->Passed</string>
-    <string name="arbitrage_reject">Platform arbitration-->Rejected</string>
-    <string name="off_shelves_wares">Ads no longer up to requirement is put off shelves by system</string>
+    <string name="arbitrage_pass">After arbitration,%1$s,this order has clinched a deal.Go and click it>></string>
+    <string name="arbitrage_reject">After arbitration,%1$s,this order has been terminated by platform.Go and click it>></string>
+    <string name="off_shelves_wares">Your ad has been put off shelves buy system，because %1$s it no longer up to the requirement>></string>
     <string name="otc_order_cancel">Your OTC order has been cancelled</string>
     <string name="otc_order_delay">Your order has been delayed</string>
     <string name="plus_sign_x">+%1$s</string>
+    <string name="increasing_ranks">Increasing Ranks</string>
 
     <!--LEGAL_CURRENCY-->
     <string-array name="legal_currency_header">
@@ -410,13 +411,15 @@
     <string name="pay_info">Payment info</string>
     <string name="trade_rules_description">Ask the other party how the transaction will be done and compare it with he/she listed on the platform. If inconsistent, be careful to pay. \n\n1. Please note last 4 letters of order number to speed up the confirmation. \n\n2. Please do not fill in any word about cryptocurrency such as Bitcoin, BTC, OTC, etc., in order to prevent the remittance from being intercepted by the bank. \n\n3. The order is valid for 15 minutes. Please pay in time and click the "paid" button, and then the token can be released to you. \n\n4. If you are unable to complete payment within 15 minutes, the order will be cancelled. \n\n5. The cryptocurrency is hosted by the system during the transaction. Please feel free to place an order.</string>
     <string name="order_detail_price_x">Price: %1$s&#160;%2$s/%3$s</string>
-    <string name="order_detail_amount_x">Amount: %1$s&#160;%2$s</string>
+    <string name="order_detail_amount_x">Amount: %1$f&#160;%2$s</string>
     <string name="you_have_canceled_trade">Trade cancelled</string>
     <string name="otc_order_success_wait_pay">Ordered. Please pay it in time</string>
     <string name="otc_trade_complete_desc">Completed</string>
     <string name="wait_to_pay_and_confirm">Waiting for payment</string>
     <string name="wait_sell_transfer_coin">Waiting for release</string>
     <string name="seller_info">Seller&apos;s info</string>
+    <string name="buyer_info">Buyer&apos;s info</string>
+    <string name="register_time">Register time：%1$s</string>
     <string name="click_to_ask_contract_info">Ask for payment</string>
     <string name="contact_each_other">Contact him/her</string>
     <string name="cancel_trade">Cancel the trade</string>

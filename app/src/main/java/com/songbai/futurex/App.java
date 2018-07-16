@@ -29,6 +29,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         sContext = this;
+        setLanguage();
         Api.init(sContext.getCacheDir(), sContext.getFilesDir());
         Api.setLogger(new ReqLogger() {
             @Override
@@ -53,7 +54,6 @@ public class App extends Application {
             }
         });
         processCaughtException();
-        setLanguage();
     }
 
     private void setLanguage() {

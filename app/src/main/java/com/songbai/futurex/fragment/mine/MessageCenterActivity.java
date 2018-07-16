@@ -1,5 +1,6 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.OtcOrderCompletedActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
@@ -106,7 +108,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         });
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
         mSwipeTarget.setEmptyView(mEmptyView);
-        mAdapter = new MessageListAdapter();
+        mAdapter = new MessageListAdapter(this);
         mAdapter.setOnItemClickListener(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
@@ -117,6 +119,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             .putExtra(WebActivity.EX_URL, Api.getH5Url(url))
                             .execute();
                 } else {
+                    int direct = 0;
+                    String msg = sysMessage.getMsg();
                     switch (sysMessage.getType()) {
                         case 1:
                         case 3:
@@ -127,18 +131,41 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                     .execute();
                             break;
                         case 2:
-                        case 4:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
                                     .execute();
                             break;
                         case 7:
+
+                            break;
                         case 8:
+                        case 4:
+                            Launcher.with(getActivity(), OtcOrderCompletedActivity.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
+                                    .execute();
+                            break;
                         case 10:
+                            if (msg.contains("direct")) {
+                                try {
+                                    JSONObject object = new JSONObject(msg);
+                                    direct = object.getInt("direct");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                if (direct == 0) {
+                                    return;
+                                }
+                                Launcher.with(getActivity(), OtcOrderCompletedActivity.class)
+                                        .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                        .putExtra(ExtraKeys.TRADE_DIRECTION, direct)
+                                        .execute();
+                            }
+                            break;
                         case 11:
-                            int direct = 0;
-                            String msg = sysMessage.getMsg();
+                            direct = 0;
+                            msg = sysMessage.getMsg();
                             if (msg.contains("direct")) {
                                 try {
                                     JSONObject object = new JSONObject(msg);
@@ -297,6 +324,11 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
 
         private boolean allIsRead;
         private int mPageType;
+        private Context mContext;
+
+        public MessageListAdapter(Context context) {
+            mContext = context;
+        }
 
         public void setAllIsRead(boolean allIsRead) {
             this.allIsRead = allIsRead;
@@ -317,7 +349,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof MessageViewHolder) {
-                ((MessageViewHolder) holder).bindData(mList.get(position), position, mPageType, allIsRead);
+                ((MessageViewHolder) holder).bindData(mContext, mList.get(position), position, mPageType, allIsRead);
             }
         }
 
@@ -341,7 +373,10 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         }
 
         class MessageViewHolder extends RecyclerView.ViewHolder {
-            private View mRootView;
+            @BindView(R.id.rootView)
+            View mRootView;
+            @BindView(R.id.emptyView)
+            View mEmptyView;
             @BindView(R.id.timestamp)
             TextView mTimestamp;
             @BindView(R.id.content)
@@ -352,10 +387,9 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
             MessageViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
-                mRootView = view;
             }
 
-            void bindData(final SysMessage sysMessage, final int position, int pageType, boolean allIsRead) {
+            void bindData(Context context, final SysMessage sysMessage, final int position, int pageType, boolean allIsRead) {
 
                 if (pageType == PAGE_TYPE_NOTICE) {
                     mContent.setSelected(true);
@@ -374,6 +408,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         mContent.setSelected(sysMessage.getStatus() == SysMessage.READ);
                     }
                     mTimestamp.setText(DateUtil.format(sysMessage.getCreateTime(), DateUtil.FORMAT_SPECIAL_SLASH));
+                    mEmptyView.setVisibility(View.GONE);
+                    mRootView.setVisibility(View.VISIBLE);
                     int textId = 0;
                     switch (sysMessage.getType()) {
                         case MessageType.PAY_ADDR_CHANGE:
@@ -398,13 +434,32 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             textId = R.string.user_auth_fail;
                             break;
                         case MessageType.ARBITRAGE_PASS:
-                            textId = R.string.arbitrage_pass;
+                            String msg = sysMessage.getMsg();
+                            if (msg.contains("msg")) {
+                                try {
+                                    JSONObject object = new JSONObject(msg);
+                                    String hintMsg = object.getString("msg");
+                                    mContent.setText(context.getString(R.string.arbitrage_pass, hintMsg));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             break;
                         case MessageType.ARBITRAGE_REJECT:
-                            textId = R.string.arbitrage_reject;
+                            msg = sysMessage.getMsg();
+                            if (msg.contains("msg")) {
+                                try {
+                                    JSONObject object = new JSONObject(msg);
+                                    String hintMsg = object.getString("msg");
+                                    mContent.setText(context.getString(R.string.arbitrage_reject, hintMsg));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             break;
                         case MessageType.OFF_SHELVES_WARES:
-                            textId = R.string.off_shelves_wares;
+                            msg = sysMessage.getMsg();
+                            mContent.setText(context.getString(R.string.off_shelves_wares, msg));
                             break;
                         case MessageType.OTC_ORDER_CANCEL:
                             textId = R.string.otc_order_cancel;
@@ -413,6 +468,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             textId = R.string.otc_order_delay;
                             break;
                         default:
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            mRootView.setVisibility(View.GONE);
                     }
                     if (textId != 0) {
                         mContent.setText(textId);

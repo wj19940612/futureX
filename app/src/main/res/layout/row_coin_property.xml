@@ -26,8 +26,8 @@
         android:layout_marginTop="18dp"
         android:text="@string/coin_type"
         android:textColor="@color/text99"
-        android:visibility="gone"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="0.6"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -55,7 +55,6 @@
         android:id="@+id/amountText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="18dp"
         android:gravity="end"
         android:text="@string/amount"
@@ -72,6 +71,7 @@
         android:id="@+id/statusText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:gravity="end"
         android:text="@string/status"
         android:textColor="@color/text99"
@@ -118,7 +118,6 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:gravity="end"
-        app:layout_goneMarginLeft="12dp"
         android:singleLine="true"
         android:textColor="@color/text22"
         android:textSize="14sp"
@@ -126,6 +125,7 @@
         app:layout_constraintLeft_toRightOf="@id/coinType"
         app:layout_constraintRight_toRightOf="@id/amountText"
         app:layout_constraintTop_toBottomOf="@id/amountText"
+        app:layout_goneMarginLeft="12dp"
         tools:text="514.54304"/>
 
     <com.songbai.futurex.view.ScaleTextView

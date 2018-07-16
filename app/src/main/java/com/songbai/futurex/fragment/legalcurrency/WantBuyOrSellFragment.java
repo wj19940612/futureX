@@ -444,7 +444,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             mDrawCashPwd.setVisibility(mType == OTCOrderStatus.ORDER_DIRECT_SELL ? View.GONE : View.VISIBLE);
             mCurrencyGroup.setVisibility(mType == OTCOrderStatus.ORDER_DIRECT_SELL ? View.VISIBLE : View.GONE);
             String payCurrency = mData.getPayCurrency();
-            mPrice.setText(mData.getFixedPrice() + payCurrency.toUpperCase());
+            mPrice.setText(FinanceUtil.formatWithScale(mData.getFixedPrice()) + payCurrency.toUpperCase());
             final double maxTurnover = mData.getMaxTurnover();
             mTradeLimit.setText(mContext.getString(R.string.amount_limit, FinanceUtil.trimTrailingZero(mData.getMinTurnover())
                     , FinanceUtil.trimTrailingZero(maxTurnover)));
