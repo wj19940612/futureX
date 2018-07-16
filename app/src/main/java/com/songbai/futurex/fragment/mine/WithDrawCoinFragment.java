@@ -31,6 +31,7 @@ import com.songbai.futurex.model.mine.DrawLimit;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
+import com.songbai.futurex.view.SmartDialog;
 
 import java.util.ArrayList;
 
@@ -115,7 +116,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
                 return;
             }
         }
-        double fee =  mWithdrawRate;
+        double fee = mWithdrawRate;
         mFee.setText(getString(R.string.amount_space_coin_x, FinanceUtil.formatWithScale(fee, 8), mAccountBean.getCoinType().toUpperCase()));
         mResultAmount.setText(getString(R.string.amount_space_coin_x,
                 FinanceUtil.formatWithScale(FinanceUtil.subtraction(value, fee).doubleValue(), 8), mAccountBean.getCoinType().toUpperCase()));
@@ -147,7 +148,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     }
 
     private void setLimit(DrawLimit drawLimit) {
-        String minWithDrawAmountStr = FinanceUtil.subZeroAndDot(drawLimit.getMinWithdrawAmount(),8);
+        String minWithDrawAmountStr = FinanceUtil.subZeroAndDot(drawLimit.getMinWithdrawAmount(), 8);
         mFee.setText(getString(R.string.amount_space_coin_x, FinanceUtil.formatWithScale(drawLimit.getWithdrawRate(), 8), mAccountBean.getCoinType().toUpperCase()));
         mWithDrawAmount.setHint(getString(R.string.min_draw_amount_coin_x, minWithDrawAmountStr, mAccountBean.getCoinType().toUpperCase()));
         mWithDrawRules.setText(getString(R.string.with_draw_rules_x, minWithDrawAmountStr, drawLimit.getConfirm()));
@@ -253,4 +254,16 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         mEtWithDrawAddress.setSelection(mEtWithDrawAddress.getText().length());
     }
 
+    private class AddressSelector extends SmartDialog.CustomViewController{
+        @Override
+        protected View onCreateView() {
+            LayoutInflater.from(getContext()).inflate(R.layout.view_draw_coin_address_selector,null);
+            return null;
+        }
+
+        @Override
+        protected void onInitView(View view, SmartDialog dialog) {
+
+        }
+    }
 }

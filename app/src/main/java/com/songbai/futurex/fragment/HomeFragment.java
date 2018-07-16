@@ -50,7 +50,6 @@ import com.songbai.futurex.model.home.HomeNews;
 import com.songbai.futurex.model.home.PairRiseListBean;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
-import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.OnNavigationListener;
@@ -168,8 +167,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     }
 
     private void requestData() {
-        findBannerList(LanguageUtils.getCurrentLocale(getContext()).getLanguage());
-        findNewsList(1, "");
+        findBannerList();
+        findNewsList(1);
         entrustPairsList();
         indexRiseList();
     }
@@ -200,25 +199,19 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         }
     }
 
-    private void findBannerList(String locale) {
-        Apic.findBannerList(locale).tag(TAG)
+    private void findBannerList() {
+        Apic.findBannerList().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<Banner>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<Banner>> resp) {
-                        ArrayList<Banner> list = new ArrayList<>();
-                        for (int i = 0; i < 5; i++) {
-                            Banner banner = new Banner();
-                            banner.setContent("https://wx1.sinaimg.cn/mw690/b2b2dfe6gy1fshvo57i83j20j60bsgn2.jpg");
-                            list.add(banner);
-                        }
-                        mHomeBanner.setHomeAdvertisement(list);
+                        mHomeBanner.setHomeAdvertisement(resp.getData());
                     }
                 })
                 .fire();
     }
 
-    private void findNewsList(int type, String lang) {
-        Apic.findNewsList(type, lang, 0, 3).tag(TAG)
+    private void findNewsList(int type) {
+        Apic.findNewsList(type, 0, 3).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<HomeNews>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<HomeNews>> resp) {

@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -31,7 +30,6 @@ import com.songbai.futurex.model.CustomerService;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
-import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.ThumbTransform;
 import com.songbai.futurex.utils.ToastUtil;
@@ -168,6 +166,7 @@ public class CustomServiceActivity extends BaseActivity {
                         if (PushDestUtils.isCustomerChat(dest)) {
                             mCustomServiceChats.add(customServiceChatResponse.getContent());
                             mChatAdapter.notifyDataSetChanged();
+                            updateRecyclerViewPosition(true);
                         }
                     }
                 }.parse();
@@ -289,9 +288,7 @@ public class CustomServiceActivity extends BaseActivity {
     private void sendMsg() {
         if (!Network.isNetworkAvailable()) {
             ToastUtil.show(R.string.http_error_network);
-        } else if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(getActivity(), LoginActivity.class).execute();
-        } else if (mEditText.getText().length() > 500) {
+        }  else if (mEditText.getText().length() > 500) {
             ToastUtil.show(R.string.over_500);
         } else if (!TextUtils.isEmpty(mEditText.getText().toString().trim())) {
             requestSendTxtMsg(mEditText.getText().toString());
