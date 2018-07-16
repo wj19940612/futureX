@@ -25,8 +25,8 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.order.Order;
 import com.songbai.futurex.model.local.SysTime;
+import com.songbai.futurex.model.order.Order;
 import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.CurrencyUtils;
@@ -36,6 +36,9 @@ import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.HistoryFilter;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
+import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -79,6 +82,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
 
     private TextView mFilter;
     private HistoryFilter mHistoryFilter;
+    private MarketSubscriber mMarketSubscriber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,7 +113,28 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         mSwipeTarget.setAdapter(mOrderAdapter);
         mSwipeTarget.setEmptyView(mEmptyView);
 
+        mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(String data, int code, String dest) {
+                if (PushDestUtils.isEntrustOrder(dest)) {
+                    requestOrderList();
+                }
+            }
+        });
+
         requestOrderList();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mMarketSubscriber.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMarketSubscriber.pause();
     }
 
     private void initTitleBar() {
@@ -157,7 +182,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
-                        requestOrderList();
+                        //requestOrderList();
                     }
                 }).fire();
     }
@@ -291,7 +316,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                     case OrderStatus.PART_DEAL_PART_REVOKED:
                         return R.string.part_deal_part_revoked_with_arrow;
                     default:
-                        return R.string.unknown_operation;
+                        return R.string.unknown_status;
                 }
             }
         }
@@ -334,17 +359,34 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 mEntrustPrice.setText(order.getEntrustPrice());
                 mEntrustVolume.setText(order.getEntrustCount());
                 mActualDealVolume.setText(order.getDealCount());
-                mRevoke.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onOrderRevokeClickListener != null) {
-                            onOrderRevokeClickListener.onOrderRevoke(order);
+                mRevoke.setText(getStatusTextRes(order.getStatus()));
+                if (order.getStatus() == OrderStatus.PENDING_DEAL) {
+                    mRevoke.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (onOrderRevokeClickListener != null) {
+                                onOrderRevokeClickListener.onOrderRevoke(order);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    mRevoke.setOnClickListener(null);
+                }
+
                 mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix().toUpperCase()));
                 mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix().toUpperCase()));
                 mActualDealVolumeTitle.setText(context.getString(R.string.actual_deal_x, order.getPrefix().toUpperCase()));
+            }
+
+            private int getStatusTextRes(int status) {
+                switch (status) {
+                    case OrderStatus.PENDING_DEAL:
+                        return R.string.revoke_order;
+                    case OrderStatus.REVOKING:
+                        return R.string.revoking_order;
+                    default:
+                        return R.string.unknown_status;
+                }
             }
         }
 

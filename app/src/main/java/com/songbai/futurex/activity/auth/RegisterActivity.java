@@ -49,6 +49,7 @@ import com.songbai.futurex.utils.StrFormatter;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
+import com.songbai.futurex.websocket.MessageProcessor;
 
 import java.util.List;
 
@@ -314,6 +315,7 @@ public class RegisterActivity extends BaseActivity {
 
         }
         if (requestCode == REQ_CODE_SET_PASS && resultCode == RESULT_OK) {
+            MessageProcessor.get().register();
             setResult(RESULT_OK);
             finish();
         }

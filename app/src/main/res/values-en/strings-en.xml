@@ -607,7 +607,7 @@
     <string name="part_deal">Partially filled</string>
     <string name="system_revoked">Cancelled by system</string>
     <string name="part_deal_part_revoked">Partially filled &amp; partially cancelled</string>
-    <string name="unknown_operation">Unknown operation</string>
+    <string name="unknown_status">Unknown operation</string>
     <string name="filter">Filter</string>
     <string name="trading_on">Pairs</string>
     <string name="select_currency">Select currency unit</string>
