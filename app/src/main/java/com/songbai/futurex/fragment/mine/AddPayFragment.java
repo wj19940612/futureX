@@ -20,7 +20,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.LocalUser;
-import com.songbai.futurex.model.mine.AuthenticationName;
+import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.TitleBar;
@@ -71,7 +71,6 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        authenticationName();
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
             String realName = user.getUserInfo().getRealName();
@@ -91,6 +90,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                     mHasBind = true;
                 }
                 mAccountNum.setText(mBindBankList.getAliPay().getCardNumber());
+                otcBankAccount(mBindBankList.getAliPay().getId());
             }
         } else {
             mTitleBar.setTitle(R.string.add_wei_chat_pay);
@@ -103,6 +103,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                     mHasBind = true;
                 }
                 mAccountNum.setText(cardNumber);
+                otcBankAccount(mBindBankList.getWechat().getId());
             }
         }
     }
@@ -112,13 +113,17 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
         editText.setFocusableInTouchMode(false);
     }
 
-    private void authenticationName() {
-        Apic.authenticationName().tag(TAG)
-                .callback(new Callback<Resp<AuthenticationName>>() {
+    private void otcBankAccount(int id) {
+        Apic.otcBankAccount(id).tag(TAG)
+                .callback(new Callback<Resp<BankCardBean>>() {
                     @Override
-                    protected void onRespSuccess(Resp<AuthenticationName> resp) {
-                        mName = resp.getData().getName();
-                        mRealName.setText(mName);
+                    protected void onRespSuccess(Resp<BankCardBean> resp) {
+                        BankCardBean bankCardBean = resp.getData();
+                        if (bankCardBean != null) {
+                            mName = bankCardBean.getRealName();
+                            mRealName.setText(mName);
+                            mAccountNum.setText(bankCardBean.getCardNumber());
+                        }
                     }
                 })
                 .fire();

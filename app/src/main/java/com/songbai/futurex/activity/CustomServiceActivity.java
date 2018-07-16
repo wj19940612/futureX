@@ -39,6 +39,7 @@ import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.im.IMProcessor;
 import com.songbai.futurex.websocket.model.CustomServiceChat;
@@ -159,13 +160,15 @@ public class CustomServiceActivity extends BaseActivity {
         //初始化推送回调
         mIMProcessor = new IMProcessor(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code, String dest) {
+            public void onDataReceive(String data, int code, final String dest) {
                 new DataParser<Response<CustomServiceChat>>(data) {
 
                     @Override
                     public void onSuccess(Response<CustomServiceChat> customServiceChatResponse) {
-                        mCustomServiceChats.add(customServiceChatResponse.getContent());
-                        mChatAdapter.notifyDataSetChanged();
+                        if (PushDestUtils.isCustomerChat(dest)) {
+                            mCustomServiceChats.add(customServiceChatResponse.getContent());
+                            mChatAdapter.notifyDataSetChanged();
+                        }
                     }
                 }.parse();
             }
@@ -401,11 +404,11 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     static class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        public static final int TYPE_LEFT = 1;
-        public static final int TYPE_LEFT_PHOTO = 2;
-        public static final int TYPE_RIGHT = 3;
-        public static final int TYPE_RIGHT_PHOTO = 4;
-        public static final int TYPE_SYSTEM = 5;
+        static final int TYPE_LEFT = 1;
+        static final int TYPE_LEFT_PHOTO = 2;
+        static final int TYPE_RIGHT = 3;
+        static final int TYPE_RIGHT_PHOTO = 4;
+        static final int TYPE_SYSTEM = 5;
 
         private List<CustomServiceChat> mCustomServiceChats;
         private Context mContext;
@@ -426,7 +429,7 @@ public class CustomServiceActivity extends BaseActivity {
             mOnRetryClickListener = onRetryClickListener;
         }
 
-        public void setCustomerService(CustomerService customerService) {
+        void setCustomerService(CustomerService customerService) {
             mCustomerService = customerService;
         }
 
@@ -559,20 +562,6 @@ public class CustomServiceActivity extends BaseActivity {
                     GlideApp.with(context).load(customServiceChat.getContent())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-//                            .listener(new RequestListener<Drawable>() {
-//                                @Override
-//                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                                    return false;
-//                                }
-//
-//                                @Override
-//                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                                    if (onRetryClickListener != null && isFirstResource) {
-//                                        onRetryClickListener.onLeftReScroll();
-//                                    }
-//                                    return false;
-//                                }
-//                            })
                             .into(mPhoto);
                 }
             }
@@ -664,21 +653,6 @@ public class CustomServiceActivity extends BaseActivity {
                     GlideApp.with(context).load(customServiceChat.getContent())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-//                            .listener(new RequestListener<Drawable>() {
-//                                @Override
-//                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                                    return false;
-//                                }
-//
-//                                @Override
-//                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                                    if (onRetryClickListener != null && isFirstResource) {
-//                                        onRetryClickListener.onRightReScroll();
-//                                    }
-//                                    return false;
-//                                }
-//                            })
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mPhoto);
                 }
 

@@ -1,6 +1,8 @@
 package com.songbai.futurex.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ import android.widget.ViewSwitcher;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.StatusBarActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.WebActivity;
@@ -50,6 +53,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
+import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.view.HomeBanner;
 
 import java.util.ArrayList;
@@ -64,6 +68,7 @@ import butterknife.Unbinder;
  * @date 2018/5/29
  */
 public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerClickListener {
+    private static final int REQ_CODE_MARKET_DETAIL = 95;
 
     @BindView(R.id.homeBanner)
     HomeBanner mHomeBanner;
@@ -94,6 +99,15 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             }
         }
     };
+    private OnNavigationListener mOnNavigationListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnNavigationListener) {
+            mOnNavigationListener = (OnNavigationListener) context;
+        }
+    }
 
     @Nullable
     @Override
@@ -284,7 +298,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             currencyPair.setPricePoint(latelyBean.getPricePoint());
             UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
                     .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
-                    .execute();
+                    .execute(HomeFragment.this, REQ_CODE_MARKET_DETAIL);
         }
 
         @Override
@@ -300,7 +314,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             currencyPair.setPricePoint(pairRiseListBean.getPricePoint());
             UniqueActivity.launcher(HomeFragment.this, MarketDetailFragment.class)
                     .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
-                    .execute();
+                    .execute(HomeFragment.this, REQ_CODE_MARKET_DETAIL);
         }
     };
 
@@ -308,6 +322,16 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_FIRST_USER) { // 行情详情选择交易
+            if (mOnNavigationListener != null) {
+                mOnNavigationListener.onNavigation(MainActivity.PAGE_TRADE, data);
+            }
+        }
     }
 
     @Override

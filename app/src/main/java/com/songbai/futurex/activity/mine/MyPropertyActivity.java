@@ -74,7 +74,7 @@ public class MyPropertyActivity extends BaseActivity {
     float mPagerTranslationX;
     private int mCardPagePadding;
     private PropertyCardAdapter mPropertyCardAdapter;
-    int size = 3;
+    int mCardSize = 2;
     private int mScrollWidth;
     private SparseArray<AccountList> mAccountLists = new SparseArray<>(3);
     private ArrayList<PropertyListFragment> mFragments;
@@ -104,9 +104,10 @@ public class MyPropertyActivity extends BaseActivity {
             @Override
             public void run() {
                 int measuredWidth = mIndicatorContainer.getMeasuredWidth();
-                mScrollWidth = (int) (measuredWidth / size + 0.5);
+                mScrollWidth = (int) (measuredWidth / mCardSize + 0.5);
                 ViewGroup.LayoutParams layoutParams = mIndicator.getLayoutParams();
                 layoutParams.width = mScrollWidth;
+                mIndicator.setLayoutParams(layoutParams);
             }
         });
         mPropertyCardAdapter = new PropertyCardAdapter(this);
@@ -136,9 +137,9 @@ public class MyPropertyActivity extends BaseActivity {
         mCardPagePadding = (int) Display.dp2Px(12, getResources());
         mPropertyCardPager.setPageMargin(mCardPagePadding);
         mFragments = new ArrayList<>();
-        mFragments.add(PropertyListFragment.newInstance(0));
-        mFragments.add(PropertyListFragment.newInstance(1));
-        mFragments.add(PropertyListFragment.newInstance(2));
+        for (int i = 0; i < mCardSize; i++) {
+            mFragments.add(PropertyListFragment.newInstance(i));
+        }
         PropertyListAdapter adapter = new PropertyListAdapter(getSupportFragmentManager());
         adapter.setList(mFragments);
         mPropertyListPager.setAdapter(adapter);
@@ -164,12 +165,23 @@ public class MyPropertyActivity extends BaseActivity {
     }
 
     private void setCardPagerTranslationX(int position, float positionOffset) {
-        if (position <= 1) {
-            mPropertyCardPager.setTranslationX(-mPagerTranslationX * (1 - (position + positionOffset)));
-        } else if (position >= size - 2) {
-            mPropertyCardPager.setTranslationX(mPagerTranslationX * (position + positionOffset - size + 2));
+        float translateX = position + positionOffset;
+        float translateXRightBorder = mCardSize - 2;
+        float translateXLeftBorder = 1;
+        float scale = 1;
+        if (mCardSize < 3) {
+            translateXRightBorder = mCardSize - 1.5f;
+            translateXLeftBorder = 1 - 0.5f;
+            scale = 2;
+        }
+        if (translateX < translateXLeftBorder) {
+            mPropertyCardPager.setTranslationX(-mPagerTranslationX * scale * (translateXLeftBorder - (translateX)));
         } else {
-            mPropertyCardPager.setTranslationX(0);
+            if (translateX > translateXRightBorder) {
+                mPropertyCardPager.setTranslationX(mPagerTranslationX * scale * (translateX - translateXRightBorder));
+            } else {
+                mPropertyCardPager.setTranslationX(0);
+            }
         }
     }
 
@@ -252,7 +264,7 @@ public class MyPropertyActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return mCardSize;
         }
 
         @Override

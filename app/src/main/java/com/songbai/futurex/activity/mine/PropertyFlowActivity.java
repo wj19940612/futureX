@@ -104,6 +104,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
         mCoinType = getIntent().getStringExtra(ExtraKeys.COIN_TYPE);
         mTitleBar.setTitle(mAllType ? R.string.property_flow : R.string.history_record);
         mTitleBar.setRightVisible(mAccountType != 2);
+        mTitleBar.setRightViewEnable(mAccountType != 2);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

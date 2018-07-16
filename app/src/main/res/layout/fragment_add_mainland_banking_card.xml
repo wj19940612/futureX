@@ -33,16 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
-                android:text="地"
-                android:textColor="@color/text22"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="区"
+                android:text="@string/location"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
         </RelativeLayout>
