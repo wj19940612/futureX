@@ -397,7 +397,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     }.parse();
                 }
                 if (PushDestUtils.isEntrustOrder(dest)) {
-                    
+                    requestOrderList();
                 }
             }
         });
@@ -1118,7 +1118,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     case OrderStatus.PART_DEAL_PART_REVOKED:
                         return R.string.part_deal_part_revoked_with_arrow;
                     default:
-                        return R.string.unknown_operation;
+                        return R.string.unknown_status;
                 }
             }
         }
@@ -1148,7 +1148,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(final Order order, Context context, final OnOrderRevokeClickListener onOrderRevokeClickListener) {
+            public void bind(final Order order, final Context context, final OnOrderRevokeClickListener onOrderRevokeClickListener) {
                 int color = ContextCompat.getColor(context, R.color.green);
                 String tradeDir = context.getString(R.string.buy_in);
                 if (order.getDirection() == Order.DIR_SELL) {
@@ -1161,17 +1161,33 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mEntrustPrice.setText(order.getEntrustPrice());
                 mEntrustVolume.setText(order.getEntrustCount());
                 mActualDealVolume.setText(order.getDealCount());
-                mRevoke.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onOrderRevokeClickListener != null) {
-                            onOrderRevokeClickListener.onOrderRevoke(order);
+                mRevoke.setText(getStatusTextRes(order.getStatus()));
+                if (order.getStatus() == OrderStatus.PENDING_DEAL) {
+                    mRevoke.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (onOrderRevokeClickListener != null) {
+                                onOrderRevokeClickListener.onOrderRevoke(order);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    mRevoke.setOnClickListener(null);
+                }
                 mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
                 mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix()));
                 mActualDealVolumeTitle.setText(context.getString(R.string.actual_deal_x, order.getPrefix()));
+            }
+
+            private int getStatusTextRes(int status) {
+                switch (status) {
+                    case OrderStatus.PENDING_DEAL:
+                        return R.string.revoke_order;
+                    case OrderStatus.REVOKING:
+                        return R.string.revoking_order;
+                    default:
+                        return R.string.unknown_status;
+                }
             }
         }
 

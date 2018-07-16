@@ -42,6 +42,7 @@ import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
+import com.songbai.futurex.websocket.MessageProcessor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -286,6 +287,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     protected void onRespData(UserInfo data) {
                         LocalUser.getUser().setUserInfo(data, mLoginData.getPhone(), mLoginData.getEmail());
+                        MessageProcessor.get().register();
                         Preference.get().setOptionalListRefresh(true);
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();

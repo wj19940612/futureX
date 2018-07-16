@@ -136,7 +136,7 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
         register();
     }
 
-    private void register() {
+    public void register() {
         String tokens = LocalUser.getUser().getToken();
         RegisterInfo registerInfo = new RegisterInfo(tokens);
         registerInfo.setDevice(AppInfo.getDeviceHardwareId(App.getAppContext()));
