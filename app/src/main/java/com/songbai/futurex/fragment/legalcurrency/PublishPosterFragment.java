@@ -868,7 +868,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private void setTradeLimit(double minTurnover, double maxTurnover) {
         if (maxTurnover != 0) {
             mTradeLimit.setText(getString(R.string.limit_range_x,
-                    FinanceUtil.trimTrailingZero(minTurnover), FinanceUtil.trimTrailingZero(maxTurnover)));
+                    FinanceUtil.subZeroAndDot(minTurnover,8), FinanceUtil.subZeroAndDot(maxTurnover,8)));
             mWaresModel.setMinTurnover(minTurnover);
             mWaresModel.setMaxTurnover(maxTurnover);
         }

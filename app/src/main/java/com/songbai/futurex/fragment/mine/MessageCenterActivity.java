@@ -341,7 +341,10 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         }
 
         class MessageViewHolder extends RecyclerView.ViewHolder {
-            private View mRootView;
+            @BindView(R.id.rootView)
+            View mRootView;
+            @BindView(R.id.emptyView)
+            View mEmptyView;
             @BindView(R.id.timestamp)
             TextView mTimestamp;
             @BindView(R.id.content)
@@ -352,7 +355,6 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
             MessageViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
-                mRootView = view;
             }
 
             void bindData(final SysMessage sysMessage, final int position, int pageType, boolean allIsRead) {
@@ -374,6 +376,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         mContent.setSelected(sysMessage.getStatus() == SysMessage.READ);
                     }
                     mTimestamp.setText(DateUtil.format(sysMessage.getCreateTime(), DateUtil.FORMAT_SPECIAL_SLASH));
+                    mEmptyView.setVisibility(View.GONE);
+                    mRootView.setVisibility(View.VISIBLE);
                     int textId = 0;
                     switch (sysMessage.getType()) {
                         case MessageType.PAY_ADDR_CHANGE:
@@ -413,6 +417,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             textId = R.string.otc_order_delay;
                             break;
                         default:
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            mRootView.setVisibility(View.GONE);
                     }
                     if (textId != 0) {
                         mContent.setText(textId);

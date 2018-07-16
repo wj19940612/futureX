@@ -309,6 +309,38 @@ public class FinanceUtil {
     }
 
     /**
+     * 使用java正则表达式去掉多余的.与0
+     *
+     * @param value
+     * @return
+     */
+    public static String subZeroAndDot(double value, int scale) {
+        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+        decimalFormat.setGroupingUsed(false);
+        decimalFormat.setMaximumFractionDigits(scale);
+        String s = decimalFormat.format(value);
+        if (s.indexOf(".") > 0) {
+            s = s.replaceAll("0+?$", "");
+            s = s.replaceAll("[.]$", "");
+        }
+        return s;
+    }
+
+    /**
+     * 使用java正则表达式去掉多余的.与0
+     *
+     * @param s
+     * @return
+     */
+    public static String subZeroAndDot(String s) {
+        if (s.indexOf(".") > 0) {
+            s = s.replaceAll("0+?$", "");
+            s = s.replaceAll("[.]$", "");
+        }
+        return s;
+    }
+
+    /**
      * 处理 Double 的大数据减法
      *
      * @param minuend    被减数

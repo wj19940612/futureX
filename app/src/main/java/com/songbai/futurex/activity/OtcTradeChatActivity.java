@@ -889,7 +889,7 @@ public class OtcTradeChatActivity extends BaseActivity {
             View v = getCurrentFocus();
             if (KeyBoardUtils.isOutside(ev, mBottomLayout)) {
                 if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
-                    KeyBoardUtils.closeOrOpenKeyBoard();
+                    KeyBoardUtils.closeKeyboard(v);
                     v.clearFocus();
                 }
             }

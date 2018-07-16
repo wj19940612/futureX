@@ -436,7 +436,7 @@
     <string name="pay_info">支付信息</string>
     <string name="trade_rules_description">请务必向对方询问交易方式，并且与平台所留方式进行对比，若不一致，请慎重付款\n\n1.转帐时请备注「订单编号后4位」以加快确认速度\n\n2.请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n3.订单有效期为15分钟，请您在有效期内及时付款并点击「已转账」按钮，数字币才可以释放给您\n\n4.如果您无法在15分钟内完成付款，该笔订单将被取消\n\n5.开始交易后数字币由系统锁定托管，请安心下单</string>
     <string name="order_detail_price_x">价格：%1$s&#160;%2$s/%3$s</string>
-    <string name="order_detail_amount_x">数量：%1$s&#160;%2$s</string>
+    <string name="order_detail_amount_x">数量：%1$f&#160;%2$s</string>
     <string name="otc_order_success_wait_pay">您已经成功下单，请及时支付</string>
     <string name="otc_trade_complete_desc">已成交</string>
     <string name="wait_buyer_to_pay">待买家付款</string>

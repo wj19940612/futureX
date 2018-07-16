@@ -452,7 +452,8 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                     default:
                 }
                 mLegalAmount.setText(otcWarePoster.getPayCurrency().toUpperCase());
-                mLimit.setText(getString(R.string.limit_range_x, FinanceUtil.trimTrailingZero(otcWarePoster.getMinTurnover()), FinanceUtil.trimTrailingZero(otcWarePoster.getMaxTurnover())));
+                mLimit.setText(getString(R.string.limit_range_x, FinanceUtil.subZeroAndDot(otcWarePoster.getMinTurnover(),8),
+                        FinanceUtil.subZeroAndDot(otcWarePoster.getMaxTurnover(),8)));
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:
                         mEdit.setEnabled(true);

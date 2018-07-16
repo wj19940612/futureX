@@ -21,14 +21,10 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.DrawLimit;
 import com.songbai.futurex.utils.FinanceUtil;
-import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ZXingUtils;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.TitleBar;
-import com.umeng.commonsdk.statistics.common.MLog;
-
-import java.text.NumberFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,7 +99,7 @@ public class ReChargeCoinFragment extends UniqueActivity.UniFragment {
                                 mCoinType.toUpperCase(),
                                 drawLimit.getConfirm(),
                                 getString(R.string.amount_space_coin_x,
-                                        String.valueOf(drawLimit.getMinWithdrawAmount()), mCoinType.toUpperCase())));
+                                        FinanceUtil.subZeroAndDot(drawLimit.getMinWithdrawAmount(),8), mCoinType.toUpperCase())));
                     }
                 })
                 .fire();

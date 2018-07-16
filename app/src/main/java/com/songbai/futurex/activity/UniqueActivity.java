@@ -47,7 +47,7 @@ public class UniqueActivity extends BaseActivity {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
-                KeyBoardUtils.closeOrOpenKeyBoard();
+                KeyBoardUtils.closeKeyboard(v);
                 v.clearFocus();
             }
             return super.dispatchTouchEvent(ev);

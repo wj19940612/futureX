@@ -119,10 +119,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         otcOrderDetail();
         otcWaresMine();
         orderPayInfo();
-        initImPush();
+        initSocketListener();
+        initEntrustPush();
     }
+
     private void initSocketListener() {
-        //初始化推送回调
         mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code) {
@@ -136,7 +137,8 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         });
         mOtcProcessor.resume();
     }
-    private void initImPush() {
+
+    private void initEntrustPush() {
         mOtcProcessor.registerEntrust();
     }
 
@@ -182,8 +184,8 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                         }
                         otcOrderDetail();
                         Intent data = new Intent();
-                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH,true);
-                        setResult(LEGAL_CURRENCY_ORDER_RESULT,data);
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
+                        setResult(LEGAL_CURRENCY_ORDER_RESULT, data);
                     }
                 }).fire();
     }
@@ -210,8 +212,8 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                         }
                         otcOrderDetail();
                         Intent data = new Intent();
-                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH,true);
-                        setResult(LEGAL_CURRENCY_ORDER_RESULT,data);
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
+                        setResult(LEGAL_CURRENCY_ORDER_RESULT, data);
                     }
                 }).fire();
     }
@@ -267,9 +269,9 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 FinanceUtil.formatWithScale(order.getOrderPrice()),
                 order.getPayCurrency().toUpperCase(), coinSymbol.toUpperCase()));
         mTradeAmount.setText(getString(R.string.order_detail_amount_x,
-                FinanceUtil.formatWithScale(order.getOrderCount()),
+                order.getOrderCount(),
                 coinSymbol.toUpperCase()));
-        mOrderNo.setText(getString(R.string.pound_sign_x,order.getOrderId()));
+        mOrderNo.setText(getString(R.string.pound_sign_x, order.getOrderId()));
         switch (order.getStatus()) {
             case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
@@ -352,6 +354,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
+        mOtcProcessor.pause();
     }
 
     @OnClick({R.id.sellerInfo, R.id.bankEmptyView, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
