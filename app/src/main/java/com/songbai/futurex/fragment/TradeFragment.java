@@ -63,6 +63,7 @@ import com.songbai.futurex.view.dialog.ItemSelectController;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.MarketData;
@@ -375,23 +376,29 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                new DataParser<Response<PairMarket>>(data) {
-                    @Override
-                    public void onSuccess(Response<PairMarket> pairMarketResponse) {
-                        PairMarket pairMarket = pairMarketResponse.getContent();
-                        if (pairMarket != null && pairMarket.isVaild()) {
-                            updateMarketView(pairMarketResponse.getContent());
+                if (PushDestUtils.isSoloMarket(dest)) {
+                    new DataParser<Response<PairMarket>>(data) {
+                        @Override
+                        public void onSuccess(Response<PairMarket> pairMarketResponse) {
+                            PairMarket pairMarket = pairMarketResponse.getContent();
+                            if (pairMarket != null && pairMarket.isVaild()) {
+                                updateMarketView(pairMarketResponse.getContent());
+                            }
                         }
-                    }
-                }.parse();
-
-                new DataParser<Response<Map<String, MarketData>>>(data) {
-                    @Override
-                    public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
-                        if (mPairsPopup == null) return;
-                        mPairsPopup.setMarketDataList(mapResponse.getContent());
-                    }
-                }.parse();
+                    }.parse();
+                }
+                if (PushDestUtils.isAllMarket(dest)) {
+                    new DataParser<Response<Map<String, MarketData>>>(data) {
+                        @Override
+                        public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
+                            if (mPairsPopup == null) return;
+                            mPairsPopup.setMarketDataList(mapResponse.getContent());
+                        }
+                    }.parse();
+                }
+                if (PushDestUtils.isEntrustOrder(dest)) {
+                    
+                }
             }
         });
     }

@@ -38,6 +38,7 @@ import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.MarketData;
@@ -146,13 +147,15 @@ public class MarketFragment extends BaseFragment {
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                new DataParser<Response<Map<String, MarketData>>>(data) {
-                    @Override
-                    public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
-                        mCurrencyPairAdapter.setMarketDataList(mapResponse.getContent());
-                        mOptionalAdapter.setMarketDataList(mapResponse.getContent());
-                    }
-                }.parse();
+                if (PushDestUtils.isAllMarket(dest)) {
+                    new DataParser<Response<Map<String, MarketData>>>(data) {
+                        @Override
+                        public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
+                            mCurrencyPairAdapter.setMarketDataList(mapResponse.getContent());
+                            mOptionalAdapter.setMarketDataList(mapResponse.getContent());
+                        }
+                    }.parse();
+                }
             }
         });
 
