@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -334,6 +335,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mOrderAdapter = new OrderAdapter(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
+                if (obj instanceof Order && ((Order) obj).hasDealDetail()) {
+                    UniqueActivity.launcher(getActivity(), DealDetailFragment.class)
+                            .putExtra(ExtraKeys.ORDER, (Parcelable) obj)
+                            .execute();
+                }
             }
         });
         mOrderAdapter.setOnOrderRevokeClickListener(new OrderAdapter.OnOrderRevokeClickListener() {
@@ -368,7 +374,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
+            public void onDataReceive(String data, int code, String dest) {
                 new DataParser<Response<PairMarket>>(data) {
                     @Override
                     public void onSuccess(Response<PairMarket> pairMarketResponse) {

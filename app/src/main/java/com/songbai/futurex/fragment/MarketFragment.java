@@ -145,7 +145,7 @@ public class MarketFragment extends BaseFragment {
 
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
+            public void onDataReceive(String data, int code, String dest) {
                 new DataParser<Response<Map<String, MarketData>>>(data) {
                     @Override
                     public void onSuccess(Response<Map<String, MarketData>> mapResponse) {

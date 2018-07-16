@@ -167,7 +167,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
+            public void onDataReceive(String data, int code, String dest) {
                 new DataParser<Response<PairMarket>>(data) {
                     @Override
                     public void onSuccess(Response<PairMarket> pairMarketResponse) {

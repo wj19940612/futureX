@@ -651,4 +651,5 @@
     <string name="deal_fee_x">手续费 (%1$s)</string>
     <string name="time_x">时间 %1$s</string>
     <string name="deal_detail">成交明细</string>
+    <string name="revoke_order">撤单</string>
 </resources>

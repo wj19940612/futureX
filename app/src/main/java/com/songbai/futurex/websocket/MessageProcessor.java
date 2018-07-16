@@ -118,7 +118,7 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
     public void send(Request request) {
         if (!Network.isNetworkAvailable()) {
             Response resp = new Response(Response.NETWORK_ERROR);
-            onDataReceived(mGson.toJson(resp), resp.getCode());
+            onDataReceived(mGson.toJson(resp), resp.getCode(), resp.getDest());
             return;
         }
 
@@ -184,7 +184,7 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
         }
 
         if (resp.code == Response.PUSH) {
-            onDataReceived(receivedMsg, resp.code);
+            onDataReceived(receivedMsg, resp.code, resp.dest);
             return;
         }
     }
@@ -192,19 +192,16 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
     public static class Resp {
         int code;
         long timestamp;
-        String uuid;
-        String msgId;
-        String message;
+        String dest;
         // 后期做请求管理和推送过滤会用到
     }
 
-    private void onDataReceived(final String msg, final int code) {
+    private void onDataReceived(final String msg, final int code, final String dest) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
                 for (OnDataRecListener onDataRecListener : mOnDataRecListeners) {
-                    Log.e("zzz", "msg:" + msg);
-                    onDataRecListener.onDataReceive(msg, code);
+                    onDataRecListener.onDataReceive(msg, code, dest);
                 }
             }
         });

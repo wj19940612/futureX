@@ -125,7 +125,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         //初始化推送回调
         mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
+            public void onDataReceive(String data, int code, String dest) {
                 new DataParser<Response<Object>>(data) {
 
                     @Override
