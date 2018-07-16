@@ -79,8 +79,10 @@
     <string name="ali_pay_account">支付宝账号</string>
     <string name="add_wei_chat_pay">添加微信支付</string>
     <string name="wei_chat_account">微信账号</string>
+    <string name="name">姓名</string>
     <string name="please_input_name">请填写姓名</string>
     <string name="add_banking_card">添加银行卡</string>
+    <string name="location">地&#8195;&#8195;区</string>
     <string name="with_draw_pass">资金密码</string>
     <string name="please_input_with_draw_pass">请输入资金密码</string>
     <string name="please_input_ali_pay_account">请填写支付宝账号</string>

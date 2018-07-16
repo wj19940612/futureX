@@ -194,13 +194,10 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void initSocketListener() {
-        //初始化推送回调
         mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                Log.e("wtf", "onDataReceive: " + dest);
-                if (PushDestUtils.isOtcChat(dest)) {
-                    Log.e("wtf", "onDataReceive: " + "收到");
+                if (PushDestUtils.isOtcChat(mOrderId, dest)) {
                     new DataParser<Response<OtcChatMessage>>(data) {
 
                         @Override

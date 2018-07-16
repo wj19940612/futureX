@@ -202,6 +202,15 @@ public class Apic {
     }
 
     /**
+     * /api/otc/bank/account
+     * GET
+     * 查询支付宝/微信账号
+     */
+    public static Api otcBankAccount(int id) {
+        return Api.get("/api/otc/bank/account", new ReqParams().put("id", id));
+    }
+
+    /**
      * /api/entrust/coin/loadSimpleList.do
      * GET
      * 查询所有币种
