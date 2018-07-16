@@ -651,6 +651,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private void updateTradeCurrencyView() {
+        if (mCurrencyPair == null) return;
+
         if (LocalUser.getUser().isLogin() && mAvailableCurrencyList != null) {
             // 默认买入
             String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
@@ -839,6 +841,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private void toggleOptionalStatus() {
+        if (mCurrencyPair == null) return;
+
         if (mOptionalStatus.isSelected()) { // 已经添加自选
             Apic.cancelOptional(mCurrencyPair.getPairs()).tag(TAG)
                     .callback(new Callback<Resp>() {
