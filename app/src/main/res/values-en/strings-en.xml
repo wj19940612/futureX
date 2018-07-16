@@ -306,6 +306,7 @@
     <string name="otc_order_cancel">Your OTC order has been cancelled</string>
     <string name="otc_order_delay">Your order has been delayed</string>
     <string name="plus_sign_x">+%1$s</string>
+    <string name="increasing_ranks">Increasing Ranks</string>
 
     <!--LEGAL_CURRENCY-->
     <string-array name="legal_currency_header">

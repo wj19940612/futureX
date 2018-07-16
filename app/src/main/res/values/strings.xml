@@ -324,6 +324,7 @@
     <string name="otc_order_cancel">您的法币订单已取消</string>
     <string name="otc_order_delay">您的订单已延期</string>
     <string name="plus_sign_x">+%1$s</string>
+    <string name="increasing_ranks">涨幅榜</string>
 
     <!--LEGAL_CURRENCY-->
     <string-array name="legal_currency_header">
