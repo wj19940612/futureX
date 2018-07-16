@@ -132,14 +132,14 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
                 }
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
-                mDealTotalAmt.setText(CurrencyUtils.getAmt(order.getDealCount() * order.getDealPrice()));
-                mDealAveragePrice.setText(CurrencyUtils.getPrice(order.getDealPrice()));
-                mDealVolume.setText(CurrencyUtils.getVolume(order.getDealCount()));
+                mDealTotalAmt.setText(CurrencyUtils.getAmt(order.getDealCountDouble() * order.getDealPriceDouble()));
+                mDealAveragePrice.setText(order.getDealPrice());
+                mDealVolume.setText(order.getDealCount());
                 mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix().toUpperCase()));
                 mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix().toUpperCase()));
                 mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix().toUpperCase()));
                 mDealFeeTitle.setText(context.getString(R.string.deal_fee_x, order.getPrefix().toUpperCase()));
-                mDealFee.setText(CurrencyUtils.getPrice(order.getPoundage()));
+                mDealFee.setText(order.getPoundage());
             }
         }
 
@@ -160,9 +160,9 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
 
             public void bind(Order order, DealDetail dealDetail, Context context) {
                 mTime.setText(context.getString(R.string.time_x, DateUtil.format(dealDetail.getDealTime(), "HH:mm MM/dd")));
-                mDealPrice.setText(CurrencyUtils.getPrice(dealDetail.getDealPrice()) + " " + order.getSuffix().toUpperCase());
-                mDealVolume.setText(CurrencyUtils.getVolume(dealDetail.getDealCount()) + " " +  order.getPrefix().toUpperCase());
-                mDealFee.setText(CurrencyUtils.getPrice(dealDetail.getPoundage()) + " " +  order.getPrefix().toUpperCase());
+                mDealPrice.setText(dealDetail.getDealPrice() + " " + order.getSuffix().toUpperCase());
+                mDealVolume.setText(dealDetail.getDealCount() + " " +  order.getPrefix().toUpperCase());
+                mDealFee.setText(dealDetail.getPoundage() + " " +  order.getPrefix().toUpperCase());
             }
         }
 

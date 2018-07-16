@@ -159,7 +159,7 @@ public class CustomServiceActivity extends BaseActivity {
         //初始化推送回调
         mIMProcessor = new IMProcessor(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
+            public void onDataReceive(String data, int code, String dest) {
                 new DataParser<Response<CustomServiceChat>>(data) {
 
                     @Override

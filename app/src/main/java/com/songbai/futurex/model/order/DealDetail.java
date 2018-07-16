@@ -33,17 +33,17 @@ public class DealDetail {
     private String changeAmount;
     private String coinSymbol;
     private long createTime;
-    private double dealCount;
-    private double dealPrice;
+    private String dealCount;
+    private String dealPrice;
     private long dealTime;
     private int direction;
     private int entrustId;
-    private double entrustPrice;
+    private String entrustPrice;
     private int entrustSrc;
     private int entrustType;
     private int id;
     private String pairs;
-    private double poundage;
+    private String poundage;
     private int status;
     private int userId;
 
@@ -51,84 +51,36 @@ public class DealDetail {
         return alreadyCount;
     }
 
-    public void setAlreadyCount(String alreadyCount) {
-        this.alreadyCount = alreadyCount;
-    }
-
     public String getChangeAmount() {
         return changeAmount;
-    }
-
-    public void setChangeAmount(String changeAmount) {
-        this.changeAmount = changeAmount;
     }
 
     public String getCoinSymbol() {
         return coinSymbol;
     }
 
-    public void setCoinSymbol(String coinSymbol) {
-        this.coinSymbol = coinSymbol;
-    }
-
     public long getCreateTime() {
         return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
-    public double getDealCount() {
-        return dealCount;
-    }
-
-    public double getDealPrice() {
-        return dealPrice;
     }
 
     public long getDealTime() {
         return dealTime;
     }
 
-    public void setDealTime(long dealTime) {
-        this.dealTime = dealTime;
-    }
-
     public int getDirection() {
         return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
     }
 
     public int getEntrustId() {
         return entrustId;
     }
 
-    public void setEntrustId(int entrustId) {
-        this.entrustId = entrustId;
-    }
-
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getPairs() {
         return pairs;
-    }
-
-    public void setPairs(String pairs) {
-        this.pairs = pairs;
-    }
-
-    public double getPoundage() {
-        return poundage;
     }
 
     public int getStatus() {
@@ -139,11 +91,27 @@ public class DealDetail {
         this.status = status;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getDealCount() {
+        return dealCount;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public String getDealPrice() {
+        return dealPrice;
+    }
+
+    public String getEntrustPrice() {
+        return entrustPrice;
+    }
+
+    public int getEntrustSrc() {
+        return entrustSrc;
+    }
+
+    public int getEntrustType() {
+        return entrustType;
+    }
+
+    public String getPoundage() {
+        return poundage;
     }
 }

@@ -46,11 +46,11 @@ public class Order implements OrderStatus, Parcelable {
     private String amount;
     private long cancelTime;
     private long createTime;
-    private double dealCount;
-    private double dealPrice;
+    private String dealCount;
+    private String dealPrice;
     private int direction;
-    private double entrustCount;
-    private double entrustPrice;
+    private String entrustCount;
+    private String entrustPrice;
     private int entrustType;
     private String feeCoin;
     private String id;
@@ -58,7 +58,7 @@ public class Order implements OrderStatus, Parcelable {
     private int orderStatus;
     private long orderTime;
     private String pairs;
-    private double poundage;
+    private String poundage;
     private int status;
     private long updateTime;
 
@@ -74,23 +74,41 @@ public class Order implements OrderStatus, Parcelable {
         return createTime;
     }
 
-    public double getDealCount() {
+    public String getDealCount() {
         return dealCount;
     }
 
-    public double getDealPrice() {
+    public double getDealCountDouble() {
+        try {
+            return Double.parseDouble(dealCount);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public String getDealPrice() {
         return dealPrice;
+    }
+
+    public double getDealPriceDouble() {
+        try {
+            return Double.parseDouble(dealPrice);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     public int getDirection() {
         return direction;
     }
 
-    public double getEntrustCount() {
+    public String getEntrustCount() {
         return entrustCount;
     }
 
-    public double getEntrustPrice() {
+    public String getEntrustPrice() {
         return entrustPrice;
     }
 
@@ -118,7 +136,7 @@ public class Order implements OrderStatus, Parcelable {
         return pairs;
     }
 
-    public double getPoundage() {
+    public String getPoundage() {
         return poundage;
     }
 
@@ -182,11 +200,11 @@ public class Order implements OrderStatus, Parcelable {
         dest.writeString(this.amount);
         dest.writeLong(this.cancelTime);
         dest.writeLong(this.createTime);
-        dest.writeDouble(this.dealCount);
-        dest.writeDouble(this.dealPrice);
+        dest.writeString(this.dealCount);
+        dest.writeString(this.dealPrice);
         dest.writeInt(this.direction);
-        dest.writeDouble(this.entrustCount);
-        dest.writeDouble(this.entrustPrice);
+        dest.writeString(this.entrustCount);
+        dest.writeString(this.entrustPrice);
         dest.writeInt(this.entrustType);
         dest.writeString(this.feeCoin);
         dest.writeString(this.id);
@@ -194,7 +212,7 @@ public class Order implements OrderStatus, Parcelable {
         dest.writeInt(this.orderStatus);
         dest.writeLong(this.orderTime);
         dest.writeString(this.pairs);
-        dest.writeDouble(this.poundage);
+        dest.writeString(this.poundage);
         dest.writeInt(this.status);
         dest.writeLong(this.updateTime);
     }
@@ -206,11 +224,11 @@ public class Order implements OrderStatus, Parcelable {
         this.amount = in.readString();
         this.cancelTime = in.readLong();
         this.createTime = in.readLong();
-        this.dealCount = in.readDouble();
-        this.dealPrice = in.readDouble();
+        this.dealCount = in.readString();
+        this.dealPrice = in.readString();
         this.direction = in.readInt();
-        this.entrustCount = in.readDouble();
-        this.entrustPrice = in.readDouble();
+        this.entrustCount = in.readString();
+        this.entrustPrice = in.readString();
         this.entrustType = in.readInt();
         this.feeCoin = in.readString();
         this.id = in.readString();
@@ -218,12 +236,12 @@ public class Order implements OrderStatus, Parcelable {
         this.orderStatus = in.readInt();
         this.orderTime = in.readLong();
         this.pairs = in.readString();
-        this.poundage = in.readDouble();
+        this.poundage = in.readString();
         this.status = in.readInt();
         this.updateTime = in.readLong();
     }
 
-    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
         @Override
         public Order createFromParcel(Parcel source) {
             return new Order(source);

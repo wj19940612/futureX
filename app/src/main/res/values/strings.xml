@@ -623,7 +623,7 @@
     </string-array>
     <string name="available_currency_x_x">可用&#160;%1$s&#160;%2$s</string>
     <string name="obtainable_currency_x_x">可得&#160;%1$s&#160;%2$s</string>
-    <string name="obtainable_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
+    <string name="trade_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
     <string name="please_choose_limited_condition">请选择限制条件</string>
     <string name="entrust_price_x">委托价 (%1$s)</string>
     <string name="entrust_volume_x">委托量 (%1$s)</string>
@@ -633,7 +633,9 @@
     <string name="deal_price">成交价</string>
     <string name="deal_volume_x">成交量 (%1$s)</string>
     <string name="deal_volume">成交量</string>
+    <string name="pending_deal">等待成交</string>
     <string name="deal_with_arrow">已成交></string>
+    <string name="revoking">正在撤单</string>
     <string name="revoked">已撤销</string>
     <string name="part_deal_with_arrow">部分成交></string>
     <string name="system_revoked">系统撤销</string>
@@ -649,4 +651,5 @@
     <string name="deal_fee_x">手续费 (%1$s)</string>
     <string name="time_x">时间 %1$s</string>
     <string name="deal_detail">成交明细</string>
+    <string name="revoke_order">撤单</string>
 </resources>

@@ -596,7 +596,7 @@
     </string-array>
     <string name="available_currency_x_x">Available &#160;%1$s&#160;%2$s</string>
     <string name="obtainable_currency_x_x">Gainable &#160;%1$s&#160;%2$s</string>
-    <string name="obtainable_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
+    <string name="trade_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
     <string name="please_choose_limited_condition">Select the conditions</string>
     <string name="entrust_price_x">Order price (%1$s)</string>
     <string name="entrust_volume_x">Order amount (%1$s)</string>

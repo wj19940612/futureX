@@ -9,5 +9,5 @@ package com.songbai.futurex.websocket;
  */
 public interface OnDataRecListener {
 
-    void onDataReceive(String data, int code);
+    void onDataReceive(String data, int code, String dest);
 }

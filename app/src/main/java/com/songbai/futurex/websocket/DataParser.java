@@ -44,10 +44,10 @@ public abstract class DataParser<T> {
             processResult(result);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
-            Log.d("WebSocket", "DataParser parse(JsonSyntaxException): " + e.toString());
+            Log.d("WebSocket", "DataParser:JsonSyntaxException(" + type.toString() + "): " + e.toString());
         } catch (JsonParseException e) {
             e.printStackTrace();
-            Log.d("WebSocket", "DataParser parse(JsonParseException): " + e.toString());
+            Log.d("WebSocket", "DataParser:JsonParseException(" + type.toString() + "): " + e.toString());
         }
     }
 

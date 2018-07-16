@@ -91,7 +91,7 @@ public class HistoryFilter {
         void onFilter(FilterResult filterResult);
     }
 
-    public HistoryFilter(View view, View dimView) {
+    public HistoryFilter(View view, final View dimView) {
         this.mView = view;
         ButterKnife.bind(this, view);
 
@@ -100,6 +100,12 @@ public class HistoryFilter {
         mCounterCurrencyList.remove(mCounterCurrencyList.size() - 1); // remove optional
         mDimView = dimView;
         mFilterResult = new FilterResult();
+        mDimView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     @OnClick({R.id.counterCurrency, R.id.buyBtn, R.id.sellBtn, R.id.reset, R.id.filterBtn})
