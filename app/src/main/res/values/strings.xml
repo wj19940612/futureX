@@ -318,9 +318,9 @@
     <string name="otc_sell_pay">您的法币交易订单，卖家已确认收款，并转币，请查收>></string>
     <string name="otc_order_msg">您的订单已经回复,赶紧去看看吧>></string>
     <string name="user_auth_fail">您提交的认证信息审核失败，点击查看详情</string>
-    <string name="arbitrage_pass">平台仲裁-->通过</string>
-    <string name="arbitrage_reject">平台仲裁-->拒绝</string>
-    <string name="off_shelves_wares">系统下架不满足条件的广告</string>
+    <string name="arbitrage_pass">经过平台仲裁，%1$s,该笔订单已经成功交易，赶紧去看看吧>></string>
+    <string name="arbitrage_reject">经过平台仲裁，%1$s,该笔订单已被平台终止，赶紧去看看吧>></string>
+    <string name="off_shelves_wares">您的广告已被系统自动下架：原因%1$s,赶紧去看看看吧</string>
     <string name="otc_order_cancel">您的法币订单已取消</string>
     <string name="otc_order_delay">您的订单已延期</string>
     <string name="plus_sign_x">+%1$s</string>

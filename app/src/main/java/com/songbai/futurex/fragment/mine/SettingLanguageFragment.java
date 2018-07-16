@@ -160,7 +160,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
                     match = locale.getLanguage().equals(supportLang.getLang()) && locale.getCountry().equals(country);
                 }
                 mCheck.setVisibility(match ? View.VISIBLE : View.GONE);
-                mLanguage.setText(supportLang.getEnglishName());
+                mLanguage.setText(supportLang.getName());
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

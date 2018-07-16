@@ -50,6 +50,7 @@ import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.CountDownView;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.otc.OtcProcessor;
 
@@ -197,19 +198,23 @@ public class OtcTradeChatActivity extends BaseActivity {
         mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                new DataParser<Response<OtcChatMessage>>(data) {
+                Log.e("wtf", "onDataReceive: " + dest);
+                if (PushDestUtils.isOtcChat(dest)) {
+                    Log.e("wtf", "onDataReceive: " + "收到");
+                    new DataParser<Response<OtcChatMessage>>(data) {
 
-                    @Override
-                    public void onSuccess(Response<OtcChatMessage> resp) {
-                        OtcChatMessage otcChatMessage = resp.getContent();
-                        if (otcChatMessage.getDirection() == mTradeDirection) {
-                            return;
+                        @Override
+                        public void onSuccess(Response<OtcChatMessage> resp) {
+                            OtcChatMessage otcChatMessage = resp.getContent();
+                            if (otcChatMessage.getDirection() == mTradeDirection) {
+                                return;
+                            }
+                            mOtcChatMessages.add(otcChatMessage);
+                            mChatAdapter.notifyDataSetChanged();
+                            updateRecyclerViewPosition(true);
                         }
-                        mOtcChatMessages.add(otcChatMessage);
-                        mChatAdapter.notifyDataSetChanged();
-                        updateRecyclerViewPosition(true);
-                    }
-                }.parse();
+                    }.parse();
+                }
             }
         });
         mOtcProcessor.resume();

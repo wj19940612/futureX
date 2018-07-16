@@ -300,9 +300,9 @@
     <string name="otc_sell_pay">The seller has recieved the money and released token. Check it now>></string>
     <string name="otc_order_msg">Your order is responded. Check it now>></string>
     <string name="user_auth_fail">Fail to pass authentication. Click to check details</string>
-    <string name="arbitrage_pass">Platform arbitration-->Passed</string>
-    <string name="arbitrage_reject">Platform arbitration-->Rejected</string>
-    <string name="off_shelves_wares">Ads no longer up to requirement is put off shelves by system</string>
+    <string name="arbitrage_pass">After arbitration,%1$s,this order has clinched a deal.Go and click it>></string>
+    <string name="arbitrage_reject">After arbitration,%1$s,this order has been terminated by platform.Go and click it>></string>
+    <string name="off_shelves_wares">Your ad has been put off shelves buy system，because %1$s it no longer up to the requirement>></string>
     <string name="otc_order_cancel">Your OTC order has been cancelled</string>
     <string name="otc_order_delay">Your order has been delayed</string>
     <string name="plus_sign_x">+%1$s</string>

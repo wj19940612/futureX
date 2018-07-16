@@ -2,6 +2,8 @@ package com.songbai.futurex.websocket;
 
 import android.text.TextUtils;
 
+import com.songbai.futurex.websocket.otc.OtcParam;
+
 /**
  * Modified by john on 2018/7/16
  * <p>
@@ -21,5 +23,9 @@ public class PushDestUtils {
 
     public static boolean isEntrustOrder(String dest) {
         return "queue:entrust".equals(dest);
+    }
+
+    public static boolean isOtcChat(String dest) {
+        return OtcParam.OTC_CHAT.equals(dest);
     }
 }
