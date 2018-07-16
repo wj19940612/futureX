@@ -599,7 +599,7 @@ public class RegisterActivity extends BaseActivity {
 
             public void bind(final AreaCode areaCode) {
                 mCountryName.setText(areaCode.getName());
-                mAreaCode.setText("+" + areaCode.getTeleCode());
+                mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode.getTeleCode()));
             }
         }
     }

@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
  */
 public class CurrencyPairsPopup {
     private Map<String, List<CurrencyPair>> mPairListMap;
+    private List<String> mCounterCurrencyStrings;
     private View mView;
     private PopupWindow mPopupWindow;
     private View mDimView;
@@ -79,9 +80,9 @@ public class CurrencyPairsPopup {
         });
 
         String[] stringArray = context.getResources().getStringArray(R.array.market_radio_header);
-        List<String> counterCurrency = new ArrayList<>(Arrays.asList(stringArray));
+        mCounterCurrencyStrings = new ArrayList<>(Arrays.asList(stringArray));
         mCounterCurrencyList.setLayoutManager(new LinearLayoutManager(context));
-        mCounterCurrencyAdapter = new CounterCurrencyAdapter(counterCurrency, mCurCurrencyPair.getSuffixSymbol(),
+        mCounterCurrencyAdapter = new CounterCurrencyAdapter(mCounterCurrencyStrings, mCurCurrencyPair.getSuffixSymbol(),
                 new OnRVItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position, Object obj) {
@@ -125,6 +126,7 @@ public class CurrencyPairsPopup {
 
     public void selectCounterCurrency(String counterCurrency) {
         mCounterCurrencyAdapter.setSelectedCurrency(counterCurrency);
+        mBaseBaseCurrencyAdapter.setIsOptional(mCounterCurrencyStrings.indexOf(counterCurrency) == mCounterCurrencyStrings.size() - 1);
         List<CurrencyPair> pairList = mPairListMap.get(counterCurrency);
         if (pairList != null) {
             mBaseBaseCurrencyAdapter.setCurrencyPairList(pairList);
@@ -259,6 +261,7 @@ public class CurrencyPairsPopup {
         private List<CurrencyPair> mCurrencyPairList;
         private CurrencyPair mCurCurrencyPair;
         private Map<String, MarketData> mMarketDataList;
+        private boolean mIsOptional;
 
         public BaseCurrencyAdapter(CurrencyPair currencyPair, OnRVItemClickListener onRVItemClickListener) {
             mOnRVItemClickListener = onRVItemClickListener;
@@ -286,7 +289,7 @@ public class CurrencyPairsPopup {
 
         @Override
         public void onBindViewHolder(@NonNull final VHolder holder, final int position) {
-            holder.bind(mCurrencyPairList.get(position), mCurCurrencyPair, mMarketDataList, mContext);
+            holder.bind(mCurrencyPairList.get(position), mCurCurrencyPair, mMarketDataList, mIsOptional, mContext);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -298,6 +301,10 @@ public class CurrencyPairsPopup {
         @Override
         public int getItemCount() {
             return mCurrencyPairList.size();
+        }
+
+        public void setIsOptional(boolean isOptional) {
+            mIsOptional = isOptional;
         }
 
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
@@ -323,9 +330,10 @@ public class CurrencyPairsPopup {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair currencyPair, CurrencyPair selectedPair, Map<String, MarketData> marketDataList, Context context) {
+            public void bind(CurrencyPair currencyPair, CurrencyPair selectedPair, Map<String, MarketData> marketDataList, boolean isOptional, Context context) {
                 mCurrencyName.setText(currencyPair.getPrefixSymbol().toUpperCase());
                 mCounterCurrencyName.setText(currencyPair.getSuffixSymbol().toUpperCase());
+                mCounterCurrencyName.setVisibility(isOptional ? View.VISIBLE : View.GONE);
                 if (currencyPair.getPairs().equalsIgnoreCase(selectedPair.getPairs())) {
                     mMark.setVisibility(View.VISIBLE);
                 } else {
