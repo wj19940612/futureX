@@ -76,8 +76,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
                         mLanguageAdapter.setList(resp.getData());
                         mLanguageAdapter.notifyDataSetChanged();
                     }
-                })
-                .fireFreely();
+                }).fireFreely();
     }
 
     @Override

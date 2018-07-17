@@ -2,13 +2,13 @@
     <string name="app_name">BITFUTURE</string>
 
     <!-- http 请求信息 -->
-    <string name="http_error_null">Null data error</string>
+    <string name="http_error_null">Empty data error</string>
     <string name="http_error_timeout">Network request timeout</string>
     <string name="http_error_network">Network error</string>
-    <string name="http_error_parse">Data error</string>
+    <string name="http_error_parse">Data parse error</string>
     <string name="http_error_server">Server busy. Please wait.</string>
     <!--data 处理异常-->
-    <string name="data_parse_error">Data analysis error</string>
+    <string name="data_parse_error">Data parse error</string>
 
     <!-- Crash -->
     <string name="restart_app">Restart</string>
@@ -443,7 +443,7 @@
     <string name="market">Market</string>
     <string name="legal_currency">OTC</string>
     <string name="coin_coin">Exchange</string>
-    <string name="mine">Mine</string>
+    <string name="mine">Account</string>
     <string-array name="tabTexts">
         <item>@string/home</item>
         <item>@string/market</item>
