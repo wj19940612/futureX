@@ -286,7 +286,11 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
                 mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
-                mEntrustPrice.setText(order.getEntrustPrice());
+                if (order.getEntrustType() == Order.LIMIT_TRADE) {
+                    mEntrustPrice.setText(order.getEntrustPrice());
+                } else {
+                    mEntrustPrice.setText(R.string.market_price);
+                }
                 mEntrustVolume.setText(order.getEntrustCount());
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
                 mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix().toUpperCase()));
@@ -356,7 +360,11 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
                 mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
-                mEntrustPrice.setText(order.getEntrustPrice());
+                if (order.getEntrustType() == Order.LIMIT_TRADE) {
+                    mEntrustPrice.setText(order.getEntrustPrice());
+                } else {
+                    mEntrustPrice.setText(R.string.market_price);
+                }
                 mEntrustVolume.setText(order.getEntrustCount());
                 mActualDealVolume.setText(order.getDealCount());
                 mRevoke.setText(getStatusTextRes(order.getStatus()));

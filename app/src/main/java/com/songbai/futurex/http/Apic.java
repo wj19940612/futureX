@@ -68,7 +68,7 @@ public class Apic {
                         .put("identify", "cn")
                         .put("version", AppInfo.getVersionName(App.getAppContext()))
 //                        .put("version", AppInfo.getVersionName(App.getAppContext()))
-                        .put("platform", 2));
+                        .put("platform", 0));
     }
 
     /**

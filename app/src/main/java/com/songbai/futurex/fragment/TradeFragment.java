@@ -32,6 +32,7 @@ import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
+import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -888,6 +889,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 showTradeTypeSelector();
                 break;
             case R.id.recharge:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), MyPropertyActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.tradeButton:
                 if (LocalUser.getUser().isLogin()) {
@@ -1093,7 +1099,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
                 mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
-                mEntrustPrice.setText(order.getEntrustPrice());
+                if (order.getEntrustType() == Order.LIMIT_TRADE) {
+                    mEntrustPrice.setText(order.getEntrustPrice());
+                } else {
+                    mEntrustPrice.setText(R.string.market_price);
+                }
                 mEntrustVolume.setText(order.getEntrustCount());
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
                 mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
