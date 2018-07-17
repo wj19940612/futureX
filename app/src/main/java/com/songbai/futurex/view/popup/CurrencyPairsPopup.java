@@ -2,9 +2,11 @@ package com.songbai.futurex.view.popup;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.utils.CurrencyUtils;
+import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.recycler.DividerItemDecor;
 import com.songbai.futurex.websocket.model.MarketData;
@@ -43,13 +46,30 @@ public class CurrencyPairsPopup {
     private View mDimView;
 
     private RecyclerView mCounterCurrencyList;
-    private RecyclerView mBaseCurrencyList;
+    private MaxHeightRecyclerView mBaseCurrencyList;
 
     private CounterCurrencyAdapter mCounterCurrencyAdapter;
     private BaseCurrencyAdapter mBaseBaseCurrencyAdapter;
     private CurrencyPair mCurCurrencyPair;
     private OnCurrencyChangeListener mOnCurrencyChangeListener;
     private OnSearchBoxClickListener mOnSearchBoxClickListener;
+
+    public static class MaxHeightRecyclerView extends RecyclerView {
+
+        public MaxHeightRecyclerView(Context context) {
+            super(context);
+        }
+
+        public MaxHeightRecyclerView(Context context, @Nullable AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        @Override
+        protected void onMeasure(int widthSpec, int heightSpec) {
+            heightSpec = MeasureSpec.makeMeasureSpec((int) Display.dp2Px(300, getResources()), MeasureSpec.AT_MOST);
+            super.onMeasure(widthSpec, heightSpec);
+        }
+    }
 
     public interface OnSearchBoxClickListener {
         void onSearchBoxClick();

@@ -915,6 +915,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     protected void onRespSuccess(Resp resp) {
                         mPage = 0;
                         requestOrderList();
+                        ToastUtil.show(R.string.entrust_success);
                     }
                 }).fire();
     }
@@ -1162,7 +1163,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
                 mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
-                mEntrustPrice.setText(order.getEntrustPrice());
+                if (order.getEntrustType() == Order.LIMIT_TRADE) {
+                    mEntrustPrice.setText(order.getEntrustPrice());
+                } else {
+                    mEntrustPrice.setText(R.string.market_price);
+                }
                 mEntrustVolume.setText(order.getEntrustCount());
                 mActualDealVolume.setText(order.getDealCount());
                 mRevoke.setText(getStatusTextRes(order.getStatus()));

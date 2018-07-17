@@ -631,4 +631,5 @@
     <string name="deal_detail">成交明细</string>
     <string name="revoke_order">撤單</string>
     <string name="revoking_order">撤单中</string>
+    <string name="entrust_success">委托成功</string>
 </resources>
