@@ -1,11 +1,14 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -254,16 +257,44 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         mEtWithDrawAddress.setSelection(mEtWithDrawAddress.getText().length());
     }
 
-    private class AddressSelector extends SmartDialog.CustomViewController{
-        @Override
-        protected View onCreateView() {
-            LayoutInflater.from(getContext()).inflate(R.layout.view_draw_coin_address_selector,null);
-            return null;
+    static class AddressSelector extends SmartDialog.CustomViewController {
+
+        private Context mContext;
+        private OnConfirmClickListener mOnConfirmClickListener;
+
+        public AddressSelector(Context context, OnConfirmClickListener onConfirmClickListener) {
+            mContext = context;
+            mOnConfirmClickListener = onConfirmClickListener;
+        }
+
+        public interface OnConfirmClickListener {
+            void onCoinfirm();
         }
 
         @Override
-        protected void onInitView(View view, SmartDialog dialog) {
+        protected View onCreateView() {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.view_draw_coin_address_selector, null);
+            return view;
+        }
 
+        @Override
+        protected void onInitView(View view, final SmartDialog dialog) {
+            View cancel = view.findViewById(R.id.cancel);
+            View confirm = view.findViewById(R.id.confirm);
+            RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         }
     }
 }

@@ -3,8 +3,4 @@
 
     <dimen name="common_little_radius">3dp</dimen>
 
-    <dimen name="default_height">44dp</dimen>
-
-    <dimen name="common_padding">14dp</dimen>
-
 </resources>
