@@ -1,11 +1,14 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,6 +34,7 @@ import com.songbai.futurex.model.mine.DrawLimit;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
+import com.songbai.futurex.view.SmartDialog;
 
 import java.util.ArrayList;
 
@@ -115,7 +119,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
                 return;
             }
         }
-        double fee =  mWithdrawRate;
+        double fee = mWithdrawRate;
         mFee.setText(getString(R.string.amount_space_coin_x, FinanceUtil.formatWithScale(fee, 8), mAccountBean.getCoinType().toUpperCase()));
         mResultAmount.setText(getString(R.string.amount_space_coin_x,
                 FinanceUtil.formatWithScale(FinanceUtil.subtraction(value, fee).doubleValue(), 8), mAccountBean.getCoinType().toUpperCase()));
@@ -147,7 +151,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     }
 
     private void setLimit(DrawLimit drawLimit) {
-        String minWithDrawAmountStr = FinanceUtil.subZeroAndDot(drawLimit.getMinWithdrawAmount(),8);
+        String minWithDrawAmountStr = FinanceUtil.subZeroAndDot(drawLimit.getMinWithdrawAmount(), 8);
         mFee.setText(getString(R.string.amount_space_coin_x, FinanceUtil.formatWithScale(drawLimit.getWithdrawRate(), 8), mAccountBean.getCoinType().toUpperCase()));
         mWithDrawAmount.setHint(getString(R.string.min_draw_amount_coin_x, minWithDrawAmountStr, mAccountBean.getCoinType().toUpperCase()));
         mWithDrawRules.setText(getString(R.string.with_draw_rules_x, minWithDrawAmountStr, drawLimit.getConfirm()));
@@ -253,4 +257,44 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         mEtWithDrawAddress.setSelection(mEtWithDrawAddress.getText().length());
     }
 
+    static class AddressSelector extends SmartDialog.CustomViewController {
+
+        private Context mContext;
+        private OnConfirmClickListener mOnConfirmClickListener;
+
+        public AddressSelector(Context context, OnConfirmClickListener onConfirmClickListener) {
+            mContext = context;
+            mOnConfirmClickListener = onConfirmClickListener;
+        }
+
+        public interface OnConfirmClickListener {
+            void onCoinfirm();
+        }
+
+        @Override
+        protected View onCreateView() {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.view_draw_coin_address_selector, null);
+            return view;
+        }
+
+        @Override
+        protected void onInitView(View view, final SmartDialog dialog) {
+            View cancel = view.findViewById(R.id.cancel);
+            View confirm = view.findViewById(R.id.confirm);
+            RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        }
+    }
 }

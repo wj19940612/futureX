@@ -65,6 +65,9 @@ public class Apic {
     public static Api queryForceVersion() {
         return Api.get("/api/user/appVersion/queryForceVersion.do",
                 new ReqParams()
+                        .put("identify", "cn")
+                        .put("version", AppInfo.getVersionName(App.getAppContext()))
+//                        .put("version", AppInfo.getVersionName(App.getAppContext()))
                         .put("platform", 2));
     }
 
@@ -626,12 +629,11 @@ public class Apic {
     /**
      * /api/user/banner/findBannerList
      * GET
-     * 查询banner列表
+     * 查询banner列表 platform (1 android)
      */
-    public static Api findBannerList(String locale) {
+    public static Api findBannerList() {
         return Api.get("/api/user/banner/findBannerList.do",
-                new ReqParams()
-                        .put("locale", locale));
+                new ReqParams().put("platform", 1));
     }
 
     /**
@@ -639,11 +641,10 @@ public class Apic {
      * GET
      * 查询资讯列表
      */
-    public static Api findNewsList(int type, String lang, int offset, int size) {
+    public static Api findNewsList(int type, int offset, int size) {
         return Api.get("/api/user/news/findNewsList.do",
                 new ReqParams()
                         .put("type", type)
-                        .put("lang", lang)
                         .put("offset", offset)
                         .put("size", size));
     }

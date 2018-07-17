@@ -18,8 +18,6 @@
     <string name="ok">OK</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
 
     <string name="please_select_portrait">Select image</string>
     <string name="take_phone_from_camera">Camera</string>
@@ -28,7 +26,6 @@
     <string name="take_phone_cancel">Cancel</string>
 
     <string name="click_login">Log in</string>
-    <string name="phone_number_x">Phone：%1$s</string>
     <string name="property">Assets</string>
     <string name="trade_order_log">Exchange history</string>
     <string name="legal_currency_trade_order">OTC orders</string>
@@ -93,7 +90,6 @@
     <string name="cn_tw">Taiwan</string>
     <string name="cn_mainland">China mainland</string>
     <string name="bank_name">Bank name</string>
-    <string name="please_input_bank_name">Input bank name</string>
     <string name="bank_code">Bank code</string>
     <string name="please_input_bank_code">Input bank code</string>
     <string name="sub_bank_name">Branch name</string>
@@ -121,7 +117,6 @@
     <string name="send_auth_code">Send</string>
     <string name="message_auth_code">SMS code</string>
     <string name="mail_auth_code">Email code</string>
-    <string name="resend">Resend</string>
     <string name="bind_mail">Bind Email</string>
     <string name="confirm_bind">Confirm</string>
     <string name="modify_mail">Change email</string>
@@ -148,8 +143,6 @@
     <string name="total_property_equivalent">Estimated Value(BTC)</string>
     <string name="promoted_property_equivalent">Cashback(BTC)</string>
     <string name="invite_num_x">\n%1$d invited</string>
-    <string name="amount_available_x">%1$s\n available</string>
-    <string name="amount_freeze_x">%1$s\n Frozen</string>
 
     <string name="language">Language</string>
     <string name="about_us">About us</string>
@@ -168,8 +161,6 @@
     <string name="x_faction_str_x">%1$s/%2$s</string>
     <string name="feedback_hint">Please discribe the problem you found. Upload a screenshot if possible.</string>
     <string name="confirm_submit">Submit</string>
-    <string name="customer_service_title">Customer Service</string>
-    <string name="input_hint">Press Enter to send</string>
     <string name="invite_activity_rules">1. Minimum withdrawal amount: XX \n2.Be sure that the address is correct before you apply for withdrawal. Once sent to the block chain network, the transaction is irrevocable.\n3. Confirmation of all network nodes is needed after withdrawal. You can get your token after x times confirmation. \n4. Please do not take your token directly to ICO crowdfunding address, which may prevent you from receiving crowdfunding digital assets. \n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
     <string name="check_activity_rules">Check Rules</string>
     <string name="join_now">Join the group</string>
@@ -181,13 +172,11 @@
     <string name="change_cash_pwd">Change fund password</string>
     <string name="set_cash_pwd">Set fund password</string>
     <string name="set_cash_pwd_success">Success</string>
-    <string name="please_input_set_cash_pwd">Input fund password</string>
     <string name="forget_cash_pwd">Forgot fund password?</string>
     <string name="confirm_set_cash_pwd">Confirm</string>
     <string name="send_sms_auth_code_phone_hint_x">Sent to your phone:%1$s. Please check it</string>
     <string name="send_mail_auth_code_hint_x">Sent to your email:%1$s. Please check it</string>
     <string name="the_two_passwords_differ">Inconsistent password</string>
-    <string name="auth_code_error">Wrong verification code</string>
     <string name="change_login_pwd">Change login password</string>
     <string name="new_login_pwd">New password</string>
     <string name="please_input_new_login_pwd">Input new login password</string>
@@ -219,7 +208,6 @@
 
     <string name="coin_coin_account">Exchange account</string>
     <string name="legal_currency_account">OTC account</string>
-    <string name="personal_account">Personal account</string>
     <string name="transfer">Transfer</string>
     <string name="fast_transfer">Quick transfer</string>
     <string name="funds_transfer">Fund transfer</string>
@@ -289,12 +277,10 @@
 
     <string name="detail">Details</string>
     <string name="address_two_space">Address</string>
-    <string name="status_two_space">Status</string>
     <string name="fee_two_half_space">Fee</string>
     <string name="time_two_space">Time</string>
 
     <string name="set_read">Tag as "Read"</string>
-    <string name="important">Important</string>
     <string name="pay_addr_change">Your top-up address changed. Check it now</string>
     <string name="otc_buy_order">A buyer replied your ad. Check it now>></string>
     <string name="otc_sell_order">A seller replied your ad. Check it now>></string>
@@ -382,16 +368,13 @@
     <string name="publish_poster">Post ads</string>
     <string name="buy_symbol_x">Buy %1$s</string>
     <string name="sell_symbol_x">Sell %1$s</string>
-    <string name="please_select_tread_limit_condition">Select limits</string>
     <string name="authentication">Authentication</string>
     <string name="deal_success_count">Completed trades</string>
     <string name="please_select_edit_type">Select edit type</string>
     <string name="edit_content">Edit</string>
     <string name="delete_poster">Delete ad</string>
     <string name="pricing_currency">Currency unit</string>
-    <string name="quota_price_x_symbol">Price: %1$s</string>
     <string name="passed_primary_certification">Primary authentication needed</string>
-    <string name="passed_senior_certification">Advanced authentication needed</string>
     <string name="deal_count_more_than_x">Completed trades ＞ %1$s</string>
     <!--LEGAL_CURRENCY_ORDER-->
     <string-array name="legal_currency_order_header">
@@ -414,11 +397,7 @@
     <string name="trade_rules_description">Ask the other party how the transaction will be done and compare it with he/she listed on the platform. If inconsistent, be careful to pay. \n\n1. Please note last 4 letters of order number to speed up the confirmation. \n\n2. Please do not fill in any word about cryptocurrency such as Bitcoin, BTC, OTC, etc., in order to prevent the remittance from being intercepted by the bank. \n\n3. The order is valid for 15 minutes. Please pay in time and click the "paid" button, and then the token can be released to you. \n\n4. If you are unable to complete payment within 15 minutes, the order will be cancelled. \n\n5. The cryptocurrency is hosted by the system during the transaction. Please feel free to place an order.</string>
     <string name="order_detail_price_x">Price: %1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">Amount: %1$f&#160;%2$s</string>
-    <string name="you_have_canceled_trade">Trade cancelled</string>
-    <string name="otc_order_success_wait_pay">Ordered. Please pay it in time</string>
     <string name="otc_trade_complete_desc">Completed</string>
-    <string name="wait_to_pay_and_confirm">Waiting for payment</string>
-    <string name="wait_sell_transfer_coin">Waiting for release</string>
     <string name="seller_info">Seller&apos;s info</string>
     <string name="buyer_info">Buyer&apos;s info</string>
     <string name="register_time">Register time：%1$s</string>
@@ -543,8 +522,6 @@
     <string name="highest_price_x">High&#160;%1$s</string>
     <string name="lowest_price_x">Low&#160;%1$s</string>
     <string name="close_price_x">Close&#160;%1$s</string>
-    <string name="price_change_amt">Amount</string>
-    <string name="price_change_percent">Change</string>
     <string name="trade_volume_x">Volume&#160;%1$s</string>
     <string name="no_more_data">No more data</string>
     <string name="buy_in">Buy</string>
@@ -571,9 +548,6 @@
     <string name="trade_amt">Trade amount</string>
 
 
-    <string name="input_msg_enter_to_send">Press enter to send</string>
-
-    <string name="over_50">Your speech cannot exceed 50 characters</string>
     <string name="hello_customer_for_you">Hello! This is %1$s. Glad to service you</string>
     <string name="trade_with_market_price">Trade at the currently best price</string>
     <string name="android_web_agent">ANDROID_AGENT/1.0</string>
@@ -585,9 +559,7 @@
     <string name="please_not_download_again">Do not download again</string>
     <string name="download_fail">Fail to download</string>
     <string name="check_new_version">New version detected</string>
-    <string name="version">v%1$s</string>
     <string name="download_complete">Download complete</string>
-    <string name="now_update">Update</string>
     <string name="update">Update</string>
 
 
@@ -607,21 +579,12 @@
     <string name="deal_total_amt_x">Filled amount (%1$s)</string>
     <string name="deal_average_price_x">Filled price (%1$s)</string>
     <string name="deal_volume_x">Volume (%1$s)</string>
-    <string name="deal">Filled</string>
     <string name="revoked">Cancelled</string>
-    <string name="part_deal">Partially filled</string>
     <string name="system_revoked">Cancelled by system</string>
-    <string name="part_deal_part_revoked">Partially filled &amp; partially cancelled</string>
     <string name="unknown_status">Unknown operation</string>
     <string name="filter">Filter</string>
     <string name="trading_on">Pairs</string>
     <string name="select_currency">Select currency unit</string>
-    <string name="order_status">Status</string>
-    <string name="has_finish">Finished</string>
-    <string name="has_withdrawn">Cancelled</string>
-    <string name="please_input_currency">Input token</string>
-    <string name="please_select_currency">Select currency unit</string>
-    <string name="please_select_direction">Choose the side</string>
     <string name="search_currency_pairs">Search</string>
 
 </resources>

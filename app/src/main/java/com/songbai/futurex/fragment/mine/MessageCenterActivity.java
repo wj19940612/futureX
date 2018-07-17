@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +42,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -231,11 +229,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     }
 
     private void requestNotice() {
-        // TODO: 2018/7/2 字体
-        String lang = "";
-        String language = Locale.getDefault().getLanguage();
-        Log.d(TAG, "requestNotice: " + language);
-        Apic.findNewsList(PAGE_TYPE_NOTICE, lang, mOffset, Apic.DEFAULT_PAGE_SIZE).tag(TAG)
+        Apic.findNewsList(PAGE_TYPE_NOTICE,mOffset, Apic.DEFAULT_PAGE_SIZE).tag(TAG)
                 .callback(new Callback<Resp<List<SysMessage>>>() {
                     @Override
                     protected void onRespSuccess(Resp<List<SysMessage>> resp) {

@@ -21,11 +21,13 @@ import com.songbai.futurex.App;
 import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.AppInfo;
+import com.songbai.futurex.utils.LanguageUtils;
 
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -216,6 +218,16 @@ public class Api extends RequestManager {
 
         if (!TextUtils.isEmpty(imageSign)) {
             cookies = imageSign + (TextUtils.isEmpty(cookies) ? "" : "; " + cookies);
+        }
+        Locale userLocale = LanguageUtils.getUserLocale(App.getAppContext());
+        StringBuilder language = new StringBuilder();
+        language.append(userLocale.getLanguage());
+        String country = userLocale.getCountry();
+        String languageStr = "language=" + language + (TextUtils.isEmpty(country) ? "" : "_" + country);
+        if (TextUtils.isEmpty(cookies)) {
+            cookies = languageStr;
+        } else {
+            cookies += "; " + languageStr;
         }
 
         if (!TextUtils.isEmpty(cookies)) {

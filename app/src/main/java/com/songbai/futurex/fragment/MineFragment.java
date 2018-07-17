@@ -150,6 +150,7 @@ public class MineFragment extends BaseFragment {
                     .into(mHeadPortrait);
             mLogin.setVisibility(View.VISIBLE);
             mUserInfoGroup.setVisibility(View.GONE);
+            setUnreadMessageCount(0);
         }
     }
 
@@ -270,18 +271,12 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.noticeCenter:
-                if (LocalUser.getUser().isLogin())
-                    Launcher.with(getActivity(), MessageCenterActivity.class)
-                            .putExtra(ExtraKeys.TAG, MessageCenterActivity.PAGE_TYPE_NOTICE)
-                            .execute();
-                else {
-                    login();
-                }
+                Launcher.with(getActivity(), MessageCenterActivity.class)
+                        .putExtra(ExtraKeys.TAG, MessageCenterActivity.PAGE_TYPE_NOTICE)
+                        .execute();
                 break;
             case R.id.customService:
                 Launcher.with(getActivity(), CustomServiceActivity.class).execute();
-//                UniqueActivity.launcher(getActivity(), CustomerServiceFragment.class).execute();
-
                 break;
             case R.id.settings:
                 UniqueActivity.launcher(getActivity(), SettingsFragment.class).execute(this, REQUEST_SETTINGS);

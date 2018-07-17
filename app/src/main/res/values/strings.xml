@@ -18,8 +18,6 @@
     <string name="ok">确定</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
 
     <string name="please_select_portrait">请选择头像</string>
     <string name="take_phone_from_camera">拍照</string>
@@ -28,7 +26,6 @@
     <string name="take_phone_cancel">取消</string>
 
     <string name="click_login">点击登录</string>
-    <string name="phone_number_x">手机：%1$s</string>
     <string name="property">我的资产</string>
     <string name="trade_order_log">币币交易历史</string>
     <string name="legal_currency_trade_order">法币交易订单</string>
@@ -73,7 +70,6 @@
     <string name="legal_currency_pay">法币支付</string>
     <string name="delete_success">删除成功</string>
     <string name="delete">删除</string>
-    <string name="confirm_delete">确认删除</string>
     <string name="add_gathering_account">添加收款方式</string>
     <string name="add_ali_pay">添加支付宝</string>
     <string name="ali_pay_account">支付宝账号</string>
@@ -97,7 +93,6 @@
     <string name="cn_tw">中国台湾</string>
     <string name="cn_mainland">中国大陆</string>
     <string name="bank_name">银行名称</string>
-    <string name="please_input_bank_name">请填写银行名称</string>
     <string name="bank_code">银行代码</string>
     <string name="please_input_bank_code">请填写银行代码</string>
     <string name="sub_bank_name">分行名称</string>
@@ -125,7 +120,6 @@
     <string name="send_auth_code">发送验证码</string>
     <string name="message_auth_code">短信验证码</string>
     <string name="mail_auth_code">邮箱验证码</string>
-    <string name="resend">重新发送</string>
     <string name="bind_mail">绑定邮箱</string>
     <string name="confirm_bind">确认绑定</string>
     <string name="modify_mail">修改邮箱</string>
@@ -152,8 +146,6 @@
     <string name="total_property_equivalent">总资产折合（BTC）</string>
     <string name="promoted_property_equivalent">推广返佣折合（BTC）</string>
     <string name="invite_num_x">共邀请用户\n%1$d人</string>
-    <string name="amount_available_x">%1$s\n可用</string>
-    <string name="amount_freeze_x">%1$s\n冻结</string>
 
     <string name="language">语言</string>
     <string name="about_us">关于我们</string>
@@ -172,8 +164,6 @@
     <string name="x_faction_str_x">%1$s/%2$s</string>
     <string name="feedback_hint">请描述问题发生的具体场景，最好附上截图说明</string>
     <string name="confirm_submit">确认提交</string>
-    <string name="customer_service_title">客服小三</string>
-    <string name="input_hint">输入信息，按Enter发送</string>
     <string name="invite_activity_rules">1.最小提币数量为：XX\n2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n3.您提币至上述地址后，需要整个网络节点的确认，X次网络确认后方可到账提币。\n4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="check_activity_rules">查看活动规则</string>
     <string name="join_now">马上入群</string>
@@ -185,14 +175,12 @@
     <string name="change_cash_pwd">修改资金密码</string>
     <string name="set_cash_pwd">设置资金密码</string>
     <string name="set_cash_pwd_success">资金密码设置成功</string>
-    <string name="please_input_set_cash_pwd">请输入资金密码</string>
     <string name="forget_cash_pwd">忘记资金密码?</string>
     <string name="confirm_set_cash_pwd">确认资金密码</string>
     <string name="send_sms_auth_code_phone_hint_x">已发送至您的手机号：%1$s，请注意查收</string>
     <string name="send_mail_auth_code_hint_x">已发送至您的邮箱：%1$s，请注意查收</string>
     <string name="the_two_passwords_differ">两次密码输入不一致</string>
     <string name="draw_cash_pwd_can_not_short_than_8">资金密码不能小于8位</string>
-    <string name="auth_code_error">验证码错误</string>
     <string name="change_login_pwd">修改登录密码</string>
     <string name="new_login_pwd">新登录密码</string>
     <string name="please_input_new_login_pwd">请输入新登录密码</string>
@@ -225,7 +213,6 @@
 
     <string name="coin_coin_account">币币账户</string>
     <string name="legal_currency_account">法币账户</string>
-    <string name="personal_account">个人账户</string>
     <string name="transfer">划转</string>
     <string name="fast_transfer">一键划转</string>
     <string name="transfer_to_trade_account">划转至币币账户</string>
@@ -307,12 +294,10 @@
 
     <string name="detail">详情</string>
     <string name="address_two_space">地&#8195;&#8195;址</string>
-    <string name="status_two_space">状&#8195;&#8195;态</string>
     <string name="fee_two_half_space">手&#8194;续&#8194;费</string>
     <string name="time_two_space">时&#8195;&#8195;间</string>
 
     <string name="set_read">标为已读</string>
-    <string name="important">重要</string>
     <string name="pay_addr_change">您的充值地址发生了变化，赶紧去看看</string>
     <string name="otc_buy_order">您的广告已有买家下单，赶紧去看看吧>></string>
     <string name="otc_sell_order">您的广告已有卖家下单，赶紧去看看吧>></string>
@@ -407,7 +392,6 @@
     <string name="publish_poster">发布广告</string>
     <string name="buy_symbol_x">买入%1$s</string>
     <string name="sell_symbol_x">卖出%1$s</string>
-    <string name="please_select_tread_limit_condition">请选择限制条件</string>
     <string name="authentication">认证</string>
     <string name="deal_success_count">交易成功次数</string>
     <string name="please_select_edit_type">请选择编辑类型</string>
@@ -416,7 +400,6 @@
     <string name="pricing_currency">计价货币</string>
     <string name="quota_price">价格：</string>
     <string name="passed_primary_certification">必须通过初级认证</string>
-    <string name="passed_senior_certification">必须通过高级认证</string>
     <string name="deal_count_more_than_x">交易成功次数大于%1$s</string>
     <!--LEGAL_CURRENCY_ORDER-->
     <string-array name="legal_currency_order_header">
@@ -440,7 +423,6 @@
     <string name="trade_rules_description">请务必向对方询问交易方式，并且与平台所留方式进行对比，若不一致，请慎重付款\n\n1.转帐时请备注「订单编号后4位」以加快确认速度\n\n2.请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n3.订单有效期为15分钟，请您在有效期内及时付款并点击「已转账」按钮，数字币才可以释放给您\n\n4.如果您无法在15分钟内完成付款，该笔订单将被取消\n\n5.开始交易后数字币由系统锁定托管，请安心下单</string>
     <string name="order_detail_price_x">价格：%1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">数量：%1$f&#160;%2$s</string>
-    <string name="otc_order_success_wait_pay">您已经成功下单，请及时支付</string>
     <string name="otc_trade_complete_desc">已成交</string>
     <string name="wait_buyer_to_pay">待买家付款</string>
     <string name="buyer_have_paid">买家已付款</string>
@@ -569,8 +551,6 @@
     <string name="highest_price_x">高&#160;%1$s</string>
     <string name="lowest_price_x">低&#160;%1$s</string>
     <string name="close_price_x">收&#160;%1$s</string>
-    <string name="price_change_amt">额</string>
-    <string name="price_change_percent">幅</string>
     <string name="trade_volume_x">量&#160;%1$s</string>
     <string name="no_more_data">没有更多数据了</string>
     <string name="buy_in">买入</string>
@@ -612,9 +592,7 @@
     <string name="download_fail">下载失败</string>
     <string name="check_new_version">发现最新版本</string>
     <string name="is_latest_version_now">已经是最新版本</string>
-    <string name="version">v%1$s</string>
     <string name="download_complete">下载完成</string>
-    <string name="now_update">立即更新</string>
     <string name="update">更新</string>
 
 
@@ -647,9 +625,6 @@
     <string name="filter">筛选</string>
     <string name="trading_on">交易对</string>
     <string name="select_currency">请选择计价货币</string>
-    <string name="order_status">订单状态</string>
-    <string name="has_finish">已完成</string>
-    <string name="has_withdrawn">已撤销</string>
     <string name="search_currency_pairs">搜索币种</string>
     <string name="deal_fee_x">手续费 (%1$s)</string>
     <string name="time_x">时间 %1$s</string>

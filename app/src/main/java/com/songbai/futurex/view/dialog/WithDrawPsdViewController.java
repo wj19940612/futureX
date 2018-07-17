@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -56,6 +57,7 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
         mGoogleAuthCode = (EditText) view.findViewById(R.id.googleAuthCode);
         mGoogleAuthCode.setVisibility(showGoogleAuth ? View.VISIBLE : View.GONE);
         TextView forgetCashPwd = (TextView) view.findViewById(R.id.forgetCashPwd);
+        ImageView close = (ImageView) view.findViewById(R.id.close);
         forgetCashPwd.setVisibility(showCashPwd ? View.VISIBLE : View.GONE);
 
         mCashPwd.addTextChangedListener(mWatcher);
@@ -68,7 +70,12 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
                         .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, true).execute();
             }
         });
-
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
