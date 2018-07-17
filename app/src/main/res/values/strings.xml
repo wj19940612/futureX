@@ -347,8 +347,8 @@
     <string name="single_price">单价</string>
     <string name="limit">限制</string>
     <string name="update_time">更新时间</string>
-    <string name="fixed_price_x">固定价格 %1$s</string>
-    <string name="floating_price_x">溢价 %1$s%%</string>
+    <string name="fixed_price_x">固定价格&#160;%1$s</string>
+    <string name="floating_price_x">溢价&#160;%1$s%%</string>
     <string name="floating_price_x_symbol">溢价&#160;%1$s&#160;%%</string>
     <string name="fixed_price">固定价格</string>
     <string name="floating_price">浮动价格</string>
@@ -494,7 +494,7 @@
     <string name="confirm_password">确认密码</string>
     <string name="find_password">找回密码</string>
     <string name="auth_code_send_to">验证码已发送至</string>
-    <string name="for_your_account_safe_please_input_auth_code">为了您的帐号安全\n请输入验证码</string>
+    <string name="for_your_account_safe_please_input_auth_code">为了您的帐号安全 请输入验证码</string>
     <string name="please_input_auth_code">请输入验证码</string>
     <string name="graphic_auth_code">图形验证码</string>
     <string name="please_input_if_you_have_invitation_code">若您有邀请码，请输入</string>
@@ -629,6 +629,6 @@
     <string name="deal_fee_x">手续费 (%1$s)</string>
     <string name="time_x">时间 %1$s</string>
     <string name="deal_detail">成交明细</string>
-    <string name="revoke_order">撤单</string>
+    <string name="revoke_order">撤單</string>
     <string name="revoking_order">撤单中</string>
 </resources>
