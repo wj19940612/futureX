@@ -130,6 +130,8 @@
 
         <receiver android:name=".service.NotificationBroadcast"/>
 
+        <service android:name=".service.DownloadService"/>
+
     </application>
 
 </manifest>
