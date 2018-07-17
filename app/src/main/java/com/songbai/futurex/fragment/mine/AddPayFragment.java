@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.AuthenticationName;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.PasswordEditText;
@@ -71,6 +71,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        authenticationName();
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
             String realName = user.getUserInfo().getRealName();
@@ -113,6 +114,18 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
         editText.setFocusableInTouchMode(false);
     }
 
+    private void authenticationName() {
+        Apic.authenticationName().tag(TAG)
+                .callback(new Callback<Resp<AuthenticationName>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AuthenticationName> resp) {
+                        mName = resp.getData().getName();
+                        mRealName.setText(mName);
+                    }
+                })
+                .fire();
+    }
+
     private void otcBankAccount(int id) {
         Apic.otcBankAccount(id).tag(TAG)
                 .callback(new Callback<Resp<BankCardBean>>() {
@@ -134,9 +147,8 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        FragmentActivity activity = AddPayFragment.this.getActivity();
-                        activity.setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                        activity.finish();
+                        setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        finish();
                     }
                 })
                 .fireFreely();

@@ -30,10 +30,12 @@ public class PlatformIntroFragment extends UniqueActivity.UniFragment {
     public static final int STYLE_PLATFORM = 1;
     public static final int STYLE_COMPANY = 2;
     public static final int STYLE_SERVICE_AGREEMENT = 3;
+    public static final int STYLE_PLATFORM_AGREEMENT = 4;
 
     public static final String PLATFORM_CODE = "MPlatformIntroduction";
     public static final String COMPANY_CODE = "MCompanyProfile";
     public static final String SERVICE_AGREEMENT_CODE = "Mserviceagreement";
+    public static final String PLATFORM_AGREEMENT = "PlatformAgreement";
 
     @BindView(R.id.platformIntroduction)
     WebView mPlatformIntroduction;
@@ -131,6 +133,8 @@ public class PlatformIntroFragment extends UniqueActivity.UniFragment {
             code = PLATFORM_CODE;
         }else if(mStyle == STYLE_COMPANY){
             code = COMPANY_CODE;
+        }else if(mStyle == STYLE_PLATFORM_AGREEMENT){
+            code = PLATFORM_AGREEMENT;
         }else{
             code = SERVICE_AGREEMENT_CODE;
         }

@@ -25,6 +25,8 @@ import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
+import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.MsgHintController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,7 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                 BankCardBean bankCardBean = (BankCardBean) obj;
                 if (view.getId() == R.id.delete) {
                     int id = bankCardBean.getId();
-                    bindUntie(id);
+                    showDeleteDialog(id);
                 } else {
                     int payType = bankCardBean.getPayType();
                     if (payType != BankCardBean.PAYTYPE_BANK) {
@@ -90,6 +92,21 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
         });
         mRecyclerView.setAdapter(mLegalCurrencyPayAdapter);
         getBindListData();
+    }
+
+    private void showDeleteDialog(final int id) {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                bindUntie(id);
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setConfirmText(R.string.ok);
+        withDrawPsdViewController.setMsg(R.string.delete);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     private void getBindListData() {

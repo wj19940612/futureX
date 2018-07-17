@@ -1,10 +1,12 @@
 package com.songbai.futurex.utils.inputfilter;
 
+import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 
+import com.songbai.futurex.R;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
 
@@ -17,17 +19,21 @@ public class MoneyValueFilter extends DigitsKeyListener {
     private static final String TAG = "MoneyValueFilter";
     private static final String DECIMAIL_POINT = ".";
     private static final String MINUS_SIGN = "-";
+    private static final String PLUS_SIGN = "+";
     private double mMaxValue = Integer.MAX_VALUE;
     private double mMinValue = 0;
     private boolean mFilterMax;
     private boolean mFilterMin;
+    private Context mContext;
 
-    public MoneyValueFilter() {
+    public MoneyValueFilter(Context context) {
         super(false, true);
+        mContext = context;
     }
 
-    public MoneyValueFilter(boolean sign, boolean decimal) {
+    public MoneyValueFilter(Context context, boolean sign, boolean decimal) {
         super(sign, decimal);
+        mContext = context;
     }
 
     private int digits = 2;
@@ -82,21 +88,17 @@ public class MoneyValueFilter extends DigitsKeyListener {
         if (!source.toString().equals(DECIMAIL_POINT) && dest.toString().equals("0")) {
             return "";
         }
-        //如果起始位置为0,且第二位跟的不是".",则无法后续输入
-        if (!source.toString().equals(DECIMAIL_POINT) && dest.toString().equals("0")) {
-            return "";
-        }
 
         //验证输入金额的最大值
         if (mFilterMax && !"".equals(source.toString())) {
-            if (!source.toString().equals(MINUS_SIGN)) {
+            if (!source.toString().equals(MINUS_SIGN) && !source.toString().equals(PLUS_SIGN)) {
                 double dold = Double.parseDouble(dest.toString() + source.toString());
                 if (dold > mMaxValue) {
-                    ToastUtil.show("最大不能大于" + FinanceUtil.trimTrailingZero(mMaxValue));
+                    ToastUtil.show(mContext.getString(R.string.max_can_not_greater_than, FinanceUtil.trimTrailingZero(mMaxValue)));
                     return dest.subSequence(dstart, dend);
                 } else if (dold == mMaxValue) {
                     if (DECIMAIL_POINT.equals(source.toString())) {
-                        ToastUtil.show("最大不能大于" + FinanceUtil.trimTrailingZero(mMaxValue));
+                        ToastUtil.show(mContext.getString(R.string.max_can_not_greater_than, FinanceUtil.trimTrailingZero(mMaxValue)));
                         return dest.subSequence(dstart, dend);
                     }
                 }
@@ -105,14 +107,14 @@ public class MoneyValueFilter extends DigitsKeyListener {
 
         //验证输入金额的最小值
         if (mFilterMin && !"".equals(source.toString())) {
-            if (!source.toString().equals(MINUS_SIGN)) {
+            if (!source.toString().equals(MINUS_SIGN) && !source.toString().equals(PLUS_SIGN)) {
                 double dold = Double.parseDouble(dest.toString() + source.toString());
                 if (dold < mMinValue) {
-                    ToastUtil.show("最小不能小于" + FinanceUtil.trimTrailingZero(mMinValue));
+                    ToastUtil.show(mContext.getString(R.string.min_can_not_less_than, FinanceUtil.trimTrailingZero(mMinValue)));
                     return dest.subSequence(dstart, dend);
                 } else if (dold == mMinValue) {
                     if (DECIMAIL_POINT.equals(source.toString())) {
-                        ToastUtil.show("最小不能小于" + FinanceUtil.trimTrailingZero(mMinValue));
+                        ToastUtil.show(mContext.getString(R.string.min_can_not_less_than, FinanceUtil.trimTrailingZero(mMinValue)));
                         return dest.subSequence(dstart, dend);
                     }
                 }

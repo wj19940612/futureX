@@ -69,6 +69,7 @@
     <string name="legal_currency_pay_management">法币支付管理</string>
     <string name="legal_currency_pay">法币支付</string>
     <string name="delete_success">删除成功</string>
+    <string name="really_want_to_delete">真的要删除吗？</string>
     <string name="delete">删除</string>
     <string name="add_gathering_account">添加收款方式</string>
     <string name="add_ali_pay">添加支付宝</string>
@@ -236,6 +237,7 @@
     <string name="recharge_coin_rules">请勿向上述地址充值任何非%1$s资产，否则资产将不可找回。\n您充值至上述地址后，需要整个网络节点的确认，%2$d次网络确认后到账。\n最小充值金额：%3$s ，小于最小金额的充值将不会上账。\n您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。\n请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="select_coin_type">选择币种</string>
     <string name="draw_coin">提币</string>
+    <string name="select_draw_coin_address">选择提币地址</string>
     <string name="draw_coin_success">提币成功</string>
     <string name="min_draw_amount_coin_x">最小提币数量&#160;%1$s&#160;%2$s</string>
     <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
@@ -253,7 +255,7 @@
     <string name="cash_pwd">资金密码</string>
     <string name="set_cash_pwd_rules">注意：您的资金密码是用来交易和提现和账户安全设置，建议您不要设置与登录密码一致，由此产生的账户被盗，本站概不负责。</string>
     <string name="confirm_with_draw">确认提币</string>
-    <string name="with_draw_rules_x">1.最小提币数量为：%1$s\n2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n3.您提币至上述地址后，需要整个网络节点的确认，%2$S次网络确认后方可到账提币。\n4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
+    <string name="with_draw_rules_x">1.最小提币数量为：%1$s\n2.申请提币前请您确保提币地址准确无误，交易一旦发送到区块链网络便不可撤回。\n3.您提币至上述地址后，需要整个网络节点的确认，%2$d次网络确认后方可到账提币。\n4.请不要直接提币到ICO的众筹地址，这会导致您无法收取众筹到的数字资产。\n5.请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
     <string name="filtrate">筛选</string>
     <string name="coin_type">币种</string>
     <string name="flow_type">流水类型</string>
@@ -339,7 +341,7 @@
     <string name="trade_count_more_than">交易成功次数大于：</string>ø
     <string name="contract_info">联系方式</string>
     <string name="read_and_agree">我已阅读并同意</string>
-    <string name="coin_trade_protocol">《发币交易协议》</string>
+    <string name="coin_trade_protocol">《法币交易协议》</string>
     <string name="attention_rules">注意事项</string>
     <string name="attention_rules_text">1.交易过程中，请先确认款项入账后再释放数字货币。\n\n2.交易过程中，不要透漏与您账户安全有关的敏感信息。\n\n3.请不要将您的电子邮箱直接透漏给买家，否则可能会收到诈骗信件及对账户安全造成危害。\n\n4.请将平台网站记录在书签上，确保您在正确的网站上进行交易，避免误闯钓鱼网站。\n\n5.平台员工禁止以官方名义与您交易，故请不要与自称是本平台员工的投资者交易，避免您的利益损失。</string>
     <string name="attention_hint">特别提醒</string>
@@ -372,6 +374,8 @@
     <string name="go_to_bind">去绑定</string>
     <string name="please_select_price_type">请选择价格类型</string>
     <string name="floating_price_rate">溢价比例</string>
+    <string name="max_can_not_greater_than">最大不能大于%1$s</string>
+    <string name="min_can_not_less_than">最小不能小于%1$s</string>
     <string name="percent_symbol">%</string>
     <string name="price">价格</string>
     <string name="minLimit">最小限制</string>

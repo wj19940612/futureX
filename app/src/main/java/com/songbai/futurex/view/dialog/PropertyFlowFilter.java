@@ -3,7 +3,6 @@ package com.songbai.futurex.view.dialog;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -161,14 +160,20 @@ public class PropertyFlowFilter {
         if (!TextUtils.isEmpty(mTempStartTime)) {
             long timeMillion = getTimeMillion(mTempStartTime);
             if (timeMillion > 0) {
+                mStartTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 mStartTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
             }
+        } else {
+            mStartTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_history_calendar, 0, 0, 0);
         }
         if (!TextUtils.isEmpty(mTempEndTime)) {
             long timeMillion = getTimeMillion(mTempEndTime);
             if (timeMillion > 0) {
+                mEndTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 mEndTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
             }
+        } else {
+            mEndTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_history_calendar, 0, 0, 0);
         }
     }
 
@@ -428,15 +433,15 @@ public class PropertyFlowFilter {
     }
 
     public void setSelectedTime(View view, Date date) {
-        ((TextView) view).setText(DateUtil.format(date.getTime(), DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
+        TextView textView = (TextView) view;
+        textView.setText(DateUtil.format(date.getTime(), DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
+        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         switch (view.getId()) {
             case R.id.startTime:
                 mTempStartTime = DateUtil.format(date.getTime(), DateUtil.FORMAT_UTZ_STANDARD);
-                Log.e("wtf", "setSelectedTime: " + mTempStartTime);
                 break;
             case R.id.endTime:
                 mTempEndTime = DateUtil.format(date.getTime(), DateUtil.FORMAT_UTZ_STANDARD);
-                Log.e("wtf", "setSelectedTime: " + mTempEndTime);
                 break;
             default:
         }

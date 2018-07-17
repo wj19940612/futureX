@@ -40,8 +40,8 @@ public class TradeLimitController extends SmartDialog.CustomViewController {
     protected void onInitView(View view, final SmartDialog dialog) {
         mMinTurnover = view.findViewById(R.id.minTurnover);
         mMaxTurnover = view.findViewById(R.id.maxTurnover);
-        mMinTurnover.setFilters(new InputFilter[]{new MoneyValueFilter().filterMax(1000000)});
-        mMaxTurnover.setFilters(new InputFilter[]{new MoneyValueFilter().filterMax(1000000)});
+        mMinTurnover.setFilters(new InputFilter[]{new MoneyValueFilter(mContext).filterMax(1000000)});
+        mMaxTurnover.setFilters(new InputFilter[]{new MoneyValueFilter(mContext).filterMax(1000000)});
         TextView payCurrency = view.findViewById(R.id.payCurrency);
         payCurrency.setText(mPayCurrencySymbol.toUpperCase());
         restoreLimit(mMinTurnoverNum, mMaxTurnoverNum);

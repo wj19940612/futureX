@@ -1,6 +1,8 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -184,7 +186,10 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             Launcher.with(getActivity(), PersonalDataActivity.class).execute();
                             break;
                         case 9:
-                            // TODO: 2018/7/12  
+                            Intent intent = new Intent()
+                                    .putExtra(ExtraKeys.LEGAL_CURRENCY_PAGE_INDEX, 2);
+                            setResult(Activity.RESULT_FIRST_USER, intent);
+                            finish();
                             break;
                         default:
                     }

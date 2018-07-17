@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.mine.PlatformIntroFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -163,7 +164,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mWaresModel = new WaresModel();
         mConfirmRulesGroup.setSelected(false);
-        mTradeCountLimit.setFilters(new InputFilter[]{new MoneyValueFilter().filterMax(1000)});
+        mTradeCountLimit.setFilters(new InputFilter[]{new MoneyValueFilter(getContext()).filterMax(1000)});
         restoreData();
         accountBalance();
         getLegalCoin();
@@ -261,13 +262,13 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         setPriceType(waresModel.getPriceType());
         switch (waresModel.getPriceType()) {
             case OtcWarePoster.FIXED_PRICE:
-                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter()});
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext())});
                 String fixedPrice = waresModel.getFixedPrice();
                 mPremiumRate.setText(fixedPrice);
                 break;
             case OtcWarePoster.FLOATING_PRICE:
-                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(true, true)
-                        .filterMin(-1000).filterMax(1000)});
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext(), true, true)
+                        .filterMin(-100).filterMax(1000)});
                 mPremiumRate.setText(waresModel.getPercent());
                 break;
             default:
@@ -299,16 +300,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             public void afterTextChanged(Editable s) {
                 if (mWaresModel.getPriceType() == OtcWarePoster.FLOATING_PRICE) {
                     String string = mPremiumRate.getText().toString();
-                    if ("-".equals(string)) {
+                    if ("-".equals(string) || "+".equals(string)) {
                         return;
                     }
                     if (string.length() > 0) {
                         double rate = Double.valueOf(string);
-//                        if (rate > 999) {
-//                            rate = 999;
-//                            mPremiumRate.setText(String.valueOf(rate));
-//                            mPremiumRate.setSelection(mPremiumRate.getText().length());
-//                        }
                         setFloatingPrice(rate);
                     } else {
                         setFloatingPrice(0);
@@ -317,7 +313,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 checkCanPreview();
             }
         });
-        mTradeAmount.setFilters(new InputFilter[]{new MoneyValueFilter().setDigits(6)});
+        mTradeAmount.setFilters(new InputFilter[]{new MoneyValueFilter(getContext()).setDigits(6)});
         mTradeAmount.addTextChangedListener(new ValidationWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -489,7 +485,8 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     @OnClick({R.id.waresPair, R.id.preview, R.id.buyIn, R.id.sellOut, R.id.priceType, R.id.tradeLimit, R.id.payType,
-            R.id.remark, R.id.buyerLimit, R.id.primaryCertification, R.id.seniorCertification, R.id.areaCode, R.id.confirmRulesGroup})
+            R.id.remark, R.id.buyerLimit, R.id.primaryCertification, R.id.seniorCertification, R.id.areaCode,
+            R.id.userAgreement, R.id.confirmRulesGroup})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.waresPair:
@@ -538,6 +535,10 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.areaCode:
                 showAreaCodeSelector();
+                break;
+            case R.id.userAgreement:
+                UniqueActivity.launcher(this, PlatformIntroFragment.class)
+                        .putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_PLATFORM_AGREEMENT).execute();
                 break;
             case R.id.confirmRulesGroup:
                 mConfirmRulesGroup.setSelected(!mConfirmRulesGroup.isSelected());
@@ -868,7 +869,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private void setTradeLimit(double minTurnover, double maxTurnover) {
         if (maxTurnover != 0) {
             mTradeLimit.setText(getString(R.string.limit_range_x,
-                    FinanceUtil.subZeroAndDot(minTurnover,8), FinanceUtil.subZeroAndDot(maxTurnover,8)));
+                    FinanceUtil.subZeroAndDot(minTurnover, 8), FinanceUtil.subZeroAndDot(maxTurnover, 8)));
             mWaresModel.setMinTurnover(minTurnover);
             mWaresModel.setMaxTurnover(maxTurnover);
         }
@@ -895,7 +896,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private void setPriceType(int type) {
         switch (type) {
             case OtcWarePoster.FIXED_PRICE:
-                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter()});
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext())});
                 String fixedPrice = mWaresModel.getFixedPrice();
                 mPremiumRate.setText(fixedPrice);
                 mPriceType.setText(R.string.fixed_price);
@@ -905,8 +906,8 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 mPrice.setVisibility(View.GONE);
                 break;
             case OtcWarePoster.FLOATING_PRICE:
-                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(true, true)
-                        .filterMin(-1000).filterMax(1000)});
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext(), true, true)
+                        .filterMin(-100).filterMax(1000)});
                 mPremiumRate.setText(mWaresModel.getPercent());
                 mPriceType.setText(R.string.floating_price);
                 mPriceText.setText(R.string.floating_price_rate);

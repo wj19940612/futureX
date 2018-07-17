@@ -47,6 +47,7 @@ public interface ExtraKeys {
     String SELECTED_CURRENCY_SYMBOL = "selected_currency_symbol";
 
     String TRADE_DIRECTION = "trade_direction";
+    String LEGAL_CURRENCY_PAGE_INDEX = "legal_currency_page_index";
 
     String INTRODUCE_STYLE = "introduce_style";
     String APP_VERSION = "app_version";
