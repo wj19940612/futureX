@@ -35,7 +35,7 @@ public class Resp<T> {
     }
 
     public boolean isTokenExpired() {
-        return code == 211;
+        return code == 211 || code == 214; // token timeout || user not login
     }
 
     @Override
