@@ -271,7 +271,9 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
     @Override
     public void onBannerClick(Banner banner) {
-
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_URL, banner.getJumpContent())
+                .execute();
     }
 
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
