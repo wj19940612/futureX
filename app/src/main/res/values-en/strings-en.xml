@@ -294,7 +294,6 @@
     <string name="otc_order_cancel">Your OTC order has been cancelled</string>
     <string name="otc_order_delay">Your order has been delayed</string>
     <string name="plus_sign_x">+%1$s</string>
-    <string name="increasing_ranks">Increasing Ranks</string>
 
     <!--LEGAL_CURRENCY-->
     <string-array name="legal_currency_header">
@@ -583,7 +582,7 @@
     <string name="system_revoked">Cancelled by system</string>
     <string name="unknown_status">Unknown operation</string>
     <string name="filter">Filter</string>
-    <string name="trading_on">Pairs</string>
+    <string name="trading_on">Pair</string>
     <string name="select_currency">Select currency unit</string>
     <string name="search_currency_pairs">Search</string>
 

@@ -120,7 +120,7 @@
     <string name="send_auth_code">发送验证码</string>
     <string name="message_auth_code">短信验证码</string>
     <string name="mail_auth_code">邮箱验证码</string>
-    <string name="bind_mail">绑定邮箱</string>
+    <string name="bind_mail" translatable="false">绑定邮箱</string>
     <string name="confirm_bind">确认绑定</string>
     <string name="modify_mail">修改邮箱</string>
     <string name="confirm_modify">确认修改</string>
