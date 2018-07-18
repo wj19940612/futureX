@@ -579,6 +579,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             subscribeMarket();
             requestPairDescription();
             updateTradeDirectionView();
+            mVolumeInput.reset();
         } else {
             unsubscribeMarket();
         }
@@ -1097,7 +1098,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     color = ContextCompat.getColor(context, R.color.red);
                     tradeDir = context.getString(R.string.sell_out);
                 }
-                if (order.getStatus() == OrderStatus.REVOKED) {
+                if (order.getStatus() == OrderStatus.REVOKED
+                        || order.getStatus() == OrderStatus.REVOKING
+                        || order.getStatus() == OrderStatus.SYSTEM_REVOKED) {
                     color = ContextCompat.getColor(context, R.color.text49);
                 }
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
@@ -1110,14 +1113,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 }
                 mEntrustVolume.setText(order.getEntrustCount());
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
-                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
-                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix()));
+                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix().toUpperCase()));
+                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix().toUpperCase()));
                 mDealTotalAmt.setText(CurrencyUtils.getAmt(order.getDealCountDouble() * order.getDealPriceDouble(), suffixScale));
                 mDealAveragePrice.setText(order.getDealPrice());
                 mDealVolume.setText(order.getDealCount());
-                mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix()));
-                mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix()));
-                mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix()));
+                mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix().toUpperCase()));
+                mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix().toUpperCase()));
+                mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix().toUpperCase()));
             }
 
             private int getStatusTextRes(int status) {
@@ -1197,9 +1200,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 } else {
                     mRevoke.setOnClickListener(null);
                 }
-                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
-                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix()));
-                mActualDealVolumeTitle.setText(context.getString(R.string.actual_deal_x, order.getPrefix()));
+                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix().toUpperCase()));
+                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix().toUpperCase()));
+                mActualDealVolumeTitle.setText(context.getString(R.string.actual_deal_x, order.getPrefix().toUpperCase()));
             }
 
             private int getStatusTextRes(int status) {

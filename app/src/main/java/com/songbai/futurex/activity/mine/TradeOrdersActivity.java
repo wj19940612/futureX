@@ -280,7 +280,9 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                     color = ContextCompat.getColor(context, R.color.red);
                     tradeDir = context.getString(R.string.sell_out);
                 }
-                if (order.getStatus() == OrderStatus.REVOKED) {
+                if (order.getStatus() == OrderStatus.REVOKED
+                        || order.getStatus() == OrderStatus.REVOKING
+                        || order.getStatus() == OrderStatus.SYSTEM_REVOKED) {
                     color = ContextCompat.getColor(context, R.color.text49);
                 }
                 mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
