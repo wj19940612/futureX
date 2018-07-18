@@ -68,7 +68,7 @@ public class RechargeHistoryActivity extends RVSwipeLoadActivity {
     }
 
     private void getRechargeFlow(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
-        Apic.getUserFinanceFlow(getUserFinanceFlowData, page, pageSize)
+        Apic.getUserFinanceFlow(getUserFinanceFlowData, page, pageSize).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {

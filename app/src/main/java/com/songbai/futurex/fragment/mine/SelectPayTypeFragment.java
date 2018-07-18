@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,8 @@ import android.view.ViewGroup;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.IconTextRow;
@@ -53,9 +54,9 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         if (mBindBankList != null) {
-            BankCardBean aliPay = mBindBankList.getAliPay();
-            mAliPay.setSubText(aliPay.getCardNumber());
-            mWechatPay.setSubText(mBindBankList.getWechat().getCardNumber());
+            mAliPay.setVisibility(mBindBankList.getAliPay().getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND ? View.GONE : View.VISIBLE);
+            mWechatPay.setVisibility(mBindBankList.getWechat().getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND ? View.GONE : View.VISIBLE);
+            mBankCard.setVisibility(mBindBankList.getBankCard().size() >= 5 ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -66,9 +67,17 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
             if (data != null) {
                 boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
                 if (shouldRefresh) {
-                    FragmentActivity activity = getActivity();
-                    activity.setResult(SELECT_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                    activity.finish();
+                    LocalUser user = LocalUser.getUser();
+                    if (user.isLogin()) {
+                        UserInfo userInfo = user.getUserInfo();
+                        int payment = userInfo.getPayment();
+                        if (payment < 1) {
+                            userInfo.setPayment(1);
+                            LocalUser.getUser().setUserInfo(userInfo);
+                        }
+                    }
+                    setResult(SELECT_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                    finish();
                 }
             }
         }
@@ -85,19 +94,14 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
         switch (view.getId()) {
             case R.id.bankCard:
                 UniqueActivity.launcher(this, AddBankingCardFragment.class)
-                        .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
                         .execute(this, REQUEST_ADD_PAY);
                 break;
             case R.id.aliPay:
                 UniqueActivity.launcher(this, AddPayFragment.class)
-                        .putExtra(ExtraKeys.IS_ALIPAY, true)
-                        .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
                         .execute(this, REQUEST_ADD_PAY);
                 break;
             case R.id.wechatPay:
                 UniqueActivity.launcher(this, AddPayFragment.class)
-                        .putExtra(ExtraKeys.IS_ALIPAY, false)
-                        .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
                         .execute(this, REQUEST_ADD_PAY);
                 break;
             default:

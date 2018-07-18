@@ -3,10 +3,8 @@ package com.songbai.futurex.view;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
@@ -14,68 +12,107 @@ import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.songbai.futurex.R;
-import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.LegalCoin;
-import com.songbai.futurex.utils.AnimatorUtil;
-import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.AnimUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.songbai.futurex.model.Order.DIR_BUY;
-import static com.songbai.futurex.model.Order.DIR_SELL;
+import static com.songbai.futurex.model.order.Order.DIR_BUY;
+import static com.songbai.futurex.model.order.Order.DIR_SELL;
 
 public class HistoryFilter {
+
+    public static class FilterResult {
+        private String baseCurrency;
+        private String counterCurrency;
+        private Integer tradeDirection;
+
+        public void setBaseCurrency(String baseCurrency) {
+            this.baseCurrency = baseCurrency;
+        }
+
+        public void setCounterCurrency(String counterCurrency) {
+            this.counterCurrency = counterCurrency;
+        }
+
+        public void setTradeDirection(Integer tradeDirection) {
+            this.tradeDirection = tradeDirection;
+        }
+
+        public String getBaseCurrency() {
+            return baseCurrency;
+        }
+
+        public String getCounterCurrency() {
+            return counterCurrency;
+        }
+
+        public Integer getTradeDirection() {
+            return tradeDirection;
+        }
+
+        public void clear() {
+            baseCurrency = null;
+            counterCurrency = null;
+            tradeDirection = null;
+        }
+    }
+
     @BindView(R.id.currency)
     EditText mCurrency;
-    @BindView(R.id.selectCurrency)
-    TextView mSelectCurrency;
-    @BindView(R.id.selectIcon)
-    ImageView mSelectIcon;
-    @BindView(R.id.selectCurrencyLayout)
-    RelativeLayout mSelectCurrencyLayout;
+    @BindView(R.id.counterCurrency)
+    TextView mCounterCurrency;
     @BindView(R.id.buyBtn)
     TextView mBuyBtn;
     @BindView(R.id.sellBtn)
     TextView mSellBtn;
-    @BindView(R.id.has_finish)
-    TextView mHasFinish;
-    @BindView(R.id.has_withdrawn)
-    TextView mHasWithdrawn;
     @BindView(R.id.reset)
     TextView mReset;
     @BindView(R.id.filterBtn)
     TextView mFilterBtn;
-    @BindView(R.id.historyFilter)
-    LinearLayout mHistoryFilter;
     private View mView;
 
-    private OptionsPickerView<LegalCoin> mPvOptions;
-
-    private List<LegalCoin> mLegalCoinArrayList;
-
+    private OptionsPickerView mPvOptions;
+    private List<String> mCounterCurrencyList;
     private OnFilterListener mOnFilterListener;
+    private View mDimView;
+    private FilterResult mFilterResult;
+
+    public FilterResult getFilterResult() {
+        return mFilterResult;
+    }
 
     public interface OnFilterListener {
-        public void onFilter(String suffixSymbol, String prefixSymbol, int direction);
+        void onFilter(FilterResult filterResult);
     }
 
-    public HistoryFilter(View view) {
+    public HistoryFilter(View view, final View dimView) {
         this.mView = view;
         ButterKnife.bind(this, view);
+
+        String[] stringArray = view.getContext().getResources().getStringArray(R.array.market_radio_header);
+        mCounterCurrencyList = new ArrayList<>(Arrays.asList(stringArray));
+        mCounterCurrencyList.remove(mCounterCurrencyList.size() - 1); // remove optional
+        mDimView = dimView;
+        mFilterResult = new FilterResult();
+        mDimView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
-    @OnClick({R.id.selectCurrency, R.id.buyBtn, R.id.sellBtn, R.id.has_finish, R.id.has_withdrawn, R.id.reset, R.id.filterBtn, R.id.emptyClick})
+    @OnClick({R.id.counterCurrency, R.id.buyBtn, R.id.sellBtn, R.id.reset, R.id.filterBtn})
     public void onViewClick(View view) {
         switch (view.getId()) {
-            case R.id.selectCurrency:
-                showLegalCurrencySelect();
+            case R.id.counterCurrency:
+                showCounterCurrencySelector();
                 break;
             case R.id.buyBtn:
                 setBuyOrSellBtn(true);
@@ -83,20 +120,11 @@ public class HistoryFilter {
             case R.id.sellBtn:
                 setBuyOrSellBtn(false);
                 break;
-            case R.id.has_finish:
-                setStatusBtn(true);
-                break;
-            case R.id.has_withdrawn:
-                setStatusBtn(false);
-                break;
             case R.id.reset:
                 resetAll();
                 break;
             case R.id.filterBtn:
                 filter();
-                break;
-            case R.id.emptyClick:
-                goneView();
                 break;
         }
     }
@@ -104,45 +132,25 @@ public class HistoryFilter {
     private void setBuyOrSellBtn(boolean isBuy) {
         mBuyBtn.setSelected(isBuy);
         mSellBtn.setSelected(!isBuy);
-        mBuyBtn.setTextColor(isBuy ? ContextCompat.getColor(mView.getContext(), R.color.colorPrimary) : ContextCompat.getColor(mView.getContext(), R.color.text22));
-        mSellBtn.setTextColor(!isBuy ? ContextCompat.getColor(mView.getContext(), R.color.colorPrimary) : ContextCompat.getColor(mView.getContext(), R.color.text22));
-    }
-
-    private void setStatusBtn(boolean isFinish) {
-        mHasFinish.setSelected(isFinish);
-        mHasWithdrawn.setSelected(!isFinish);
-        mHasFinish.setTextColor(isFinish ? ContextCompat.getColor(mView.getContext(), R.color.colorPrimary) : ContextCompat.getColor(mView.getContext(), R.color.text22));
-        mHasWithdrawn.setTextColor(!isFinish ? ContextCompat.getColor(mView.getContext(), R.color.colorPrimary) : ContextCompat.getColor(mView.getContext(), R.color.text22));
     }
 
     private void resetAll() {
         mCurrency.setText("");
-        mSelectIcon.setVisibility(View.VISIBLE);
-        mSelectCurrency.setText(R.string.select_currency);
+        mCounterCurrency.setText(R.string.select_currency);
 
         mBuyBtn.setSelected(false);
         mSellBtn.setSelected(false);
-        mBuyBtn.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.text22));
-        mSellBtn.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.text22));
-
-        mHasFinish.setSelected(false);
-        mHasWithdrawn.setSelected(false);
-        mHasFinish.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.text22));
-        mHasWithdrawn.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.text22));
+        mFilterResult.clear();
     }
 
-    private void showLegalCurrencySelect() {
-        if (mLegalCoinArrayList == null) {
-            getLegalCoin();
-            return;
-        }
+    private void showCounterCurrencySelector() {
         if (mPvOptions == null) {
             mPvOptions = new OptionsPickerBuilder(mView.getContext(), new OnOptionsSelectListener() {
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                    if (options1 < mLegalCoinArrayList.size()) {
-                        LegalCoin legalCoin = mLegalCoinArrayList.get(options1);
-                        selectLegal(legalCoin);
+                    if (options1 < mCounterCurrencyList.size()) {
+                        String counterCurrency = mCounterCurrencyList.get(options1);
+                        selectCounterCurrency(counterCurrency);
                     }
                 }
             }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
@@ -164,59 +172,76 @@ public class HistoryFilter {
                         }
                     });
                 }
-            })
-                    .setCyclic(false, false, false)
+            }).setCyclic(false, false, false)
                     .setTextColorCenter(ContextCompat.getColor(mView.getContext(), R.color.text22))
                     .setTextColorOut(ContextCompat.getColor(mView.getContext(), R.color.text99))
                     .setDividerColor(ContextCompat.getColor(mView.getContext(), R.color.bgDD))
                     .build();
-            mPvOptions.setPicker(mLegalCoinArrayList, null, null);
+            mPvOptions.setPicker(mCounterCurrencyList);
         }
         mPvOptions.show();
     }
 
-    private void selectLegal(LegalCoin legalCoin) {
-        mSelectCurrency.setText(legalCoin.getSymbol());
-        mSelectIcon.setVisibility(View.GONE);
-    }
-
-    private void getLegalCoin() {
-        Apic.getLegalCoin()
-                .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
-                        mLegalCoinArrayList = resp.getData();
-                        showLegalCurrencySelect();
-                    }
-                }).fire();
+    private void selectCounterCurrency(String counterCurrency) {
+        mCounterCurrency.setText(counterCurrency);
     }
 
     public void setOnFilterListener(OnFilterListener onFilterListener) {
         mOnFilterListener = onFilterListener;
     }
 
-    private void filter() {
-        if (TextUtils.isEmpty(mCurrency.getText())) {
-            ToastUtil.show(R.string.please_input_currency);
-            return;
-        }
-
-        if (mSelectIcon.getVisibility() != View.GONE) {
-            ToastUtil.show(R.string.please_select_currency);
-            return;
-        }
-
-        if (!mBuyBtn.isSelected() && !mSellBtn.isSelected()) {
-            ToastUtil.show(R.string.please_select_direction);
-            return;
-        }
-
-        if (mOnFilterListener != null) {
-            mOnFilterListener.onFilter(mCurrency.getText().toString(), mSelectCurrency.getText().toString(), mBuyBtn.isSelected() ? DIR_BUY : DIR_SELL);
+    public void show() {
+        if (mView.getVisibility() == View.GONE || mView.getVisibility() == View.INVISIBLE) {
+            Animation expendY = AnimUtils.createExpendY(mView, 300);
+            mView.startAnimation(expendY);
+            if (mDimView != null) {
+                mDimView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
-    private void goneView() {
-        AnimatorUtil.collapseVertical(mView, 300);
+    public void dismiss() {
+        if (mView.getVisibility() == View.VISIBLE) {
+            mView.clearAnimation();
+            Animation collapseY = AnimUtils.createCollapseY(mView, 300);
+            mView.startAnimation(collapseY);
+            if (mDimView != null) {
+                mDimView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public boolean isShowing() {
+        return mView.getVisibility() == View.VISIBLE;
+    }
+
+    private void filter() {
+        String baseCurrency = mCurrency.getText().toString().trim();
+        String counterCurrency = mCounterCurrency.getText().toString().trim();
+        Integer direction;
+
+        if (TextUtils.isEmpty(baseCurrency)) {
+            baseCurrency = null;
+        }
+
+        if (counterCurrency.equals(mView.getResources().getString(R.string.select_currency))) {
+            counterCurrency = null;
+        }
+
+        if (mBuyBtn.isSelected()) {
+            direction = DIR_BUY;
+        } else if (mSellBtn.isSelected()) {
+            direction = DIR_SELL;
+        } else {
+            direction = null;
+        }
+
+        mFilterResult.setBaseCurrency(baseCurrency);
+        mFilterResult.setCounterCurrency(counterCurrency);
+        mFilterResult.setTradeDirection(direction);
+
+        if (mOnFilterListener != null) {
+            mOnFilterListener.onFilter(mFilterResult);
+        }
     }
 }

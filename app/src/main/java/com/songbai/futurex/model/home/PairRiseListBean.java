@@ -7,22 +7,24 @@ package com.songbai.futurex.model.home;
 public class PairRiseListBean {
 
     /**
-     * lastPrice : 15.73
-     * lastVolume : 0.0
-     * pairs : qtum_usdt
-     * prefixSymbol : qtum
+     * lastPrice : 16.731
+     * pairs : etc_usdt
+     * prefixSymbol : etc
+     * pricePoint : 3
      * suffixSymbol : usdt
-     * upDropPrice : 0.0
-     * upDropSpeed : 0.0
+     * upDropPrice : 0.587
+     * upDropSpeed : 0.0364
+     * volume : 179260.98457887
      */
 
     private double lastPrice;
-    private double lastVolume;
     private String pairs;
     private String prefixSymbol;
+    private int pricePoint;
     private String suffixSymbol;
     private double upDropPrice;
     private double upDropSpeed;
+    private double volume;
 
     public double getLastPrice() {
         return lastPrice;
@@ -30,14 +32,6 @@ public class PairRiseListBean {
 
     public void setLastPrice(double lastPrice) {
         this.lastPrice = lastPrice;
-    }
-
-    public double getLastVolume() {
-        return lastVolume;
-    }
-
-    public void setLastVolume(double lastVolume) {
-        this.lastVolume = lastVolume;
     }
 
     public String getPairs() {
@@ -54,6 +48,14 @@ public class PairRiseListBean {
 
     public void setPrefixSymbol(String prefixSymbol) {
         this.prefixSymbol = prefixSymbol;
+    }
+
+    public int getPricePoint() {
+        return pricePoint;
+    }
+
+    public void setPricePoint(int pricePoint) {
+        this.pricePoint = pricePoint;
     }
 
     public String getSuffixSymbol() {
@@ -78,5 +80,13 @@ public class PairRiseListBean {
 
     public void setUpDropSpeed(double upDropSpeed) {
         this.upDropSpeed = upDropSpeed;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
     }
 }

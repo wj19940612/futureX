@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.model.CurrencyPair;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.websocket.model.DealData;
 
 import java.util.LinkedList;
@@ -37,6 +37,7 @@ public class RealtimeDealView extends LinearLayout {
 
     private List<DealData> mDealDataList;
     private int mPriceScale;
+    private int mVolumeScale;
 
     public RealtimeDealView(Context context) {
         super(context);
@@ -102,9 +103,9 @@ public class RealtimeDealView extends LinearLayout {
                 childAt.setVisibility(VISIBLE);
                 DealData dealData = mDealDataList.get(i);
                 ((DealFlowView) childAt).setDirection(dealData.getDirection());
-                ((DealFlowView) childAt).setPrice(NumUtils.getPrice(dealData.getLastPrice(), mPriceScale));
+                ((DealFlowView) childAt).setPrice(CurrencyUtils.getPrice(dealData.getLastPrice(), mPriceScale));
                 ((DealFlowView) childAt).setTime(dealData.getUpTime());
-                ((DealFlowView) childAt).setVolume(NumUtils.getVolume(dealData.getLastVolume()));
+                ((DealFlowView) childAt).setVolume(CurrencyUtils.getVolume(dealData.getLastVolume(), mVolumeScale));
             }
         }
 
@@ -116,5 +117,9 @@ public class RealtimeDealView extends LinearLayout {
 
     public void setPriceScale(int priceScale) {
         mPriceScale = priceScale;
+    }
+
+    public void setVolumeScale(int volumeScale) {
+        mVolumeScale = volumeScale;
     }
 }

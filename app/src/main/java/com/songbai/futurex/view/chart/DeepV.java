@@ -14,8 +14,10 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.websocket.model.DeepData;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -115,7 +117,7 @@ public class DeepV extends View {
         float x = 0;
         float y = 0;
         float firstX = 0;
-        for (int i = 0; i < mBuyDeepList.size(); i++) {
+        for (int i = mBuyDeepList.size() - 1; i >= 0; i--) {
             DeepData deepData = mBuyDeepList.get(i);
             x = getBuyX(deepData.getPrice());
             y = getY(deepData.getTotalCount());
@@ -123,6 +125,11 @@ public class DeepV extends View {
                 firstX = x;
                 path.moveTo(x, y);
             } else {
+                path.lineTo(x, y);
+            }
+
+            if (i - 1 >= 0) {
+                x = getBuyX(mBuyDeepList.get(i - 1).getPrice());
                 path.lineTo(x, y);
             }
         }
@@ -144,6 +151,10 @@ public class DeepV extends View {
                 firstX = x;
                 path.moveTo(x, y);
             } else {
+                path.lineTo(x, y);
+            }
+            if (i + 1 < mSellDeepList.size()) {
+                x = getSellX(mSellDeepList.get(i + 1).getPrice());
                 path.lineTo(x, y);
             }
         }
@@ -172,7 +183,13 @@ public class DeepV extends View {
     }
 
     private String formatVolume(double baseline) {
-        return String.valueOf(baseline);
+        if (baseline < 1000) {
+            return FinanceUtil.formatWithScale(baseline, 1, RoundingMode.DOWN);
+        } else if (baseline < 1000000) {
+            return FinanceUtil.formatWithScale(baseline / 1000, 2, RoundingMode.DOWN) + "k";
+        } else {
+            return FinanceUtil.formatWithScale(baseline / 1000000, 2, RoundingMode.DOWN) + "m";
+        }
     }
 
     private void calculateBaselines() {

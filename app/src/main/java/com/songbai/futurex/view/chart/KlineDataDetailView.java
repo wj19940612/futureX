@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +43,7 @@ public class KlineDataDetailView extends FrameLayout {
 
     private SimpleDateFormat mSimpleDateFormat;
     private Date mSimpleDate;
+    private String mDateFormatStr;
 
     public KlineDataDetailView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -53,26 +54,32 @@ public class KlineDataDetailView extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_kline_data_detail, this, true);
         ButterKnife.bind(this);
 
-        mSimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        mDateFormatStr = "yyyy/MM/dd HH:mm";
+        mSimpleDateFormat = new SimpleDateFormat(mDateFormatStr);
         mSimpleDate = new Date();
+    }
+
+    public void setDateFormatStr(String dateFormatStr) {
+        mDateFormatStr = dateFormatStr;
+        mSimpleDateFormat.applyPattern(mDateFormatStr);
     }
 
     public void setKlineData(Kline.Data data) {
         mOpenPrice.setText(getPrice(R.string.open_price_x, data.getOpenPrice()));
-        mHighestPrice.setText(getPrice(R.string.highest_price_x, data.getOpenPrice()));
-        mLowestPrice.setText(getPrice(R.string.lowest_price_x, data.getOpenPrice()));
-        mClosePrice.setText(getPrice(R.string.close_price_x, data.getOpenPrice()));
+        mHighestPrice.setText(getPrice(R.string.highest_price_x, data.getMaxPrice()));
+        mLowestPrice.setText(getPrice(R.string.lowest_price_x, data.getMinPrice()));
+        mClosePrice.setText(getPrice(R.string.close_price_x, data.getClosePrice()));
         mTradeVolume.setText(getVolume(R.string.trade_volume_x, data.getNowVolume()));
         mSimpleDate.setTime(data.getTimestamp());
         mDate.setText(mSimpleDateFormat.format(mSimpleDate));
     }
 
     private String getPrice(int res, double value) {
-        return getContext().getString(res, NumUtils.getPrice(value, mPriceScale));
+        return getContext().getString(res, CurrencyUtils.getPrice(value, mPriceScale));
     }
 
     private String getVolume(int res, double volume) {
-        return getContext().getString(res, NumUtils.getVolume(volume));
+        return getContext().getString(res, CurrencyUtils.getVolume(volume));
     }
 
     public void setPriceScale(int pricePoint) {

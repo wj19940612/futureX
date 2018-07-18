@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
@@ -27,7 +28,7 @@ import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.ChartsRadio;
 import com.songbai.futurex.view.RadioHeader;
@@ -45,6 +46,7 @@ import com.songbai.futurex.view.chart.TrendV;
 import com.songbai.futurex.view.chart.TrendView;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.DealData;
@@ -166,15 +168,18 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
-                new DataParser<Response<PairMarket>>(data) {
-                    @Override
-                    public void onSuccess(Response<PairMarket> pairMarketResponse) {
-                        updateMarketDataView(pairMarketResponse.getContent().getQuota());
-                        updateDeepDataView(pairMarketResponse.getContent().getDeep());
-                        updateTradeDealView(pairMarketResponse.getContent().getDetail());
-                    }
-                }.parse();
+            public void onDataReceive(String data, int code, String dest) {
+                if (PushDestUtils.isSoloMarket(dest)) {
+                    new DataParser<Response<PairMarket>>(data) {
+                        @Override
+                        public void onSuccess(Response<PairMarket> pairMarketResponse) {
+                            if (pairMarketResponse.getContent() == null) return;
+                            updateMarketDataView(pairMarketResponse.getContent().getQuota());
+                            updateDeepDataView(pairMarketResponse.getContent().getDeep());
+                            updateTradeDealView(pairMarketResponse.getContent().getDetail());
+                        }
+                    }.parse();
+                }
             }
         });
 
@@ -203,6 +208,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     @OnClick({R.id.buyIn, R.id.sellOut, R.id.optional})
     public void onViewClicked(View view) {
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+            return;
+        }
+
         switch (view.getId()) {
             case R.id.buyIn:
                 Intent intent = new Intent()
@@ -219,11 +229,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 finish();
                 break;
             case R.id.optional:
-                if (LocalUser.getUser().isLogin()) {
-                    toggleOptionalStatus();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
+                toggleOptionalStatus();
                 break;
         }
     }
@@ -237,8 +243,6 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                             mOptional.setSelected(false);
                             mOptional.setText(R.string.add_optional_no_plus);
                             ToastUtil.show(R.string.optional_cancel);
-
-                            setResult(Activity.RESULT_OK); // refresh optional page
                         }
                     }).fire();
         } else {
@@ -250,10 +254,10 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                             mOptional.setText(R.string.already_added);
                             ToastUtil.show(R.string.optional_added);
 
-                            setResult(Activity.RESULT_OK);
                         }
                     }).fire();
         }
+        Preference.get().setOptionalListRefresh(true);
     }
 
     static class CalcDeepTask extends AsyncTask<Void, Void, Void> {
@@ -327,19 +331,34 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mDeepView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
+        mTradeVolumeView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mTradeDealView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mTradeDealView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mKlineDataDetailView.setPriceScale(mPairDesc.getPairs().getPricePoint());
     }
 
     private void updateMarketDataView(MarketData marketData) {
         if (marketData == null) return;
-        mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
+        if (mPairDesc != null) {
+            int scale = mPairDesc.getPairs().getPricePoint();
+            mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), scale));
+            mHighestPrice.setText(CurrencyUtils.getPrice(marketData.getHighestPrice(), scale));
+            mLowestPrice.setText(CurrencyUtils.getPrice(marketData.getLowestPrice(), scale));
+        } else {
+            mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice()));
+            mHighestPrice.setText(CurrencyUtils.getPrice(marketData.getHighestPrice()));
+            mLowestPrice.setText(CurrencyUtils.getPrice(marketData.getLowestPrice()));
+        }
         mDeepView.setLastPrice(marketData.getLastPrice());
-
-        mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
-        mHighestPrice.setText(NumUtils.getPrice(marketData.getHighestPrice()));
-        mLowestPrice.setText(NumUtils.getPrice(marketData.getLowestPrice()));
-        mTradeVolume.setText(NumUtils.getVolume(marketData.getVolume()));
+        mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+        if (marketData.getUpDropSpeed() >= 0) {
+            mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
+            mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));
+        } else {
+            mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+            mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+        }
+        mTradeVolume.setText(CurrencyUtils.get24HourVolume(marketData.getVolume()));
     }
 
     @Override
@@ -378,6 +397,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         Collections.sort(data);
                         if (TextUtils.isEmpty(endTime)) {
                             mTrend.setDataList(data);
+                            mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
 
                             startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
                         } else {
@@ -403,8 +423,14 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         if (TextUtils.isEmpty(endTime)) {
                             mKline.setDataList(data);
                             mKline.setDateFormatStr(KlineUtils.getDateFormat(mChartRadio.getSelectedPosition()));
+                            mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
 
-                            startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
+                            int refreshInterval = KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition());
+                            if (refreshInterval > 0) {
+                                startScheduleJobNext(refreshInterval);
+                            } else {
+                                stopScheduleJob();
+                            }
                         } else {
                             if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
                             mKline.addHistoryData(data);
@@ -478,6 +504,20 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         trendColor.setClosePriceColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         mTrend.setDateFormatStr("HH:mm");
+        mTrend.setOnCrossLineAppearListener(new Kline.OnCrossLineAppearListener() {
+            @Override
+            public void onAppear(Kline.Data data) {
+                mChartRadio.setVisibility(View.GONE);
+                mKlineDataDetailView.setVisibility(View.VISIBLE);
+                mKlineDataDetailView.setKlineData(data);
+            }
+
+            @Override
+            public void onDisappear() {
+                mChartRadio.setVisibility(View.VISIBLE);
+                mKlineDataDetailView.setVisibility(View.GONE);
+            }
+        });
         mTrend.setOnSidesReachedListener(new Kline.OnSidesReachedListener() {
             @Override
             public void onStartSideReached(Kline.Data data) {

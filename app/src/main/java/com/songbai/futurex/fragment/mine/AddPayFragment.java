@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.AuthenticationName;
+import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.TitleBar;
@@ -91,6 +91,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                     mHasBind = true;
                 }
                 mAccountNum.setText(mBindBankList.getAliPay().getCardNumber());
+                otcBankAccount(mBindBankList.getAliPay().getId());
             }
         } else {
             mTitleBar.setTitle(R.string.add_wei_chat_pay);
@@ -103,6 +104,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                     mHasBind = true;
                 }
                 mAccountNum.setText(cardNumber);
+                otcBankAccount(mBindBankList.getWechat().getId());
             }
         }
     }
@@ -113,7 +115,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     }
 
     private void authenticationName() {
-        Apic.authenticationName()
+        Apic.authenticationName().tag(TAG)
                 .callback(new Callback<Resp<AuthenticationName>>() {
                     @Override
                     protected void onRespSuccess(Resp<AuthenticationName> resp) {
@@ -124,27 +126,41 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 .fire();
     }
 
-    private void bankBand(BankBindData bankBindData) {
-        Apic.bankBind(bankBindData)
-                .callback(new Callback<Resp<Object>>() {
+    private void otcBankAccount(int id) {
+        Apic.otcBankAccount(id).tag(TAG)
+                .callback(new Callback<Resp<BankCardBean>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        FragmentActivity activity = AddPayFragment.this.getActivity();
-                        activity.setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                        activity.finish();
+                    protected void onRespSuccess(Resp<BankCardBean> resp) {
+                        BankCardBean bankCardBean = resp.getData();
+                        if (bankCardBean != null) {
+                            mName = bankCardBean.getRealName();
+                            mRealName.setText(mName);
+                            mAccountNum.setText(bankCardBean.getCardNumber());
+                        }
                     }
                 })
                 .fire();
     }
 
-    private void updateBankAccount(String type, String account, String name, String withDrawPass) {
-        Apic.updateBankAccount(type, account, name, withDrawPass)
+    private void bankBand(BankBindData bankBindData) {
+        Apic.bankBind(bankBindData).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        FragmentActivity activity = AddPayFragment.this.getActivity();
-                        activity.setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                        activity.finish();
+                        setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        finish();
+                    }
+                })
+                .fireFreely();
+    }
+
+    private void updateBankAccount(String type, String account, String name, String withDrawPass) {
+        Apic.updateBankAccount(type, account, name, withDrawPass).tag(TAG)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        setResult(ADD_PAY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        finish();
                     }
                 })
                 .fire();

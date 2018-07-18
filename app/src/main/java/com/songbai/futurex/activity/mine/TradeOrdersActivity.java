@@ -3,45 +3,42 @@ package com.songbai.futurex.activity.mine;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.CustomListener;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.DealDetailFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.LegalCoin;
-import com.songbai.futurex.model.Order;
 import com.songbai.futurex.model.local.SysTime;
-import com.songbai.futurex.model.status.OrderStatus;
+import com.songbai.futurex.model.order.Order;
+import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
-import com.songbai.futurex.utils.AnimUtils;
-import com.songbai.futurex.utils.AnimatorUtil;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.DateUtil;
-import com.songbai.futurex.utils.Display;
-import com.songbai.futurex.utils.NumUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.HistoryFilter;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
+import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -52,8 +49,6 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.songbai.futurex.model.Order.DIR_DEFAULT;
 
 /**
  * Modified by john on 2018/7/2
@@ -76,17 +71,18 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     LoadMoreFooterView mSwipeLoadMoreFooter;
     @BindView(R.id.rootView)
     ConstraintLayout mRootView;
-    @BindView(R.id.historyFilter)
-    LinearLayout mHistoryFilter;
+    @BindView(R.id.filterView)
+    ConstraintLayout mFilterView;
+    @BindView(R.id.dimView)
+    View mDimView;
 
     private int mPage;
     private OrderAdapter mOrderAdapter;
     private RadioHeader mRadioHeader;
+
     private TextView mFilter;
-
-    private OptionsPickerView<LegalCoin> mPvOptions;
-
-    private List<LegalCoin> mLegalCoinArrayList;
+    private HistoryFilter mHistoryFilter;
+    private MarketSubscriber mMarketSubscriber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +97,11 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         mOrderAdapter = new OrderAdapter(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
-
+                if (obj instanceof Order && ((Order) obj).hasDealDetail()) {
+                    UniqueActivity.launcher(getActivity(), DealDetailFragment.class)
+                            .putExtra(ExtraKeys.ORDER, (Parcelable) obj)
+                            .execute();
+                }
             }
         });
         mOrderAdapter.setOnOrderRevokeClickListener(new OrderAdapter.OnOrderRevokeClickListener() {
@@ -113,7 +113,28 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         mSwipeTarget.setAdapter(mOrderAdapter);
         mSwipeTarget.setEmptyView(mEmptyView);
 
+        mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(String data, int code, String dest) {
+                if (PushDestUtils.isEntrustOrder(dest)) {
+                    requestOrderList();
+                }
+            }
+        });
+
         requestOrderList();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mMarketSubscriber.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMarketSubscriber.pause();
     }
 
     private void initTitleBar() {
@@ -132,25 +153,26 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 requestOrderList();
             }
         });
-    }
-
-    private void initFilterView() {
-        HistoryFilter historyFilter = new HistoryFilter(mHistoryFilter);
         mFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mHistoryFilter.getVisibility() == View.GONE) {
-                    AnimatorUtil.expandVertical(mHistoryFilter,200);
+                if (mHistoryFilter.isShowing()) {
+                    mHistoryFilter.dismiss();
                 } else {
-                    AnimatorUtil.collapseVertical(mHistoryFilter,200);
+                    mHistoryFilter.show();
                 }
             }
         });
-        historyFilter.setOnFilterListener(new HistoryFilter.OnFilterListener() {
+    }
+
+    private void initFilterView() {
+        mHistoryFilter = new HistoryFilter(mFilterView, mDimView);
+        mHistoryFilter.setOnFilterListener(new HistoryFilter.OnFilterListener() {
             @Override
-            public void onFilter(String suffixSymbol, String prefixSymbol, int direction) {
-                requestOrderList(suffixSymbol, prefixSymbol, direction);
-                AnimatorUtil.collapseVertical(mHistoryFilter);
+            public void onFilter(HistoryFilter.FilterResult filterResult) {
+                mPage = 0;
+                requestOrderList();
+                mHistoryFilter.dismiss();
             }
         });
     }
@@ -160,29 +182,33 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
-                        requestOrderList();
+                        //requestOrderList();
                     }
                 }).fire();
     }
 
     private void requestOrderList() {
-        requestOrderList(null, null, DIR_DEFAULT);
+        if (mHistoryFilter.getFilterResult() != null) {
+            HistoryFilter.FilterResult filterResult = mHistoryFilter.getFilterResult();
+            requestOrderList(filterResult.getBaseCurrency(), filterResult.getCounterCurrency(), filterResult.getTradeDirection());
+        }
     }
 
-    private void requestOrderList(String suffixSymbol, String prefixSymbol, int direction) {
+    private void requestOrderList(String prefixSymbol, String suffixSymbol, Integer direction) {
         int type = mRadioHeader.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime, suffixSymbol, prefixSymbol, direction).tag(TAG)
+        Apic.getEntrustOrderList(mPage, type, endTime, prefixSymbol, suffixSymbol, direction).tag(TAG)
                 .id(mRadioHeader.getSelectTab())
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {
                     @Override
                     protected void onRespData(PagingWrap<Order> data) {
-                        if (getId().equalsIgnoreCase(mRadioHeader.getSelectTab())) {
+                        if (getId().equals(mRadioHeader.getSelectTab())) {
                             if (mPage == 0) {
                                 mOrderAdapter.setOrderList(data.getData());
                             } else {
                                 mOrderAdapter.appendOrderList(data.getData());
                             }
+
                             stopLoadMoreAnimation();
 
                             if (data.getData().size() < Apic.DEFAULT_PAGE_SIZE) {
@@ -257,36 +283,44 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 if (order.getStatus() == OrderStatus.REVOKED) {
                     color = ContextCompat.getColor(context, R.color.text49);
                 }
-                mTradePair.setText(tradeDir + " " + order.getPairs().toUpperCase());
+                mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
-                mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
-                mEntrustPrice.setText(NumUtils.getPrice(order.getEntrustPrice()));
-                mEntrustVolume.setText(NumUtils.getVolume(order.getEntrustCount()));
+                mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
+                if (order.getEntrustType() == Order.LIMIT_TRADE) {
+                    mEntrustPrice.setText(order.getEntrustPrice());
+                } else {
+                    mEntrustPrice.setText(R.string.market_price);
+                }
+                mEntrustVolume.setText(order.getEntrustCount());
                 mOrderStatus.setText(getStatusTextRes(order.getStatus()));
-                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
-                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix()));
-                mDealTotalAmt.setText(NumUtils.getAmt(order.getDealCount() * order.getDealPrice()));
-                mDealAveragePrice.setText(NumUtils.getPrice(order.getDealPrice()));
-                mDealVolume.setText(NumUtils.getVolume(order.getDealCount()));
-                mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix()));
-                mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix()));
-                mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix()));
+                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix().toUpperCase()));
+                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix().toUpperCase()));
+                mDealTotalAmt.setText(CurrencyUtils.getAmt(order.getDealCountDouble() * order.getDealPriceDouble()));
+                mDealAveragePrice.setText(order.getDealPrice());
+                mDealVolume.setText(order.getDealCount());
+                mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix().toUpperCase()));
+                mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix().toUpperCase()));
+                mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix().toUpperCase()));
             }
 
             private int getStatusTextRes(int status) {
                 switch (status) {
+                    case OrderStatus.PENDING_DEAL:
+                        return R.string.pending_deal;
+                    case OrderStatus.REVOKING:
+                        return R.string.revoking;
                     case OrderStatus.REVOKED:
                         return R.string.revoked;
                     case OrderStatus.ALL_DEAL:
-                        return R.string.deal;
+                        return R.string.deal_with_arrow;
                     case OrderStatus.PART_DEAL:
-                        return R.string.part_deal;
+                        return R.string.part_deal_with_arrow;
                     case OrderStatus.SYSTEM_REVOKED:
                         return R.string.system_revoked;
                     case OrderStatus.PART_DEAL_PART_REVOKED:
-                        return R.string.part_deal_part_revoked;
+                        return R.string.part_deal_part_revoked_with_arrow;
                     default:
-                        return R.string.unknown_operation;
+                        return R.string.unknown_status;
                 }
             }
         }
@@ -323,23 +357,44 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                     color = ContextCompat.getColor(context, R.color.red);
                     tradeDir = context.getString(R.string.sell_out);
                 }
-                mTradePair.setText(tradeDir + " " + order.getPairs().toUpperCase());
+                mTradePair.setText(tradeDir + " " + CurrencyUtils.formatPairName(order.getPairs()));
                 mTradePair.setTextColor(color);
-                mTime.setText(DateUtil.format(order.getOrderTime(), "mm:ss MM/dd"));
-                mEntrustPrice.setText(NumUtils.getPrice(order.getEntrustPrice()));
-                mEntrustVolume.setText(NumUtils.getVolume(order.getEntrustCount()));
-                mActualDealVolume.setText(NumUtils.getVolume(order.getDealCount()));
-                mRevoke.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onOrderRevokeClickListener != null) {
-                            onOrderRevokeClickListener.onOrderRevoke(order);
+                mTime.setText(DateUtil.format(order.getOrderTime(), "HH:mm MM/dd"));
+                if (order.getEntrustType() == Order.LIMIT_TRADE) {
+                    mEntrustPrice.setText(order.getEntrustPrice());
+                } else {
+                    mEntrustPrice.setText(R.string.market_price);
+                }
+                mEntrustVolume.setText(order.getEntrustCount());
+                mActualDealVolume.setText(order.getDealCount());
+                mRevoke.setText(getStatusTextRes(order.getStatus()));
+                if (order.getStatus() == OrderStatus.PENDING_DEAL) {
+                    mRevoke.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (onOrderRevokeClickListener != null) {
+                                onOrderRevokeClickListener.onOrderRevoke(order);
+                            }
                         }
-                    }
-                });
-                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix()));
-                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix()));
-                mActualDealVolumeTitle.setText(context.getString(R.string.actual_deal_x, order.getPrefix()));
+                    });
+                } else {
+                    mRevoke.setOnClickListener(null);
+                }
+
+                mEntrustPriceTitle.setText(context.getString(R.string.entrust_price_x, order.getSuffix().toUpperCase()));
+                mEntrustVolumeTitle.setText(context.getString(R.string.entrust_volume_x, order.getPrefix().toUpperCase()));
+                mActualDealVolumeTitle.setText(context.getString(R.string.actual_deal_x, order.getPrefix().toUpperCase()));
+            }
+
+            private int getStatusTextRes(int status) {
+                switch (status) {
+                    case OrderStatus.PENDING_DEAL:
+                        return R.string.revoke_order;
+                    case OrderStatus.REVOKING:
+                        return R.string.revoking_order;
+                    default:
+                        return R.string.unknown_status;
+                }
             }
         }
 

@@ -2,7 +2,7 @@ package com.songbai.futurex.http;
 
 import com.sbai.httplib.ReqParams;
 import com.songbai.futurex.App;
-import com.songbai.futurex.model.Order;
+import com.songbai.futurex.model.local.AuthCodeCheck;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.BankBindData;
@@ -65,7 +65,10 @@ public class Apic {
     public static Api queryForceVersion() {
         return Api.get("/api/user/appVersion/queryForceVersion.do",
                 new ReqParams()
-                        .put("platform", 2));
+                        .put("identify", "cn")
+                        .put("version", AppInfo.getVersionName(App.getAppContext()))
+//                        .put("version", AppInfo.getVersionName(App.getAppContext()))
+                        .put("platform", 0));
     }
 
     /**
@@ -163,11 +166,10 @@ public class Apic {
      * POST
      * 解绑银行卡
      */
-    public static Api bindUntie(int id, String withDrawPass) {
+    public static Api bindUntie(int id) {
         return Api.post("/api/otc/bank/untie",
                 new ReqParams()
-                        .put("id", id)
-                        .put("withDrawPass", withDrawPass));
+                        .put("id", id));
     }
 
     /**
@@ -200,6 +202,15 @@ public class Apic {
      */
     public static Api bankList() {
         return Api.get("/api/otc/bank/list");
+    }
+
+    /**
+     * /api/otc/bank/account
+     * GET
+     * 查询支付宝/微信账号
+     */
+    public static Api otcBankAccount(int id) {
+        return Api.get("/api/otc/bank/account", new ReqParams().put("id", id));
     }
 
     /**
@@ -263,17 +274,6 @@ public class Apic {
     }
 
     /**
-     * /user/wallet/getAccountByUser.do
-     * GET
-     * 账户查询（叶海啸）
-     * 币币账户
-     */
-    public static Api getAccountByUser(String coinType) {
-        return Api.get("/api/user/wallet/getAccountByUser.do",
-                new ReqParams().put("coinType", coinType));
-    }
-
-    /**
      * /api/otc/account/list
      * GET
      * 法币账户
@@ -305,6 +305,17 @@ public class Apic {
     }
 
     /**
+     * /api/user/user/transfer
+     * POST
+     * 划转至个人账户
+     */
+    public static Api userTransfer(String coins) {
+        return Api.post("/api/user/user/transfer",
+                new ReqParams()
+                        .put("coins", coins));
+    }
+
+    /**
      * /api/user/wallet/getAccountByUserForMuti.do
      * GET
      * 获取多个品种账户可用资金
@@ -318,12 +329,47 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/getAccountByUser.do
+     * GET
+     * 账户查询--(v1.1)（齐慕伟）
+     */
+    public static Api getAccountByUser(String coinType) {
+        return Api.get("/api/user/wallet/getAccountByUser.do",
+                new ReqParams()
+                        .put("coinType", coinType));
+    }
+
+    /**
      * /api/user/wallet/getUserFinanceFlow.do
      * GET
      * 资产明细（叶海啸）
      */
     public static Api getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
         return Api.get("/api/user/wallet/getUserFinanceFlow.do",
+                new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * /api/otc/account/detail
+     * GET
+     * 法币账户资产明细--(v1.1)
+     */
+    public static Api otcAccountDetail(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
+        return Api.get("/api/otc/account/detail",
+                new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * /api/user/user/financeDetail
+     * GET
+     * 推广资产明细
+     */
+    public static Api userFinanceDetail(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
+        return Api.get("/api/user/user/financeDetail",
                 new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
                         .put("page", page)
                         .put("pageSize", pageSize));
@@ -382,9 +428,10 @@ public class Apic {
      * POST
      * 绑定、修改手机号--薛松
      */
-    public static Api updatePhone(String phoneNum, String phoneMsgCode, String msgCode, String type) {
+    public static Api updatePhone(String teleCode, String phoneNum, String phoneMsgCode, String msgCode, String type) {
         return Api.post("/api/user/userSafe/updatePhone.do",
                 new ReqParams()
+                        .put("teleCode", teleCode)
                         .put("phone", phoneNum)
                         .put("phoneMsgCode", phoneMsgCode)
                         .put("msgCode", msgCode)
@@ -528,7 +575,7 @@ public class Apic {
      * 标记全部已读
      */
     public static Api msgReadAll() {
-        return Api.get("/api/user/msg/list");
+        return Api.post("/api/user/msg/readAll");
     }
 
     /**
@@ -537,7 +584,7 @@ public class Apic {
      * 标记已读
      */
     public static Api msgRead(String msgId) {
-        return Api.get("/api/user/msg/list",
+        return Api.post("/api/user/msg/read",
                 new ReqParams()
                         .put("msgId", msgId));
     }
@@ -582,12 +629,11 @@ public class Apic {
     /**
      * /api/user/banner/findBannerList
      * GET
-     * 查询banner列表
+     * 查询banner列表 platform (1 android)
      */
-    public static Api findBannerList(String locale) {
+    public static Api findBannerList() {
         return Api.get("/api/user/banner/findBannerList.do",
-                new ReqParams()
-                        .put("locale", locale));
+                new ReqParams().put("platform", 1));
     }
 
     /**
@@ -595,11 +641,10 @@ public class Apic {
      * GET
      * 查询资讯列表
      */
-    public static Api findNewsList(int type, String lang, int offset, int size) {
+    public static Api findNewsList(int type, int offset, int size) {
         return Api.get("/api/user/news/findNewsList.do",
                 new ReqParams()
                         .put("type", type)
-                        .put("lang", lang)
                         .put("offset", offset)
                         .put("size", size));
     }
@@ -667,11 +712,13 @@ public class Apic {
      * GET
      * 广告管理--(v1.2)
      */
-    public static Api otcWaresList(int page, int pageSize) {
+    public static Api otcWaresList(int page, int pageSize, String coinType, String payCurrency) {
         return Api.get("/api/otc/wares/list",
                 new ReqParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("coinType", coinType)
+                        .put("payCurrency", payCurrency));
     }
 
     /**
@@ -824,7 +871,7 @@ public class Apic {
      * GET
      * (改)个人广告主页-个人信息(V1.2)
      */
-    public static Api otcWaresMine(String waresId, int orderId, int orientation) {
+    public static Api otcWaresMine(String waresId, String orderId, int orientation) {
         return Api.get("/api/otc/wares/mine",
                 new ReqParams()
                         .put("waresId", waresId)
@@ -954,6 +1001,19 @@ public class Apic {
     public static Api login(LoginData loginData) {
         return Api.post("/api/user/user/login.do",
                 new ReqParams(LoginData.class, loginData));
+    }
+
+    /**
+     * 验证码验证正确性
+     * <p>
+     * /api/user/user/checkMsgCode.do
+     *
+     * @param authCodeCheck
+     * @return
+     */
+    public static Api checkAuthCode(AuthCodeCheck authCodeCheck) {
+        return Api.post("/api/user/user/checkMsgCode.do",
+                new ReqParams(AuthCodeCheck.class, authCodeCheck));
     }
 
     /**
@@ -1158,20 +1218,19 @@ public class Apic {
      * @param endDate
      * @param prefixSymbol
      * @param suffixSymbol
+     * @param direction
      * @return
      */
-    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, int direction) {
-        ReqParams reqParams = new ReqParams();
-        reqParams.put("pageSize", DEFAULT_PAGE_SIZE)
-                .put("page", page)
-                .put("current", type)
-                .put("endDate", endDate)
-                .put("suffixSymbol", suffixSymbol)
-                .put("prefixSymbol", prefixSymbol);
-        if (direction != Order.DIR_DEFAULT) {
-            reqParams.put("direction", direction);
-        }
-        return Api.get("/api/entrust/entrust/mine", reqParams);
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, Integer direction) {
+        return Api.get("/api/entrust/entrust/mine",
+                new ReqParams()
+                        .put("pageSize", DEFAULT_PAGE_SIZE)
+                        .put("page", page)
+                        .put("current", type)
+                        .put("endDate", endDate)
+                        .put("prefixSymbol", prefixSymbol)
+                        .put("suffixSymbol", suffixSymbol)
+                        .put("direction", direction));
     }
 
     /**
@@ -1216,6 +1275,16 @@ public class Apic {
     }
 
     /**
+     * /api/user/chat/online.do
+     * POST
+     * 获取客服状态
+     */
+    public static Api chatOnline() {
+        return Api.post("/api/user/chat/online.do",
+                new ReqParams().put("deviceid", AppInfo.getDeviceHardwareId(App.getAppContext())));
+    }
+
+    /**
      * 发送给客服消息
      *
      * @return
@@ -1238,6 +1307,18 @@ public class Apic {
      */
     public static Api requestPlatformIntroduce(String code) {
         return Api.get("/api/user/article/getAgreement.do", new ReqParams().put("code", code));
+    }
+
+    /**
+     * 获取订单交易详情
+     *
+     * @param orderId
+     * @return
+     */
+    public static Api getOrderDealDetail(String orderId) {
+        return Api.get("/api/entrust/entrust/dealLog",
+                new ReqParams()
+                        .put("entrustId", orderId));
     }
 
 }

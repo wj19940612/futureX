@@ -17,10 +17,12 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,12 +36,15 @@ import com.songbai.futurex.fragment.mine.PropertyListFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.model.mine.InviteSubordinate;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 
 import java.util.ArrayList;
@@ -69,10 +74,11 @@ public class MyPropertyActivity extends BaseActivity {
     float mPagerTranslationX;
     private int mCardPagePadding;
     private PropertyCardAdapter mPropertyCardAdapter;
-    int size = 3;
+    int mCardSize = 2;
     private int mScrollWidth;
     private SparseArray<AccountList> mAccountLists = new SparseArray<>(3);
     private ArrayList<PropertyListFragment> mFragments;
+    private SmartDialog mSmartDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +95,7 @@ public class MyPropertyActivity extends BaseActivity {
             public void onClick(View v) {
                 Launcher.with(MyPropertyActivity.this, PropertyFlowActivity.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, true)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mPropertyListPager.getCurrentItem())
                         .execute();
             }
         });
@@ -97,9 +104,10 @@ public class MyPropertyActivity extends BaseActivity {
             @Override
             public void run() {
                 int measuredWidth = mIndicatorContainer.getMeasuredWidth();
-                mScrollWidth = (int) (measuredWidth / size + 0.5);
+                mScrollWidth = (int) (measuredWidth / mCardSize + 0.5);
                 ViewGroup.LayoutParams layoutParams = mIndicator.getLayoutParams();
                 layoutParams.width = mScrollWidth;
+                mIndicator.setLayoutParams(layoutParams);
             }
         });
         mPropertyCardAdapter = new PropertyCardAdapter(this);
@@ -129,9 +137,9 @@ public class MyPropertyActivity extends BaseActivity {
         mCardPagePadding = (int) Display.dp2Px(12, getResources());
         mPropertyCardPager.setPageMargin(mCardPagePadding);
         mFragments = new ArrayList<>();
-        mFragments.add(PropertyListFragment.newInstance(0));
-        mFragments.add(PropertyListFragment.newInstance(1));
-        mFragments.add(PropertyListFragment.newInstance(2));
+        for (int i = 0; i < mCardSize; i++) {
+            mFragments.add(PropertyListFragment.newInstance(i));
+        }
         PropertyListAdapter adapter = new PropertyListAdapter(getSupportFragmentManager());
         adapter.setList(mFragments);
         mPropertyListPager.setAdapter(adapter);
@@ -157,17 +165,28 @@ public class MyPropertyActivity extends BaseActivity {
     }
 
     private void setCardPagerTranslationX(int position, float positionOffset) {
-        if (position <= 1) {
-            mPropertyCardPager.setTranslationX(-mPagerTranslationX * (1 - (position + positionOffset)));
-        } else if (position >= size - 2) {
-            mPropertyCardPager.setTranslationX(mPagerTranslationX * (position + positionOffset - size + 2));
+        float translateX = position + positionOffset;
+        float translateXRightBorder = mCardSize - 2;
+        float translateXLeftBorder = 1;
+        float scale = 1;
+        if (mCardSize < 3) {
+            translateXRightBorder = mCardSize - 1.5f;
+            translateXLeftBorder = 1 - 0.5f;
+            scale = 2;
+        }
+        if (translateX < translateXLeftBorder) {
+            mPropertyCardPager.setTranslationX(-mPagerTranslationX * scale * (translateXLeftBorder - (translateX)));
         } else {
-            mPropertyCardPager.setTranslationX(0);
+            if (translateX > translateXRightBorder) {
+                mPropertyCardPager.setTranslationX(mPagerTranslationX * scale * (translateX - translateXRightBorder));
+            } else {
+                mPropertyCardPager.setTranslationX(0);
+            }
         }
     }
 
     private void findCommissionOfSubordinate() {
-        Apic.findCommissionOfSubordinate()
+        Apic.findCommissionOfSubordinate().tag(TAG)
                 .callback(new Callback<Resp<InviteSubordinate>>() {
 
                     @Override
@@ -216,7 +235,7 @@ public class MyPropertyActivity extends BaseActivity {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
-                KeyBoardUtils.closeOrOpenKeyBoard();
+                KeyBoardUtils.closeKeyboard(v);
                 v.clearFocus();
             }
             return super.dispatchTouchEvent(ev);
@@ -224,7 +243,7 @@ public class MyPropertyActivity extends BaseActivity {
         return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
     }
 
-    static class PropertyCardAdapter extends PagerAdapter {
+    class PropertyCardAdapter extends PagerAdapter {
         private final Context mContext;
         @BindView(R.id.accountType)
         TextView mAccountType;
@@ -245,7 +264,7 @@ public class MyPropertyActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return mCardSize;
         }
 
         @Override
@@ -317,12 +336,17 @@ public class MyPropertyActivity extends BaseActivity {
             mTransfer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    List<AccountList.AccountBean> accountBeans = accountList.getAccount();
+                    List<AccountBean> accountBeans;
+                    if (accountList != null) {
+                        accountBeans = accountList.getAccount();
+                    } else {
+                        accountBeans = new ArrayList<>();
+                    }
                     switch (position) {
                         case 0:
-                            ArrayList<AccountList.AccountBean> list = new ArrayList<>();
-                            for (AccountList.AccountBean accountBean : accountBeans) {
-                                if (accountBean.getLegal() == AccountList.AccountBean.IS_LEGAL) {
+                            ArrayList<AccountBean> list = new ArrayList<>();
+                            for (AccountBean accountBean : accountBeans) {
+                                if (accountBean.getLegal() == AccountBean.IS_LEGAL) {
                                     list.add(accountBean);
                                 }
                             }
@@ -342,9 +366,6 @@ public class MyPropertyActivity extends BaseActivity {
             });
         }
 
-        private void showTransferPop() {
-        }
-
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
@@ -356,6 +377,77 @@ public class MyPropertyActivity extends BaseActivity {
 
         public void setInviteCount(int inviteCount) {
             mInviteCount = inviteCount;
+        }
+    }
+
+    private void showTransferPop() {
+        TransferController transferController = new TransferController(this, new TransferController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                userTransfer();
+            }
+        });
+        mSmartDialog = SmartDialog.solo(this);
+        mSmartDialog
+                .setWidthScale(0.8f)
+                .setWindowGravity(Gravity.CENTER)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setCustomViewController(transferController)
+                .show();
+    }
+
+    private void userTransfer() {
+        Apic.userTransfer("").tag(TAG).callback(new Callback<Resp>() {
+            @Override
+            protected void onRespSuccess(Resp resp) {
+                ToastUtil.show(R.string.transfer_success);
+                if (mSmartDialog != null) {
+                    mSmartDialog.dismiss();
+                }
+            }
+        }).fire();
+    }
+
+    static class TransferController extends SmartDialog.CustomViewController {
+        @BindView(R.id.close)
+        ImageView mClose;
+        @BindView(R.id.confirm)
+        TextView mConfirm;
+        private Context mContext;
+        private OnClickListener mOnClickListener;
+
+        public interface OnClickListener {
+            void onConfirmClick();
+        }
+
+        public TransferController(Context context, OnClickListener onClickListener) {
+            mContext = context;
+            mOnClickListener = onClickListener;
+        }
+
+        @Override
+        protected View onCreateView() {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.view_transfer, null);
+            ButterKnife.bind(this, view);
+            return view;
+        }
+
+        @Override
+        protected void onInitView(View view, final SmartDialog dialog) {
+            mClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            mConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickListener != null) {
+                        mOnClickListener.onConfirmClick();
+                    }
+                }
+            });
         }
     }
 

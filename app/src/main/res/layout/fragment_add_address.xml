@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <com.songbai.futurex.view.TitleBar
         android:id="@+id/titleBar"
@@ -36,9 +38,9 @@
         <EditText
             android:id="@+id/address"
             style="@style/SingleEditText"
-            android:hint="@string/input_or_paste_address"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:hint="@string/input_or_paste_address"/>
     </LinearLayout>
 
     <LinearLayout

@@ -58,7 +58,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="8dp"
                     android:maxLines="1"
-                    android:text="9300.77"
+                    android:text="--"
                     android:textColor="@color/text66"
                     android:textSize="12sp"/>
 
@@ -81,7 +81,7 @@
                     android:layout_below="@id/highestPrice"
                     android:layout_marginTop="2dp"
                     android:maxLines="1"
-                    android:text="9300.77"
+                    android:text="--"
                     android:textColor="@color/text66"
                     android:textSize="12sp"/>
 
@@ -104,7 +104,7 @@
                     android:layout_below="@id/lowestPrice"
                     android:layout_marginTop="2dp"
                     android:maxLines="1"
-                    android:text="14957"
+                    android:text="--"
                     android:textColor="@color/text66"
                     android:textSize="12sp"/>
 
@@ -163,8 +163,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:paddingBottom="52dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="52dp">
 
                 <com.songbai.futurex.view.RadioHeader
                     android:id="@+id/tradeDetailRadio"

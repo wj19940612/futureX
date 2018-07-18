@@ -2,8 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
@@ -35,9 +38,9 @@
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:paddingRight="12dp"
-            android:text="中国大陆身份证"
             android:textColor="@color/text22"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            tools:text="中国大陆身份证"/>
     </LinearLayout>
 
     <LinearLayout
@@ -72,6 +75,7 @@
         android:background="@color/white">
 
         <TextView
+            android:id="@+id/certificationNumHint"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
@@ -90,6 +94,15 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/passportSample"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_passport_sample"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/confirmSubmit"

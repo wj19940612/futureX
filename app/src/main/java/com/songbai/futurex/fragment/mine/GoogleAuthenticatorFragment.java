@@ -20,6 +20,8 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.CreateGoogleKey;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
@@ -71,7 +73,7 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
     }
 
     private void createGoogleKey() {
-        Apic.createGoogleKey()
+        Apic.createGoogleKey().tag(TAG)
                 .callback(new Callback<Resp<CreateGoogleKey>>() {
                     @Override
                     protected void onRespSuccess(Resp<CreateGoogleKey> resp) {
@@ -82,12 +84,20 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
     }
 
     private void bindGoogleKey(String googleCode, String drawPass, String googleKey) {
-        Apic.bindGoogleKey(googleCode, drawPass, googleKey)
+        Apic.bindGoogleKey(googleCode, drawPass, googleKey).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(R.string.bind_google_authenticator_success);
-                        getActivity().finish();
+                        LocalUser user = LocalUser.getUser();
+                        if (user.isLogin()) {
+                            UserInfo userInfo = user.getUserInfo();
+                            if (userInfo.getGoogleAuth() == 0) {
+                                userInfo.setGoogleAuth(1);
+                                LocalUser.getUser().setUserInfo(userInfo);
+                            }
+                        }
+                        finish();
                         UniqueActivity.launcher(getContext(), GoogleAuthenticatorSettingsFragment.class).execute();
                     }
                 })

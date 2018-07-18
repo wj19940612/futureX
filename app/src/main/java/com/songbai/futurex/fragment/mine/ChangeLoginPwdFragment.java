@@ -71,7 +71,6 @@ public class ChangeLoginPwdFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
     }
 
     @Override
@@ -96,7 +95,7 @@ public class ChangeLoginPwdFragment extends UniqueActivity.UniFragment {
         public void afterTextChanged(Editable s) {
             String password = mPassword.getPassword();
             String confirmPassword = mConfirmPassword.getPassword();
-            String authCode = mSmsAuthCode.getText().toString();
+            String authCode = mSmsAuthCode.getText().toString().trim();
             if (TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(authCode)) {
                 mConfirm.setEnabled(false);
             } else {
@@ -143,10 +142,18 @@ public class ChangeLoginPwdFragment extends UniqueActivity.UniFragment {
 
     @Override
     public void onTimeUp(int count) {
-        mFreezeGetPhoneAuthCode = false;
-        mSendAuthCode.setEnabled(true);
-        mSendAuthCode.setText(R.string.regain);
-        stopScheduleJob();
+        Integer tag = (Integer) mSendAuthCode.getTag();
+        int authCodeCounter = tag != null ? tag.intValue() : 0;
+        authCodeCounter--;
+        if (authCodeCounter <= 0) {
+            mSendAuthCode.setEnabled(true);
+            mSendAuthCode.setText(R.string.regain);
+            mSendAuthCode.setTag(null);
+            stopScheduleJob();
+        } else {
+            mSendAuthCode.setTag(authCodeCounter);
+            mSendAuthCode.setText(getString(R.string.x_seconds, authCodeCounter));
+        }
     }
 
     private void showImageAuthCodeDialog() {
@@ -229,7 +236,18 @@ public class ChangeLoginPwdFragment extends UniqueActivity.UniFragment {
                 getAuthCode();
                 break;
             case R.id.confirm:
-
+                // TODO: 2018/7/5 接口不对 或者设计图不对
+                String password = mPassword.getPassword();
+                String confirmPassword = mConfirmPassword.getPassword();
+                if (password.equals(confirmPassword)) {
+                    Apic.updateLoginPass(password, password)
+                            .callback(new Callback<Resp<Object>>() {
+                                @Override
+                                protected void onRespSuccess(Resp<Object> resp) {
+                                    finish();
+                                }
+                            }).fire();
+                }
                 break;
             default:
         }

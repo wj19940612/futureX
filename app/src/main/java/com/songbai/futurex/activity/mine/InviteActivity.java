@@ -38,7 +38,7 @@ public class InviteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite);
         ButterKnife.bind(this);
-        Apic.getCurrentPromoterMsg()
+        Apic.getCurrentPromoterMsg().tag(TAG)
                 .callback(new Callback<Resp<PromoterInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<PromoterInfo> resp) {

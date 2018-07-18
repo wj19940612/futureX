@@ -2,6 +2,7 @@ package com.songbai.futurex.utils;
 
 
 import android.text.TextUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,7 +12,6 @@ public class DateUtil {
 
     public static final String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    public static final String FORMAT_NOT_SECOND = "MM月dd日 HH:mm";
     public static final String FORMAT_NOT_HOUR = "MM月dd日 ";
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日 HH:mm";
 
@@ -21,16 +21,11 @@ public class DateUtil {
     public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
 
     public static final String FORMAT_MINUTE_SECOND = "mm:ss";
-    public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
     public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
     public static final String FORMAT_HOUR_MINUTE_DATE = "HH:mm MM/dd";
 
-
-    private static final String TODAY = "今日";
-    private static final String YESTERDAY = "昨日";
-
-    public static final String FORMAT_UTZ_STANDARD= "yyyy-MM-dd'T'HH:mm:ss.SSS Z";
-    public static final String FORMAT_HOUR_MINUTE_SECOND_DATE_YEAR= "HH:mm:ss MM/dd/yyyy";
+    public static final String FORMAT_UTZ_STANDARD = "yyyy-MM-dd'T'HH:mm:ss.SSS Z";
+    public static final String FORMAT_HOUR_MINUTE_SECOND_DATE_YEAR = "HH:mm:ss MM/dd/yyyy";
     public static final String FORMAT_SPECIAL_SLASH_ALL = "yyyy/MM/dd HH:mm:ss";
 
     public static String format(long time, String toFormat) {
@@ -242,7 +237,7 @@ public class DateUtil {
         long systemTime = System.currentTimeMillis();
         if (DateUtil.isInThisYear(createTime)) {
             if (DateUtil.isToday(createTime, systemTime)) {
-                return DateUtil.format(createTime, "HH:mm");
+                return DateUtil.format(createTime, "HH:mm:ss");
             } else if (DateUtil.isYesterday(createTime, systemTime)) {
                 return DateUtil.format(createTime, "昨日  " + "HH:mm");
             } else {
@@ -254,7 +249,7 @@ public class DateUtil {
     }
 
     /**
-<<<<<<< HEAD
+     * <<<<<<< HEAD
      * 返回格式 7月15日
      *
      * @param createTime
@@ -264,62 +259,6 @@ public class DateUtil {
     public static String getStudyFormatTime(long createTime) {
         return DateUtil.format(createTime, DateUtil.FORMAT_NOT_HOUR);
     }
-
-
-    /**
-     * 评论时间显示机制：
-     * 1分钟内显示“刚刚”，
-     * 1小时内显示“XX分钟前”，
-     * 大于1小时在当天的显示“XX小时前”，
-     * 昨天的显示“昨天”，
-     * 再往前的显示“xx-xx”，跨年加上年份；
-     *
-     * @param createTime
-     * @return
-     */
-//    public static String formatDefaultStyleTime(long createTime) {
-//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
-//        if (DateUtil.isToday(createTime, systemTime)) {
-//            if (systemTime - createTime < 60 * 60 * 1000) {
-//                int time = (int) ((systemTime - createTime) / 1000 / 60);
-//                if (time < 1) {
-//                    return "刚刚";
-//                }
-//                return time + "分钟前";
-//            }
-//            int hour = (int) ((systemTime - createTime) / 1000 / 60 / 60);
-//            return hour + "小时前";
-//        } else if (DateUtil.isYesterday(createTime, systemTime)) {
-//            return "昨天";
-//        } else if (DateUtil.isInThisYear(createTime)) {
-//            return DateUtil.format(createTime, "MM/dd ");
-//        } else {
-//            return DateUtil.format(createTime, "yyyy/MM/dd ");
-//        }
-//    }
-
-    /**
-     * 如果是当天，显示今天
-     * 如果是昨天，显示昨天
-     * 如果是本年内的其他时期  12/07;
-     * 跨年  2015/12/07
-     * 涉及页面  资讯列表，资讯详情
-     *
-     * @param createTime
-     * @return
-     */
-//    public static String formatNewsStyleTime(long createTime) {
-//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
-//        if (DateUtil.isInThisDay(createTime, systemTime))
-//            return "今天";
-//        else if (DateUtil.isYesterday(createTime, systemTime)) {
-//            return "昨天";
-//        } else if (DateUtil.isInThisYear(createTime)) {
-//            return DateUtil.format(createTime, "MM/dd ");
-//        } else {
-//            return DateUtil.format(createTime, "yyyy/MM/dd ");
-//        }
-//    }
 
     /**
      * 当前是否白天
@@ -339,72 +278,6 @@ public class DateUtil {
         }
         return DateUtil.format(time, FORMAT_SPECIAL_SLASH_NO_HOUR);
     }
-
-
-//    /**
-//     * 获取明细页面的格式化时间
-//     * 日期显示：
-//     * 本日记录：今日00:00；
-//     * 昨日记录：昨日00:00
-//     * 两日以前记录：XX日00:00
-//     *
-//     * @param createTime
-//     * @return
-//     */
-//    public static String getDetailFormatTime(long createTime) {
-//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
-//        if (isToday(createTime, systemTime)) {
-//            return TODAY;
-//        }
-//        if (isYesterday(createTime, systemTime)) {
-//            return YESTERDAY;
-//        }
-//        return DateUtil.format(createTime, FORMAT_ONLY_DATE);
-//    }
-
-    /**
-     * 获取反馈页面的格式化时间
-     * 日期显示：
-     * 本日记录：今天
-     * 昨日记录：昨天
-     * 两日以前记录：XX日00:00
-     *
-     * @param createTime
-     * @return
-     */
-//    public static String getFeedbackFormatTime(long createTime) {
-//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
-//        if (isToday(createTime, systemTime)) {
-//            return "今天";
-//        }
-//        if (isYesterday(createTime, systemTime)) {
-//            return "昨天";
-//        }
-//        if (isInThisYear(createTime)) {
-//            return DateUtil.format(createTime, FORMAT_NOT_HOUR);
-//        }
-//        return DateUtil.format(createTime, FORMAT_YEAR_MONTH_DAY);
-//    }
-
-    /**
-     * 格式化月份  如果是当月 则显示本月
-     * 如果是当年中的其他月份  显示x月
-     * 如果是跨年月份   则显示xxxx年xx月
-     *
-     * @param createTime
-     * @return
-     */
-//    public static String formatMonth(long createTime) {
-//        long systemTime = SysTime.getSysTime().getSystemTimestamp();
-//        if (DateUtil.isInThisMonth(createTime, systemTime)) {
-//            return "本月";
-//        } else if (DateUtil.isInThisYear(createTime)) {
-//            return DateUtil.format(createTime, "M月");
-//        } else {
-//            return DateUtil.format(createTime, "yyyy年MM月");
-//        }
-//
-//    }
 
     /**
      * 计算传入的时间与当前时间的相差天数

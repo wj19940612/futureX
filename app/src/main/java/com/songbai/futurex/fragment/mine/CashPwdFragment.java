@@ -94,6 +94,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
         mPassword.addTextChangedListener(mTextWatcher);
         mConfirmPassword.addTextChangedListener(mTextWatcher);
         mSmsAuthCode.addTextChangedListener(mTextWatcher);
+        mGoogleAuthCode.addTextChangedListener(mTextWatcher);
         initView();
         needGoogle();
     }
@@ -101,8 +102,10 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     private void initView() {
         mTitleBar.setTitle(mHsaWithDrawPass ? R.string.change_cash_pwd : R.string.set_cash_pwd);
         mUserInfo = LocalUser.getUser().getUserInfo();
-        mUserPhone = mUserInfo.getUserPhone();
-        mUserEmail = mUserInfo.getUserEmail();
+        if (mUserInfo != null) {
+            mUserPhone = mUserInfo.getUserPhone();
+            mUserEmail = mUserInfo.getUserEmail();
+        }
         mMailMode = TextUtils.isEmpty(mUserPhone);
         mSmsAuthCodeText.setText(mMailMode ? R.string.email_auth_code : R.string.sms_auth_code);
         mSmsAuthCode.setHint(mMailMode ? R.string.please_input_mail_auth_code : R.string.please_input_sms_auth_code);
@@ -113,17 +116,23 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
         public void afterTextChanged(Editable s) {
             String password = mPassword.getPassword();
             String confirmPassword = mConfirmPassword.getPassword();
-            String authCode = mSmsAuthCode.getText().toString();
-            if (TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(authCode)) {
+            String authCode = mSmsAuthCode.getText().toString().trim();
+            if (TextUtils.isEmpty(password)
+                    || TextUtils.isEmpty(confirmPassword)
+                    || TextUtils.isEmpty(authCode)) {
                 mConfirm.setEnabled(false);
             } else {
+                if (mNeedGoogle) {
+                    mConfirm.setEnabled(!TextUtils.isEmpty(mGoogleAuthCode.getText().toString().trim()));
+                    return;
+                }
                 mConfirm.setEnabled(true);
             }
         }
     };
 
     private void needGoogle() {
-        Apic.needGoogle("SET_DRAW_PASS")
+        Apic.needGoogle("SET_DRAW_PASS").tag(TAG)
                 .callback(new Callback<Resp<Boolean>>() {
 
                     @Override
@@ -133,7 +142,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                         mGoogleAuthCode.setVisibility(mNeedGoogle ? View.VISIBLE : View.GONE);
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void freezeGetPhoneAuthCodeButton() {
@@ -146,10 +155,18 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
 
     @Override
     public void onTimeUp(int count) {
-        mFreezeGetPhoneAuthCode = false;
-        mSendAuthCode.setEnabled(true);
-        mSendAuthCode.setText(R.string.regain);
-        stopScheduleJob();
+        Integer tag = (Integer) mSendAuthCode.getTag();
+        int authCodeCounter = tag != null ? tag.intValue() : 0;
+        authCodeCounter--;
+        if (authCodeCounter <= 0) {
+            mSendAuthCode.setEnabled(true);
+            mSendAuthCode.setText(R.string.regain);
+            mSendAuthCode.setTag(null);
+            stopScheduleJob();
+        } else {
+            mSendAuthCode.setTag(authCodeCounter);
+            mSendAuthCode.setText(getString(R.string.x_seconds, authCodeCounter));
+        }
     }
 
     private void showImageAuthCodeDialog() {
@@ -177,7 +194,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     private void requestPhoneAuthCode(String imageAuthCode) {
         AuthSendOld authSendOld = new AuthSendOld();
         authSendOld.setImgCode(imageAuthCode);
-        authSendOld.setSendType(AuthCodeGet.TYPE_SAFE_PSD);
+        authSendOld.setSmsType(AuthCodeGet.TYPE_SAFE_PSD);
         authSendOld.setSendType(AuthSendOld.TYPE_DEFAULT);
         Apic.sendOld(authSendOld).tag(TAG)
                 .callback(new Callback<Resp>() {
@@ -219,12 +236,20 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     }
 
     private void setDrawPass(String drawPass, String affirmPass, String msgCode, String type, String googleCode) {
-        Apic.setDrawPass(drawPass, affirmPass, msgCode, type, googleCode)
+        Apic.setDrawPass(drawPass, affirmPass, msgCode, type, googleCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(R.string.set_cash_pwd_success);
-                        CashPwdFragment.this.getActivity().finish();
+                        LocalUser user = LocalUser.getUser();
+                        if (user.isLogin()) {
+                            UserInfo userInfo = user.getUserInfo();
+                            if (userInfo.getSafeSetting() == 0) {
+                                userInfo.setSafeSetting(1);
+                                LocalUser.getUser().setUserInfo(userInfo);
+                            }
+                        }
+                        finish();
                     }
                 })
                 .fire();
@@ -240,7 +265,7 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.sendAuthCode:
-                showImageAuthCodeDialog();
+                requestPhoneAuthCode("");
                 break;
             case R.id.confirm:
                 String password = mPassword.getPassword();
@@ -248,6 +273,10 @@ public class CashPwdFragment extends UniqueActivity.UniFragment {
                 String msgCode = mSmsAuthCode.getText().toString();
                 if (!password.equals(confirmPassword)) {
                     ToastUtil.show(R.string.the_two_passwords_differ);
+                    return;
+                }
+                if (password.length() < 8) {
+                    ToastUtil.show(R.string.draw_cash_pwd_can_not_short_than_8);
                     return;
                 }
                 if (mNeedGoogle && TextUtils.isEmpty(mGoogleAuthCode.getText().toString())) {

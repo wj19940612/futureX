@@ -40,9 +40,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="可用   0.00000001"
                     android:textColor="@color/text22"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="可用   0.00000001"/>
 
                 <View
                     android:layout_width="1dp"
@@ -55,9 +55,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="冻结   0.00000001"
                     android:textColor="@color/text22"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="冻结   0.00000001"/>
             </LinearLayout>
 
             <LinearLayout
@@ -85,7 +85,13 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <include
+                layout="@layout/view_common_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <com.songbai.futurex.view.EmptyRecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,6 +101,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
+        android:id="@+id/operateGroup"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_alignParentBottom="true"

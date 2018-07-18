@@ -35,10 +35,10 @@ public interface ExtraKeys {
     String ACCOUNT_BEAN = "account_bean";
     String MODIFIED_SHOULD_REFRESH = "modified_should_refresh";
 
-    String OPTIONAL_LIST = "optional_list";
     String CURRENCY_PAIR = "currency_pair";
     String COIN_TYPE = "coin_type";
     String PROPERTY_FLOW_FILTER_TYPE_ALL = "property_flow_filter_type_all";
+    String PROPERTY_FLOW_ACCOUNT_TYPE = "property_flow_account_type";
 
     String HAS_BIND_PHONE = "has_bind_phone";
     String OTC_WARE_POSTER = "otc_ware_poster";
@@ -47,9 +47,13 @@ public interface ExtraKeys {
     String SELECTED_CURRENCY_SYMBOL = "selected_currency_symbol";
 
     String TRADE_DIRECTION = "trade_direction";
+    String LEGAL_CURRENCY_PAGE_INDEX = "legal_currency_page_index";
 
     String INTRODUCE_STYLE = "introduce_style";
     String APP_VERSION = "app_version";
     String IS_CANCELEDONTOUCHOUTSIDE = "is_canceledontouchoutside";
+    String WARES_ID = "wares_id";
     String ORDER_ID = "order_id";
+    String ORDER = "order";
+    String SERACH_FOR_TRADE = "search_for_trade";
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp">
 
@@ -10,42 +11,90 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
         android:layout_weight="1"
-        android:gravity="center|left"
-        android:text="USDT"
+        android:gravity="center|start"
         android:textColor="@color/text22"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="USDT"/>
 
-    <TextView
-        android:id="@+id/availableAmount"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center|end"
-        android:text="@string/amount_available_x"
-        android:textColor="@color/text99"
-        android:textSize="12sp"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/freezeAmount"
+        <com.songbai.futurex.view.ScaleTextView
+            android:id="@+id/availableAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|end"
+            android:singleLine="true"
+            android:textColor="@color/text22"
+            android:textSize="16sp"
+            tools:text="0.29000000"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:gravity="center|end"
+            android:singleLine="true"
+            android:text="@string/available"
+            android:textColor="@color/text99"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/freezeAmountGroup"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="12dp"
         android:layout_weight="2"
         android:gravity="center|end"
-        android:text="@string/amount_freeze_x"
-        android:textColor="@color/text99"
-        android:textSize="12sp"/>
+        android:orientation="vertical">
 
-    <TextView
+        <com.songbai.futurex.view.ScaleTextView
+            android:id="@+id/freezeAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|end"
+            android:singleLine="true"
+            android:textColor="@color/text22"
+            android:textSize="16sp"
+            tools:text="0.29000000"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:gravity="center|end"
+            android:singleLine="true"
+            android:text="@string/freeze"
+            android:textColor="@color/text99"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <RelativeLayout
         android:id="@+id/transfer"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="14dp"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:padding="6dp"
-        android:text="@string/transfer"
-        android:textColor="@color/colorPrimary"
-        android:textSize="12sp"/>
+        android:layout_weight="2"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="@string/transfer"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp"/>
+    </RelativeLayout>
 </LinearLayout>

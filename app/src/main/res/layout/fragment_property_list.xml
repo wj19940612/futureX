@@ -23,17 +23,40 @@
             android:textColorHint="@color/textBD"
             android:textSize="15sp"/>
 
-        <TextView
+        <LinearLayout
             android:id="@+id/hideZero"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
-            android:text="@string/hide_zero_amount_coin"
-            android:textColor="@color/text99"
-            android:textSize="12sp"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="12dp">
+
+            <ImageView
+                android:id="@+id/check"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/poster_rect_12dp"
+                android:padding="2dp"
+                android:scaleType="centerInside"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="@string/hide_zero_amount_coin"
+                android:textColor="@color/text99"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <include
+        layout="@layout/view_common_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <com.songbai.futurex.view.EmptyRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

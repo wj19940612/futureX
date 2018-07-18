@@ -24,6 +24,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcWarePoster;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -63,12 +64,18 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     private boolean isPrepared;
     private boolean isFirstLoad;
     private int mPageSize = 20;
+    private String mCoinType;
+    private String mPayCurrency;
     private boolean mShouldRefresh;
     private SmartDialog mSmartDialog;
+    private boolean mRequested;
+    private boolean mPairChanged;
 
-    public static MyPosterFragment newInstance() {
+    public static MyPosterFragment newInstance(String coinType, String payCurrency) {
         MyPosterFragment wantBuyOrSellFragment = new MyPosterFragment();
         Bundle bundle = new Bundle();
+        bundle.putString("coinType", coinType);
+        bundle.putString("payCurrency", payCurrency);
         wantBuyOrSellFragment.setArguments(bundle);
         return wantBuyOrSellFragment;
     }
@@ -88,7 +95,8 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-
+            mCoinType = arguments.getString("coinType");
+            mPayCurrency = arguments.getString("payCurrency");
         }
         mRecyclerView.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -184,7 +192,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     }
 
     private void updateStatus(final OtcWarePoster otcWarePoster, int onShelf) {
-        Apic.otcWaresUpdateStatus(otcWarePoster.getId(), onShelf)
+        Apic.otcWaresUpdateStatus(otcWarePoster.getId(), onShelf).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -213,6 +221,12 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 otcWaresList(mPage, mPageSize);
                 mShouldRefresh = false;
             }
+            if (!mRequested) {
+                otcWaresList(mPage, mPageSize);
+            }
+        }
+        if (isVisibleToUser && isPrepared && mPairChanged) {
+            otcWaresList(mPage, mPageSize);
         }
     }
 
@@ -225,11 +239,36 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         }
     }
 
+    public void setRequestParamAndRefresh(String coinType, String payCurrency) {
+        mPage = 0;
+        mCoinType = coinType;
+        mPayCurrency = payCurrency;
+        mPairChanged = true;
+        if (getUserVisibleHint() && isPrepared && mPairChanged) {
+            otcWaresList(mPage, mPageSize);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mRequested) {
+            otcWaresList(mPage, mPageSize);
+        }
+    }
+
     private void otcWaresList(int page, int pageSize) {
-        Apic.otcWaresList(page, pageSize)
+        if (!LocalUser.getUser().isLogin()) {
+            return;
+        }
+        mRequested = true;
+        Apic.otcWaresList(page, pageSize, mCoinType, mPayCurrency).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<OtcWarePoster>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<OtcWarePoster>> resp) {
+                        if (mPairChanged) {
+                            mPairChanged = false;
+                        }
                         mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         mAdapter.setList(resp.getData().getData());
                         mAdapter.notifyDataSetChanged();
@@ -251,7 +290,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                             mRecyclerView.hideAll(false);
                         }
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     @Override
@@ -313,6 +352,11 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     public void refresh(boolean shouldRefresh) {
         if (!isFirstLoad) {
             mShouldRefresh = shouldRefresh;
+            if (getUserVisibleHint()) {
+                mPage = 0;
+                otcWaresList(mPage, mPageSize);
+                mShouldRefresh = false;
+            }
         }
     }
 
@@ -403,15 +447,17 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         mPrice.setText(getString(R.string.fixed_price_x, FinanceUtil.trimTrailingZero(otcWarePoster.getFixedPrice())));
                         break;
                     case OtcWarePoster.FLOATING_PRICE:
-                        mPrice.setText(getString(R.string.floating_price_x, FinanceUtil.formatToPercentage(otcWarePoster.getPercent())));
+                        mPrice.setText(getString(R.string.floating_price_x, FinanceUtil.trimTrailingZero(otcWarePoster.getPercent())));
                         break;
                     default:
                 }
-                mLegalAmount.setText(FinanceUtil.formatWithScale(otcWarePoster.getTradeCount(), 4));
-                mLimit.setText(getString(R.string.limit_range_x, FinanceUtil.trimTrailingZero(otcWarePoster.getMinTurnover()), FinanceUtil.trimTrailingZero(otcWarePoster.getMaxTurnover())));
+                mLegalAmount.setText(otcWarePoster.getPayCurrency().toUpperCase());
+                mLimit.setText(getString(R.string.limit_range_x, FinanceUtil.subZeroAndDot(otcWarePoster.getMinTurnover(), 8),
+                        FinanceUtil.subZeroAndDot(otcWarePoster.getMaxTurnover(), 8)));
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:
                         mEdit.setEnabled(true);
+                        mPosterType.setTextColor(ContextCompat.getColor(getContext(), R.color.text22));
                         mOperateArea.setText(R.string.on_shelf);
                         mStatus.setText(R.string.off_shelf);
                         break;

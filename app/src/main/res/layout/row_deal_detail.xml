@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/bgF5"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:textColor="@color/text99"
+        android:textSize="15sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="时间 09:56 05/04"/>
+
+    <TextView
+        android:id="@+id/dealPriceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/deal_price"
+        android:textColor="@color/text99"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/time"/>
+
+    <TextView
+        android:id="@+id/dealVolumeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/deal_volume"
+        android:textColor="@color/text99"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="@id/dealPriceTitle"
+        app:layout_constraintTop_toBottomOf="@id/dealPriceTitle"/>
+
+    <TextView
+        android:id="@+id/dealFeeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/fee"
+        android:textColor="@color/text99"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/dealVolumeTitle"
+        app:layout_constraintTop_toBottomOf="@id/dealVolumeTitle"/>
+
+    <TextView
+        android:id="@+id/dealPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:textColor="@color/text66"
+        android:textSize="15sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/dealPriceTitle"
+        tools:text="1026.2014 USDT"/>
+
+    <TextView
+        android:id="@+id/dealVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text66"
+        android:textSize="15sp"
+        app:layout_constraintRight_toRightOf="@id/dealPrice"
+        app:layout_constraintTop_toTopOf="@id/dealVolumeTitle"
+        tools:text="109.3523 HSR"/>
+
+    <TextView
+        android:id="@+id/dealFee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text66"
+        android:textSize="15sp"
+        app:layout_constraintRight_toRightOf="@id/dealVolume"
+        app:layout_constraintTop_toTopOf="@id/dealFeeTitle"
+        tools:text="109.3523 HSR"/>
+</android.support.constraint.ConstraintLayout>

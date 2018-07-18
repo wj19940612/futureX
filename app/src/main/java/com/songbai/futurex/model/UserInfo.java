@@ -34,6 +34,7 @@ public class UserInfo {
     private String googleAuthString; //谷歌验证开启情况
     private int id;
     private String loginIp;
+    private int payment;
     private int promoter; // 是否是推广员 yes or no
     private String realName; // 真实姓名
     private String registrationIp;
@@ -122,6 +123,14 @@ public class UserInfo {
 
     public void setLoginIp(String loginIp) {
         this.loginIp = loginIp;
+    }
+
+    public int getPayment() {
+        return payment;
+    }
+
+    public void setPayment(int payment) {
+        this.payment = payment;
     }
 
     public int getPromoter() {

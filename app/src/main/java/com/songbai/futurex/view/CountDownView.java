@@ -1,6 +1,7 @@
 package com.songbai.futurex.view;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ public class CountDownView extends FrameLayout implements Runnable {
     private TextView mMin;
     private TextView mTenSecond;
     private TextView mSecond;
+    private TextView mColon;
 
     public void setOnStateChangeListener(OnStateChangeListener onStateChangeListener) {
         mOnStateChangeListener = onStateChangeListener;
@@ -67,6 +69,7 @@ public class CountDownView extends FrameLayout implements Runnable {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_count_down, this, false);
         mTenMin = view.findViewById(R.id.tenMin);
         mMin = view.findViewById(R.id.min);
+        mColon = view.findViewById(R.id.colon);
         mTenSecond = view.findViewById(R.id.tenSecond);
         mSecond = view.findViewById(R.id.second);
         addView(view);
@@ -74,6 +77,10 @@ public class CountDownView extends FrameLayout implements Runnable {
 
     public void removeOnStateChangeListener() {
         mOnStateChangeListener = null;
+    }
+
+    public void setColonColor(@ColorInt int color) {
+        mColon.setTextColor(color);
     }
 
     public void setTimes(String time) {
@@ -136,6 +143,8 @@ public class CountDownView extends FrameLayout implements Runnable {
         if (run) {
             computeTime();
             if (mDiff <= 0) {
+                removeCallbacks(this);
+                run = false;
                 mCountDownState = CLOSED;
             } else {
                 long tenMin = mDiff / 1000 / (60 * 10);

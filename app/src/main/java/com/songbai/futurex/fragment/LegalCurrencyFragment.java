@@ -19,20 +19,26 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.LegalCurrencyOrderActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.legalcurrency.MyPosterFragment;
 import com.songbai.futurex.fragment.legalcurrency.PublishPosterFragment;
 import com.songbai.futurex.fragment.legalcurrency.WantBuyOrSellFragment;
+import com.songbai.futurex.fragment.mine.SelectPayTypeFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CountryCurrency;
 import com.songbai.futurex.model.LegalCoin;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
-import com.songbai.futurex.view.dialog.WaresPairFilter;
+import com.songbai.futurex.view.dialog.MsgHintController;
+import com.songbai.futurex.view.popup.WaresPairFilter;
 
 import java.util.ArrayList;
 
@@ -67,12 +73,24 @@ public class LegalCurrencyFragment extends BaseFragment {
     private String mSelectedCurrencySymbol;
     private String mSelectedLegalSymbol;
     private ArrayList<BaseFragment> mFragments;
+    private boolean isPrepared;
+    private boolean mInited;
+    private Network.NetworkChangeReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+                getOtcPair();
+            }
+        }
+    };
+    private int mSelectedIndex = -1;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_legal_currency, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        isPrepared = true;
         return view;
     }
 
@@ -80,22 +98,28 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
-        getLegalCoin();
-        getCountryCurrency();
+        Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+        getOtcPair();
         initView();
     }
 
+    private void getOtcPair() {
+        getLegalCoin();
+        getCountryCurrency();
+    }
+
     private void initView() {
-        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol) || mInited) {
             return;
         }
+        mInited = true;
         mTitle.setText(getString(R.string.x_faction_str_x,
                 mSelectedLegalSymbol.toUpperCase(),
                 mSelectedCurrencySymbol.toUpperCase()));
         mFragments = new ArrayList<>();
-        mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_SELL, mSelectedLegalSymbol, mSelectedCurrencySymbol));
-        mFragments.add(WantBuyOrSellFragment.newInstance(OtcOrderStatus.ORDER_DIRECT_BUY, mSelectedLegalSymbol, mSelectedCurrencySymbol));
-        mFragments.add(MyPosterFragment.newInstance());
+        mFragments.add(WantBuyOrSellFragment.newInstance(OTCOrderStatus.ORDER_DIRECT_SELL, mSelectedLegalSymbol, mSelectedCurrencySymbol));
+        mFragments.add(WantBuyOrSellFragment.newInstance(OTCOrderStatus.ORDER_DIRECT_BUY, mSelectedLegalSymbol, mSelectedCurrencySymbol));
+        mFragments.add(MyPosterFragment.newInstance(mSelectedLegalSymbol, mSelectedCurrencySymbol));
         LegalCurrencyPager adapter = new LegalCurrencyPager(getChildFragmentManager(), mFragments);
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(2);
@@ -121,8 +145,30 @@ public class LegalCurrencyFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isPrepared) {
+            if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+                getOtcPair();
+            }
+            if (mSelectedIndex != -1) {
+                mViewPager.setCurrentItem(mSelectedIndex);
+                mSelectedIndex = -1;
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
+            getOtcPair();
+        }
+    }
+
     private void getLegalCoin() {
-        Apic.getLegalCoin()
+        Apic.getLegalCoin().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
@@ -130,11 +176,11 @@ public class LegalCurrencyFragment extends BaseFragment {
                         mSelectedLegalSymbol = mLegalCoins.get(0).getSymbol().toLowerCase();
                         initView();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getCountryCurrency() {
-        Apic.getCountryCurrency()
+        Apic.getCountryCurrency().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CountryCurrency>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CountryCurrency>> resp) {
@@ -142,7 +188,7 @@ public class LegalCurrencyFragment extends BaseFragment {
                         mSelectedCurrencySymbol = mCountryCurrencies.get(0).getEnglishName().toLowerCase();
                         initView();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     @Override
@@ -163,27 +209,53 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+        mInited = false;
+        Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
     @OnClick({R.id.title, R.id.order, R.id.publishPoster})
     public void onViewClicked(View view) {
+        LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
             case R.id.title:
                 if (mLegalCoins != null && mCountryCurrencies != null) {
                     showWaresPairFilter();
                 } else {
-                    getLegalCoin();
-                    getCountryCurrency();
+                    getOtcPair();
                 }
                 break;
             case R.id.order:
-                Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+                if (user.isLogin()) {
+                    Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.publishPoster:
-                UniqueActivity.launcher(this, PublishPosterFragment.class)
-                        .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, mSelectedLegalSymbol)
-                        .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
-                        .execute(this, REQUEST_PUBLISH_POSTER);
+                if (user.isLogin()) {
+                    if (user.getUserInfo().getPayment() > 0) {
+                        UniqueActivity.launcher(this, PublishPosterFragment.class)
+                                .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, mSelectedLegalSymbol)
+                                .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
+                                .execute(this, REQUEST_PUBLISH_POSTER);
+                    } else {
+                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
+                            @Override
+                            public void onConfirmClick() {
+                                UniqueActivity.launcher(LegalCurrencyFragment.this, SelectPayTypeFragment.class)
+                                        .execute();
+                            }
+                        });
+                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+                        smartDialog.setCustomViewController(msgHintController)
+                                .show();
+                        msgHintController.setMsg(R.string.publish_poster_have_not_bind_pay);
+                        msgHintController.setConfirmText(R.string.go_to_bind);
+                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
+                    }
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             default:
         }
@@ -205,10 +277,18 @@ public class LegalCurrencyFragment extends BaseFragment {
                         ((WantBuyOrSellFragment) fragment).
                                 setRequestParamAndRefresh(mSelectedLegalSymbol, mSelectedCurrencySymbol);
                     }
+                    if (fragment instanceof MyPosterFragment) {
+                        ((MyPosterFragment) fragment).
+                                setRequestParamAndRefresh(mSelectedLegalSymbol, mSelectedCurrencySymbol);
+                    }
                 }
             }
         });
         waresPairFilter.showOrDismiss(mRadioHeader);
+    }
+
+    public void setSelectedIndex(int selectedIndex) {
+        mSelectedIndex = selectedIndex;
     }
 
     private class LegalCurrencyPager extends FragmentPagerAdapter {

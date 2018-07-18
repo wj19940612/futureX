@@ -16,9 +16,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:layout_marginTop="25dp"
             android:drawablePadding="12dp"
             android:drawableTop="@drawable/ic_ad_delete_pic"
+            android:gravity="center"
+            android:includeFontPadding="false"
             android:text="@string/confirm_transfer_coin"
             android:textColor="@color/text99"
             android:textSize="15sp"/>

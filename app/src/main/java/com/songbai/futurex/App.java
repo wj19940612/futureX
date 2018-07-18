@@ -29,6 +29,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         sContext = this;
+        setLanguage();
         Api.init(sContext.getCacheDir(), sContext.getFilesDir());
         Api.setLogger(new ReqLogger() {
             @Override
@@ -37,11 +38,10 @@ public class App extends Application {
             }
         });
         UMConfigure.setLogEnabled(true);
-        UMConfigure.init(this,  UMConfigure.DEVICE_TYPE_PHONE, "a1eddf08c530b6109ffed1b516e3934e");
+        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, BuildConfig.PUSH_SECRET);
         PushAgent mPushAgent = PushAgent.getInstance(this);
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
-
             @Override
             public void onSuccess(String deviceToken) {
                 //注册成功会返回device token
@@ -54,7 +54,6 @@ public class App extends Application {
             }
         });
         processCaughtException();
-        setLanguage();
     }
 
     private void setLanguage() {

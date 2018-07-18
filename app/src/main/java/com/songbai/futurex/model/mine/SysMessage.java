@@ -11,6 +11,7 @@ public class SysMessage {
     private String classify;
     private long createTime;
     private String id;
+    private int dataId;
     private String msg;
     private int status;
     private int type;
@@ -57,6 +58,14 @@ public class SysMessage {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
     }
 
     public String getMsg() {

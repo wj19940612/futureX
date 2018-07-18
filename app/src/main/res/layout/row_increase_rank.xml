@@ -19,6 +19,7 @@
         android:background="@drawable/bg_green_left_r10"
         android:gravity="center"
         android:minWidth="17dp"
+        android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="12sp"
         tools:text="1"/>
@@ -65,9 +66,11 @@
             android:id="@+id/price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="left|center"
+            android:layout_marginRight="20dp"
+            android:gravity="right|center"
             android:textColor="@color/text49"
             android:textSize="15sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toRightOf="@id/pairName"
@@ -85,5 +88,6 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:textStyle="bold"
         tools:text="+2.77%"/>
 </LinearLayout>

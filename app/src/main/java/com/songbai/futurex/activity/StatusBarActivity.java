@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
  */
 public class StatusBarActivity extends AppCompatActivity {
 
-    protected void translucentStatusBar() {
+    public void translucentStatusBar() {
         //make full transparent statusBar
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
                 && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {

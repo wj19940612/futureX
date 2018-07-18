@@ -35,18 +35,22 @@
         app:layout_constraintTop_toBottomOf="@+id/accountType"
         tools:text="@string/total_property_equivalent"/>
 
-    <TextView
+    <com.songbai.futurex.view.ScaleTextView
         android:id="@+id/propertyAmount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="23dp"
         android:layout_marginTop="6dp"
+        app:layout_constraintHorizontal_weight="1"
         android:includeFontPadding="false"
+        android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
+        android:layout_marginRight="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/totalPropertyType"
+        app:layout_constraintRight_toLeftOf="@id/transfer"
+        app:layout_constraintLeft_toLeftOf="@+id/totalPropertyType"
         app:layout_constraintTop_toBottomOf="@+id/totalPropertyType"
         tools:text="0.13429464"/>
 
@@ -79,6 +83,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/propertyAmount"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/propertyAmount"
         app:layout_constraintTop_toTopOf="@+id/propertyAmount"
         tools:text="@string/transfer"/>
 

@@ -1,5 +1,8 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +24,8 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.CoinAddress;
 import com.songbai.futurex.model.mine.CoinAddressCount;
+import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.CopyDeleteController;
@@ -43,7 +48,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
     private Unbinder mBind;
@@ -68,10 +73,11 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mCoinAddressCount.getCoinType().toUpperCase());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setEmptyView(mEmptyView);
         mAdapter = new DrawCoinAddressListAdapter();
         mAdapter.setOnItemClickListener(new DrawCoinAddressListAdapter.OnItemClickListener() {
             @Override
-            public void onItemLongClick(CoinAddress coinAddress) {
+            public void onItemClick(CoinAddress coinAddress) {
                 showDeleteView(coinAddress);
             }
         });
@@ -93,23 +99,17 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
     }
 
     private void getDrawWalletAddrByCoinType(String coinType) {
-        Apic.getDrawWalletAddrByCoinType(coinType)
+        Apic.getDrawWalletAddrByCoinType(coinType).tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CoinAddress>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CoinAddress>> resp) {
                         ArrayList<CoinAddress> data = resp.getData();
-                        if (data.size() < 1) {
-                            mEmptyView.setVisibility(View.VISIBLE);
-                            mRecyclerView.setVisibility(View.GONE);
-                        } else {
-                            mEmptyView.setVisibility(View.GONE);
-                            mRecyclerView.setVisibility(View.VISIBLE);
-                            mAdapter.setList(data);
-                            mAdapter.notifyDataSetChanged();
-                        }
+                        mAdapter.setList(data);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.hideAll(false);
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     @Override
@@ -124,17 +124,31 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
     }
 
     @Override
-    public void onCopyClick() {
-
+    public void onCopyClick(CoinAddress coinAddress) {
+        ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        // 将文本内容放到系统剪贴板里。
+        cm.setPrimaryClip(ClipData.newPlainText(null, coinAddress.getToAddr()));
+        ToastUtil.show(R.string.copy_success);
     }
 
     @Override
     public void onDeleteClick(CoinAddress coinAddress) {
-        mAdapter.removeItem(coinAddress);
-        mAdapter.notifyDataSetChanged();
-        mModified = true;
-        getActivity().setResult(DRAW_COIN_ADDRESS_RESULT,
-                new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, mModified));
+        removeDrawWalletAddr(coinAddress);
+    }
+
+    private void removeDrawWalletAddr(final CoinAddress coinAddress) {
+        Apic.removeDrawWalletAddr(coinAddress.getId()).tag(TAG)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        mAdapter.removeItem(coinAddress);
+                        mAdapter.notifyDataSetChanged();
+                        mModified = true;
+                        setResult(DRAW_COIN_ADDRESS_RESULT,
+                                new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, mModified));
+                    }
+                })
+                .fire();
     }
 
     @Override
@@ -146,7 +160,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
                 if (shouldRefresh) {
                     getDrawWalletAddrByCoinType(mCoinAddressCount.getCoinType());
                     mModified = shouldRefresh;
-                    getActivity().setResult(DRAW_COIN_ADDRESS_RESULT,
+                    setResult(DRAW_COIN_ADDRESS_RESULT,
                             new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, mModified));
                 }
             }
@@ -187,7 +201,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
         }
 
         interface OnItemClickListener {
-            void onItemLongClick(CoinAddress coinAddress);
+            void onItemClick(CoinAddress coinAddress);
         }
 
         void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -210,13 +224,12 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
             void bindHolder(final CoinAddress coinAddress) {
                 mRemark.setText(coinAddress.getRemark());
                 mToAddress.setText(coinAddress.getToAddr());
-                mRootView.setOnLongClickListener(new View.OnLongClickListener() {
+                mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onLongClick(View v) {
+                    public void onClick(View v) {
                         if (sOnItemClickListener != null) {
-                            sOnItemClickListener.onItemLongClick(coinAddress);
+                            sOnItemClickListener.onItemClick(coinAddress);
                         }
-                        return true;
                     }
                 });
             }

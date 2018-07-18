@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -66,7 +66,7 @@ public class VolumeInputView extends FrameLayout {
     }
 
     public double getVolume() {
-        return NumUtils.getDouble(mVolume.getText().toString());
+        return CurrencyUtils.getDouble(mVolume.getText().toString());
     }
 
     private void init() {
@@ -99,12 +99,20 @@ public class VolumeInputView extends FrameLayout {
         onVolumeChange();
     }
 
+    public void reset() {
+        mTextWatcherDisable = true;
+        mVolume.setText("");
+        mTextWatcherDisable = false;
+        mBaseCurrency.setText("");
+    }
+
     private String formatVolume(String number) {
         int pointIndex = number.indexOf('.');
         if (pointIndex > -1) {
             int endIndex = Math.min(number.length(), pointIndex + mVolumeScale + 1);
             return number.substring(0, endIndex);
         }
+
         return number;
     }
 

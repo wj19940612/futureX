@@ -98,6 +98,8 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
             mMailAuthCode.setHint(R.string.used_phone_auth_code);
         }
         mPhone.addTextChangedListener(mWatcher);
+        mAuthCode.addTextChangedListener(mWatcher);
+        mMailAuthCode.addTextChangedListener(mWatcher);
         getAreaCode();
     }
 
@@ -116,7 +118,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     }
 
     private void updatePhone(String phoneNum, String phoneMsgCode, String msgCode, String type) {
-        Apic.updatePhone(phoneNum, phoneMsgCode, msgCode, type).tag(TAG)
+        Apic.updatePhone(mAreaCode.getText().toString(), phoneNum, phoneMsgCode, msgCode, type).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
                     @Override
                     protected void onRespData(List<AreaCode> data) {
@@ -129,9 +131,9 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     private ValidationWatcher mWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            mPhoneNum = mPhone.getText().toString();
-            mMailAuth = mMailAuthCode.getText().toString();
-            mSmsAuth = mAuthCode.getText().toString();
+            mPhoneNum = mPhone.getText().toString().trim();
+            mMailAuth = mMailAuthCode.getText().toString().trim();
+            mSmsAuth = mAuthCode.getText().toString().trim();
             boolean enable = !TextUtils.isEmpty(mPhoneNum) && !TextUtils.isEmpty(mMailAuth) && !TextUtils.isEmpty(mSmsAuth);
             mConfirmBind.setEnabled(enable);
         }
@@ -164,6 +166,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 mGetMessageAuthCode.setEnabled(true);
                 mGetMessageAuthCode.setText(R.string.regain);
                 mGetMessageAuthCode.setTag(null);
+                mFreezeGetEmailAuthCode = false;
                 timeUp = true;
             } else {
                 timeUp = false;
@@ -179,6 +182,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 mGetMailAuthCode.setEnabled(true);
                 mGetMailAuthCode.setText(R.string.regain);
                 mGetMailAuthCode.setTag(null);
+                mFreezeGetPhoneAuthCode = false;
                 timeUp = true;
             } else {
                 timeUp = false;
@@ -195,9 +199,9 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         AuthCodeGet authCodeGet = AuthCodeGet.Builder.anAuthCodeGet()
                 .type(AuthCodeGet.TYPE_MODIFY_PHONE)
                 .imgCode(authCode)
+                .teleCode(mAreaCode.getText().toString())
                 .phone(phoneNum)
                 .build();
-
         Apic.getAuthCode(authCodeGet).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
@@ -269,7 +273,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         authSendOld.setSendType(type);
         authSendOld.setSmsType(AuthCodeGet.TYPE_MODIFY_PHONE);
         authSendOld.setImgCode(authCode);
-        Apic.sendOld(authSendOld)
+        Apic.sendOld(authSendOld).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -332,7 +336,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
         mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                mAreaCode.setText(codes.get(options1));
+                mAreaCode.setText(StrFormatter.getFormatAreaCode(codes.get(options1)));
             }
         }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
             @Override

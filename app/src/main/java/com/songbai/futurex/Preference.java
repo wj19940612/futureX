@@ -13,6 +13,7 @@ public class Preference {
         String SERVER_TIME = "server_time";
         String SEARCH_RECORDS = "search_record";
         String DEFAULT_TRADE_PAIR = "default_trade_pair";
+        String REFRESH_OPTIONAL = "refresh_optional";
     }
 
     private static Preference sInstance;
@@ -101,5 +102,13 @@ public class Preference {
 
     public void setDefaultTradePair(String tradePair) {
         apply(Key.DEFAULT_TRADE_PAIR, tradePair);
+    }
+
+    public void setOptionalListRefresh(boolean refresh) {
+        apply(Key.REFRESH_OPTIONAL, refresh);
+    }
+
+    public boolean getOptionalListRefresh() {
+        return mPrefs.getBoolean(Key.REFRESH_OPTIONAL, false);
     }
 }

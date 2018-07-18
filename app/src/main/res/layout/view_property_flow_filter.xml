@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="25dp"
             android:background="@drawable/bg_f5_r4"
-            android:drawableRight="@drawable/ic_invitation_angle_down"
+            android:drawableRight="@drawable/ic_triangle_downward"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:paddingRight="5dp"
@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="25dp"
             android:background="@drawable/bg_f5_r4"
-            android:drawableRight="@drawable/ic_invitation_angle_down"
+            android:drawableRight="@drawable/ic_triangle_downward"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:paddingRight="5dp"
@@ -89,7 +89,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="25dp"
             android:background="@drawable/bg_f5_r4"
-            android:drawableRight="@drawable/ic_invitation_angle_down"
+            android:drawableRight="@drawable/ic_triangle_downward"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:paddingRight="5dp"
@@ -112,7 +112,7 @@
             android:textColor="@color/text22"
             android:textSize="15sp"/>
 
-        <TextView
+        <com.songbai.futurex.view.ScaleTextView
             android:id="@+id/startTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -133,7 +133,7 @@
             android:textColor="@color/text22"
             android:textSize="15sp"/>
 
-        <TextView
+        <com.songbai.futurex.view.ScaleTextView
             android:id="@+id/endTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"

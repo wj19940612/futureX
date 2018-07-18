@@ -19,6 +19,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +59,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
     }
 
     private void queryVersion() {
-        Apic.queryForceVersion()
+        Apic.queryForceVersion().tag(TAG)
                 .callback(new Callback<Resp<AppVersion>>() {
                     @Override
                     protected void onRespSuccess(Resp<AppVersion> resp) {
@@ -73,13 +74,15 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
 
     private void queryForceVersion() {
         if (mAppVersion == null) {
-            Apic.queryForceVersion()
+            Apic.queryForceVersion().tag(TAG)
                     .callback(new Callback<Resp<AppVersion>>() {
                         @Override
                         protected void onRespSuccess(Resp<AppVersion> resp) {
                             if (resp.getData() != null && (resp.getData().isForceUpdate() || resp.getData().isNeedUpdate())) {
                                 UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
                                         .show(getChildFragmentManager());
+                            }else{
+                                ToastUtil.show(R.string.is_latest_version_now);
                             }
                         }
                     })

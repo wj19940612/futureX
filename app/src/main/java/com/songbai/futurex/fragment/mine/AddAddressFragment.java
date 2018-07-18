@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -60,15 +59,13 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mAddress.addTextChangedListener(mWatcher);
-        mRemark.addTextChangedListener(mWatcher);
     }
 
     private ValidationWatcher mWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            mAddressText = mAddress.getText().toString();
-            mRemakText = mRemark.getText().toString();
-            boolean enable = !TextUtils.isEmpty(mAddressText) && !TextUtils.isEmpty(mRemakText);
+            mAddressText = mAddress.getText().toString().trim();
+            boolean enable = !TextUtils.isEmpty(mAddressText);
             mConfirm.setEnabled(enable);
         }
     };
@@ -85,14 +82,13 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
     }
 
     private void addDrawWalletAddrByCoinType(String coinType, String toAddr, String remark) {
-        Apic.addDrawWalletAddrByCoinType(coinType, toAddr, remark)
+        Apic.addDrawWalletAddrByCoinType(coinType, toAddr, remark).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        FragmentActivity activity = AddAddressFragment.this.getActivity();
-                        activity.setResult(ADD_ADDRESS_RESULT,
+                        setResult(ADD_ADDRESS_RESULT,
                                 new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                        activity.finish();
+                        finish();
                     }
                 })
                 .fire();

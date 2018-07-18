@@ -7,16 +7,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
+import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +28,7 @@ import com.google.gson.Gson;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.mine.PlatformIntroFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -44,6 +44,8 @@ import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.StrFormatter;
+import com.songbai.futurex.utils.StrUtil;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.inputfilter.MoneyValueFilter;
 import com.songbai.futurex.view.SmartDialog;
@@ -53,7 +55,7 @@ import com.songbai.futurex.view.dialog.PosterPreviewController;
 import com.songbai.futurex.view.dialog.PriceTypeController;
 import com.songbai.futurex.view.dialog.RemarkInputController;
 import com.songbai.futurex.view.dialog.TradeLimitController;
-import com.songbai.futurex.view.dialog.WaresPairFilter;
+import com.songbai.futurex.view.popup.WaresPairFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,6 +123,14 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     TextView mPriceText;
     @BindView(R.id.priceSymbol)
     TextView mPriceSymbol;
+    @BindView(R.id.confirmRulesGroup)
+    LinearLayout mConfirmRulesGroup;
+    @BindView(R.id.preview)
+    TextView mPreview;
+    @BindView(R.id.check)
+    ImageView mCheck;
+    @BindView(R.id.tvBalance)
+    TextView mTvBalance;
     private Unbinder mBind;
     private WaresModel mWaresModel;
     private String mLegalPaySymbol = "";
@@ -133,7 +143,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private double mQuotaPrice;
     private List<AreaCode> mAreaCodes;
     private OptionsPickerView mPvOptions;
-    private Double mBalance;
+    private String mBalance;
 
     @Nullable
     @Override
@@ -153,6 +163,8 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mWaresModel = new WaresModel();
+        mConfirmRulesGroup.setSelected(false);
+        mTradeCountLimit.setFilters(new InputFilter[]{new MoneyValueFilter(getContext()).filterMax(1000)});
         restoreData();
         accountBalance();
         getLegalCoin();
@@ -164,7 +176,6 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
 
     private void restoreData() {
         if (mOtcWarePoster != null) {
-            Log.e(TAG, "restoreData1: " + new Gson().toJson(mOtcWarePoster));
             mLegalPaySymbol = mOtcWarePoster.getPayCurrency();
             mLegalCoinSymbol = mOtcWarePoster.getCoinSymbol();
             mWaresModel.setDealType(mOtcWarePoster.getDealType());
@@ -251,13 +262,13 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         setPriceType(waresModel.getPriceType());
         switch (waresModel.getPriceType()) {
             case OtcWarePoster.FIXED_PRICE:
-                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter()});
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext())});
                 String fixedPrice = waresModel.getFixedPrice();
                 mPremiumRate.setText(fixedPrice);
                 break;
             case OtcWarePoster.FLOATING_PRICE:
-                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(true, true)
-                        .filterMin(-1000).filterMax(1000)});
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext(), true, true)
+                        .filterMin(-100).filterMax(1000)});
                 mPremiumRate.setText(waresModel.getPercent());
                 break;
             default:
@@ -289,42 +300,52 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             public void afterTextChanged(Editable s) {
                 if (mWaresModel.getPriceType() == OtcWarePoster.FLOATING_PRICE) {
                     String string = mPremiumRate.getText().toString();
-                    if (string.equals("-")) {
+                    if ("-".equals(string) || "+".equals(string)) {
                         return;
                     }
                     if (string.length() > 0) {
                         double rate = Double.valueOf(string);
-//                        if (rate > 999) {
-//                            rate = 999;
-//                            mPremiumRate.setText(String.valueOf(rate));
-//                            mPremiumRate.setSelection(mPremiumRate.getText().length());
-//                        }
                         setFloatingPrice(rate);
                     } else {
                         setFloatingPrice(0);
                     }
                 }
+                checkCanPreview();
             }
         });
-        mTradeAmount.setFilters(new InputFilter[]{new MoneyValueFilter().setDigits(6)});
+        mTradeAmount.setFilters(new InputFilter[]{new MoneyValueFilter(getContext()).setDigits(6)});
+        mTradeAmount.addTextChangedListener(new ValidationWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkCanPreview();
+            }
+        });
     }
 
     private void setFloatingPrice(double rate) {
         String price = getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale((1 + rate / 100) * mQuotaPrice),
                 mLegalPaySymbol.toUpperCase());
-        SpannableStringBuilder priceText = new SpannableStringBuilder(getString(R.string.quota_price_x_symbol, price));
-        priceText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.red)),
-                priceText.length() - price.length(), priceText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mPrice.setText(priceText);
+        SpannableString priceStr = StrUtil.mergeTextWithColor(getString(R.string.quota_price),
+                price,
+                ContextCompat.getColor(getContext(), R.color.red));
+        mPrice.setText(priceStr);
+    }
+
+    private void setBalance(String balance) {
+        mTvBalance.setVisibility(View.VISIBLE);
+        SpannableString balanceStr = StrUtil.mergeTextWithColor(getString(R.string.account_balance),
+                balance,
+                ContextCompat.getColor(getContext(), R.color.red));
+        mTvBalance.setText(balanceStr);
     }
 
     private void setConditionValue(HashMap<String, String> conditionKeyValue) {
         String authValue = conditionKeyValue.get(OtcWarePoster.CONDITION_AUTH);
         if (!TextUtils.isEmpty(authValue)) {
-            if (authValue.equals("1")) {
+            if ("1".equals(authValue)) {
                 setCertificationLimit(true);
-            } else if (authValue.equals("2")) {
+            } else if ("2".equals(authValue)) {
                 setCertificationLimit(false);
             }
         } else {
@@ -349,7 +370,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         if (mPosterId == 0) {
             return;
         }
-        Apic.otcWaresGet(mPosterId)
+        Apic.otcWaresGet(mPosterId).tag(TAG)
                 .callback(new Callback<Resp<OtcWarePoster>>() {
                     @Override
                     protected void onRespSuccess(Resp<OtcWarePoster> resp) {
@@ -364,37 +385,38 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void accountBalance() {
-        Apic.accountBalance(mLegalCoinSymbol)
-                .callback(new Callback<Resp<Double>>() {
+        Apic.accountBalance(mLegalCoinSymbol).tag(TAG)
+                .callback(new Callback<Resp<String>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Double> resp) {
+                    protected void onRespSuccess(Resp<String> resp) {
                         mBalance = resp.getData();
+                        setBalance(mBalance);
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getLegalCoin() {
-        Apic.getLegalCoin()
+        Apic.getLegalCoin().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
                         mLegalCoins = resp.getData();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getCountryCurrency() {
-        Apic.getCountryCurrency()
+        Apic.getCountryCurrency().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<CountryCurrency>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<CountryCurrency>> resp) {
                         mCountryCurrencies = resp.getData();
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void getBindListData() {
-        Apic.bindList(0)
+        Apic.bindList(0).tag(TAG)
                 .callback(new Callback<Resp<BindBankList>>() {
                     @Override
                     protected void onRespSuccess(Resp<BindBankList> resp) {
@@ -405,18 +427,18 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void quotaPrice() {
-        Apic.quotaPrice(mWaresModel.getCoinSymbol(), mWaresModel.getPayCurrency(), mWaresModel.getDealType())
+        Apic.quotaPrice(mWaresModel.getCoinSymbol(), mWaresModel.getPayCurrency(), mWaresModel.getDealType()).tag(TAG)
                 .callback(new Callback<Resp<QuotaPrice>>() {
                     @Override
                     protected void onRespSuccess(Resp<QuotaPrice> resp) {
                         mQuotaPrice = resp.getData().getPrice();
                         setFloatingPrice(0);
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     private void otcWaresAdd(WaresModel otcWaresAdd) {
-        Apic.otcWaresAdd(otcWaresAdd)
+        Apic.otcWaresAdd(otcWaresAdd).tag(TAG)
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
@@ -430,7 +452,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void otcWaresUpdate(final WaresModel otcWaresAdd) {
-        Apic.otcWaresUpdate(otcWaresAdd)
+        Apic.otcWaresUpdate(otcWaresAdd).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -443,7 +465,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void getAreaCode() {
-        Apic.getAreaCodes().tag(TAG)
+        Apic.getAreaCodes().tag(TAG).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
                     @Override
                     protected void onRespData(List<AreaCode> data) {
@@ -463,7 +485,8 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     @OnClick({R.id.waresPair, R.id.preview, R.id.buyIn, R.id.sellOut, R.id.priceType, R.id.tradeLimit, R.id.payType,
-            R.id.remark, R.id.buyerLimit, R.id.primaryCertification, R.id.seniorCertification, R.id.areaCode})
+            R.id.remark, R.id.buyerLimit, R.id.primaryCertification, R.id.seniorCertification, R.id.areaCode,
+            R.id.userAgreement, R.id.confirmRulesGroup})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.waresPair:
@@ -480,10 +503,12 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             case R.id.buyIn:
                 setDealType(true);
                 quotaPrice();
+                accountBalance();
                 break;
             case R.id.sellOut:
                 setDealType(false);
                 quotaPrice();
+                accountBalance();
                 break;
             case R.id.priceType:
                 showPriceTypeSelector();
@@ -511,8 +536,36 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             case R.id.areaCode:
                 showAreaCodeSelector();
                 break;
+            case R.id.userAgreement:
+                UniqueActivity.launcher(this, PlatformIntroFragment.class)
+                        .putExtra(ExtraKeys.INTRODUCE_STYLE, PlatformIntroFragment.STYLE_PLATFORM_AGREEMENT).execute();
+                break;
+            case R.id.confirmRulesGroup:
+                mConfirmRulesGroup.setSelected(!mConfirmRulesGroup.isSelected());
+                checkCanPreview();
+                mCheck.setImageResource(mConfirmRulesGroup.isSelected() ? R.drawable.ic_common_checkmark : 0);
+                break;
             default:
         }
+    }
+
+    private void checkCanPreview() {
+        boolean canPreview = mConfirmRulesGroup.isSelected();
+        String price = mPremiumRate.getText().toString();
+        if (TextUtils.isEmpty(price)) {
+            canPreview = false;
+        }
+        if (mWaresModel.getMaxTurnover() == 0) {
+            canPreview = false;
+        }
+        String tradeAmount = mTradeAmount.getText().toString();
+        if (TextUtils.isEmpty(tradeAmount)) {
+            canPreview = false;
+        }
+        if (TextUtils.isEmpty(mWaresModel.getPayInfo())) {
+            canPreview = false;
+        }
+        mPreview.setEnabled(canPreview);
     }
 
     private void showWaresPairFilter() {
@@ -526,6 +579,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 mWaresPair.setText(getString(R.string.x_faction_str_x,
                         mLegalCoinSymbol.toUpperCase(),
                         mLegalPaySymbol.toUpperCase()));
+                mWaresModel.setCoinSymbol(mLegalCoinSymbol);
+                mWaresModel.setPayCurrency(mLegalPaySymbol);
+                restoreData();
+                quotaPrice();
+                accountBalance();
             }
         });
         waresPairFilter.showOrDismiss(mWaresPairGroup);
@@ -534,18 +592,6 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private void saveDataAndUpdate() {
         String tradeAmount = mTradeAmount.getText().toString();
         String rateOrPrice = mPremiumRate.getText().toString();
-        if (TextUtils.isEmpty(tradeAmount) || TextUtils.isEmpty(rateOrPrice)) {
-            // TODO: 2018/6/27  提示文字
-            return;
-        }
-        if (TextUtils.isEmpty(mWaresModel.getPayInfo())) {
-            // TODO: 2018/6/27  提示文字
-            return;
-        }
-        if (mWaresModel.getMaxTurnover() == 0) {
-            // TODO: 2018/6/27  提示文字
-            return;
-        }
         mWaresModel.setTradeCount(Double.valueOf(tradeAmount));
         switch (mWaresModel.getPriceType()) {
             case OtcWarePoster.FIXED_PRICE:
@@ -561,7 +607,12 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             mWaresModel.setTelephone(phone);
         }
         if (mConditionKeyValue.containsKey(OtcWarePoster.CONDITION_TRADE)) {
-            mConditionKeyValue.put(OtcWarePoster.CONDITION_TRADE, mTradeCountLimit.getText().toString());
+            String value = mTradeCountLimit.getText().toString();
+            if (TextUtils.isEmpty(value)) {
+                ToastUtil.show(R.string.deal_count_limit_unset);
+                return;
+            }
+            mConditionKeyValue.put(OtcWarePoster.CONDITION_TRADE, value);
         }
         StringBuilder conditionType = new StringBuilder();
         StringBuilder conditionValue = new StringBuilder();
@@ -609,36 +660,43 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void setConditionType(String conditionType) {
-        if (TextUtils.isEmpty(conditionType)) {
-            return;
-        }
-        StringBuilder sb = new StringBuilder();
-        if (conditionType.contains(OtcWarePoster.CONDITION_AUTH)) {
-            if (!mConditionKeyValue.containsKey(OtcWarePoster.CONDITION_AUTH)) {
-                mConditionKeyValue.put(OtcWarePoster.CONDITION_AUTH, "");
+        if (!TextUtils.isEmpty(conditionType)) {
+            StringBuilder sb = new StringBuilder();
+            if (conditionType.contains(OtcWarePoster.CONDITION_AUTH)) {
+                if (!mConditionKeyValue.containsKey(OtcWarePoster.CONDITION_AUTH)) {
+                    mConditionKeyValue.put(OtcWarePoster.CONDITION_AUTH, "1");
+                }
+                sb.append(getString(R.string.authentication));
+                sb.append("、");
+                mBuyerAuthLimitGroup.setVisibility(View.VISIBLE);
+            } else {
+                mConditionKeyValue.remove(OtcWarePoster.CONDITION_AUTH);
+                mBuyerAuthLimitGroup.setVisibility(View.GONE);
             }
-            sb.append(getString(R.string.authentication));
-            sb.append("、");
-            mBuyerAuthLimitGroup.setVisibility(View.VISIBLE);
+            if (conditionType.contains(OtcWarePoster.CONDITION_TRADE)) {
+                if (!mConditionKeyValue.containsKey(OtcWarePoster.CONDITION_TRADE)) {
+                    mConditionKeyValue.put(OtcWarePoster.CONDITION_TRADE, "");
+                }
+                sb.append(getString(R.string.deal_success_count));
+                sb.append("、");
+                mBuyerCountLimitGroup.setVisibility(View.VISIBLE);
+            } else {
+                mConditionKeyValue.remove(OtcWarePoster.CONDITION_TRADE);
+                mBuyerCountLimitGroup.setVisibility(View.GONE);
+            }
+            if (sb.length() > 0) {
+                mBuyerLimit.setText(sb.toString().substring(0, sb.length() - 1));
+            } else {
+                mBuyerLimit.setText("");
+            }
         } else {
-            mConditionKeyValue.remove(OtcWarePoster.CONDITION_AUTH);
+            mBuyerLimit.setText("");
+            mConditionKeyValue = new HashMap<>();
             mBuyerAuthLimitGroup.setVisibility(View.GONE);
-        }
-        if (conditionType.contains(OtcWarePoster.CONDITION_TRADE)) {
-            if (!mConditionKeyValue.containsKey(OtcWarePoster.CONDITION_TRADE)) {
-                mConditionKeyValue.put(OtcWarePoster.CONDITION_TRADE, "");
-            }
-            sb.append(getString(R.string.deal_success_count));
-            sb.append("、");
-            mBuyerCountLimitGroup.setVisibility(View.VISIBLE);
-        } else {
-            mConditionKeyValue.remove(OtcWarePoster.CONDITION_TRADE);
             mBuyerCountLimitGroup.setVisibility(View.GONE);
         }
-        if (sb.length() > 0) {
-            mBuyerLimit.setText(sb.toString().substring(0, sb.length() - 1));
-            mWaresModel.setConditionType(conditionType);
-        }
+        mWaresModel.setConditionType(conditionType);
+        setConditionValue(mConditionKeyValue);
     }
 
     private void showAreaCodeSelector() {
@@ -709,6 +767,9 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
+                        Intent data = new Intent();
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
+                        setResult(PUBLISH_POSTER_RESULT, data);
                         finish();
                     }
                 })
@@ -783,6 +844,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             mPayType.setText(sb.toString().substring(0, sb.length() - 1));
             mWaresModel.setPayInfo(payInfo);
         }
+        checkCanPreview();
     }
 
     private void showTradeLimitSelector() {
@@ -807,10 +869,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private void setTradeLimit(double minTurnover, double maxTurnover) {
         if (maxTurnover != 0) {
             mTradeLimit.setText(getString(R.string.limit_range_x,
-                    FinanceUtil.trimTrailingZero(minTurnover), FinanceUtil.trimTrailingZero(maxTurnover)));
+                    FinanceUtil.subZeroAndDot(minTurnover, 8), FinanceUtil.subZeroAndDot(maxTurnover, 8)));
             mWaresModel.setMinTurnover(minTurnover);
             mWaresModel.setMaxTurnover(maxTurnover);
         }
+        checkCanPreview();
     }
 
     private void showPriceTypeSelector() {
@@ -831,11 +894,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void setPriceType(int type) {
-        if (type != mWaresModel.getPriceType()) {
-            mPremiumRate.setText("");
-        }
         switch (type) {
             case OtcWarePoster.FIXED_PRICE:
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext())});
+                String fixedPrice = mWaresModel.getFixedPrice();
+                mPremiumRate.setText(fixedPrice);
                 mPriceType.setText(R.string.fixed_price);
                 mPriceText.setText(R.string.price);
                 mPriceSymbol.setText(mLegalPaySymbol.toUpperCase());
@@ -843,6 +906,9 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 mPrice.setVisibility(View.GONE);
                 break;
             case OtcWarePoster.FLOATING_PRICE:
+                mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext(), true, true)
+                        .filterMin(-100).filterMax(1000)});
+                mPremiumRate.setText(mWaresModel.getPercent());
                 mPriceType.setText(R.string.floating_price);
                 mPriceText.setText(R.string.floating_price_rate);
                 mPriceSymbol.setText(R.string.percent_symbol);

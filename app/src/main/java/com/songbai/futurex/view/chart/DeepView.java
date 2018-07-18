@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.utils.Display;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.websocket.model.DeepData;
 
 import java.util.List;
@@ -104,7 +104,7 @@ public class DeepView extends LinearLayout {
     }
 
     private String formatPrice(double price) {
-        return NumUtils.getPrice(price, mPriceScale);
+        return CurrencyUtils.getPrice(price, mPriceScale);
     }
 
     public void setPriceScale(int pricePoint) {

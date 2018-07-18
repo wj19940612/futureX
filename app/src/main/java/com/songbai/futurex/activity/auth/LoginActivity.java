@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.sbai.httplib.BitmapCfg;
 import com.sbai.httplib.ReqCallback;
 import com.sbai.httplib.ReqError;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -40,6 +42,7 @@ import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
+import com.songbai.futurex.websocket.MessageProcessor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -216,16 +219,17 @@ public class LoginActivity extends BaseActivity {
 
         SmartDialog.solo(getActivity())
                 .setCustomViewController(mAuthCodeViewController)
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
                 .show();
 
-        ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
+        final ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
         requestAuthCodeImage(imageView.getLayoutParams().width, imageView.getLayoutParams().height);
     }
 
     private void login(String authCode) {
         mLoginData = new LoginData(RegisterData.PLATFORM_ANDROID);
         mLoginData.setImgCode(authCode);
-        String phoneOrEmail = mPhoneOrEmail.getText().toString();
+        String phoneOrEmail = mPhoneOrEmail.getText().toString().trim();
         if (RegularExpUtils.isValidEmail(phoneOrEmail)) {
             mLoginData.setEmail(phoneOrEmail);
         } else {
@@ -283,6 +287,8 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     protected void onRespData(UserInfo data) {
                         LocalUser.getUser().setUserInfo(data, mLoginData.getPhone(), mLoginData.getEmail());
+                        MessageProcessor.get().register();
+                        Preference.get().setOptionalListRefresh(true);
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     }

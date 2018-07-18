@@ -9,12 +9,13 @@ import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.fragment.legalcurrency.OtcSellUserInfoFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
-import com.songbai.futurex.model.status.OtcOrderStatus;
+import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -72,11 +73,11 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
         mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
         otcOrderDetail(mOrderId, mTradeDirection);
-        otcWaresMine("", mOrderId, 1);
+        otcWaresMine("", String.valueOf(mOrderId));
     }
 
-    private void otcWaresMine(String waresId, int orderId, int orientation) {
-        Apic.otcWaresMine(waresId, orderId, orientation)
+    private void otcWaresMine(String waresId, String orderId) {
+        Apic.otcWaresMine(waresId, orderId, 1).tag(TAG)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -86,7 +87,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
     }
 
     private void otcOrderDetail(int id, int direct) {
-        Apic.otcOrderDetail(id, direct)
+        Apic.otcOrderDetail(id, direct).tag(TAG)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
                     @Override
                     protected void onRespSuccess(Resp<OtcOrderDetail> resp) {
@@ -104,9 +105,9 @@ public class OtcOrderCompletedActivity extends BaseActivity {
                 FinanceUtil.formatWithScale(order.getOrderPrice()),
                 order.getPayCurrency().toUpperCase(), order.getCoinSymbol().toUpperCase()));
         mTradeAmount.setText(getString(R.string.order_detail_amount_x,
-                FinanceUtil.formatWithScale(order.getOrderCount()),
+                order.getOrderCount(),
                 order.getCoinSymbol().toUpperCase()));
-        mOrderNo.setText(order.getOrderId());
+        mOrderNo.setText(getString(R.string.pound_sign_x,order.getOrderId()));
         GlideApp
                 .with(this)
                 .load(order.getBuyerPortrait())
@@ -114,11 +115,11 @@ public class OtcOrderCompletedActivity extends BaseActivity {
                 .into(mHeadPortrait);
         mUserName.setText(order.getBuyerName());
         switch (order.getStatus()) {
-            case OtcOrderStatus.ORDER_CANCLED:
+            case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
                 mTitleBar.setTitle(R.string.canceled);
                 break;
-            case OtcOrderStatus.ORDER_COMPLATED:
+            case OTCOrderStatus.ORDER_COMPLATED:
                 mOrderStatus.setText(R.string.completed);
                 mTitleBar.setTitle(R.string.completed);
                 break;
@@ -156,11 +157,23 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         unbinder.unbind();
     }
 
-    @OnClick(R.id.contractEachOther)
-    public void onViewClicked() {
-        Launcher.with(this, OtcTradeChatActivity.class)
-                .putExtra(ExtraKeys.ORDER_ID, mOrderId)
-                .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
-                .execute();
+    @OnClick({R.id.headPortrait, R.id.contractEachOther})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.headPortrait:
+                UniqueActivity.launcher(this, OtcSellUserInfoFragment.class)
+                        .putExtra(ExtraKeys.ORDER_ID, mOrderId)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY ?
+                                OTCOrderStatus.ORDER_DIRECT_SELL : OTCOrderStatus.ORDER_DIRECT_BUY)
+                        .execute();
+                break;
+            case R.id.contractEachOther:
+                Launcher.with(this, OtcTradeChatActivity.class)
+                        .putExtra(ExtraKeys.ORDER_ID, mOrderId)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
+                        .execute();
+                break;
+            default:
+        }
     }
 }

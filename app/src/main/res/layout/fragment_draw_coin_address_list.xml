@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,46 +15,32 @@
         app:backFeature="true"
         tools:titleText="USDRT地址"/>
 
-    <android.support.v7.widget.RecyclerView
+    <include
+        layout="@layout/view_common_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"/>
+
+    <com.songbai.futurex.view.EmptyRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/titleBar"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingTop="12dp"/>
-
-    <LinearLayout
-        android:id="@+id/emptyView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_common_none_w"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_record"
-            android:textColor="#56636B"
-            android:textSize="12sp"/>
-    </LinearLayout>
 
     <TextView
         android:id="@+id/addAddress"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="14dp"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
+        android:layout_marginTop="14dp"
         android:background="@drawable/btn_primary"
         android:gravity="center"
         android:text="@string/add_address"
         android:textColor="@android:color/white"
         android:textSize="15sp"/>
-</RelativeLayout>
+</LinearLayout>

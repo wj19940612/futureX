@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.view.SmartDialog;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -75,9 +75,15 @@ public class PayTypeController extends SmartDialog.CustomViewController {
             public void onItemClick(String payType, BankCardBean bankCardBean) {
                 int id = bankCardBean.getId();
                 if (mPayInfos.contains(payType)) {
-                    mPayInfos.remove(payType);
-                    if (String.valueOf(id).equals(mBankId)) {
-                        mBankId = "";
+                    if (payType.equals(PayType.BANK_PAY)) {
+                        if (String.valueOf(id).equals(mBankId)) {
+                            mPayInfos.remove(payType);
+                            mBankId = "";
+                        }else {
+                            mBankId = String.valueOf(id);
+                        }
+                    } else {
+                        mPayInfos.remove(payType);
                     }
                 } else {
                     mPayInfos.add(payType);
@@ -95,7 +101,11 @@ public class PayTypeController extends SmartDialog.CustomViewController {
 
     public void setPayInfo(String payInfo) {
         String[] split = payInfo.split(",");
-        mPayInfos.addAll(Arrays.asList(split));
+        for (String s : split) {
+            if (!TextUtils.isEmpty(s)) {
+                mPayInfos.add(s);
+            }
+        }
     }
 
     public void setBankList(BindBankList bankList) {
@@ -141,6 +151,9 @@ public class PayTypeController extends SmartDialog.CustomViewController {
         }
 
         public void setList(BindBankList bindBankList) {
+            if (bindBankList == null) {
+                return;
+            }
             ArrayList<BankCardBean> list = new ArrayList<>();
             BankCardBean aliPay = bindBankList.getAliPay();
             if (aliPay.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
@@ -218,7 +231,7 @@ public class PayTypeController extends SmartDialog.CustomViewController {
                         if (s.equals(payType)) {
                             match = true;
                             if (payType.equals(PayType.BANK_PAY)) {
-                                match = mSelectedBankId.equals(String.valueOf(bankCardBean.getId()));
+                                match = String.valueOf(bankCardBean.getId()).equals(mSelectedBankId);
                             }
                         }
                     }

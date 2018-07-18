@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -30,7 +29,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.NumUtils;
+import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
@@ -39,6 +38,7 @@ import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.MarketData;
@@ -64,7 +64,6 @@ import butterknife.Unbinder;
 public class MarketFragment extends BaseFragment {
 
     private static final int REQ_CODE_LOGIN = 91;
-    private static final int REQ_CODE_SEARCH = 94;
     private static final int REQ_CODE_MARKET_DETAIL = 95;
 
     Unbinder unbinder;
@@ -147,14 +146,16 @@ public class MarketFragment extends BaseFragment {
 
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
-                new DataParser<Response<Map<String, MarketData>>>(data) {
-                    @Override
-                    public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
-                        mCurrencyPairAdapter.setMarketDataList(mapResponse.getContent());
-                        mOptionalAdapter.setMarketDataList(mapResponse.getContent());
-                    }
-                }.parse();
+            public void onDataReceive(String data, int code, String dest) {
+                if (PushDestUtils.isAllMarket(dest)) {
+                    new DataParser<Response<Map<String, MarketData>>>(data) {
+                        @Override
+                        public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
+                            mCurrencyPairAdapter.setMarketDataList(mapResponse.getContent());
+                            mOptionalAdapter.setMarketDataList(mapResponse.getContent());
+                        }
+                    }.parse();
+                }
             }
         });
 
@@ -167,22 +168,13 @@ public class MarketFragment extends BaseFragment {
     }
 
     private void openSearchPage() {
-        List<CurrencyPair> optionalPairList = mOptionalAdapter.getPairList();
-        UniqueActivity.launcher(getActivity(), SearchCurrencyFragment.class)
-                .putExtra(ExtraKeys.OPTIONAL_LIST, new ArrayList<Parcelable>(optionalPairList))
-                .execute(this, REQ_CODE_SEARCH);
+        UniqueActivity.launcher(getActivity(), SearchCurrencyFragment.class).execute();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_SEARCH && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
-            updateOptionalList();
-        }
         if (requestCode == REQ_CODE_LOGIN && resultCode == Activity.RESULT_OK) { // 登录，刷新自选列表
-            updateOptionalList();
-        }
-        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) { // 自选发生变化，刷新
             updateOptionalList();
         }
         if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_FIRST_USER) { // 行情详情选择交易
@@ -203,6 +195,11 @@ public class MarketFragment extends BaseFragment {
         super.onResume();
         mMarketSubscriber.resume();
         mMarketSubscriber.subscribeAll();
+
+        if (Preference.get().getOptionalListRefresh()) {
+            updateOptionalList();
+            Preference.get().setOptionalListRefresh(false);
+        }
     }
 
     @Override
@@ -295,7 +292,6 @@ public class MarketFragment extends BaseFragment {
         }
     }
 
-
     static class OptionalAdapter extends RecyclerView.Adapter<OptionalAdapter.ViewHolder> {
 
         private OnRVItemClickListener mOnRVItemClickListener;
@@ -312,10 +308,6 @@ public class MarketFragment extends BaseFragment {
         public void setPairList(List<CurrencyPair> pairList) {
             mPairList = pairList;
             notifyDataSetChanged();
-        }
-
-        public List<CurrencyPair> getPairList() {
-            return mPairList;
         }
 
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
@@ -367,13 +359,21 @@ public class MarketFragment extends BaseFragment {
             public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
-                if (marketDataList != null) {
+                if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
-                    if (marketData == null) return;
-                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
-                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
-                    mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
+                    mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                    }
+                } else {
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(pair.getLastVolume())));
+                    mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    if (pair.getUpDropSpeed() < 0) {
                         mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
                     } else {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
@@ -453,13 +453,20 @@ public class MarketFragment extends BaseFragment {
             public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
-                if (marketDataList != null) {
+                if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
-                    if (marketData == null) return;
-                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, NumUtils.getVolume(marketData.getVolume())));
-                    mLastPrice.setText(NumUtils.getPrice(marketData.getLastPrice()));
-                    mPriceChange.setText(NumUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
+                    mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                    }
+                } else {
+                    mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    if (pair.getUpDropSpeed() < 0) {
                         mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
                     } else {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);

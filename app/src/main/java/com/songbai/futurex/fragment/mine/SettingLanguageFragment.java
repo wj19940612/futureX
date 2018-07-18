@@ -69,15 +69,14 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
     }
 
     private void getSupportLocal() {
-        Apic.getSupportLang()
+        Apic.getSupportLang().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<SupportLang>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<SupportLang>> resp) {
                         mLanguageAdapter.setList(resp.getData());
                         mLanguageAdapter.notifyDataSetChanged();
                     }
-                })
-                .fire();
+                }).fireFreely();
     }
 
     @Override
@@ -160,7 +159,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
                     match = locale.getLanguage().equals(supportLang.getLang()) && locale.getCountry().equals(country);
                 }
                 mCheck.setVisibility(match ? View.VISIBLE : View.GONE);
-                mLanguage.setText(supportLang.getEnglishName());
+                mLanguage.setText(supportLang.getName());
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

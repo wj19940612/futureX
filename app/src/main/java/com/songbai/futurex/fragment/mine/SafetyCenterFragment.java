@@ -17,6 +17,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -55,18 +56,32 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        setView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setView();
+    }
+
+    private void setView() {
         isDrawPass();
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
             UserInfo userInfo = user.getUserInfo();
-            if (userInfo.getGoogleAuth() == AUTH) {
-                mGoogleAuthenticator.setSubText(userInfo.getGoogleAuth() == AUTH ? R.string.certificated : R.string.uncertificated);
+            if (userInfo.getSafeSetting() == 0) {
+                hasWithDrawPass = false;
+                mSetCashPwd.setSubText(R.string.not_set);
+            } else {
+                mSetCashPwd.setSubText("");
             }
+            mGoogleAuthenticator.setSubText(userInfo.getGoogleAuth() == AUTH ? R.string.certificated : R.string.uncertificated);
         }
     }
 
     private void isDrawPass() {
-        Apic.isDrawPass()
+        Apic.isDrawPass().tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
@@ -78,6 +93,8 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
                         if (failedResp.getCode() == Resp.Code.CASH_PWD_NONE) {
                             hasWithDrawPass = false;
                             mSetCashPwd.setSubText(R.string.not_set);
+                        } else {
+                            mSetCashPwd.setSubText("");
                         }
                     }
                 })
@@ -94,16 +111,25 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.setCashPwd:
-                UniqueActivity.launcher(this, CashPwdFragment.class).putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, hasWithDrawPass).execute();
+                UniqueActivity.launcher(this, CashPwdFragment.class)
+                        .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, hasWithDrawPass)
+                        .execute();
                 break;
             case R.id.changeLoginPwd:
                 UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();
                 break;
             case R.id.googleAuthenticator:
+                if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
+                    return;
+                }
                 UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
                 break;
             case R.id.googleAuthenticatorSettings:
-                UniqueActivity.launcher(this, GoogleAuthenticatorSettingsFragment.class).execute();
+                if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
+                    UniqueActivity.launcher(this, GoogleAuthenticatorSettingsFragment.class).execute();
+                    return;
+                }
+                ToastUtil.show(R.string.please_set_google_authenticator_first);
                 break;
             case R.id.gesturePwd:
                 Launcher.with(this, SetGesturePwdActivity.class).execute();

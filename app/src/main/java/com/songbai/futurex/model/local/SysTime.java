@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Modified by john on 2018/6/12
  * <p>
- * Description:
+ * Description: 系统时间对象
  * <p>
  * APIs:
  */

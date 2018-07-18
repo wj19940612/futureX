@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.BaseFragment;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 
 /**
@@ -39,6 +42,18 @@ public class UniqueActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
+                KeyBoardUtils.closeKeyboard(v);
+                v.clearFocus();
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+    }
 
     private void initData(Intent intent) {
         mFragmentName = intent.getStringExtra("frag");

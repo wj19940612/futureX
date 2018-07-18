@@ -38,7 +38,7 @@
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@id/tradePair"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="撤单"/>
+        android:text="@string/revoke_order"/>
 
     <TextView
         android:id="@+id/entrustPriceTitle"

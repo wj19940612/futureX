@@ -45,7 +45,9 @@
         app:rightIcon="@drawable/ic_common_right_arrow"
         app:rowText="@string/google_authenticator"
         app:rowTextColor="@color/text22"
-        app:rowTextSize="16sp"/>
+        app:rowTextSize="16sp"
+        app:subTextColor="@color/text99"
+        app:subTextSize="14sp"/>
 
     <com.songbai.futurex.view.IconTextRow
         android:id="@+id/googleAuthenticatorSettings"

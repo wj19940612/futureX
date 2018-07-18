@@ -18,13 +18,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.SearchRecordsHelper;
 import com.songbai.futurex.utils.ToastUtil;
@@ -47,7 +51,6 @@ import butterknife.Unbinder;
  * APIs:
  */
 public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
-    private static final int REQ_CODE_MARKET_DETAIL = 95;
 
     @BindView(R.id.searchBox)
     EditText mSearchBox;
@@ -61,43 +64,14 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
     Unbinder unbinder;
 
     private CurrencyPairAdapter mCurrencyPairAdapter;
-    private List<CurrencyPair> mOptionalList;
 
     private SearchRecordsHelper mSearchRecordsHelper;
+
+    private boolean mSearchForTrade;
 
     @OnClick(R.id.cancel)
     public void onViewClicked() {
         finish();
-    }
-
-    static class OptionalWrap {
-
-        public CurrencyPair pair;
-        public boolean added;
-
-        public OptionalWrap(CurrencyPair pair, boolean added) {
-            this.pair = pair;
-            this.added = added;
-        }
-
-        public static List<OptionalWrap> getWrapList(List<CurrencyPair> displayList, List<CurrencyPair> optionalList) {
-            List<OptionalWrap> wrapList = new ArrayList<>();
-            for (int i = 0; i < displayList.size(); i++) {
-                CurrencyPair pair = displayList.get(i);
-                boolean added = indexOf(pair, optionalList);
-                wrapList.add(new OptionalWrap(pair, added));
-            }
-            return wrapList;
-        }
-
-        private static boolean indexOf(CurrencyPair pair, List<CurrencyPair> optionalList) {
-            for (CurrencyPair currencyPair : optionalList) {
-                if (pair.getPairs().equalsIgnoreCase(currencyPair.getPairs())) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
     @Nullable
@@ -110,7 +84,7 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-        mOptionalList = extras.getParcelableArrayList(ExtraKeys.OPTIONAL_LIST);
+        mSearchForTrade = extras.getBoolean(ExtraKeys.SERACH_FOR_TRADE);
     }
 
     @Override
@@ -123,6 +97,12 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
         updateCurrencyList(mSearchRecordsHelper.getRecordList());
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateCurrencyListBaseOnSearch(mSearchBox.getText().toString());
+    }
+
     private void initCurrencyPairList() {
         mCurrencyPairList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCurrencyPairAdapter = new CurrencyPairAdapter(new CurrencyPairAdapter.Callback() {
@@ -133,43 +113,62 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
             }
 
             @Override
-            public void onAddOptionalClick(final View view, final OptionalWrap wrap) {
-                if (wrap.added) { // cancel
-                    Apic.cancelOptional(wrap.pair.getPairs()).tag(TAG)
+            public void onAddOptionalClick(final View view, final CurrencyPair pair) {
+                if (!LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), LoginActivity.class)
+                            .execute();
+                    return;
+                }
+
+                if (pair.isAddOptional()) {
+                    Apic.cancelOptional(pair.getPairs()).tag(TAG)
                             .callback(new Callback<Resp>() {
                                 @Override
                                 protected void onRespSuccess(Resp resp) {
-                                    wrap.added = false;
-                                    view.setSelected(wrap.added);
-                                    updateOptionalList(wrap);
+                                    pair.setAddOptional(false);
+                                    view.setSelected(pair.isAddOptional());
+
+                                    mSearchRecordsHelper.updateRecord(pair);
+
                                     ToastUtil.show(R.string.optional_cancel);
                                 }
                             }).fire();
-                } else { // add
-                    Apic.addOptional(wrap.pair.getPairs()).tag(TAG)
+                } else {
+                    Apic.addOptional(pair.getPairs()).tag(TAG)
                             .callback(new Callback<Resp>() {
                                 @Override
                                 protected void onRespSuccess(Resp resp) {
-                                    wrap.added = true;
-                                    view.setSelected(wrap.added);
-                                    updateOptionalList(wrap);
+                                    pair.setAddOptional(true);
+                                    view.setSelected(pair.isAddOptional());
+
+                                    mSearchRecordsHelper.updateRecord(pair);
+
                                     ToastUtil.show(R.string.optional_added);
                                 }
                             }).fire();
                 }
+
+                Preference.get().setOptionalListRefresh(true);
             }
 
             @Override
             public void onItemClick(View view, int position, Object obj) {
-                if (obj instanceof OptionalWrap) {
-                    CurrencyPair currencyPair = ((OptionalWrap) obj).pair;
+                if (obj instanceof CurrencyPair) {
+                    CurrencyPair currencyPair = (CurrencyPair) obj;
 
                     mSearchRecordsHelper.addRecord(currencyPair);
+
                     if (mCurrencyPairAdapter.getType() == CurrencyPairAdapter.Type.SHOW_HISTORY_RECORDS) {
                         updateCurrencyList(mSearchRecordsHelper.getRecordList());
                     }
 
-                    openMarketDetailPage(currencyPair);
+                    if (mSearchForTrade) {
+                        Intent intent = new Intent().putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair);
+                        setResult(Activity.RESULT_OK, intent);
+                        finish();
+                    } else {
+                        openMarketDetailPage(currencyPair);
+                    }
                 }
             }
         });
@@ -177,50 +176,28 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
         mCurrencyPairList.setEmptyView(mEmptyView);
     }
 
-    private void updateOptionalList(OptionalWrap wrap) {
-        CurrencyPair operatedCurrencyPair = null;
-        for (CurrencyPair currencyPair : mOptionalList) {
-            if (currencyPair.getPairs().equals(wrap.pair.getPairs())) {
-                operatedCurrencyPair = currencyPair;
-                break;
-            }
-        }
-        if (operatedCurrencyPair != null && !wrap.added) {
-            mOptionalList.remove(operatedCurrencyPair);
-            setResult(Activity.RESULT_OK); // update optional page
-        } else if (wrap.added) {
-            mOptionalList.add(wrap.pair);
-            setResult(Activity.RESULT_OK);
-        }
-    }
-
     private void openMarketDetailPage(CurrencyPair currencyPair) {
         UniqueActivity.launcher(SearchCurrencyFragment.this, MarketDetailFragment.class)
                 .putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair)
-                .execute(SearchCurrencyFragment.this, REQ_CODE_MARKET_DETAIL);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_MARKET_DETAIL && resultCode == Activity.RESULT_OK) {
-
-        }
+                .execute();
     }
 
     private ValidationWatcher mSearchWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            String keyword = s.toString();
-            if (TextUtils.isEmpty(keyword)) {
-                mCurrencyPairAdapter.setType(CurrencyPairAdapter.Type.SHOW_HISTORY_RECORDS);
-                updateCurrencyList(mSearchRecordsHelper.getRecordList());
-            } else {
-                mCurrencyPairAdapter.setType(CurrencyPairAdapter.Type.SHOW_SEARCH_RESULTS);
-                requestSearchResults(keyword);
-            }
+            updateCurrencyListBaseOnSearch(s.toString());
         }
     };
+
+    private void updateCurrencyListBaseOnSearch(String keyword) {
+        if (TextUtils.isEmpty(keyword)) {
+            mCurrencyPairAdapter.setType(CurrencyPairAdapter.Type.SHOW_HISTORY_RECORDS);
+            updateCurrencyList(mSearchRecordsHelper.getRecordList());
+        } else {
+            mCurrencyPairAdapter.setType(CurrencyPairAdapter.Type.SHOW_SEARCH_RESULTS);
+            requestSearchResults(keyword);
+        }
+    }
 
     private void requestSearchResults(String keyword) {
         Apic.searchCurrencyPairs(keyword).tag(TAG)
@@ -237,8 +214,7 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
     }
 
     private void updateCurrencyList(List<CurrencyPair> displayList) {
-        List<OptionalWrap> wrapList = OptionalWrap.getWrapList(displayList, mOptionalList);
-        mCurrencyPairAdapter.setOptionalWrapList(wrapList);
+        mCurrencyPairAdapter.setCurrencyPairList(displayList);
     }
 
     @Override
@@ -254,7 +230,7 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
         private static final int ITEM = 1;
 
         private Callback mCallback;
-        private List<OptionalWrap> mOptionalWrapList;
+        private List<CurrencyPair> mCurrencyPairList;
         private Type mType;
 
         public enum Type {
@@ -265,17 +241,17 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
         public interface Callback extends OnRVItemClickListener {
             void onClearRecordsClick();
 
-            void onAddOptionalClick(View view, OptionalWrap wrap);
+            void onAddOptionalClick(View view, CurrencyPair pair);
         }
 
         public CurrencyPairAdapter(Callback callback) {
             mCallback = callback;
-            mOptionalWrapList = new ArrayList<>();
+            mCurrencyPairList = new ArrayList<>();
             mType = Type.SHOW_HISTORY_RECORDS;
         }
 
-        public void setOptionalWrapList(List<OptionalWrap> optionalWrapList) {
-            mOptionalWrapList = optionalWrapList;
+        public void setCurrencyPairList(List<CurrencyPair> currencyPairList) {
+            mCurrencyPairList = currencyPairList;
             notifyDataSetChanged();
         }
 
@@ -321,30 +297,29 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(final OptionalWrap wrap, final Callback callback, final int position) {
-                CurrencyPair pair = wrap.pair;
+            public void bind(final CurrencyPair pair, final Callback callback, final int position) {
                 mPairName.setText(pair.getUpperCasePairName());
-                mOptionalStatus.setSelected(wrap.added);
+                mOptionalStatus.setSelected(pair.isAddOptional());
                 mOptionalStatus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onAddOptionalClick(mOptionalStatus, wrap);
+                        callback.onAddOptionalClick(mOptionalStatus, pair);
                     }
                 });
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onItemClick(v, position, wrap);
+                        callback.onItemClick(v, position, pair);
                     }
                 });
             }
         }
 
-        private OptionalWrap getItem(int position) {
+        private CurrencyPair getItem(int position) {
             if (mType == Type.SHOW_HISTORY_RECORDS) {
-                return mOptionalWrapList.get(position - 1);
+                return mCurrencyPairList.get(position - 1);
             } else {
-                return mOptionalWrapList.get(position);
+                return mCurrencyPairList.get(position);
             }
         }
 
@@ -373,7 +348,7 @@ public class SearchCurrencyFragment extends UniqueActivity.UniFragment {
 
         @Override
         public int getItemCount() {
-            return mType == Type.SHOW_HISTORY_RECORDS ? mOptionalWrapList.size() + 1 : mOptionalWrapList.size();
+            return mType == Type.SHOW_HISTORY_RECORDS ? mCurrencyPairList.size() + 1 : mCurrencyPairList.size();
         }
     }
 }

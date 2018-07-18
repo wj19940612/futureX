@@ -101,7 +101,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     }
 
     private void getBankList() {
-        Apic.bankList()
+        Apic.bankList().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<BankListBean>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<BankListBean>> resp) {
@@ -109,7 +109,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
                         divideIntoGroups(data);
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     private void divideIntoGroups(ArrayList<BankListBean> data) {
@@ -208,7 +208,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     }
 
     private void bankBand(BankBindData bankBindData) {
-        Apic.bankBind(bankBindData)
+        Apic.bankBind(bankBindData).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

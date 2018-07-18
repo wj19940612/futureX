@@ -1,5 +1,7 @@
 package com.songbai.futurex.model.mine;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author yangguangda
  * @date 2018/6/12
@@ -8,8 +10,10 @@ public class CoinPropertyFlow {
     private int id;
     private String coinType;
     private long createTime;
+    @SerializedName(value = "flowType", alternate = {"flowCode"})
     private int flowType;
     private int status;
+    @SerializedName(value = "value", alternate = {"commission"})
     private double value;
 
     public int getId() {

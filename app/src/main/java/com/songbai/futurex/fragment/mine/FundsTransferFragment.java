@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -24,8 +23,9 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.mine.AccountList;
+import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +56,10 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.confirmTransfer)
     TextView mConfirmTransfer;
     private Unbinder mBind;
-    private List<AccountList.AccountBean> mAccountBeans;
+    private List<AccountBean> mAccountBeans;
     private OptionsPickerView mPvOptions;
     private int mTransferType;
-    private AccountList.AccountBean mSelectedAccountBean;
+    private AccountBean mSelectedAccountBean;
 
     @Nullable
     @Override
@@ -77,6 +77,10 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        setView();
+    }
+
+    private void setView() {
         mFromAccount.setText(mTransferType == 0 ? R.string.coin_coin_account : R.string.legal_currency_account);
         mToAccount.setText(mTransferType == 1 ? R.string.coin_coin_account : R.string.legal_currency_account);
         setSelectedItem(0);
@@ -98,20 +102,20 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
         if (TextUtils.isEmpty(amount)) {
             return;
         }
-        if (Double.valueOf(amount) > Double.valueOf(mSelectedAccountBean.getAbleCoin())) {
+        if (Double.valueOf(amount) > mSelectedAccountBean.getAbleCoin()) {
             mTransferAmount.setText("");
         }
     }
 
     private void accountTransfer(String coinType, int type, String count) {
-        Apic.accountTransfer(coinType, type, count)
+        Apic.accountTransfer(coinType, type, count).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        FragmentActivity activity = FundsTransferFragment.this.getActivity();
-                        activity.setResult(FundsTransferFragment.FUNDS_TRANSFER_RESULT,
+                        ToastUtil.show(R.string.transfer_success);
+                        setResult(FundsTransferFragment.FUNDS_TRANSFER_RESULT,
                                 new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-                        activity.finish();
+                        finish();
                     }
                 })
                 .fire();
@@ -123,9 +127,17 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.coinType, R.id.transferAll, R.id.confirmTransfer})
+    @OnClick({R.id.ivArrow, R.id.coinType, R.id.transferAll, R.id.confirmTransfer})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.ivArrow:
+                if (mTransferType == 0) {
+                    mTransferType = 1;
+                } else {
+                    mTransferType = 0;
+                }
+                setView();
+                break;
             case R.id.coinType:
                 if (mAccountBeans.size() > 1) {
                     showSelector();
@@ -144,7 +156,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
 
     private void showSelector() {
         ArrayList<String> coinTypes = new ArrayList<>();
-        for (AccountList.AccountBean accountBean : mAccountBeans) {
+        for (AccountBean accountBean : mAccountBeans) {
             coinTypes.add(accountBean.getCoinType().toUpperCase());
         }
         mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {

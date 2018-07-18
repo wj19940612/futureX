@@ -1,8 +1,8 @@
 package com.songbai.futurex.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,13 +20,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -34,7 +29,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CustomerService;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.DateUtil;
-import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.ThumbTransform;
 import com.songbai.futurex.utils.ToastUtil;
@@ -42,11 +37,13 @@ import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.im.IMProcessor;
 import com.songbai.futurex.websocket.model.CustomServiceChat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,6 +64,8 @@ public class CustomServiceActivity extends BaseActivity {
     ImageButton mAddPic;
     @BindView(R.id.bottomLayout)
     RelativeLayout mBottomLayout;
+    @BindView(R.id.inputGroup)
+    RelativeLayout mInputGroup;
 
     private boolean mKeyboardInit = false;
 
@@ -100,6 +99,25 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        startScheduleJobRightNow(30 * 1000);
+        chatOnline();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        chatOnline();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mIMProcessor != null) {
@@ -108,6 +126,7 @@ public class CustomServiceActivity extends BaseActivity {
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mCustomServiceChats = new ArrayList<>();
         mChatAdapter = new ChatAdapter(mCustomServiceChats, getActivity(), getOnRetryClickListener());
@@ -133,34 +152,22 @@ public class CustomServiceActivity extends BaseActivity {
                 }
             }
         });
-        mEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    checkUserStatus();
-                }
-                return false;
-            }
-        });
-    }
-
-    private void checkUserStatus() {
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(CustomServiceActivity.this, LoginActivity.class).executeForResult(REQ_LOGIN);
-        }
     }
 
     private void initSocketListener() {
         //初始化推送回调
         mIMProcessor = new IMProcessor(new OnDataRecListener() {
             @Override
-            public void onDataReceive(String data, int code) {
+            public void onDataReceive(String data, int code, final String dest) {
                 new DataParser<Response<CustomServiceChat>>(data) {
 
                     @Override
                     public void onSuccess(Response<CustomServiceChat> customServiceChatResponse) {
-                        mCustomServiceChats.add(customServiceChatResponse.getContent());
-                        mChatAdapter.notifyDataSetChanged();
+                        if (PushDestUtils.isCustomerChat(dest)) {
+                            mCustomServiceChats.add(customServiceChatResponse.getContent());
+                            mChatAdapter.notifyDataSetChanged();
+                            updateRecyclerViewPosition(true);
+                        }
                     }
                 }.parse();
             }
@@ -178,7 +185,9 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     private void showKeyboard() {
-        if (!mKeyboardInit) mKeyboardInit = true;
+        if (!mKeyboardInit) {
+            mKeyboardInit = true;
+        }
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(mEditText, 0);
     }
 
@@ -223,18 +232,30 @@ public class CustomServiceActivity extends BaseActivity {
         }).fireFreely();
     }
 
+    private void chatOnline() {
+        Apic.chatOnline().tag(TAG).callback(new Callback<Resp<Object>>() {
+            @Override
+            protected void onRespSuccess(Resp<Object> resp) {
+            }
+        }).fireFreely();
+    }
+
     private void loadSystemData(CustomerService data) {
         CustomServiceChat customServiceChat = new CustomServiceChat();
         customServiceChat.setChatType(CustomServiceChat.MSG_SYSTEM);
         customServiceChat.setContent(getString(R.string.hello_customer_for_you, data.getName()));
         mCustomServiceChats.add(customServiceChat);
         mChatAdapter.notifyDataSetChanged();
+        updateRecyclerViewPosition(false);
     }
 
 
     private void loadChatData(List<CustomServiceChat> data) {
+        mCustomServiceChats.clear();
+        Collections.reverse(data);
         mCustomServiceChats.addAll(data);
         mChatAdapter.notifyDataSetChanged();
+        updateRecyclerViewPosition(false);
     }
 
     private void loadChatData(CustomServiceChat data) {
@@ -260,17 +281,16 @@ public class CustomServiceActivity extends BaseActivity {
             case R.id.addPic:
                 sendPicToCustomer();
                 break;
+            default:
         }
     }
 
     private void sendMsg() {
         if (!Network.isNetworkAvailable()) {
             ToastUtil.show(R.string.http_error_network);
-        } else if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(getActivity(), LoginActivity.class).execute();
-        } else if (mEditText.getText().length() > 50) {
-            ToastUtil.show(R.string.over_50);
-        } else if (!TextUtils.isEmpty(mEditText.getText())) {
+        }  else if (mEditText.getText().length() > 500) {
+            ToastUtil.show(R.string.over_500);
+        } else if (!TextUtils.isEmpty(mEditText.getText().toString().trim())) {
             requestSendTxtMsg(mEditText.getText().toString());
             mEditText.setText("");
         }
@@ -330,7 +350,7 @@ public class CustomServiceActivity extends BaseActivity {
 
     private void sendImage(final String path) {
         String image = ImageUtils.compressImageToBase64(path, getActivity());
-        Apic.uploadImage(image)
+        Apic.uploadImage(image).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -381,11 +401,11 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     static class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        public static final int TYPE_LEFT = 1;
-        public static final int TYPE_LEFT_PHOTO = 2;
-        public static final int TYPE_RIGHT = 3;
-        public static final int TYPE_RIGHT_PHOTO = 4;
-        public static final int TYPE_SYSTEM = 5;
+        static final int TYPE_LEFT = 1;
+        static final int TYPE_LEFT_PHOTO = 2;
+        static final int TYPE_RIGHT = 3;
+        static final int TYPE_RIGHT_PHOTO = 4;
+        static final int TYPE_SYSTEM = 5;
 
         private List<CustomServiceChat> mCustomServiceChats;
         private Context mContext;
@@ -393,11 +413,11 @@ public class CustomServiceActivity extends BaseActivity {
         private OnRetryClickListener mOnRetryClickListener;
 
         interface OnRetryClickListener {
-            public void onRetry(CustomServiceChat customServiceChat);
+            void onRetry(CustomServiceChat customServiceChat);
 
-            public void onRightReScroll();
+            void onRightReScroll();
 
-            public void onLeftReScroll();
+            void onLeftReScroll();
         }
 
         public ChatAdapter(List<CustomServiceChat> customServiceChats, Context context, OnRetryClickListener onRetryClickListener) {
@@ -406,7 +426,7 @@ public class CustomServiceActivity extends BaseActivity {
             mOnRetryClickListener = onRetryClickListener;
         }
 
-        public void setCustomerService(CustomerService customerService) {
+        void setCustomerService(CustomerService customerService) {
             mCustomerService = customerService;
         }
 
@@ -434,7 +454,7 @@ public class CustomServiceActivity extends BaseActivity {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_left_content, parent, false);
                 return new LeftTextHolder(view);
             } else if (viewType == TYPE_RIGHT) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_right_content, parent, false);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.row_otc_chat_right_content, parent, false);
                 return new RightTextHolder(view);
             } else if (viewType == TYPE_RIGHT_PHOTO) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_right_photo, parent, false);
@@ -452,8 +472,9 @@ public class CustomServiceActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             CustomServiceChat lastChat = null;
-            if (position > 0)
+            if (position > 0) {
                 lastChat = mCustomServiceChats.get(position - 1);
+            }
             if (holder instanceof LeftTextHolder) {
                 ((LeftTextHolder) holder).bindingData(mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof RightTextHolder) {
@@ -461,7 +482,7 @@ public class CustomServiceActivity extends BaseActivity {
             } else if (holder instanceof RightPhotoHolder) {
                 ((RightPhotoHolder) holder).bindingData(mOnRetryClickListener, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof LeftPhotoHolder) {
-                ((LeftPhotoHolder) holder).bindingData(mOnRetryClickListener,mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
+                ((LeftPhotoHolder) holder).bindingData(mOnRetryClickListener, mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             } else if (holder instanceof SystemHolder) {
                 ((SystemHolder) holder).bindingData(mCustomerService, mContext, mCustomServiceChats.get(position), lastChat, position, getItemCount());
             }
@@ -538,21 +559,6 @@ public class CustomServiceActivity extends BaseActivity {
                     GlideApp.with(context).load(customServiceChat.getContent())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    if (onRetryClickListener != null) {
-                                        onRetryClickListener.onLeftReScroll();
-                                    }
-                                    return false;
-                                }
-                            })
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mPhoto);
                 }
             }
@@ -644,21 +650,6 @@ public class CustomServiceActivity extends BaseActivity {
                     GlideApp.with(context).load(customServiceChat.getContent())
                             .centerCrop()
                             .transform(new ThumbTransform(context))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    if (onRetryClickListener != null) {
-                                        onRetryClickListener.onRightReScroll();
-                                    }
-                                    return false;
-                                }
-                            })
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mPhoto);
                 }
 
@@ -687,5 +678,20 @@ public class CustomServiceActivity extends BaseActivity {
                 mContent.setText(customServiceChat.getContent());
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (KeyBoardUtils.isOutside(ev, mInputGroup)) {
+                if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
+                    KeyBoardUtils.closeKeyboard(v);
+                    v.clearFocus();
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
     }
 }

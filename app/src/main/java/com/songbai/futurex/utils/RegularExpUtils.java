@@ -18,7 +18,7 @@ public class RegularExpUtils {
      * @return
      */
     public static boolean isWeakPassword(String password) {
-        String pattern = "^(\\d+|[a-z]+|[A-Z]+|[\\W]+)$";
+        String pattern = "^(\\d+|[a-z]+|[A-Z]+|[\\W_]+)$";
         return Pattern.matches(pattern, password);
     }
 

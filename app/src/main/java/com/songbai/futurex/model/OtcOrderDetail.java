@@ -62,6 +62,7 @@ public class OtcOrderDetail {
         private String coinSymbol;
         private String conditionType;
         private String conditionValue;
+        private int countDown;
         private int delay;
         private double fixedPrice;
         private double orderAmount;
@@ -121,6 +122,14 @@ public class OtcOrderDetail {
 
         public void setConditionValue(String conditionValue) {
             this.conditionValue = conditionValue;
+        }
+
+        public int getCountDown() {
+            return countDown;
+        }
+
+        public void setCountDown(int countDown) {
+            this.countDown = countDown;
         }
 
         public int getDelay() {

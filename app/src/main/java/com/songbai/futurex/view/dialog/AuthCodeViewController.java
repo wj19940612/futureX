@@ -96,7 +96,11 @@ public class AuthCodeViewController extends SmartDialog.CustomViewController {
     }
 
     private boolean checkConfirmButtonEnable() {
-        if (TextUtils.isEmpty(mAuthCodeInput.getText().toString())) {
+        String authCode = mAuthCodeInput.getText().toString().trim();
+        if (TextUtils.isEmpty(authCode)) {
+            return false;
+        }
+        if (authCode.length() < 4) {
             return false;
         }
         return true;

@@ -17,8 +17,6 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.fragment.mine.PropertyFlowDetailFragment;
 import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -26,8 +24,10 @@ import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
-import com.songbai.futurex.model.status.FlowStatus;
+import com.songbai.futurex.model.status.CurrencyFlowStatus;
+import com.songbai.futurex.model.status.OTCFlowStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadActivity;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.PropertyFlowFilter;
@@ -39,6 +39,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * @author yangguangda
@@ -51,6 +52,8 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     EmptyRecyclerView mSwipeTarget;
     @BindView(R.id.swipeToLoadLayout)
     SwipeToLoadLayout mSwipeToLoadLayout;
+    @BindView(R.id.shader)
+    View shader;
     @BindView(R.id.filtrateGroup)
     LinearLayout mFiltrateGroup;
     private final int TYPE_ALL = 10;
@@ -67,15 +70,25 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private String mCoinType;
     private PropertyFlowAdapter mAdapter;
     private final int[] flowStatus = new int[]{TYPE_ALL,
-            FlowStatus.SUCCESS, FlowStatus.FREEZE, FlowStatus.DRAW_REJECT,
-            FlowStatus.ENTRUS_RETURN, FlowStatus.FREEZE_DEDUCT, FlowStatus.ENTRUSE_RETURN_SYS,
-            FlowStatus.FREEZE_RETURN};
+            CurrencyFlowStatus.SUCCESS, CurrencyFlowStatus.FREEZE, CurrencyFlowStatus.DRAW_REJECT,
+            CurrencyFlowStatus.ENTRUS_RETURN, CurrencyFlowStatus.FREEZE_DEDUCT, CurrencyFlowStatus.ENTRUSE_RETURN_SYS,
+            CurrencyFlowStatus.FREEZE_RETURN};
     private final int[] flowStatusStrRes = new int[]{
             R.string.all_status, R.string.completed, R.string.freeze, R.string.withdraw_coin_rejected,
             R.string.entrust_return, R.string.freeze_deduct, R.string.sys_withdraw, R.string.freeze_return};
+
+    private final int[] otcFlowStatus = new int[]{TYPE_ALL,
+            OTCFlowStatus.SUCCESS, OTCFlowStatus.FREEZE, OTCFlowStatus.FREEZE_DEDUCT,
+            OTCFlowStatus.CANCEL_TRADE_FREEZE, OTCFlowStatus.SYS_CANCEL_TRADE_FREEZE, OTCFlowStatus.POSTER_OFF_SHELF_RETURN,};
+
+    private final int[] otcFlowStatusStrRes = new int[]{
+            R.string.all_status, R.string.completed, R.string.freeze, R.string.freeze_deduct,
+            R.string.cancel_trade_freeze, R.string.sys_cancel_trade_freeze, R.string.poster_off_shelf_return};
     private OptionsPickerView<String> mPvOptions;
     private ArrayList<String> mFlowStatusStr;
     private ArrayList<Integer> mFlowStatus;
+    private PropertyFlowFilter mPropertyFlowFilter;
+    private int mAccountType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,37 +100,35 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
 
     private void initView() {
         mAllType = getIntent().getBooleanExtra(ExtraKeys.PROPERTY_FLOW_FILTER_TYPE_ALL, false);
+        mAccountType = getIntent().getIntExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, 0);
         mCoinType = getIntent().getStringExtra(ExtraKeys.COIN_TYPE);
         mTitleBar.setTitle(mAllType ? R.string.property_flow : R.string.history_record);
+        mTitleBar.setRightVisible(mAccountType != 2);
+        mTitleBar.setRightViewEnable(mAccountType != 2);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mAllType) {
                     showAllPropertyFilter();
                 } else {
-                    if (mFlowStatusStr == null) {
-                        mFlowStatusStr = new ArrayList<>();
-                        for (int flowStatusStrRe : flowStatusStrRes) {
-                            mFlowStatusStr.add(getString(flowStatusStrRe));
-                        }
-                    }
                     showSelector(mFlowStatusStr, mFlowStatus);
                 }
             }
         });
+        mFlowStatusStr = new ArrayList<>();
         mFlowStatus = new ArrayList<>();
-        for (int status : flowStatus) {
-            mFlowStatus.add(status);
-        }
+        createStr();
         mSwipeTarget.setEmptyView(mEmptyView);
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PropertyFlowAdapter();
+        mAdapter.setSingleType(!mAllType);
+        mAdapter.setAccount(mAccountType);
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
             public void onItemClick(int id) {
-                UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowDetailFragment.class)
-                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
-                        .execute();
+//                UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowDetailFragment.class)
+//                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
+//                        .execute();
             }
         });
         mSwipeTarget.setAdapter(mAdapter);
@@ -125,22 +136,48 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
         getUserFinanceFlow();
     }
 
+    private void createStr() {
+        switch (mAccountType) {
+            case 0:
+                for (int status : flowStatus) {
+                    mFlowStatus.add(status);
+                }
+                for (int flowStatusStrRe : flowStatusStrRes) {
+                    mFlowStatusStr.add(getString(flowStatusStrRe));
+                }
+                break;
+            case 1:
+                for (int status : otcFlowStatus) {
+                    mFlowStatus.add(status);
+                }
+                for (int flowStatusStrRe : otcFlowStatusStrRes) {
+                    mFlowStatusStr.add(getString(flowStatusStrRe));
+                }
+                break;
+            case 2:
+
+                break;
+            default:
+        }
+    }
+
     private void showAllPropertyFilter() {
-        PropertyFlowFilter propertyFlowFilter = new PropertyFlowFilter(this, mFiltrateGroup);
-        propertyFlowFilter.restoreData(
+        mPropertyFlowFilter = new PropertyFlowFilter(this, mFiltrateGroup, mAccountType);
+        mPropertyFlowFilter.restoreData(
                 mGetUserFinanceFlowData.getCoinType(), mGetUserFinanceFlowData.getFlowType(),
                 mGetUserFinanceFlowData.getStatus(), mGetUserFinanceFlowData.getStartTime(),
                 mGetUserFinanceFlowData.getEndTime());
-        propertyFlowFilter.setOnSelectCallBack(new PropertyFlowFilter.OnSelectCallBack() {
+        mPropertyFlowFilter.setOnSelectCallBack(new PropertyFlowFilter.OnSelectCallBack() {
             @Override
             public void onSelected(String coinSymbol, int flowType, int flowStatus, String startTime, String endTime) {
                 mGetUserFinanceFlowData.setCoinType(coinSymbol);
-                mGetUserFinanceFlowData.setCoinType(coinSymbol);
                 mGetUserFinanceFlowData.setFlowType(flowType == PropertyFlowFilter.ALL ? "" : String.valueOf(flowType));
+                mGetUserFinanceFlowData.setStatus(flowStatus == PropertyFlowFilter.ALL ? "" : String.valueOf(flowStatus));
                 mGetUserFinanceFlowData.setStartTime(startTime);
                 mGetUserFinanceFlowData.setEndTime(endTime);
                 mPage = 0;
                 getUserFinanceFlow();
+                showOrDismiss();
             }
 
             @Override
@@ -148,9 +185,44 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                 mGetUserFinanceFlowData = new GetUserFinanceFlowData();
                 mPage = 0;
                 getUserFinanceFlow();
+                showOrDismiss();
             }
         });
-        propertyFlowFilter.showOrDismiss();
+        showOrDismiss();
+    }
+
+    public void showOrDismiss() {
+        if (mFiltrateGroup.getVisibility() == View.VISIBLE) {
+            AnimatorUtil.collapseVertical(mFiltrateGroup, new AnimatorUtil.OnAnimatorFactionListener() {
+                @Override
+                public void onFaction(float fraction) {
+                    if (fraction == 1) {
+                        mFiltrateGroup.setVisibility(View.GONE);
+                    }
+                }
+            });
+            shader.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    shader.setVisibility(View.GONE);
+                }
+            }, 200);
+        } else {
+            AnimatorUtil.expandVertical(mFiltrateGroup, new AnimatorUtil.OnAnimatorFactionListener() {
+                @Override
+                public void onFaction(float fraction) {
+                    if (fraction == 1) {
+                        mFiltrateGroup.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            shader.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    shader.setVisibility(View.VISIBLE);
+                }
+            }, 200);
+        }
     }
 
     @Override
@@ -165,23 +237,69 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     }
 
     private void getUserFinanceFlow() {
-        Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize)
-                .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
-                        mAdapter.setList(resp.getData());
-                        mAdapter.notifyDataSetChanged();
-                        stopFreshOrLoadAnimation();
-                        if (mPage == 0) {
-                            mSwipeTarget.hideAll(false);
-                        }
-                        mPage++;
-                        if (mPage >= resp.getData().getTotal()) {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
-                        }
-                    }
-                })
-                .fire();
+        switch (mAccountType) {
+            case 0:
+                Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize).tag(TAG)
+                        .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                                mAdapter.setList(resp.getData());
+                                mAdapter.notifyDataSetChanged();
+                                stopFreshOrLoadAnimation();
+                                if (mPage == 0) {
+                                    mSwipeTarget.hideAll(false);
+                                    mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
+                                }
+                                mPage++;
+                                if (mPage >= resp.getData().getTotal()) {
+                                    mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                                }
+                            }
+                        })
+                        .fire();
+                break;
+            case 1:
+                Apic.otcAccountDetail(mGetUserFinanceFlowData, mPage, mPageSize).tag(TAG)
+                        .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                                mAdapter.setList(resp.getData());
+                                mAdapter.notifyDataSetChanged();
+                                stopFreshOrLoadAnimation();
+                                if (mPage == 0) {
+                                    mSwipeTarget.hideAll(false);
+                                    mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
+                                }
+                                mPage++;
+                                if (mPage >= resp.getData().getTotal()) {
+                                    mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                                }
+                            }
+                        })
+                        .fire();
+                break;
+            case 2:
+                Apic.userFinanceDetail(mGetUserFinanceFlowData, mPage, mPageSize).tag(TAG)
+                        .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                                mAdapter.setList(resp.getData());
+                                mAdapter.notifyDataSetChanged();
+                                stopFreshOrLoadAnimation();
+                                if (mPage == 0) {
+                                    mSwipeTarget.hideAll(false);
+                                    mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
+                                }
+                                mPage++;
+                                if (mPage >= resp.getData().getTotal()) {
+                                    mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                                }
+                            }
+                        })
+                        .fire();
+                break;
+            default:
+        }
     }
 
     private void showSelector(final List<String> item, final ArrayList<Integer> origin) {
@@ -255,5 +373,10 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     @Override
     public LoadMoreFooterView getLoadMoreFooterView() {
         return mSwipeLoadMoreFooter;
+    }
+
+    @OnClick(R.id.shader)
+    public void onViewClicked() {
+        showOrDismiss();
     }
 }

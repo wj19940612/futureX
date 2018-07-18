@@ -19,6 +19,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.mine.UserAuth;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.IconTextRow;
@@ -48,6 +49,8 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     ImageView mHandIdCardImg;
     @BindView(R.id.submit)
     TextView mSubmit;
+    @BindView(R.id.backImgText)
+    TextView mBackImgText;
     private Unbinder mBind;
     private UserAuth mUserAuth;
     private int mAuthenticationStatus;
@@ -69,13 +72,14 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mCanEdit = mAuthenticationStatus == 4 || mAuthenticationStatus == 1;
+        mCanEdit = mAuthenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL
+                || mAuthenticationStatus == AuthenticationStatus.AUTHENTICATION_PRIMARY;
         mSubmit.setVisibility(mCanEdit ? View.VISIBLE : View.INVISIBLE);
         getUserAuth();
     }
 
     private void getUserAuth() {
-        Apic.getUserAuth()
+        Apic.getUserAuth().tag(TAG)
                 .callback(new Callback<Resp<UserAuth>>() {
                     @Override
                     protected void onRespSuccess(Resp<UserAuth> resp) {
@@ -104,6 +108,8 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
                 break;
             case 2:
                 idCardTypeText = R.string.passport;
+                mBackImg.setVisibility(View.GONE);
+                mBackImgText.setVisibility(View.GONE);
                 break;
             default:
                 idCardTypeText = R.string.mainland_id_card;
@@ -156,7 +162,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
             getHIntImage(view);
             UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
                     UploadUserImageDialogFragment.IMAGE_TYPE_NOT_DEAL, "",
-                    -1, getString(getHIntStiring(view)),
+                    -1, getString(getHintString(view)),
                     1, getHIntImage(view));
             uploadUserImageDialogFragment.setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                 @Override
@@ -209,7 +215,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
         return R.drawable.ic_authentication_idcard_front;
     }
 
-    private int getHIntStiring(View view) {
+    private int getHintString(View view) {
         switch (view.getId()) {
             case R.id.frontImg:
                 return R.string.please_add_certification_front_pic;
@@ -223,7 +229,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     }
 
     private void confirmAuth() {
-        Apic.realNameAuth(mRealNameAuthData)
+        Apic.realNameAuth(mRealNameAuthData).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -235,7 +241,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
     }
 
     private void uploadImage(String image, final View view) {
-        Apic.uploadImage(image)
+        Apic.uploadImage(image).indeterminate(this).tag(TAG)
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -267,7 +273,7 @@ public class SeniorCertificationFragment extends UniqueActivity.UniFragment {
 
     private void checkIsEnable() {
         if (!TextUtils.isEmpty(mRealNameAuthData.getIdcardFrontImg())
-                && !TextUtils.isEmpty(mRealNameAuthData.getIdcardBackImg())
+                && (!TextUtils.isEmpty(mRealNameAuthData.getIdcardBackImg()) || mUserAuth.getIdType() == 2)
                 && !TextUtils.isEmpty(mRealNameAuthData.getHandIdcardImg())) {
             mSubmit.setEnabled(true);
         } else {

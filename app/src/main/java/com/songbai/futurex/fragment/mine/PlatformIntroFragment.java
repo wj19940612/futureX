@@ -30,10 +30,12 @@ public class PlatformIntroFragment extends UniqueActivity.UniFragment {
     public static final int STYLE_PLATFORM = 1;
     public static final int STYLE_COMPANY = 2;
     public static final int STYLE_SERVICE_AGREEMENT = 3;
+    public static final int STYLE_PLATFORM_AGREEMENT = 4;
 
     public static final String PLATFORM_CODE = "MPlatformIntroduction";
     public static final String COMPANY_CODE = "MCompanyProfile";
-    public static final String SERVICE_AGREEMENT_CODE = "ServiceAgreement";
+    public static final String SERVICE_AGREEMENT_CODE = "Mserviceagreement";
+    public static final String PLATFORM_AGREEMENT = "PlatformAgreement";
 
     @BindView(R.id.platformIntroduction)
     WebView mPlatformIntroduction;
@@ -88,9 +90,10 @@ public class PlatformIntroFragment extends UniqueActivity.UniFragment {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setUserAgentString(webSettings.getUserAgentString()
-                + " ###" + getString(R.string.android_web_agent) + "/2.0");
-        //mWebView.getSettings().setAppCacheEnabled(true);l
+        String userAgentString = webSettings.getUserAgentString();
+        userAgentString = getString(R.string.android_web_agent) + " " + userAgentString;
+        webSettings.setUserAgentString(userAgentString);
+        //mWebView.getSettings().setAppCacheEnabled(true);
         //webSettings.setAppCachePath(getExternalCacheDir().getPath());
         webSettings.setAllowFileAccess(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -130,6 +133,8 @@ public class PlatformIntroFragment extends UniqueActivity.UniFragment {
             code = PLATFORM_CODE;
         }else if(mStyle == STYLE_COMPANY){
             code = COMPANY_CODE;
+        }else if(mStyle == STYLE_PLATFORM_AGREEMENT){
+            code = PLATFORM_AGREEMENT;
         }else{
             code = SERVICE_AGREEMENT_CODE;
         }

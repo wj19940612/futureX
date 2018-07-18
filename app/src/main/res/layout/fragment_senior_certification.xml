@@ -104,7 +104,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_authentication_add"
             app:layout_constraintDimensionRatio="h,1:1"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toRightOf="@id/frontImg"
             app:layout_constraintRight_toLeftOf="@id/handIdCardImg"
@@ -120,7 +120,6 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_authentication_add"
             app:layout_constraintDimensionRatio="h,1:1"
-            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toRightOf="@id/backImg"
             app:layout_constraintRight_toRightOf="parent"
@@ -136,6 +135,7 @@
             app:layout_constraintStart_toStartOf="@+id/frontImg"/>
 
         <TextView
+            android:id="@+id/backImgText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="17dp"

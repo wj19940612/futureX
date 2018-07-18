@@ -27,4 +27,16 @@ public class IMProcessor {
         Request request = Utils.getRequest(param);
         mMessageProcessor.send(request);
     }
+
+    public void registerOffline() {
+        IMParam param = new IMParam(IMParam.CUSOOFFLINE);
+        Request request = Utils.getRequest(param);
+        mMessageProcessor.send(request);
+    }
+
+    public void registerOnline() {
+        IMParam param = new IMParam(IMParam.CUSOONLINE);
+        Request request = Utils.getRequest(param);
+        mMessageProcessor.send(request);
+    }
 }

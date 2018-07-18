@@ -121,7 +121,7 @@ public class ModifyNickNameActivity extends BaseActivity {
 
     private void submitNickName() {
         final String nickName = mUserNameInput.getText().toString();
-        Apic.updateNickName(nickName)
+        Apic.updateNickName(nickName).tag(TAG)
                 .tag(TAG)
                 .indeterminate(this)
                 .callback(new Callback<Resp<Object>>() {

@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
@@ -31,16 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
-                android:text="地"
-                android:textColor="@color/text22"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="区"
+                android:text="@string/location"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
         </RelativeLayout>
@@ -120,9 +113,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="0.5dp"
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:layout_marginTop="0.5dp"
             android:background="@color/white">
 
             <TextView

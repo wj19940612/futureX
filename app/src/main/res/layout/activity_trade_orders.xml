@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+
+    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <com.songbai.futurex.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:customView="@layout/view_tb_trade_order"/>
-
+        app:customView="@layout/view_tb_trade_order"
+        app:hasBottomSplitLine="true"/>
 
     <LinearLayout
         android:id="@+id/emptyView"
@@ -43,7 +45,6 @@
         app:load_more_enabled="false"
         app:load_more_final_drag_offset="@dimen/load_more_final_offset"
         app:load_more_trigger_offset="@dimen/load_more_trigger_offset"
-        app:refresh_enabled="false"
         app:refresh_final_drag_offset="@dimen/refresh_final_offset"
         app:refresh_trigger_offset="@dimen/refresh_trigger_offset"
         app:swipe_style="classic">
@@ -64,11 +65,18 @@
             android:layout_height="wrap_content"/>
     </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
 
+    <View
+        android:id="@+id/dimView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#66000000"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"/>
+
     <include
         layout="@layout/view_history_filter"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/titleBar"/>
-
-
 </android.support.constraint.ConstraintLayout>

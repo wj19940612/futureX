@@ -72,6 +72,9 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
             if (mAuthenticated) {
                 String googleAuthString = userInfo.getGoogleAuthString();
                 mGoogleAuthVerify = new Gson().fromJson(googleAuthString, GoogleAuthVerify.class);
+                if (mGoogleAuthVerify == null) {
+                    mGoogleAuthVerify = new GoogleAuthVerify();
+                }
                 mDraw = mGoogleAuthVerify.getDRAW();
                 mSetDrawPass = mGoogleAuthVerify.getSET_DRAW_PASS();
                 mCnyTrade = mGoogleAuthVerify.getCNY_TRADE();
@@ -86,7 +89,7 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
     }
 
     public void setAuthVerify(String authCode, String googleCode) {
-        Apic.setAuthVerify(authCode, googleCode)
+        Apic.setAuthVerify(authCode, googleCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -97,7 +100,7 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
     }
 
     private void getUserInfo() {
-        Apic.getUserInfo().tag(TAG).indeterminate(this)
+        Apic.getUserInfo().tag(TAG).indeterminate(this).tag(TAG)
                 .callback(new Callback<Resp<UserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<UserInfo> resp) {

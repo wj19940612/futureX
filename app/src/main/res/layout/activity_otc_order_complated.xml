@@ -33,6 +33,7 @@
             android:layout_height="48dp"
             android:layout_marginLeft="20dp"
             android:padding="2dp"
+            android:background="@drawable/bg_white_round_border_w2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -56,6 +57,7 @@
             android:layout_marginRight="20dp"
             android:includeFontPadding="false"
             android:textColor="@color/text22"
+            app:layout_constraintBottom_toTopOf="@id/countDealRate"
             android:textSize="17sp"
             app:layout_constraintLeft_toRightOf="@id/headPortrait"
             app:layout_constraintRight_toLeftOf="@id/contractEachOther"
