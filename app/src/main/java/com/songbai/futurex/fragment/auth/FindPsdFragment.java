@@ -23,7 +23,6 @@ import com.songbai.futurex.model.local.FindPsdData;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.RegularExpUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
-import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,9 +46,10 @@ public class FindPsdFragment extends UniqueActivity.UniFragment {
     TextView mNext;
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
-    Unbinder unbinder;
+    @BindView(R.id.phoneNumberClear)
+    ImageView mPhoneNumberClear;
 
-    private AuthCodeViewController mAuthCodeViewController;
+    Unbinder unbinder;
 
     @Nullable
     @Override
@@ -67,6 +67,7 @@ public class FindPsdFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mPhoneOrEmail.addTextChangedListener(mValidationWatcher);
+
         mRootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -86,8 +87,15 @@ public class FindPsdFragment extends UniqueActivity.UniFragment {
             if (enable != mNext.isEnabled()) {
                 mNext.setEnabled(enable);
             }
+
+            mPhoneNumberClear.setVisibility(checkClearBtnVisible() ? View.VISIBLE : View.INVISIBLE);
         }
     };
+
+    private boolean checkClearBtnVisible() {
+        String phone = mPhoneOrEmail.getText().toString();
+        return !TextUtils.isEmpty(phone);
+    }
 
     private boolean checkNextButtonEnable() {
         String phoneOrEmail = mPhoneOrEmail.getText().toString().trim();
@@ -105,7 +113,7 @@ public class FindPsdFragment extends UniqueActivity.UniFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.closePage, R.id.next})
+    @OnClick({R.id.closePage, R.id.next, R.id.phoneNumberClear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.closePage:
@@ -113,6 +121,9 @@ public class FindPsdFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.next:
                 openAuthCodePage();
+                break;
+            case R.id.phoneNumberClear:
+                mPhoneOrEmail.setText("");
                 break;
         }
     }
