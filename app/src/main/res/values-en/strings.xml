@@ -496,7 +496,7 @@
     <string name="no_currency_for_now">No token</string>
     <string name="here_will_show_your_optional">Your favorite tokens will be shown here</string>
     <string name="add_optional">+ Add to fav</string>
-    <string name="volume_24h_x">24H volum&#160;%1$s</string>
+    <string name="volume_24h_x">24H VOL&#160;%1$s</string>
     <string name="volume_24h">24H</string>
     <string name="search_currency">Search</string>
     <string name="nothing_for_now">No data</string>
@@ -525,7 +525,7 @@
     <string name="highest_price_x">High&#160;%1$s</string>
     <string name="lowest_price_x">Low&#160;%1$s</string>
     <string name="close_price_x">Close&#160;%1$s</string>
-    <string name="trade_volume_x">Volume&#160;%1$s</string>
+    <string name="trade_volume_x">VOL&#160;%1$s</string>
     <string name="no_more_data">No more data</string>
     <string name="buy_in">Buy</string>
     <string name="sell_out">Sell</string>
@@ -578,9 +578,9 @@
     <string name="entrust_price_x">Order price (%1$s)</string>
     <string name="entrust_volume_x">Order amount (%1$s)</string>
     <string name="actual_deal_x">Filled (%1$s)</string>
-    <string name="deal_total_amt_x">Filled amount (%1$s)</string>
+    <string name="deal_total_amt_x">total(%1$s)</string>
     <string name="deal_average_price_x">Filled price (%1$s)</string>
-    <string name="deal_volume_x">Volume (%1$s)</string>
+    <string name="deal_volume_x">VOL (%1$s)</string>
     <string name="revoked">Cancelled</string>
     <string name="system_revoked">Cancelled by system</string>
     <string name="unknown_status">Unknown operation</string>
@@ -603,7 +603,7 @@
     <string name="deal_detail">Order Detail</string>
     <string name="time_x">Time %1$s</string>
     <string name="deal_fee_x">Fee (%1$s)</string>
-    <string name="deal_volume">Volume</string>
+    <string name="deal_volume">VOL</string>
     <string name="pending_deal">Pending</string>
     <string name="transfer_success">Transfer success</string>
     <string name="save_success">Save success</string>
