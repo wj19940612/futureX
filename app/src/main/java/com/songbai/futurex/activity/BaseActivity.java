@@ -66,6 +66,11 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
     };
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LanguageUtils.attachBaseContext(base, LanguageUtils.getUserLocale(base)));
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = this.getClass().getSimpleName();
