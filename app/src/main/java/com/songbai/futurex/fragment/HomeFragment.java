@@ -150,7 +150,9 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         mHomeBanner.post(new Runnable() {
             @Override
             public void run() {
-                mBannerHeight = mHomeBanner.getMeasuredHeight();
+                if (mHomeBanner != null) {
+                    mBannerHeight = mHomeBanner.getMeasuredHeight();
+                }
             }
         });
         mNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -271,7 +273,11 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
     @Override
     public void onBannerClick(Banner banner) {
-
+        if (banner.getJumpType() == 1) {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_URL, banner.getJumpContent())
+                    .execute();
+        }
     }
 
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {

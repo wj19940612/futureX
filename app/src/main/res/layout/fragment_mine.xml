@@ -61,11 +61,18 @@
                         android:textSize="20sp"
                         tools:text="昵称"/>
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/authenticationStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"/>
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bg_white_r100"
+                        android:drawablePadding="5dp"
+                        android:paddingBottom="3dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="3dp"
+                        android:textSize="10sp"/>
                 </LinearLayout>
 
                 <TextView

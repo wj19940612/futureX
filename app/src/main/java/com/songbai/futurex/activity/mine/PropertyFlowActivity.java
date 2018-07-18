@@ -172,7 +172,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
             public void onSelected(String coinSymbol, int flowType, int flowStatus, String startTime, String endTime) {
                 mGetUserFinanceFlowData.setCoinType(coinSymbol);
                 mGetUserFinanceFlowData.setFlowType(flowType == PropertyFlowFilter.ALL ? "" : String.valueOf(flowType));
-                mGetUserFinanceFlowData.setStatus(String.valueOf(flowStatus));
+                mGetUserFinanceFlowData.setStatus(flowStatus == PropertyFlowFilter.ALL ? "" : String.valueOf(flowStatus));
                 mGetUserFinanceFlowData.setStartTime(startTime);
                 mGetUserFinanceFlowData.setEndTime(endTime);
                 mPage = 0;

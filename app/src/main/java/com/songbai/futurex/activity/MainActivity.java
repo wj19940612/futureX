@@ -90,6 +90,11 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
             ((TradeFragment) fragment).setCurrencyPair(pair);
             mBottomTabs.performTabClick(mainPageIndex);
         }
+        if (fragment instanceof LegalCurrencyFragment) {
+            int index = exUserDefineData.getIntExtra(ExtraKeys.LEGAL_CURRENCY_PAGE_INDEX, 2);
+            ((LegalCurrencyFragment)fragment).setSelectedIndex(index);
+            mBottomTabs.performTabClick(mainPageIndex);
+        }
     }
 
     @Override

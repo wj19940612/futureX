@@ -83,6 +83,7 @@ public class LegalCurrencyFragment extends BaseFragment {
             }
         }
     };
+    private int mSelectedIndex = -1;
 
     @Nullable
     @Override
@@ -150,6 +151,10 @@ public class LegalCurrencyFragment extends BaseFragment {
         if (isVisibleToUser && isPrepared) {
             if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol)) {
                 getOtcPair();
+            }
+            if (mSelectedIndex != -1) {
+                mViewPager.setCurrentItem(mSelectedIndex);
+                mSelectedIndex = -1;
             }
         }
     }
@@ -280,6 +285,10 @@ public class LegalCurrencyFragment extends BaseFragment {
             }
         });
         waresPairFilter.showOrDismiss(mRadioHeader);
+    }
+
+    public void setSelectedIndex(int selectedIndex) {
+        mSelectedIndex = selectedIndex;
     }
 
     private class LegalCurrencyPager extends FragmentPagerAdapter {

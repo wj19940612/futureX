@@ -453,7 +453,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             double maxNum = Double.valueOf(mData.getChangeCount());
             maxNum = Math.min(maxNum, maxTurnover / mData.getFixedPrice());
             mCoinAmount.setHint(mContext.getString(mType == OTCOrderStatus.ORDER_DIRECT_SELL ? R.string.max_buy_amount : R.string.max_sell_amount, FinanceUtil.formatWithScale(maxNum, 6)));
-            mCoinAmount.setFilters(new InputFilter[]{new MoneyValueFilter().setDigits(6)});
+            mCoinAmount.setFilters(new InputFilter[]{new MoneyValueFilter(mContext).setDigits(6)});
             final double finalMaxNum = maxNum;
             mCoinAmount.addTextChangedListener(new ValidationWatcher() {
                 @Override

@@ -75,9 +75,15 @@ public class PayTypeController extends SmartDialog.CustomViewController {
             public void onItemClick(String payType, BankCardBean bankCardBean) {
                 int id = bankCardBean.getId();
                 if (mPayInfos.contains(payType)) {
-                    mPayInfos.remove(payType);
-                    if (String.valueOf(id).equals(mBankId)) {
-                        mBankId = "";
+                    if (payType.equals(PayType.BANK_PAY)) {
+                        if (String.valueOf(id).equals(mBankId)) {
+                            mPayInfos.remove(payType);
+                            mBankId = "";
+                        }else {
+                            mBankId = String.valueOf(id);
+                        }
+                    } else {
+                        mPayInfos.remove(payType);
                     }
                 } else {
                     mPayInfos.add(payType);
@@ -104,37 +110,6 @@ public class PayTypeController extends SmartDialog.CustomViewController {
 
     public void setBankList(BindBankList bankList) {
         mBankList = bankList;
-//        ArrayList<BankCardBean> list = new ArrayList<>();
-//        BankCardBean aliPay = bankList.getAliPay();
-//        if (aliPay.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
-//            list.add(aliPay);
-//        }
-//        BankCardBean wechat = bankList.getWechat();
-//        if (wechat.getBind() == BankCardBean.ALIPAY_WECHATPAY_BIND) {
-//            list.add(wechat);
-//        }
-//        List<BankCardBean> bankCard = bankList.getBankCard();
-//        for (BankCardBean bankCardBean : bankCard) {
-//            list.add(bankCardBean);
-//        }
-//        for (BankCardBean bankCardBean : list) {
-//            String payTyp = "";
-//            switch (bankCardBean.getPayType()) {
-//                case BankCardBean.PAYTYPE_ALIPAY:
-//                    payType = PayType.ALIPAY;
-//                    break;
-//                case BankCardBean.PAYTYPE_WX:
-//                    payType = PayType.WXPAY;
-//                    break;
-//                case BankCardBean.PAYTYPE_BANK:
-//                    payType = PayType.BANK_PAY;
-//                    break;
-//                default:
-//            }
-//            if (mPayInfos.contains(payType)) {
-//
-//            }
-//        }
     }
 
     public void setSelectedBankId(String selectedBankId) {

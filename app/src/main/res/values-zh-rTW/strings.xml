@@ -120,7 +120,7 @@
     <string name="please_input_used_mail_auth_code">請輸入舊郵箱驗證碼</string>
     <string name="bind_success">綁定成功</string>
     <string name="please_input_mail">請輸入郵箱</string>
-    <string name="please_input_mail_auth_code">請輸入郵箱請輸入郵箱驗證碼</string>
+    <string name="please_input_mail_auth_code">請輸入郵箱驗證碼</string>
     <string name="please_input_phone_auth_code">請輸入手機驗證碼</string>
     <string name="please_open_camera_permission">請打開相機許可權</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
@@ -232,7 +232,7 @@
     <string name="cash_pwd">資金密碼</string>
     <string name="set_cash_pwd_rules">注意：您的資金密碼是用來交易和提現和賬戶安全設置，建議您不要設置與登錄密碼一致，由此產生的賬戶被盜，本站概不負責。</string>
     <string name="confirm_with_draw">確認提幣</string>
-    <string name="with_draw_rules_x">1.最小提幣數量為：%1$s\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網路便不可撤回。\n3.您提幣至上述地址後，需要整個網路節點的確認，%2$S次網路確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或泄露。</string>
+    <string name="with_draw_rules_x">1.最小提幣數量為：%1$s\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網路便不可撤回。\n3.您提幣至上述地址後，需要整個網路節點的確認，%2$d次網路確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或泄露。</string>
     <string name="filtrate">篩選</string>
     <string name="coin_type">幣種</string>
     <string name="flow_type">流水類型</string>
@@ -267,6 +267,7 @@
     <string name="completed">已完成</string>
     <string name="freeze">凍結</string>
     <string name="withdraw_coin_rejected">提幣駁回</string>
+    <string name="select_draw_coin_address">選擇提幣地址</string>
     <string name="entrust_return">用戶撤單</string>
     <string name="freeze_deduct">凍結扣除</string>
     <string name="cancel_trade_freeze">取消交易解凍</string>
@@ -294,7 +295,7 @@
     <string name="plus_sign_x">+%1$s</string>
     <string name="increasing_ranks">漲幅榜</string>
     <string name="order">訂單</string>
-    <string name="x_space_x">%1$s1$s&#160;%2$s</string>
+    <string name="x_space_x">%1$s&#160;%2$s</string>
     <string name="amount_limit">限制金額：&#160;%1$s-%2$s</string>
     <string name="own_amount">擁有數量：&#160;%1$s</string>
     <string name="x_done_count_done_rate_x">%1$d單&#8194;完成率%2$s</string>
@@ -312,7 +313,7 @@
     <string name="trade_count_more_than">交易成功次數大於：</string>
     <string name="contract_info">聯繫方式</string>
     <string name="read_and_agree">我已閱讀並同意</string>
-    <string name="coin_trade_protocol">《發幣交易協議》</string>
+    <string name="coin_trade_protocol">《法幣交易協議》</string>
     <string name="attention_rules">注意事項</string>
     <string name="attention_rules_text">1.交易過程中，請先確認款項入賬後再釋放數字貨幣。\n2.交易過程中，不要透漏與您賬戶安全有關的敏感信息。\n3.請不要將您的電子郵箱直接透漏給買家，否則可能會收到詐騙信件及對賬戶安全造成危害。\n4.請將平台網站記錄在書籤上，確保您在正確的網站上進行交易，避免誤闖釣魚網站。\n5.平台員工禁止以官方名義與您交易，故請不要與自稱是本平台員工的投資者交易，避免您的利益損失。</string>
     <string name="attention_hint">特別提醒</string>
@@ -339,6 +340,8 @@
     <string name="go_to_bind">去綁定</string>
     <string name="please_select_price_type">請選擇價格類型</string>
     <string name="floating_price_rate">溢價比例</string>
+    <string name="max_can_not_greater_than">最大不能大於%1$s</string>
+    <string name="min_can_not_less_than">最小不能小於%1$s</string>
     <string name="percent_symbol">%</string>
     <string name="price">價格</string>
     <string name="minLimit">最小限制</string>
@@ -527,6 +530,7 @@
     <string name="select_currency">請選擇計價貨幣</string>
     <string name="search_currency_pairs">" 搜索幣種"</string>
     <string name="delete_success">刪除成功</string>
+    <string name="really_want_to_delete">真的要刪除嗎？</string>
     <string name="account_balance">當前賬戶餘額：</string>
     <string name="deal_count_limit_unset">交易次數限制未填寫</string>
     <string name="poster_owner_set_needs_primary_certification">廣告主設置交易需完成初級認證</string>

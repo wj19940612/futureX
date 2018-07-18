@@ -1,10 +1,13 @@
 package com.songbai.futurex.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.CustomServiceActivity;
 import com.songbai.futurex.activity.LegalCurrencyOrderActivity;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.activity.mine.InviteActivity;
@@ -35,6 +39,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.UnreadMessageCount;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -51,6 +56,7 @@ public class MineFragment extends BaseFragment {
     private static final int REQUEST_LOGIN = 12343;
     private static final int REQUEST_PERSONAL_DATA = 12345;
     private static final int REQUEST_SETTINGS = 12344;
+    private static final int REQUEST_MESSAGE_CENTER = 12346;
 
     @BindView(R.id.headLayout)
     ConstraintLayout mHeadLayout;
@@ -59,7 +65,7 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.userName)
     TextView mUserName;
     @BindView(R.id.authenticationStatus)
-    ImageView mAuthenticationStatus;
+    TextView mAuthenticationStatus;
     @BindView(R.id.userInfoGroup)
     LinearLayout mUserInfoGroup;
     @BindView(R.id.login)
@@ -87,6 +93,15 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.settings)
     IconTextRow mSettings;
     private Unbinder mBind;
+    private OnNavigationListener mOnNavigationListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnNavigationListener) {
+            mOnNavigationListener = (OnNavigationListener) context;
+        }
+    }
 
     @Nullable
     @Override
@@ -136,9 +151,17 @@ public class MineFragment extends BaseFragment {
             if (authenticationStatus == AuthenticationStatus.AUTHENTICATION_PRIMARY
                     || authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_GOING
                     || authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL) {
-                mAuthenticationStatus.setImageResource(R.drawable.ic_certification_primary);
+                mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_primary_star, 0, 0, 0);
+                mAuthenticationStatus.setText(R.string.primary_certification);
+                mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             } else if (authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR) {
-                mAuthenticationStatus.setImageResource(R.drawable.ic_certification_senior);
+                mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
+                mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+                mAuthenticationStatus.setText(R.string.senior_certification);
+            } else {
+                mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
+                mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.text99));
+                mAuthenticationStatus.setText(R.string.uncertificated);
             }
             mUserInfoGroup.setVisibility(View.VISIBLE);
             mLogin.setVisibility(View.GONE);
@@ -206,6 +229,11 @@ public class MineFragment extends BaseFragment {
                 setUserInfo();
             }
         }
+        if (requestCode == REQUEST_MESSAGE_CENTER && resultCode == Activity.RESULT_FIRST_USER) {
+            if (mOnNavigationListener != null) {
+                mOnNavigationListener.onNavigation(MainActivity.PAGE_LEGAL_CURRENCY, data);
+            }
+        }
     }
 
     @Override
@@ -258,7 +286,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.msgCenter:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), MessageCenterActivity.class).execute();
+                    Launcher.with(getActivity(), MessageCenterActivity.class).execute(this, REQUEST_MESSAGE_CENTER);
                 } else {
                     login();
                 }

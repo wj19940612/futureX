@@ -228,6 +228,7 @@
     <string name="recharge_coin_rules">Don&apos;t top up any non-%1$s assets to address above, otherwise it won&apos;t be found back. \n Confirmation of all network nodes is needed after top-up. You will recieve the token after %2$d confirmation. \n Minimum top-up amount: %3$s. Less top-up is invalid. \n The top-up address seldom changes and you can repeatedly top up. You will be noted by website notice or email if the address changes. \n Make sure that your computer and browser is secure to prevent information from being tampered with or leaked.</string>
     <string name="select_coin_type">Select token</string>
     <string name="draw_coin">Withdraw</string>
+    <string name="select_draw_coin_address">Select draw coin address</string>
     <string name="draw_coin_success">Success</string>
     <string name="min_draw_amount_coin_x">Minimum amount &#160;%1$s&#160;%2$s</string>
     <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
@@ -245,7 +246,7 @@
     <string name="cash_pwd">Fund password</string>
     <string name="set_cash_pwd_rules">Notice: Your fund password will be used for trade, withdrawal and security setting. It is suggested to be different than login password. The platform will take no responsibility if your account is stolen because of the password.</string>
     <string name="confirm_with_draw">Confirm</string>
-    <string name="with_draw_rules_x">1. Minimum withdrawal: %1$s \n2. Make sure the address is correct before you withdraw. Once sent to the block chain network, the transaction is irrevocable. \n3. After transfer to the address above, you need the confirmation of all network nodes. %2$S times network confirm later, you are able to get the coins. \n4. Please do not take coins directly to ICO's crowdfunding address, which will prevent you from receiving crowdfunding digital assets. \n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
+    <string name="with_draw_rules_x">1. Minimum withdrawal: %1$s \n2. Make sure the address is correct before you withdraw. Once sent to the block chain network, the transaction is irrevocable. \n3. After transfer to the address above, you need the confirmation of all network nodes. %2$d times network confirm later, you are able to get the coins. \n4. Please do not take coins directly to ICO's crowdfunding address, which will prevent you from receiving crowdfunding digital assets. \n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
     <string name="filtrate">Filter</string>
     <string name="coin_type">Token</string>
     <string name="flow_type">Statement type</string>
@@ -348,6 +349,8 @@
     <string name="go_to_bind">Set it now</string>
     <string name="please_select_price_type">Select price type</string>
     <string name="floating_price_rate">Premium rate</string>
+    <string name="max_can_not_greater_than">Maximum cannot be greater than %1$s</string>
+    <string name="min_can_not_less_than">Minimum cannot be less than %1$s</string>
     <string name="percent_symbol">%</string>
     <string name="price">Price</string>
     <string name="minLimit">Minimum</string>
@@ -592,6 +595,7 @@
     <string name="passport_code">Passport No.</string>
     <string name="increasing_ranks">Top Gainers</string>
     <string name="delete_success">Delete success</string>
+    <string name="really_want_to_delete">Really want to delete?</string>
     <string name="draw_cash_pwd_can_not_short_than_8">Fund password should not be less than 8 digits</string>
     <string name="entrust_success">Entrust success</string>
     <string name="revoking_order">Revoking</string>

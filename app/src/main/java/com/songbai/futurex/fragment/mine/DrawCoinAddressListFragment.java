@@ -77,7 +77,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
         mAdapter = new DrawCoinAddressListAdapter();
         mAdapter.setOnItemClickListener(new DrawCoinAddressListAdapter.OnItemClickListener() {
             @Override
-            public void onItemLongClick(CoinAddress coinAddress) {
+            public void onItemClick(CoinAddress coinAddress) {
                 showDeleteView(coinAddress);
             }
         });
@@ -201,7 +201,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
         }
 
         interface OnItemClickListener {
-            void onItemLongClick(CoinAddress coinAddress);
+            void onItemClick(CoinAddress coinAddress);
         }
 
         void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -228,7 +228,7 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
                     @Override
                     public void onClick(View v) {
                         if (sOnItemClickListener != null) {
-                            sOnItemClickListener.onItemLongClick(coinAddress);
+                            sOnItemClickListener.onItemClick(coinAddress);
                         }
                     }
                 });

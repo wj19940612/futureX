@@ -112,7 +112,7 @@
             android:textColor="@color/text22"
             android:textSize="15sp"/>
 
-        <TextView
+        <com.songbai.futurex.view.ScaleTextView
             android:id="@+id/startTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -133,7 +133,7 @@
             android:textColor="@color/text22"
             android:textSize="15sp"/>
 
-        <TextView
+        <com.songbai.futurex.view.ScaleTextView
             android:id="@+id/endTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
