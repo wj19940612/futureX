@@ -123,9 +123,11 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
             public void bind(Order order, Context context) {
                 int color = ContextCompat.getColor(context, R.color.green);
                 String tradeDir = context.getString(R.string.buy_in);
+                String feeSign = order.getPrefix();
                 if (order.getDirection() == Order.DIR_SELL) {
                     color = ContextCompat.getColor(context, R.color.red);
                     tradeDir = context.getString(R.string.sell_out);
+                    feeSign = order.getSuffix();
                 }
                 if (order.getStatus() == OrderStatus.REVOKED) {
                     color = ContextCompat.getColor(context, R.color.text49);
@@ -138,8 +140,8 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
                 mDealTotalAmtTitle.setText(context.getString(R.string.deal_total_amt_x, order.getSuffix().toUpperCase()));
                 mDealAveragePriceTitle.setText(context.getString(R.string.deal_average_price_x, order.getSuffix().toUpperCase()));
                 mDealVolumeTitle.setText(context.getString(R.string.deal_volume_x, order.getPrefix().toUpperCase()));
-                mDealFeeTitle.setText(context.getString(R.string.deal_fee_x, order.getPrefix().toUpperCase()));
                 mDealFee.setText(order.getPoundage());
+                mDealFeeTitle.setText(context.getString(R.string.deal_fee_x, feeSign.toUpperCase()));
             }
         }
 
@@ -162,7 +164,11 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
                 mTime.setText(context.getString(R.string.time_x, DateUtil.format(dealDetail.getDealTime(), "HH:mm MM/dd")));
                 mDealPrice.setText(dealDetail.getDealPrice() + " " + order.getSuffix().toUpperCase());
                 mDealVolume.setText(dealDetail.getDealCount() + " " +  order.getPrefix().toUpperCase());
-                mDealFee.setText(dealDetail.getPoundage() + " " +  order.getPrefix().toUpperCase());
+                if (order.getDirection() == Order.DIR_SELL) {
+                    mDealFee.setText(dealDetail.getPoundage() + " " +  order.getSuffix().toUpperCase());
+                } else {
+                    mDealFee.setText(dealDetail.getPoundage() + " " +  order.getPrefix().toUpperCase());
+                }
             }
         }
 
