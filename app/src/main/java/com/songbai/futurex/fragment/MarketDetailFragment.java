@@ -46,6 +46,7 @@ import com.songbai.futurex.view.chart.TrendV;
 import com.songbai.futurex.view.chart.TrendView;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.DealData;
@@ -168,14 +169,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                new DataParser<Response<PairMarket>>(data) {
-                    @Override
-                    public void onSuccess(Response<PairMarket> pairMarketResponse) {
-                        updateMarketDataView(pairMarketResponse.getContent().getQuota());
-                        updateDeepDataView(pairMarketResponse.getContent().getDeep());
-                        updateTradeDealView(pairMarketResponse.getContent().getDetail());
-                    }
-                }.parse();
+                if (PushDestUtils.isSoloMarket(dest)) {
+                    new DataParser<Response<PairMarket>>(data) {
+                        @Override
+                        public void onSuccess(Response<PairMarket> pairMarketResponse) {
+                            if (pairMarketResponse.getContent() == null) return;
+                            updateMarketDataView(pairMarketResponse.getContent().getQuota());
+                            updateDeepDataView(pairMarketResponse.getContent().getDeep());
+                            updateTradeDealView(pairMarketResponse.getContent().getDetail());
+                        }
+                    }.parse();
+                }
             }
         });
 

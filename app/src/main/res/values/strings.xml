@@ -599,7 +599,6 @@
     <string name="download_complete">下载完成</string>
     <string name="update">更新</string>
 
-
     <string name="entrust">委托</string>
     <string name="history">历史</string>
     <string-array name="order_list_radio">
@@ -636,4 +635,5 @@
     <string name="revoke_order">撤單</string>
     <string name="revoking_order">撤单中</string>
     <string name="entrust_success">委托成功</string>
+    <string name="no_enough_balance">余额不足</string>
 </resources>

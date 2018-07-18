@@ -556,7 +556,7 @@ public class Kline extends BaseChart {
         if (mTouchIndex >= 0) {
             maData = mVisibleList.get(mTouchIndex);
         }
-        if (maData != null && mOnMADataChangedListener != null) {
+        if (mOnMADataChangedListener != null) {
             mOnMADataChangedListener.onMADataChanged(maData);
         }
     }

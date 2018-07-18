@@ -44,9 +44,15 @@ public class KlineView extends RelativeLayout {
         mKline.setOnMADataChangedListener(new Kline.OnMADataChangedListener() {
             @Override
             public void onMADataChanged(Kline.Data data) {
-                mMa5.setText(formatMaValue(5, data.getMas(5)));
-                mMa10.setText(formatMaValue(10, data.getMas(10)));
-                mMa30.setText(formatMaValue(30, data.getMas(30)));
+                if (data != null) {
+                    mMa5.setText(formatMaValue(5, data.getMas(5)));
+                    mMa10.setText(formatMaValue(10, data.getMas(10)));
+                    mMa30.setText(formatMaValue(30, data.getMas(30)));
+                } else {
+                    mMa5.setText(formatMaValue(5, null));
+                    mMa10.setText(formatMaValue(10, null));
+                    mMa30.setText(formatMaValue(30, null));
+                }
             }
         });
 
