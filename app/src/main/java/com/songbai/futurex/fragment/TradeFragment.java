@@ -281,6 +281,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             public void onVolumeChange(double volume) {
                 updateTradeAmount();
                 updateVolumeSeekBar();
+
+                if (LocalUser.getUser().isLogin() && volume > mTradeCurrencyVolume) {
+                    ToastUtil.show(R.string.no_enough_balance);
+                }
             }
         });
 

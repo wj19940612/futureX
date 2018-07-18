@@ -112,6 +112,7 @@ public class VolumeInputView extends FrameLayout {
             int endIndex = Math.min(number.length(), pointIndex + mVolumeScale + 1);
             return number.substring(0, endIndex);
         }
+
         return number;
     }
 
