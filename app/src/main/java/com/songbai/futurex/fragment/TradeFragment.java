@@ -579,6 +579,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             subscribeMarket();
             requestPairDescription();
             updateTradeDirectionView();
+            mVolumeInput.reset();
         } else {
             unsubscribeMarket();
         }
