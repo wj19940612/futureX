@@ -204,8 +204,8 @@
     <string name="transfer_all">全部劃轉</string>
     <string name="confirm_transfer">確認劃轉</string>
     <string name="recharge_coin">充幣</string>
-    <string name="available_amount_space">可用&#160;</string>
-    <string name="freeze_amount_space">凍結&#160;</string>
+    <string name="available_amount_space">可用\n</string>
+    <string name="freeze_amount_space">凍結\n</string>
     <string name="recharge_history">歷史充值</string>
     <string name="recharge_amount_coin_x">充值%1$d&#160;%2$s</string>
     <string name="long_press_to_save_qr_code">長按保存二維碼</string>

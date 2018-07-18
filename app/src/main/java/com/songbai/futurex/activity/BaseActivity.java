@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +20,7 @@ import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.SysTime;
+import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
@@ -29,6 +31,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 /**
  * Modified by john on 18/01/2018
@@ -76,6 +79,17 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         PushAgent.getInstance(this).onAppStart();
         SysTime.getSysTime().sync();
         MessageProcessor.get().connect();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        setLanguage();
+        super.onConfigurationChanged(newConfig);
+    }
+
+    private void setLanguage() {
+        Locale locale = LanguageUtils.getCurrentLocale(this);
+        LanguageUtils.updateLocale(this, locale);
     }
 
     private void scrollToTop(View view) {

@@ -82,6 +82,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     private boolean isPrepared;
     private boolean mPairChanged;
     private SmartDialog mSmartDialog;
+    private boolean mOnBuyOrSell;
 
     public static WantBuyOrSellFragment newInstance(int type, String coinType, String payCurrency) {
         WantBuyOrSellFragment wantBuyOrSellFragment = new WantBuyOrSellFragment();
@@ -270,8 +271,10 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
         buyOrSellController.setData(legalCurrencyTrade);
         buyOrSellController.setType(type);
         buyOrSellController.setOnConfirmClickListener(new BuyOrSellController.OnConfirmClickListener() {
+
             @Override
             public void onConfirmClick(String coinAmount, String currencyAmout, String cashPwd) {
+                mOnBuyOrSell = true;
                 if (type == OTCOrderStatus.ORDER_DIRECT_SELL) {
                     otcOrderBuy(legalCurrencyTrade.getId(), currencyAmout, coinAmount);
                 } else if (type == OTCOrderStatus.ORDER_DIRECT_BUY) {
@@ -293,13 +296,16 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
+                        mOnBuyOrSell = false;
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
-                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
-                                .execute();
+                        if (resp != null) {
+                            UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, resp.getData())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
+                                    .execute();
+                        }
                     }
 
                     @Override
@@ -323,10 +329,12 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
-                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_SELL)
-                                .execute();
+                        if (resp != null) {
+                            UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, resp.getData())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_SELL)
+                                    .execute();
+                        }
                     }
 
                     @Override
@@ -452,8 +460,8 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             mCurrencySymbol.setText(payCurrency.toUpperCase());
             double maxNum = Double.valueOf(mData.getChangeCount());
             maxNum = Math.min(maxNum, maxTurnover / mData.getFixedPrice());
-            mCoinAmount.setHint(mContext.getString(mType == OTCOrderStatus.ORDER_DIRECT_SELL ? R.string.max_buy_amount : R.string.max_sell_amount, FinanceUtil.formatWithScale(maxNum, 6)));
-            mCoinAmount.setFilters(new InputFilter[]{new MoneyValueFilter(mContext).setDigits(6)});
+            mCoinAmount.setHint(mContext.getString(mType == OTCOrderStatus.ORDER_DIRECT_SELL ? R.string.max_buy_amount : R.string.max_sell_amount, FinanceUtil.formatWithScale(maxNum, 8)));
+            mCoinAmount.setFilters(new InputFilter[]{new MoneyValueFilter(mContext).setDigits(8)});
             final double finalMaxNum = maxNum;
             mCoinAmount.addTextChangedListener(new ValidationWatcher() {
                 @Override
@@ -462,23 +470,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                     if (!TextUtils.isEmpty(string)) {
                         mCurrencyAmount.setText("");
                         double value = Double.valueOf(string);
-                        if (value > finalMaxNum) {
-                            mCoinAmount.setText(FinanceUtil.formatWithScale(finalMaxNum, 6));
+                        if (value > Double.valueOf(FinanceUtil.formatWithScale(finalMaxNum, 8))) {
+                            mCoinAmount.setText(FinanceUtil.formatWithScale(finalMaxNum, 8));
                             mCoinAmount.setSelection(mCoinAmount.getText().length());
-                        }
-                    }
-                }
-            });
-            mCurrencyAmount.addTextChangedListener(new ValidationWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    String string = mCurrencyAmount.getText().toString();
-                    if (!TextUtils.isEmpty(string)) {
-                        mCoinAmount.setText("");
-                        double value = Double.valueOf(string);
-                        if (value > maxTurnover) {
-                            mCurrencyAmount.setText(String.valueOf(maxTurnover));
-                            mCurrencyAmount.setSelection(mCurrencyAmount.getText().length());
                         }
                     }
                 }
@@ -486,6 +480,21 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             double maxAmount = maxTurnover;
             maxAmount = Math.min(maxAmount, Double.valueOf(mData.getChangeCount()) * mData.getFixedPrice());
             mCurrencyAmount.setHint(mContext.getString(R.string.max_buy_amount, FinanceUtil.formatWithScale(maxAmount)));
+            final double finalMaxAmount = maxAmount;
+            mCurrencyAmount.addTextChangedListener(new ValidationWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String string = mCurrencyAmount.getText().toString();
+                    if (!TextUtils.isEmpty(string)) {
+                        mCoinAmount.setText("");
+                        double value = Double.valueOf(string);
+                        if (value > finalMaxAmount) {
+                            mCurrencyAmount.setText(String.valueOf(finalMaxAmount));
+                            mCurrencyAmount.setSelection(mCurrencyAmount.getText().length());
+                        }
+                    }
+                }
+            });
             mClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

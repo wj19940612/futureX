@@ -62,7 +62,6 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     private MyAdAdapter mAdapter;
     private int mPage;
     private boolean isPrepared;
-    private boolean isFirstLoad;
     private int mPageSize = 20;
     private String mCoinType;
     private String mPayCurrency;
@@ -83,7 +82,6 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        isFirstLoad = true;
         View view = inflater.inflate(R.layout.fragment_my_poster, container, false);
         mBind = ButterKnife.bind(this, view);
         isPrepared = true;
@@ -232,10 +230,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
 
     private void lazyLoad() {
         if (isPrepared && getUserVisibleHint()) {
-            if (isFirstLoad) {
-                isFirstLoad = false;
-                otcWaresList(mPage, mPageSize);
-            }
+            otcWaresList(mPage, mPageSize);
         }
     }
 
@@ -350,13 +345,11 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     }
 
     public void refresh(boolean shouldRefresh) {
-        if (!isFirstLoad) {
-            mShouldRefresh = shouldRefresh;
-            if (getUserVisibleHint()) {
-                mPage = 0;
-                otcWaresList(mPage, mPageSize);
-                mShouldRefresh = false;
-            }
+        mShouldRefresh = shouldRefresh;
+        if (getUserVisibleHint()) {
+            mPage = 0;
+            otcWaresList(mPage, mPageSize);
+            mShouldRefresh = false;
         }
     }
 

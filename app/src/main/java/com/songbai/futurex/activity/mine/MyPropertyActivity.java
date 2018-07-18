@@ -86,7 +86,7 @@ public class MyPropertyActivity extends BaseActivity {
         setContentView(R.layout.activity_my_property);
         mBind = ButterKnife.bind(this);
         initView();
-        findCommissionOfSubordinate();
+//        findCommissionOfSubordinate();
     }
 
     private void initView() {

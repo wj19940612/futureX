@@ -133,6 +133,9 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
         });
         mSwipeTarget.setAdapter(mAdapter);
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
+        if (!TextUtils.isEmpty(mCoinType)) {
+            mGetUserFinanceFlowData.setCoinType(mCoinType);
+        }
         getUserFinanceFlow();
     }
 

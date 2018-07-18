@@ -98,10 +98,12 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.aliPay:
                 UniqueActivity.launcher(this, AddPayFragment.class)
+                        .putExtra(ExtraKeys.IS_ALIPAY, true)
                         .execute(this, REQUEST_ADD_PAY);
                 break;
             case R.id.wechatPay:
                 UniqueActivity.launcher(this, AddPayFragment.class)
+                        .putExtra(ExtraKeys.IS_ALIPAY, false)
                         .execute(this, REQUEST_ADD_PAY);
                 break;
             default:

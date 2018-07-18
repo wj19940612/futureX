@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,10 +128,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                new DataParser<Response<Object>>(data) {
+                Log.e("wtf", "onDataReceive: " + dest);
+                new DataParser<Response>(data) {
 
                     @Override
-                    public void onSuccess(Response<Object> resp) {
+                    public void onSuccess(Response resp) {
                     }
                 }.parse();
             }

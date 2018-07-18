@@ -217,8 +217,8 @@
     <string name="transfer_all">Transfer all</string>
     <string name="confirm_transfer">Confirm</string>
     <string name="recharge_coin">Top up</string>
-    <string name="available_amount_space">Available &#160;</string>
-    <string name="freeze_amount_space">Frozen &#160;</string>
+    <string name="available_amount_space">Available\n</string>
+    <string name="freeze_amount_space">Frozen\n</string>
     <string name="recharge_history">Top-up history</string>
     <string name="recharge_amount_coin_x">Top up %1$d&#160;%2$s</string>
     <string name="long_press_to_save_qr_code">Long press to save QR code</string>

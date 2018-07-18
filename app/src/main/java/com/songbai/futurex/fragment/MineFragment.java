@@ -147,6 +147,7 @@ public class MineFragment extends BaseFragment {
                     .circleCrop()
                     .into(mHeadPortrait);
             mUserName.setText(userInfo.getUserName());
+            mAuthenticationStatus.setVisibility(View.VISIBLE);
             int authenticationStatus = userInfo.getAuthenticationStatus();
             if (authenticationStatus == AuthenticationStatus.AUTHENTICATION_PRIMARY
                     || authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_GOING
@@ -174,6 +175,7 @@ public class MineFragment extends BaseFragment {
             mLogin.setVisibility(View.VISIBLE);
             mUserInfoGroup.setVisibility(View.GONE);
             setUnreadMessageCount(0);
+            mAuthenticationStatus.setVisibility(View.GONE);
         }
     }
 

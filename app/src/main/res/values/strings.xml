@@ -225,8 +225,8 @@
     <string name="confirm_transfer">确认划转</string>
     <string name="transfer_success">划转成功</string>
     <string name="recharge_coin">充币</string>
-    <string name="available_amount_space">可用&#160;</string>
-    <string name="freeze_amount_space">冻结&#160;</string>
+    <string name="available_amount_space">可用\n</string>
+    <string name="freeze_amount_space">冻结\n</string>
     <string name="recharge_history">历史充值</string>
     <string name="recharge_amount_coin_x">充值%1$d&#160;%2$s</string>
     <string name="long_press_to_save_qr_code">长按保存二维码</string>
