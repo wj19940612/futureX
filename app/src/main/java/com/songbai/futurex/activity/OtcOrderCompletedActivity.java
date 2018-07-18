@@ -15,6 +15,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -107,13 +108,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         mTradeAmount.setText(getString(R.string.order_detail_amount_x,
                 order.getOrderCount(),
                 order.getCoinSymbol().toUpperCase()));
-        mOrderNo.setText(getString(R.string.pound_sign_x,order.getOrderId()));
-        GlideApp
-                .with(this)
-                .load(order.getBuyerPortrait())
-                .circleCrop()
-                .into(mHeadPortrait);
-        mUserName.setText(order.getBuyerName());
+        mOrderNo.setText(getString(R.string.pound_sign_x, order.getOrderId()));
         switch (order.getStatus()) {
             case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
@@ -135,12 +130,14 @@ public class OtcOrderCompletedActivity extends BaseActivity {
                 .circleCrop()
                 .into(mHeadPortrait);
         int authStatus = waresUserInfo.getAuthStatus();
-        mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
+        mCertification.setVisibility(authStatus > AuthenticationStatus.AUTHENTICATION_NONE ? View.VISIBLE : View.GONE);
         switch (authStatus) {
-            case 1:
+            case AuthenticationStatus.AUTHENTICATION_PRIMARY:
+            case AuthenticationStatus.AUTHENTICATION_SENIOR_GOING:
+            case AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL:
                 mCertification.setImageResource(R.drawable.ic_primary_star);
                 break;
-            case 2:
+            case AuthenticationStatus.AUTHENTICATION_SENIOR:
                 mCertification.setImageResource(R.drawable.ic_senior_star);
                 break;
             default:

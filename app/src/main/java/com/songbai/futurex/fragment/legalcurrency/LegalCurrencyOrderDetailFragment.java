@@ -24,10 +24,12 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OtcChatMessage;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -38,6 +40,7 @@ import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.otc.OtcProcessor;
 
@@ -121,27 +124,45 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         otcWaresMine();
         orderPayInfo();
         initSocketListener();
-        initEntrustPush();
+        initMsgPush();
     }
 
     private void initSocketListener() {
         mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                Log.e("wtf", "onDataReceive: " + dest);
-                new DataParser<Response>(data) {
+                Log.e("wtf", "onSuccess: wtf" );
+                if (PushDestUtils.isOtcChat(mOrderId, dest)) {
+                    new DataParser<Response<OtcChatMessage>>(data) {
 
-                    @Override
-                    public void onSuccess(Response resp) {
-                    }
-                }.parse();
+                        @Override
+                        public void onSuccess(Response<OtcChatMessage> resp) {
+                            OtcChatMessage otcChatMessage = resp.getContent();
+                            if (otcChatMessage.getDirection() == mTradeDirection) {
+                                return;
+                            }
+                        }
+                    }.parse();
+                }
             }
         });
         mOtcProcessor.resume();
     }
 
-    private void initEntrustPush() {
-        mOtcProcessor.registerEntrust();
+    private void initMsgPush() {
+        mOtcProcessor.registerMsg(mOrderId);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mOtcProcessor.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mOtcProcessor.pause();
     }
 
     private void otcOrderDetail() {
@@ -227,12 +248,14 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 .circleCrop()
                 .into(mHeadPortrait);
         int authStatus = waresUserInfo.getAuthStatus();
-        mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
+        mCertification.setVisibility(authStatus > AuthenticationStatus.AUTHENTICATION_NONE ? View.VISIBLE : View.GONE);
         switch (authStatus) {
-            case 1:
+            case AuthenticationStatus.AUTHENTICATION_PRIMARY:
+            case AuthenticationStatus.AUTHENTICATION_SENIOR_GOING:
+            case AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL:
                 mCertification.setImageResource(R.drawable.ic_primary_star);
                 break;
-            case 2:
+            case AuthenticationStatus.AUTHENTICATION_SENIOR:
                 mCertification.setImageResource(R.drawable.ic_senior_star);
                 break;
             default:
@@ -356,7 +379,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
-        mOtcProcessor.pause();
+        mOtcProcessor.unregisterMsg(mOrderId);
     }
 
     @OnClick({R.id.sellerInfo, R.id.bankEmptyView, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})

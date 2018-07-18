@@ -33,4 +33,12 @@ public class PushDestUtils {
     public static boolean isCustomerChat(String dest) {
         return IMParam.CHAT.equals(dest);
     }
+
+    public static boolean isServiceOnline(String dest) {
+        return IMParam.CUSOOFFLINE.equals(dest);
+    }
+
+    public static boolean isServiceOffline(String dest) {
+        return IMParam.CUSOONLINE.equals(dest);
+    }
 }

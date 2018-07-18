@@ -34,6 +34,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.LegalCurrencyTrade;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
@@ -180,9 +181,10 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         if (mPage == 0) {
                             mRecyclerView.hideAll(false);
                         }
-                        mPage++;
-                        mGetOtcWaresHome.setPage(mPage);
-                        if (mPage >= resp.getData().getTotal()) {
+                        if (mPage < resp.getData().getTotal() - 1) {
+                            mPage++;
+                            mGetOtcWaresHome.setPage(mPage);
+                        } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                     }
@@ -274,6 +276,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
             @Override
             public void onConfirmClick(String coinAmount, String currencyAmout, String cashPwd) {
+                if (mOnBuyOrSell) {
+                    return;
+                }
                 mOnBuyOrSell = true;
                 if (type == OTCOrderStatus.ORDER_DIRECT_SELL) {
                     otcOrderBuy(legalCurrencyTrade.getId(), currencyAmout, coinAmount);
@@ -296,11 +301,11 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 .callback(new Callback<Resp<Integer>>() {
                     @Override
                     protected void onRespSuccess(Resp<Integer> resp) {
-                        mOnBuyOrSell = false;
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
-                        if (resp != null) {
+                        mOnBuyOrSell = false;
+                        if (resp != null && resp.getData() != null) {
                             UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, resp.getData())
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
@@ -310,6 +315,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
+                        mOnBuyOrSell = false;
                         int code = failedResp.getCode();
                         if (code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
                                 || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
@@ -329,7 +335,8 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
-                        if (resp != null) {
+                        mOnBuyOrSell = false;
+                        if (resp != null && resp.getData() != null) {
                             UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, resp.getData())
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_SELL)
@@ -339,6 +346,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
+                        mOnBuyOrSell = false;
                         int code = failedResp.getCode();
                         if (code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
                                 || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
@@ -615,12 +623,14 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         .circleCrop()
                         .into(mHeadPortrait);
                 int authStatus = legalCurrencyTrade.getAuthStatus();
-                mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
+                mCertification.setVisibility(authStatus > AuthenticationStatus.AUTHENTICATION_NONE ? View.VISIBLE : View.GONE);
                 switch (authStatus) {
-                    case 1:
+                    case AuthenticationStatus.AUTHENTICATION_PRIMARY:
+                    case AuthenticationStatus.AUTHENTICATION_SENIOR_GOING:
+                    case AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL:
                         mCertification.setImageResource(R.drawable.ic_primary_star);
                         break;
-                    case 2:
+                    case AuthenticationStatus.AUTHENTICATION_SENIOR:
                         mCertification.setImageResource(R.drawable.ic_senior_star);
                         break;
                     default:

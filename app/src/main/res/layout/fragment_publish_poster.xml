@@ -38,14 +38,19 @@
 
         <TextView
             android:id="@+id/preview"
-            android:layout_width="50dp"
-            android:layout_height="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="20dp"
             android:background="@drawable/btn_primary_r100"
             android:enabled="false"
             android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingBottom="2dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
             android:text="@string/preview"
             android:textColor="@color/white"
             android:textSize="15sp"/>
@@ -279,7 +284,7 @@
                     android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
-                <TextView
+                <com.songbai.futurex.view.autofit.AutofitTextView
                     android:id="@+id/payType"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -375,6 +380,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
                 android:visibility="gone">
 
                 <TextView
@@ -387,7 +393,7 @@
                     android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
-                <TextView
+                <com.songbai.futurex.view.autofit.AutofitTextView
                     android:id="@+id/primaryCertification"
                     android:layout_width="0dp"
                     android:layout_height="36dp"
@@ -397,7 +403,7 @@
                     android:gravity="center"
                     android:text="@string/primary_certification"/>
 
-                <TextView
+                <com.songbai.futurex.view.autofit.AutofitTextView
                     android:id="@+id/seniorCertification"
                     android:layout_width="0dp"
                     android:layout_height="36dp"
@@ -414,6 +420,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
                 android:visibility="gone">
 
                 <TextView
@@ -500,12 +507,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical">
 
                 <LinearLayout
                     android:id="@+id/confirmRulesGroup"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:id="@+id/check"

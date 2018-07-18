@@ -84,6 +84,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         PushAgent.getInstance(this).onAppStart();
         SysTime.getSysTime().sync();
         MessageProcessor.get().connect();
+        setLanguage();
     }
 
     @Override

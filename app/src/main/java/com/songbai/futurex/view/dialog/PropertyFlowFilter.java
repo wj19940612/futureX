@@ -435,7 +435,7 @@ public class PropertyFlowFilter {
     public void setSelectedTime(View view, Date date) {
         TextView textView = (TextView) view;
         textView.setText(DateUtil.format(date.getTime(), DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
-        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         switch (view.getId()) {
             case R.id.startTime:
                 mTempStartTime = DateUtil.format(date.getTime(), DateUtil.FORMAT_UTZ_STANDARD);

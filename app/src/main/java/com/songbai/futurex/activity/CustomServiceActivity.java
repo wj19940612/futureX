@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CustomerService;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.CustomServiceInfo;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Network;
@@ -170,6 +172,15 @@ public class CustomServiceActivity extends BaseActivity {
                         }
                     }
                 }.parse();
+                new DataParser<Response<CustomServiceInfo>>(data) {
+
+                    @Override
+                    public void onSuccess(Response<CustomServiceInfo> customServiceChatResponse) {
+                        if (PushDestUtils.isServiceOnline(dest)||PushDestUtils.isServiceOffline(dest)) {
+                            Log.e("wtf", "onSuccess: 下线了" );
+                        }
+                    }
+                }.parse();
             }
         });
         mIMProcessor.resume();
@@ -182,6 +193,8 @@ public class CustomServiceActivity extends BaseActivity {
 
     private void initImPush() {
         mIMProcessor.registerMsg();
+        mIMProcessor.registerOffline();
+        mIMProcessor.registerOnline();
     }
 
     private void showKeyboard() {
@@ -288,7 +301,7 @@ public class CustomServiceActivity extends BaseActivity {
     private void sendMsg() {
         if (!Network.isNetworkAvailable()) {
             ToastUtil.show(R.string.http_error_network);
-        }  else if (mEditText.getText().length() > 500) {
+        } else if (mEditText.getText().length() > 500) {
             ToastUtil.show(R.string.over_500);
         } else if (!TextUtils.isEmpty(mEditText.getText().toString().trim())) {
             requestSendTxtMsg(mEditText.getText().toString());

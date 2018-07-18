@@ -106,11 +106,10 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
-                        mPage++;
-                        if (resp.getData().getTotal() <= mPage) {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                        if (mPage < resp.getData().getTotal() - 1) {
+                            mPage++;
                         } else {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                         if (page == 0) {
                             mRecyclerView.hideAll(false);

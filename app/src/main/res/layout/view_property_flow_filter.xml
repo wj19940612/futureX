@@ -112,14 +112,13 @@
             android:textColor="@color/text22"
             android:textSize="15sp"/>
 
-        <com.songbai.futurex.view.ScaleTextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/startTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/bg_f5_r4"
-            android:drawableLeft="@drawable/ic_history_calendar"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingLeft="15dp"
             android:textColor="@color/text22"
             android:textSize="13sp"/>
@@ -133,15 +132,14 @@
             android:textColor="@color/text22"
             android:textSize="15sp"/>
 
-        <com.songbai.futurex.view.ScaleTextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/endTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="25dp"
             android:layout_weight="1"
             android:background="@drawable/bg_f5_r4"
-            android:drawableLeft="@drawable/ic_history_calendar"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingLeft="15dp"
             android:textColor="@color/text22"
             android:textSize="13sp"/>

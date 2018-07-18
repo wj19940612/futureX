@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
@@ -222,6 +223,10 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
             if (!mRequested) {
                 otcWaresList(mPage, mPageSize);
             }
+            if (Preference.get().getPosterListRefresh()) {
+                otcWaresList(mPage, mPageSize);
+                Preference.get().setPosterListRefresh(false);
+            }
         }
         if (isVisibleToUser && isPrepared && mPairChanged) {
             otcWaresList(mPage, mPageSize);
@@ -250,10 +255,18 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         if (!mRequested) {
             otcWaresList(mPage, mPageSize);
         }
+        if (Preference.get().getPosterListRefresh()) {
+            otcWaresList(mPage, mPageSize);
+            Preference.get().setPosterListRefresh(false);
+        }
     }
 
     private void otcWaresList(int page, int pageSize) {
         if (!LocalUser.getUser().isLogin()) {
+            mPage = 0;
+            mAdapter.getList().clear();
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.hideAll(false);
             return;
         }
         mRequested = true;
@@ -271,8 +284,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         if (mPage == 0) {
                             mRecyclerView.hideAll(false);
                         }
-                        mPage++;
-                        if (mPage >= resp.getData().getTotal()) {
+                        if (mPage < resp.getData().getTotal() - 1) {
+                            mPage++;
+                        } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                     }

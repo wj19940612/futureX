@@ -253,8 +253,9 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                                     mSwipeTarget.hideAll(false);
                                     mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
                                 }
-                                mPage++;
-                                if (mPage >= resp.getData().getTotal()) {
+                                if (mPage < resp.getData().getTotal() - 1) {
+                                    mPage++;
+                                } else {
                                     mSwipeToLoadLayout.setLoadMoreEnabled(false);
                                 }
                             }
@@ -273,8 +274,9 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                                     mSwipeTarget.hideAll(false);
                                     mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
                                 }
-                                mPage++;
-                                if (mPage >= resp.getData().getTotal()) {
+                                if (mPage < resp.getData().getTotal() - 1) {
+                                    mPage++;
+                                } else {
                                     mSwipeToLoadLayout.setLoadMoreEnabled(false);
                                 }
                             }
@@ -293,8 +295,9 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                                     mSwipeTarget.hideAll(false);
                                     mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
                                 }
-                                mPage++;
-                                if (mPage >= resp.getData().getTotal()) {
+                                if (mPage < resp.getData().getTotal() - 1) {
+                                    mPage++;
+                                } else {
                                     mSwipeToLoadLayout.setLoadMoreEnabled(false);
                                 }
                             }
