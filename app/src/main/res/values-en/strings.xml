@@ -578,7 +578,7 @@
     <string name="entrust_price_x">Order price (%1$s)</string>
     <string name="entrust_volume_x">Order amount (%1$s)</string>
     <string name="actual_deal_x">Filled (%1$s)</string>
-    <string name="deal_total_amt_x">Filled amount (%1$s)</string>
+    <string name="deal_total_amt_x">total(%1$s)</string>
     <string name="deal_average_price_x">Filled price (%1$s)</string>
     <string name="deal_volume_x">Volume (%1$s)</string>
     <string name="revoked">Cancelled</string>

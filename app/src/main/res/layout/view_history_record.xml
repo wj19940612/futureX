@@ -27,6 +27,8 @@
         android:gravity="center"
         android:minHeight="18dp"
         android:minWidth="68dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:text="@string/clear_record"
         android:textColor="@color/text99"
         android:textSize="13sp"
