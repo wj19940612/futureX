@@ -28,13 +28,16 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CustomerService;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.CustomServiceInfo;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.ThumbTransform;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.image.ImageUtils;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.dialog.MsgHintController;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
@@ -78,11 +81,12 @@ public class CustomServiceActivity extends BaseActivity {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
             if (availableNetworkType > Network.NET_NONE) {
-//                initImPush();
-//                loadData();
+//                registerImPush();
+//                loadServiceData();
             }
         }
     };
+    private CustomerService mCustomerService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,11 +94,9 @@ public class CustomServiceActivity extends BaseActivity {
         setContentView(R.layout.activity_custom_service);
         ButterKnife.bind(this);
         initView();
-        loadData();
+        loadServiceData();
         initSocketListener();
-        if (LocalUser.getUser().isLogin()) {
-            initImPush();
-        }
+        registerImPush();
         Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
@@ -103,6 +105,7 @@ public class CustomServiceActivity extends BaseActivity {
         super.onResume();
         startScheduleJobRightNow(30 * 1000);
         chatOnline();
+        mIMProcessor.resume();
     }
 
     @Override
@@ -115,15 +118,21 @@ public class CustomServiceActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
+        mIMProcessor.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mIMProcessor != null) {
-            mIMProcessor.pause();
-        }
+        unregisterImPush();
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+    }
+
+    private void unregisterImPush() {
+        if (mIMProcessor != null) {
+            mIMProcessor.unregisterMsg();
+            mIMProcessor.unregisterOffline();
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -155,33 +164,60 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     private void initSocketListener() {
-        //初始化推送回调
         mIMProcessor = new IMProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, final String dest) {
-                new DataParser<Response<CustomServiceChat>>(data) {
+                if (PushDestUtils.isCustomerChat(dest)) {
+                    new DataParser<Response<CustomServiceChat>>(data) {
 
-                    @Override
-                    public void onSuccess(Response<CustomServiceChat> customServiceChatResponse) {
-                        if (PushDestUtils.isCustomerChat(dest)) {
+                        @Override
+                        public void onSuccess(Response<CustomServiceChat> customServiceChatResponse) {
                             mCustomServiceChats.add(customServiceChatResponse.getContent());
                             mChatAdapter.notifyDataSetChanged();
                             updateRecyclerViewPosition(true);
                         }
-                    }
-                }.parse();
+                    }.parse();
+                } else if (PushDestUtils.isServiceOffline(dest)) {
+                    new DataParser<Response<CustomServiceInfo>>(data) {
+
+                        @Override
+                        public void onSuccess(Response<CustomServiceInfo> customServiceChatResponse) {
+                            if (mCustomerService != null) {
+                                if (mCustomerService.getId() == customServiceChatResponse.getContent().getId()) {
+                                    showChangeServiceDialog();
+                                }
+                            }
+                        }
+                    }.parse();
+                }
             }
         });
-        mIMProcessor.resume();
+    }
+
+    private void showChangeServiceDialog() {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                unregisterImPush();
+                loadServiceData();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setConfirmText(R.string.confirm);
+        withDrawPsdViewController.setMsg(R.string.current_service_is_offline_change_service);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     private void initAll() {
-        loadData();
-        initImPush();
+        loadServiceData();
+        registerImPush();
     }
 
-    private void initImPush() {
+    private void registerImPush() {
         mIMProcessor.registerMsg();
+        mIMProcessor.registerOffline();
     }
 
     private void showKeyboard() {
@@ -199,17 +235,20 @@ public class CustomServiceActivity extends BaseActivity {
         }
     }
 
-    private void loadData() {
+    private void loadServiceData() {
         Apic.chat().tag(TAG).callback(new Callback<Resp<CustomerService>>() {
             @Override
             protected void onRespSuccess(Resp<CustomerService> resp) {
                 updateCustomerService(resp.getData());
+                registerImPush();
+                chatOnline();
             }
         }).fireFreely();
     }
 
     private void updateCustomerService(CustomerService data) {
         if (data != null) {
+            mCustomerService = data;
             updateStatus(data);
             mChatAdapter.setCustomerService(data);
             loadHistoryData(data);
@@ -288,7 +327,7 @@ public class CustomServiceActivity extends BaseActivity {
     private void sendMsg() {
         if (!Network.isNetworkAvailable()) {
             ToastUtil.show(R.string.http_error_network);
-        }  else if (mEditText.getText().length() > 500) {
+        } else if (mEditText.getText().length() > 500) {
             ToastUtil.show(R.string.over_500);
         } else if (!TextUtils.isEmpty(mEditText.getText().toString().trim())) {
             requestSendTxtMsg(mEditText.getText().toString());

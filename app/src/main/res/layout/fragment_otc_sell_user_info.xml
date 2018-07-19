@@ -77,21 +77,21 @@
             tools:text="注册时间：2017-11-11"/>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/primaryCertification"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/bg_seller_certification_item">
+        android:background="@drawable/bg_seller_certification_item"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.songbai.futurex.view.autofit.AutofitTextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:layout_weight="1"
             android:text="@string/primary_certification"
             android:textColor="@color/text22"
             android:textSize="15sp"/>
@@ -100,31 +100,29 @@
             android:id="@+id/primaryCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/ic_common_checkmark"
             android:drawablePadding="3dp"
             android:text="@string/certificated"
             android:textColor="@color/text99"
             android:textSize="13sp"/>
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/seniorCertification"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_seller_certification_item">
+        android:background="@drawable/bg_seller_certification_item"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.songbai.futurex.view.autofit.AutofitTextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:layout_weight="1"
             android:text="@string/senior_certification"
             android:textColor="@color/text22"
             android:textSize="15sp"/>
@@ -133,31 +131,29 @@
             android:id="@+id/seniorCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/ic_common_checkmark"
             android:drawablePadding="3dp"
             android:text="@string/certificated"
             android:textColor="@color/text99"
             android:textSize="13sp"/>
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/mailCertification"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_seller_certification_item">
+        android:background="@drawable/bg_seller_certification_item"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.songbai.futurex.view.autofit.AutofitTextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:layout_weight="1"
             android:text="@string/mail_certification"
             android:textColor="@color/text22"
             android:textSize="15sp"/>
@@ -166,31 +162,29 @@
             android:id="@+id/mailCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/ic_common_checkmark"
             android:drawablePadding="3dp"
             android:text="@string/certificated"
             android:textColor="@color/text99"
             android:textSize="13sp"/>
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/phoneCertification"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_seller_certification_item">
+        android:background="@drawable/bg_seller_certification_item"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.songbai.futurex.view.autofit.AutofitTextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:layout_weight="1"
             android:text="@string/phone_certification"
             android:textColor="@color/text22"
             android:textSize="15sp"/>
@@ -199,14 +193,12 @@
             android:id="@+id/phoneCertificationState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/ic_common_checkmark"
             android:drawablePadding="3dp"
             android:text="@string/certificated"
             android:textColor="@color/text99"
             android:textSize="13sp"/>
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

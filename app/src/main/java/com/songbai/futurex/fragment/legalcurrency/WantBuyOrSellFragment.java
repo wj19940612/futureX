@@ -34,6 +34,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.LegalCurrencyTrade;
 import com.songbai.futurex.model.local.GetOtcWaresHome;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.model.status.PayType;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
@@ -82,6 +83,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
     private boolean isPrepared;
     private boolean mPairChanged;
     private SmartDialog mSmartDialog;
+    private boolean mOnBuyOrSell;
 
     public static WantBuyOrSellFragment newInstance(int type, String coinType, String payCurrency) {
         WantBuyOrSellFragment wantBuyOrSellFragment = new WantBuyOrSellFragment();
@@ -179,9 +181,10 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         if (mPage == 0) {
                             mRecyclerView.hideAll(false);
                         }
-                        mPage++;
-                        mGetOtcWaresHome.setPage(mPage);
-                        if (mPage >= resp.getData().getTotal()) {
+                        if (mPage < resp.getData().getTotal() - 1) {
+                            mPage++;
+                            mGetOtcWaresHome.setPage(mPage);
+                        } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                     }
@@ -270,8 +273,13 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
         buyOrSellController.setData(legalCurrencyTrade);
         buyOrSellController.setType(type);
         buyOrSellController.setOnConfirmClickListener(new BuyOrSellController.OnConfirmClickListener() {
+
             @Override
             public void onConfirmClick(String coinAmount, String currencyAmout, String cashPwd) {
+                if (mOnBuyOrSell) {
+                    return;
+                }
+                mOnBuyOrSell = true;
                 if (type == OTCOrderStatus.ORDER_DIRECT_SELL) {
                     otcOrderBuy(legalCurrencyTrade.getId(), currencyAmout, coinAmount);
                 } else if (type == OTCOrderStatus.ORDER_DIRECT_BUY) {
@@ -296,14 +304,18 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
-                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
-                                .execute();
+                        mOnBuyOrSell = false;
+                        if (resp != null && resp.getData() != null) {
+                            UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, resp.getData())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
+                                    .execute();
+                        }
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
+                        mOnBuyOrSell = false;
                         int code = failedResp.getCode();
                         if (code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
                                 || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
@@ -323,14 +335,18 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
-                        UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, resp.getData())
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_SELL)
-                                .execute();
+                        mOnBuyOrSell = false;
+                        if (resp != null && resp.getData() != null) {
+                            UniqueActivity.launcher(WantBuyOrSellFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, resp.getData())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_SELL)
+                                    .execute();
+                        }
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
+                        mOnBuyOrSell = false;
                         int code = failedResp.getCode();
                         if (code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
                                 || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
@@ -452,8 +468,8 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             mCurrencySymbol.setText(payCurrency.toUpperCase());
             double maxNum = Double.valueOf(mData.getChangeCount());
             maxNum = Math.min(maxNum, maxTurnover / mData.getFixedPrice());
-            mCoinAmount.setHint(mContext.getString(mType == OTCOrderStatus.ORDER_DIRECT_SELL ? R.string.max_buy_amount : R.string.max_sell_amount, FinanceUtil.formatWithScale(maxNum, 6)));
-            mCoinAmount.setFilters(new InputFilter[]{new MoneyValueFilter(mContext).setDigits(6)});
+            mCoinAmount.setHint(mContext.getString(mType == OTCOrderStatus.ORDER_DIRECT_SELL ? R.string.max_buy_amount : R.string.max_sell_amount, FinanceUtil.formatWithScale(maxNum, 8)));
+            mCoinAmount.setFilters(new InputFilter[]{new MoneyValueFilter(mContext).setDigits(8)});
             final double finalMaxNum = maxNum;
             mCoinAmount.addTextChangedListener(new ValidationWatcher() {
                 @Override
@@ -462,23 +478,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                     if (!TextUtils.isEmpty(string)) {
                         mCurrencyAmount.setText("");
                         double value = Double.valueOf(string);
-                        if (value > finalMaxNum) {
-                            mCoinAmount.setText(FinanceUtil.formatWithScale(finalMaxNum, 6));
+                        if (value > Double.valueOf(FinanceUtil.formatWithScale(finalMaxNum, 8))) {
+                            mCoinAmount.setText(FinanceUtil.formatWithScale(finalMaxNum, 8));
                             mCoinAmount.setSelection(mCoinAmount.getText().length());
-                        }
-                    }
-                }
-            });
-            mCurrencyAmount.addTextChangedListener(new ValidationWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    String string = mCurrencyAmount.getText().toString();
-                    if (!TextUtils.isEmpty(string)) {
-                        mCoinAmount.setText("");
-                        double value = Double.valueOf(string);
-                        if (value > maxTurnover) {
-                            mCurrencyAmount.setText(String.valueOf(maxTurnover));
-                            mCurrencyAmount.setSelection(mCurrencyAmount.getText().length());
                         }
                     }
                 }
@@ -486,6 +488,21 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             double maxAmount = maxTurnover;
             maxAmount = Math.min(maxAmount, Double.valueOf(mData.getChangeCount()) * mData.getFixedPrice());
             mCurrencyAmount.setHint(mContext.getString(R.string.max_buy_amount, FinanceUtil.formatWithScale(maxAmount)));
+            final double finalMaxAmount = maxAmount;
+            mCurrencyAmount.addTextChangedListener(new ValidationWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String string = mCurrencyAmount.getText().toString();
+                    if (!TextUtils.isEmpty(string)) {
+                        mCoinAmount.setText("");
+                        double value = Double.valueOf(string);
+                        if (value > finalMaxAmount) {
+                            mCurrencyAmount.setText(String.valueOf(finalMaxAmount));
+                            mCurrencyAmount.setSelection(mCurrencyAmount.getText().length());
+                        }
+                    }
+                }
+            });
             mClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -606,12 +623,14 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         .circleCrop()
                         .into(mHeadPortrait);
                 int authStatus = legalCurrencyTrade.getAuthStatus();
-                mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
+                mCertification.setVisibility(authStatus > AuthenticationStatus.AUTHENTICATION_NONE ? View.VISIBLE : View.GONE);
                 switch (authStatus) {
-                    case 1:
+                    case AuthenticationStatus.AUTHENTICATION_PRIMARY:
+                    case AuthenticationStatus.AUTHENTICATION_SENIOR_GOING:
+                    case AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL:
                         mCertification.setImageResource(R.drawable.ic_primary_star);
                         break;
-                    case 2:
+                    case AuthenticationStatus.AUTHENTICATION_SENIOR:
                         mCertification.setImageResource(R.drawable.ic_senior_star);
                         break;
                     default:

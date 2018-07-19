@@ -10,6 +10,8 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
 
+import java.math.BigDecimal;
+
 /**
  * @author yangguangda
  * @date 2018/6/26
@@ -92,7 +94,7 @@ public class MoneyValueFilter extends DigitsKeyListener {
         //验证输入金额的最大值
         if (mFilterMax && !"".equals(source.toString())) {
             if (!source.toString().equals(MINUS_SIGN) && !source.toString().equals(PLUS_SIGN)) {
-                double dold = Double.parseDouble(dest.toString() + source.toString());
+                double dold = new BigDecimal(dest.toString() + source.toString()).doubleValue();
                 if (dold > mMaxValue) {
                     ToastUtil.show(mContext.getString(R.string.max_can_not_greater_than, FinanceUtil.trimTrailingZero(mMaxValue)));
                     return dest.subSequence(dstart, dend);
@@ -108,7 +110,7 @@ public class MoneyValueFilter extends DigitsKeyListener {
         //验证输入金额的最小值
         if (mFilterMin && !"".equals(source.toString())) {
             if (!source.toString().equals(MINUS_SIGN) && !source.toString().equals(PLUS_SIGN)) {
-                double dold = Double.parseDouble(dest.toString() + source.toString());
+                double dold = new BigDecimal(dest.toString() + source.toString()).doubleValue();
                 if (dold < mMinValue) {
                     ToastUtil.show(mContext.getString(R.string.min_can_not_less_than, FinanceUtil.trimTrailingZero(mMinValue)));
                     return dest.subSequence(dstart, dend);

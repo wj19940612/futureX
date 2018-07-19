@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/accountType"
         tools:text="@string/total_property_equivalent"/>
 
-    <com.songbai.futurex.view.ScaleTextView
+    <com.songbai.futurex.view.autofit.AutofitTextView
         android:id="@+id/propertyAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

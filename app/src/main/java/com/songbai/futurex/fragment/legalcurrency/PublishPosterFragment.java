@@ -20,10 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.CustomListener;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.google.gson.Gson;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
@@ -54,6 +50,7 @@ import com.songbai.futurex.view.dialog.PayTypeController;
 import com.songbai.futurex.view.dialog.PosterPreviewController;
 import com.songbai.futurex.view.dialog.PriceTypeController;
 import com.songbai.futurex.view.dialog.RemarkInputController;
+import com.songbai.futurex.view.dialog.SelectAreaCodesViewController;
 import com.songbai.futurex.view.dialog.TradeLimitController;
 import com.songbai.futurex.view.popup.WaresPairFilter;
 
@@ -142,8 +139,8 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     private ArrayList<CountryCurrency> mCountryCurrencies;
     private double mQuotaPrice;
     private List<AreaCode> mAreaCodes;
-    private OptionsPickerView mPvOptions;
     private String mBalance;
+    private SelectAreaCodesViewController mSelectAreaCodesViewController;
 
     @Nullable
     @Override
@@ -700,48 +697,21 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     }
 
     private void showAreaCodeSelector() {
-        if (mAreaCodes == null || mAreaCodes.isEmpty()) {
-            return;
+        if (mSelectAreaCodesViewController == null) {
+            mSelectAreaCodesViewController = new SelectAreaCodesViewController(getContext(),
+                    new SelectAreaCodesViewController.OnSelectListener() {
+                        @Override
+                        public void onSelect(AreaCode areaCode) {
+                            mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode.getTeleCode()));
+                        }
+                    });
+            mSelectAreaCodesViewController.setAreaCodeList(mAreaCodes);
         }
-        final ArrayList<String> codes = new ArrayList<>();
-        for (AreaCode code : mAreaCodes) {
-            codes.add(code.getTeleCode());
-        }
-        mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                String areaCode = codes.get(options1);
-                mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode));
-                mWaresModel.setAreaCode(areaCode);
-            }
-        })
-                .setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
-                    @Override
-                    public void customLayout(View v) {
-                        TextView cancel = v.findViewById(R.id.cancel);
-                        TextView confirm = v.findViewById(R.id.confirm);
-                        cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPvOptions.dismiss();
-                            }
-                        });
-                        confirm.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPvOptions.returnData();
-                                mPvOptions.dismiss();
-                            }
-                        });
-                    }
-                })
-                .setCyclic(false, false, false)
-                .setTextColorCenter(ContextCompat.getColor(getContext(), R.color.text22))
-                .setTextColorOut(ContextCompat.getColor(getContext(), R.color.text99))
-                .setDividerColor(ContextCompat.getColor(getContext(), R.color.bgDD))
-                .build();
-        mPvOptions.setPicker(codes, null, null);
-        mPvOptions.show();
+        SmartDialog.with(getActivity()).setCustomViewController(mSelectAreaCodesViewController)
+                .setWindowGravity(Gravity.BOTTOM)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setWidthScale(1)
+                .show();
     }
 
     private void showPreview(OtcWarePoster otcWarePoster) {

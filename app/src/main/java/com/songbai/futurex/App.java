@@ -3,6 +3,7 @@ package com.songbai.futurex;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
 
 import com.sbai.httplib.ReqLogger;
@@ -24,6 +25,14 @@ import java.util.Locale;
 public class App extends Application {
 
     private static Context sContext;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        if (sContext != null) {
+            sContext=this;
+        }
+        super.attachBaseContext(LanguageUtils.attachBaseContext(base, LanguageUtils.getUserLocale(base)));
+    }
 
     @Override
     public void onCreate() {
@@ -54,6 +63,16 @@ public class App extends Application {
             }
         });
         processCaughtException();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        onLanguageChange();
+    }
+
+    private void onLanguageChange() {
+        setLanguage();
     }
 
     private void setLanguage() {

@@ -20,6 +20,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.utils.OnRVItemClickListener;
@@ -174,9 +175,26 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
 
     @OnClick(R.id.addGathering)
     public void onViewClicked() {
-        UniqueActivity.launcher(this, SelectPayTypeFragment.class)
-                .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
-                .execute(this, REQUEST_SELECT_PAY);
+        if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+            MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+                @Override
+                public void onConfirmClick() {
+                    UniqueActivity.launcher(LegalCurrencyPayFragment.this, CashPwdFragment.class)
+                            .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
+                            .execute();
+                }
+            });
+            SmartDialog smartDialog = SmartDialog.solo(getActivity());
+            smartDialog.setCustomViewController(withDrawPsdViewController)
+                    .show();
+            withDrawPsdViewController.setConfirmText(R.string.go_to_set);
+            withDrawPsdViewController.setMsg(R.string.set_draw_cash_pwd_hint);
+            withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
+        } else {
+            UniqueActivity.launcher(this, SelectPayTypeFragment.class)
+                    .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
+                    .execute(this, REQUEST_SELECT_PAY);
+        }
     }
 
     static class LegalCurrencyPayAdapter extends RecyclerView.Adapter {

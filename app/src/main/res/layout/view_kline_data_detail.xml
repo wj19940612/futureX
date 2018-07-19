@@ -5,89 +5,85 @@
     android:layout_width="match_parent"
     android:layout_height="36dp"
     android:layout_marginLeft="20dp"
+    android:orientation="vertical"
     android:paddingTop="6dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/openPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:maxLines="1"
             android:textColor="@color/text66"
             android:textSize="10sp"
             tools:text="@string/open_price_x"/>
 
         <TextView
-            android:id="@+id/tradeVolume"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:maxLines="1"
-            android:textColor="@color/text66"
-            android:textSize="10sp"
-            tools:text="@string/trade_volume_x"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
             android:id="@+id/highestPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:maxLines="1"
             android:textColor="@color/text66"
             android:textSize="10sp"
             tools:text="@string/highest_price_x"/>
 
         <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
+            android:id="@+id/lowestPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textColor="@color/text66"
+            android:textSize="10sp"
+            tools:text="@string/lowest_price_x"/>
+
+
+        <TextView
+            android:id="@+id/closePrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textColor="@color/text66"
+            android:textSize="10sp"
+            tools:text="@string/close_price_x"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tradeVolume"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textColor="@color/text66"
+            android:textSize="10sp"
+            tools:text="@string/trade_volume_x"/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
             android:maxLines="1"
             android:textColor="@color/text66"
             android:textSize="10sp"
             tools:text="2018/06/15 07:00"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/lowestPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textColor="@color/text66"
-            android:textSize="10sp"
-            tools:text="@string/lowest_price_x"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/closePrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textColor="@color/text66"
-            android:textSize="10sp"
-            tools:text="@string/close_price_x"/>
-    </LinearLayout>
 </LinearLayout>

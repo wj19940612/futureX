@@ -225,8 +225,8 @@
     <string name="confirm_transfer">确认划转</string>
     <string name="transfer_success">划转成功</string>
     <string name="recharge_coin">充币</string>
-    <string name="available_amount_space">可用&#160;</string>
-    <string name="freeze_amount_space">冻结&#160;</string>
+    <string name="available_amount_space">可用\n</string>
+    <string name="freeze_amount_space">冻结\n</string>
     <string name="recharge_history">历史充值</string>
     <string name="recharge_amount_coin_x">充值%1$d&#160;%2$s</string>
     <string name="long_press_to_save_qr_code">长按保存二维码</string>
@@ -585,6 +585,7 @@
 
     <string name="over_500">发言不能超过500字符</string>
     <string name="hello_customer_for_you">尊敬的小主您好，我是%1$s，很高兴为您服务。</string>
+    <string name="current_service_is_offline_change_service">当前客服已离线，是否切换客服？</string>
     <string name="trade_with_market_price">以当前最优价格交易</string>
     <string name="android_web_agent">ANDROID_AGENT/1.0</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
@@ -617,13 +618,13 @@
     <string name="deal_price">成交价</string>
     <string name="deal_volume_x">成交量 (%1$s)</string>
     <string name="deal_volume">成交量</string>
-    <string name="pending_deal">等待成交</string>
-    <string name="deal_with_arrow">已成交></string>
-    <string name="revoking">正在撤单</string>
+    <string name="not_deal">未成交</string>
+    <string name="deal_with_arrow">完全成交></string>
+    <string name="revoking">撤单中</string>
     <string name="revoked">已撤销</string>
     <string name="part_deal_with_arrow">部分成交></string>
     <string name="system_revoked">系统撤销</string>
-    <string name="part_deal_part_revoked_with_arrow">部分成交部分撤单></string>
+    <string name="part_deal_part_revoked_with_arrow">部分成交已撤销></string>
     <string name="unknown_status">未知状态</string>
     <string name="filter">筛选</string>
     <string name="trading_on">交易对</string>
@@ -633,7 +634,6 @@
     <string name="time_x">时间 %1$s</string>
     <string name="deal_detail">成交明细</string>
     <string name="revoke_order">撤單</string>
-    <string name="revoking_order">撤单中</string>
     <string name="entrust_success">委托成功</string>
     <string name="no_enough_balance">余额不足</string>
     <string name="complete">完成</string>

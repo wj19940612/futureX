@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.CustomListener;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.sbai.httplib.BitmapCfg;
 import com.sbai.httplib.ReqCallback;
@@ -37,8 +34,8 @@ import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
+import com.songbai.futurex.view.dialog.SelectAreaCodesViewController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -77,6 +74,7 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     private boolean mFreezeGetEmailAuthCode;
     private boolean mFreezeGetPhoneAuthCode;
     private boolean mHasBindPhone;
+    private SelectAreaCodesViewController mSelectAreaCodesViewController;
 
     @Nullable
     @Override
@@ -326,44 +324,20 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     }
 
     private void showAreaCodeSelector(List<AreaCode> areaCode) {
-        if (areaCode == null || areaCode.isEmpty()) {
-            return;
+        if (mSelectAreaCodesViewController == null) {
+            mSelectAreaCodesViewController = new SelectAreaCodesViewController(getContext(),
+                    new SelectAreaCodesViewController.OnSelectListener() {
+                        @Override
+                        public void onSelect(AreaCode areaCode) {
+                            mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode.getTeleCode()));
+                        }
+                    });
+            mSelectAreaCodesViewController.setAreaCodeList(areaCode);
         }
-        final ArrayList<String> codes = new ArrayList<>();
-        for (AreaCode code : areaCode) {
-            codes.add(code.getTeleCode());
-        }
-        mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                mAreaCode.setText(StrFormatter.getFormatAreaCode(codes.get(options1)));
-            }
-        }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
-            @Override
-            public void customLayout(View v) {
-                TextView cancel = v.findViewById(R.id.cancel);
-                TextView confirm = v.findViewById(R.id.confirm);
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mPvOptions.dismiss();
-                    }
-                });
-                confirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mPvOptions.returnData();
-                        mPvOptions.dismiss();
-                    }
-                });
-            }
-        })
-                .setCyclic(false, false, false)
-                .setTextColorCenter(ContextCompat.getColor(getContext(), R.color.text22))
-                .setTextColorOut(ContextCompat.getColor(getContext(), R.color.text99))
-                .setDividerColor(ContextCompat.getColor(getContext(), R.color.bgDD))
-                .build();
-        mPvOptions.setPicker(codes);
-        mPvOptions.show();
+        SmartDialog.with(getActivity()).setCustomViewController(mSelectAreaCodesViewController)
+                .setWindowGravity(Gravity.BOTTOM)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setWidthScale(1)
+                .show();
     }
 }

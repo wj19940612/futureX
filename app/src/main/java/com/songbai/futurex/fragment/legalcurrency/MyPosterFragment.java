@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
@@ -62,7 +63,6 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     private MyAdAdapter mAdapter;
     private int mPage;
     private boolean isPrepared;
-    private boolean isFirstLoad;
     private int mPageSize = 20;
     private String mCoinType;
     private String mPayCurrency;
@@ -83,7 +83,6 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        isFirstLoad = true;
         View view = inflater.inflate(R.layout.fragment_my_poster, container, false);
         mBind = ButterKnife.bind(this, view);
         isPrepared = true;
@@ -224,6 +223,10 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
             if (!mRequested) {
                 otcWaresList(mPage, mPageSize);
             }
+            if (Preference.get().getPosterListRefresh()) {
+                otcWaresList(mPage, mPageSize);
+                Preference.get().setPosterListRefresh(false);
+            }
         }
         if (isVisibleToUser && isPrepared && mPairChanged) {
             otcWaresList(mPage, mPageSize);
@@ -232,10 +235,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
 
     private void lazyLoad() {
         if (isPrepared && getUserVisibleHint()) {
-            if (isFirstLoad) {
-                isFirstLoad = false;
-                otcWaresList(mPage, mPageSize);
-            }
+            otcWaresList(mPage, mPageSize);
         }
     }
 
@@ -255,10 +255,18 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         if (!mRequested) {
             otcWaresList(mPage, mPageSize);
         }
+        if (Preference.get().getPosterListRefresh()) {
+            otcWaresList(mPage, mPageSize);
+            Preference.get().setPosterListRefresh(false);
+        }
     }
 
     private void otcWaresList(int page, int pageSize) {
         if (!LocalUser.getUser().isLogin()) {
+            mPage = 0;
+            mAdapter.getList().clear();
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.hideAll(false);
             return;
         }
         mRequested = true;
@@ -276,8 +284,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         if (mPage == 0) {
                             mRecyclerView.hideAll(false);
                         }
-                        mPage++;
-                        if (mPage >= resp.getData().getTotal()) {
+                        if (mPage < resp.getData().getTotal() - 1) {
+                            mPage++;
+                        } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
                     }
@@ -350,13 +359,11 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
     }
 
     public void refresh(boolean shouldRefresh) {
-        if (!isFirstLoad) {
-            mShouldRefresh = shouldRefresh;
-            if (getUserVisibleHint()) {
-                mPage = 0;
-                otcWaresList(mPage, mPageSize);
-                mShouldRefresh = false;
-            }
+        mShouldRefresh = shouldRefresh;
+        if (getUserVisibleHint()) {
+            mPage = 0;
+            otcWaresList(mPage, mPageSize);
+            mShouldRefresh = false;
         }
     }
 

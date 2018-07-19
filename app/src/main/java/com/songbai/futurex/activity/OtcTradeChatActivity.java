@@ -114,6 +114,7 @@ public class OtcTradeChatActivity extends BaseActivity {
         }
     };
     private OtcBankInfoMsg mBankInfoMsg;
+    private int mOtcChatUserId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,10 +142,23 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mOtcProcessor.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mOtcProcessor.pause();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mOtcProcessor != null) {
-            mOtcProcessor.pause();
+            mOtcProcessor.unregisterMsg(mOrderId);
+            mOtcProcessor.unregisterEntrust(mOtcChatUserId);
         }
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
@@ -214,7 +228,6 @@ public class OtcTradeChatActivity extends BaseActivity {
                 }
             }
         });
-        mOtcProcessor.resume();
     }
 
     private void initAll() {
@@ -283,6 +296,8 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mRightOtcChatUserInfo = otcChatUserInfo;
             } else {
                 mLeftOtcChatUserInfo = otcChatUserInfo;
+                mOtcChatUserId = mLeftOtcChatUserInfo.getId();
+                mOtcProcessor.registerEntrust(mOtcChatUserId);
             }
         }
     }

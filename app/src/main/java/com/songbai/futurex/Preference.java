@@ -14,6 +14,7 @@ public class Preference {
         String SEARCH_RECORDS = "search_record";
         String DEFAULT_TRADE_PAIR = "default_trade_pair";
         String REFRESH_OPTIONAL = "refresh_optional";
+        String REFRESH_POSTER = "refresh_poster";
     }
 
     private static Preference sInstance;
@@ -110,5 +111,13 @@ public class Preference {
 
     public boolean getOptionalListRefresh() {
         return mPrefs.getBoolean(Key.REFRESH_OPTIONAL, false);
+    }
+
+    public void setPosterListRefresh(boolean refresh) {
+        apply(Key.REFRESH_POSTER, refresh);
+    }
+
+    public boolean getPosterListRefresh() {
+        return mPrefs.getBoolean(Key.REFRESH_POSTER, false);
     }
 }

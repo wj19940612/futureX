@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -43,13 +43,13 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.countDealRate)
     TextView mCountDealRate;
     @BindView(R.id.primaryCertification)
-    RelativeLayout mPrimaryCertification;
+    LinearLayout mPrimaryCertification;
     @BindView(R.id.seniorCertification)
-    RelativeLayout mSeniorCertification;
+    LinearLayout mSeniorCertification;
     @BindView(R.id.mailCertification)
-    RelativeLayout mMailCertification;
+    LinearLayout mMailCertification;
     @BindView(R.id.phoneCertification)
-    RelativeLayout mPhoneCertification;
+    LinearLayout mPhoneCertification;
     @BindView(R.id.primaryCertificationState)
     TextView mPrimaryCertificationState;
     @BindView(R.id.seniorCertificationState)

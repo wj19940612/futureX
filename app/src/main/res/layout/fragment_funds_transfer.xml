@@ -24,13 +24,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="42dp"
         android:gravity="center">
 
-        <TextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/fromAccount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:singleLine="true"
             android:text="@string/coin_coin_account"
             android:textColor="@color/text22"
             android:textSize="17sp"/>
@@ -43,10 +48,12 @@
             android:layout_marginRight="28dp"
             android:src="@drawable/ic_property_double_arrow"/>
 
-        <TextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/toAccount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
             android:text="@string/legal_currency_account"
             android:textColor="@color/text22"
             android:textSize="17sp"/>

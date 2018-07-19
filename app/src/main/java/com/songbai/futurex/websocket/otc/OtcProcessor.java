@@ -29,9 +29,21 @@ public class OtcProcessor {
         mMessageProcessor.send(request);
     }
 
-    public void registerEntrust() {
-        OtcParam param = new OtcParam(OtcParam.OTC_ENTRUST);
+    public void unregisterMsg(int id) {
+        OtcParam param = new OtcParam(OtcParam.OTC_CHAT + id);
+        Request request = Utils.getRequest(RequestCode.UNSUBSCRIBE_BUSINESS, param);
+        mMessageProcessor.send(request);
+    }
+
+    public void registerEntrust(int id) {
+        OtcParam param = new OtcParam(OtcParam.USER_STATUS + id);
         Request request = Utils.getRequest(RequestCode.SUBSCRIBE_BUSINESS, param);
+        mMessageProcessor.send(request);
+    }
+
+    public void unregisterEntrust(int id) {
+        OtcParam param = new OtcParam(OtcParam.USER_STATUS + id);
+        Request request = Utils.getRequest(RequestCode.UNSUBSCRIBE_BUSINESS, param);
         mMessageProcessor.send(request);
     }
 }

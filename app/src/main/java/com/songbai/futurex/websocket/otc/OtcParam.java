@@ -9,9 +9,8 @@ package com.songbai.futurex.websocket.otc;
  */
 public class OtcParam {
 
-    public static final String USER_STATUS = "topic:user:statu";
+    public static final String USER_STATUS = "topic:user:status";
     public static final String OTC_CHAT = "queue:otc:chat:";
-    public static final String OTC_ENTRUST = "queue:entrust";
 
     private String topic;
 

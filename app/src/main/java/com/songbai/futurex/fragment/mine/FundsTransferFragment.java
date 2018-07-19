@@ -23,7 +23,9 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.LegalCoin;
 import com.songbai.futurex.model.mine.AccountBean;
+import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
 
@@ -56,10 +58,13 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.confirmTransfer)
     TextView mConfirmTransfer;
     private Unbinder mBind;
-    private List<AccountBean> mAccountBeans;
     private OptionsPickerView mPvOptions;
     private int mTransferType;
-    private AccountBean mSelectedAccountBean;
+    private List<AccountBean> mOtcAccountList;
+    private double mMaxAmount;
+    private List<AccountBean> mUserAccount;
+    private String mSelectedCoinType;
+    private ArrayList<LegalCoin> mLegalCoins;
 
     @Nullable
     @Override
@@ -72,7 +77,18 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
         mTransferType = extras.getInt(ExtraKeys.TRANSFER_TYPE);
-        mAccountBeans = extras.getParcelableArrayList(ExtraKeys.ACCOUNT_BEANS);
+        if (mTransferType == 0) {
+            mUserAccount = extras.getParcelableArrayList(ExtraKeys.ACCOUNT_BEANS);
+            if (mUserAccount != null) {
+                mSelectedCoinType = mUserAccount.get(0).getCoinType();
+            }
+        }
+        if (mTransferType == 1) {
+            mOtcAccountList = extras.getParcelableArrayList(ExtraKeys.ACCOUNT_BEANS);
+            if (mOtcAccountList != null) {
+                mSelectedCoinType = mOtcAccountList.get(0).getCoinType();
+            }
+        }
     }
 
     @Override
@@ -81,28 +97,110 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
     }
 
     private void setView() {
+        getLegalCoin();
         mFromAccount.setText(mTransferType == 0 ? R.string.coin_coin_account : R.string.legal_currency_account);
         mToAccount.setText(mTransferType == 1 ? R.string.coin_coin_account : R.string.legal_currency_account);
-        setSelectedItem(0);
+        if (mTransferType == 0) {
+            getOtcAccountList();
+        }
+        if (mTransferType == 1) {
+            getAccountByUser();
+        }
+        setSelectedItem(mSelectedCoinType);
     }
 
-    private void setSelectedItem(int options1) {
-        mSelectedAccountBean = mAccountBeans.get(options1);
-        double ableCoin = mSelectedAccountBean.getAbleCoin();
+    private void getLegalCoin() {
+        Apic.getLegalCoin().tag(TAG)
+                .callback(new Callback<Resp<ArrayList<LegalCoin>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<ArrayList<LegalCoin>> resp) {
+                        mLegalCoins = resp.getData();
+                    }
+                }).fireFreely();
+    }
+
+    private void getOtcAccountList() {
+        Apic.otcAccountList().tag(TAG)
+                .callback(new Callback<Resp<AccountList>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AccountList> resp) {
+                        AccountList accountList = resp.getData();
+                        if (accountList != null) {
+                            mOtcAccountList = accountList.getAccount();
+                        }
+                    }
+                })
+                .fireFreely();
+    }
+
+    private void getAccountByUser() {
+        Apic.getAccountByUser("").tag(TAG)
+                .callback(new Callback<Resp<AccountList>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AccountList> resp) {
+                        AccountList accountList = resp.getData();
+                        if (accountList != null) {
+                            mUserAccount = accountList.getAccount();
+                        }
+                    }
+                })
+                .fireFreely();
+    }
+
+    private void setSelectedItem(String selectedCoinType) {
+        mSelectedCoinType = selectedCoinType;
+        mCoinType.setText(selectedCoinType.toUpperCase());
+        double otcAbleCoin = 0;
+        double ableCoin = 0;
+        switch (mTransferType) {
+            case 0:
+                if (mUserAccount != null) {
+                    for (AccountBean accountBean : mUserAccount) {
+                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
+                            ableCoin = accountBean.getAbleCoin();
+                        }
+                    }
+                }
+                if (mOtcAccountList != null) {
+                    for (AccountBean accountBean : mOtcAccountList) {
+                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
+                            otcAbleCoin = accountBean.getAbleCoin();
+                        }
+                    }
+                }
+                break;
+            case 1:
+                if (mUserAccount != null) {
+                    for (AccountBean accountBean : mUserAccount) {
+                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
+                            otcAbleCoin = accountBean.getAbleCoin();
+                        }
+                    }
+                }
+                if (mOtcAccountList != null) {
+                    for (AccountBean accountBean : mOtcAccountList) {
+                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
+                            ableCoin = accountBean.getAbleCoin();
+                        }
+                    }
+                }
+                break;
+            default:
+        }
+        mMaxAmount = mTransferType == 0 ? ableCoin : otcAbleCoin;
         mConfirmTransfer.setEnabled(ableCoin > 0);
-        mCoinType.setText(mSelectedAccountBean.getCoinType().toUpperCase());
         mTransferAmount.setHint(getString(R.string.most_transfer_amount_type_x,
                 FinanceUtil.formatWithScale(ableCoin),
-                mSelectedAccountBean.getCoinType().toUpperCase()));
-        fixAmount();
+                mSelectedCoinType.toUpperCase()));
+        fixAmount(mMaxAmount);
     }
 
-    private void fixAmount() {
+    private void fixAmount(double maxAmount) {
         String amount = mTransferAmount.getText().toString();
         if (TextUtils.isEmpty(amount)) {
             return;
         }
-        if (Double.valueOf(amount) > mSelectedAccountBean.getAbleCoin()) {
+        if (Double.valueOf(amount) > maxAmount) {
             mTransferAmount.setText("");
         }
     }
@@ -139,30 +237,36 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                 setView();
                 break;
             case R.id.coinType:
-                if (mAccountBeans.size() > 1) {
-                    showSelector();
+                if (mTransferType == 0) {
+                    if (mUserAccount.size() > 1) {
+                        showSelector();
+                    }
+                } else {
+                    if (mOtcAccountList.size() > 1) {
+                        showSelector();
+                    }
                 }
                 break;
             case R.id.transferAll:
-                mTransferAmount.setText(FinanceUtil.formatWithScale(mSelectedAccountBean.getAbleCoin(), 8));
+                mTransferAmount.setText(FinanceUtil.formatWithScale(mMaxAmount, 8));
                 mTransferAmount.setSelection(mTransferAmount.getText().length());
                 break;
             case R.id.confirmTransfer:
-                accountTransfer(mSelectedAccountBean.getCoinType(), mTransferType == 0 ? 3 : 4, mTransferAmount.getText().toString());
+                accountTransfer(mSelectedCoinType, mTransferType == 0 ? 3 : 4, mTransferAmount.getText().toString());
                 break;
             default:
         }
     }
 
     private void showSelector() {
-        ArrayList<String> coinTypes = new ArrayList<>();
-        for (AccountBean accountBean : mAccountBeans) {
-            coinTypes.add(accountBean.getCoinType().toUpperCase());
+        final ArrayList<String> coinTypes = new ArrayList<>();
+        for (LegalCoin legalCoin : mLegalCoins) {
+            coinTypes.add(legalCoin.getSymbol().toUpperCase());
         }
         mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                setSelectedItem(options1);
+                setSelectedItem(coinTypes.get(options1).toLowerCase());
             }
         })
                 .setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {

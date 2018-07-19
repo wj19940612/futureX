@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         }
         if (fragment instanceof LegalCurrencyFragment) {
             int index = exUserDefineData.getIntExtra(ExtraKeys.LEGAL_CURRENCY_PAGE_INDEX, 2);
-            ((LegalCurrencyFragment)fragment).setSelectedIndex(index);
+            ((LegalCurrencyFragment) fragment).setSelectedIndex(index);
             mBottomTabs.performTabClick(mainPageIndex);
         }
     }

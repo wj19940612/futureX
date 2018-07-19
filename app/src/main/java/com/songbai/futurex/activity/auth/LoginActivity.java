@@ -289,6 +289,7 @@ public class LoginActivity extends BaseActivity {
                         LocalUser.getUser().setUserInfo(data, mLoginData.getPhone(), mLoginData.getEmail());
                         MessageProcessor.get().register();
                         Preference.get().setOptionalListRefresh(true);
+                        Preference.get().setPosterListRefresh(true);
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     }

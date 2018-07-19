@@ -24,7 +24,7 @@
         android:gravity="center|end"
         android:orientation="vertical">
 
-        <com.songbai.futurex.view.ScaleTextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/availableAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
         android:gravity="center|end"
         android:orientation="vertical">
 
-        <com.songbai.futurex.view.ScaleTextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/freezeAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

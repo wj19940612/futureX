@@ -110,7 +110,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/timeText"/>
 
-    <com.songbai.futurex.view.ScaleTextView
+    <com.songbai.futurex.view.autofit.AutofitTextView
         android:id="@+id/amount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
         app:layout_goneMarginLeft="12dp"
         tools:text="514.54304"/>
 
-    <com.songbai.futurex.view.ScaleTextView
+    <com.songbai.futurex.view.autofit.AutofitTextView
         android:id="@+id/status"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
         app:layout_constraintTop_toBottomOf="@id/amountText"
         tools:text="已完成"/>
 
-    <com.songbai.futurex.view.ScaleTextView
+    <com.songbai.futurex.view.autofit.AutofitTextView
         android:id="@+id/timestamp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
