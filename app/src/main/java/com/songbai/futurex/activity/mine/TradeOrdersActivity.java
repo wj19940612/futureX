@@ -308,7 +308,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             private int getStatusTextRes(int status) {
                 switch (status) {
                     case OrderStatus.PENDING_DEAL:
-                        return R.string.pending_deal;
+                        return R.string.not_deal;
                     case OrderStatus.REVOKING:
                         return R.string.revoking;
                     case OrderStatus.REVOKED:
@@ -393,7 +393,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                     case OrderStatus.PENDING_DEAL:
                         return R.string.revoke_order;
                     case OrderStatus.REVOKING:
-                        return R.string.revoking_order;
+                        return R.string.revoking;
                     default:
                         return R.string.unknown_status;
                 }

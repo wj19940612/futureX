@@ -547,7 +547,7 @@
     <string name="is_latest_version_now">已經是最新版本</string>
     <string name="deal_price">成交價</string>
     <string name="deal_volume">成交量</string>
-    <string name="pending_deal">等待成交</string>
+    <string name="not_deal">等待成交</string>
     <string name="deal_with_arrow">已成交></string>
     <string name="revoking">正在撤單</string>
     <string name="part_deal_with_arrow">部分成交></string>
@@ -558,4 +558,6 @@
     <string name="revoke_order">撤单</string>
     <string name="revoking_order">撤單中</string>
     <string name="no_enough_balance">余額不足</string>
+    <string name="complete">完成</string>
+
 </resources>

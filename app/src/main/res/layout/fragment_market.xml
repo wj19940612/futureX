@@ -10,11 +10,8 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:rightImage="@drawable/ic_search"
-        app:rightVisible="true"
-        app:titleText="@string/market"
-        app:titleTextSize="17sp"/>
+        app:customView="@layout/view_tb_market"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.songbai.futurex.view.RadioHeader
         android:id="@+id/radioHeader"
@@ -27,7 +24,7 @@
         app:tabArray="@array/market_radio_header"
         app:tabInterval="10dp"/>
 
-    <com.songbai.futurex.view.EmptyRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/currencyPairList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -37,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/radioHeader"/>
 
-    <com.songbai.futurex.view.EmptyRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/optionalList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -51,6 +48,7 @@
         layout="@layout/view_market_empty"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +58,7 @@
         layout="@layout/view_optional_empty"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

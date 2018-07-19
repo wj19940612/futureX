@@ -34,6 +34,18 @@ public class Apic {
 
     }
 
+    /**
+     * 提交自选列表 jsonarray：[{"pairs":"eth_usdt","sort":1},{"pairs":"btc_usdt","sort":2}]
+     *
+     * @param jsonArray
+     * @return
+     */
+    public static Api updateOptionalList(String jsonArray) {
+        return Api.post("/api/entrust/selfPairs/pairsSortUpdate",
+                new ReqParams()
+                        .put("pairs", jsonArray));
+    }
+
 
     public static Api getAreaCodes() {
         return Api.get("/api/user/country/country.d");

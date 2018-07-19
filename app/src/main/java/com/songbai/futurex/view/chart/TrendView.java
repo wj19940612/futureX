@@ -43,8 +43,9 @@ public class TrendView extends RelativeLayout {
         mTrendV.setOnMADataChangedListener(new Kline.OnMADataChangedListener() {
             @Override
             public void onMADataChanged(Kline.Data data) {
-                if (data==null) return;
-                mMa60.setText(formatMaValue(60, data.getMas(60)));
+                if (data != null) {
+                    mMa60.setText(formatMaValue(60, data.getMas(60)));
+                }
             }
         });
 

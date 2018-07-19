@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
+    android:background="@color/white"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -35,7 +36,6 @@
                 android:textColor="@color/text99"
                 android:textSize="10sp"
                 tools:text="USDT"/>
-
         </LinearLayout>
 
         <TextView
@@ -48,6 +48,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/priceLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
@@ -76,4 +77,13 @@
             android:textSize="15sp"
             tools:text="+13.38%"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/dragIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="35dp"
+        android:paddingLeft="16dp"
+        android:src="@drawable/ic_drag"
+        android:visibility="gone"/>
 </LinearLayout>

@@ -605,7 +605,7 @@
     <string name="time_x">Time %1$s</string>
     <string name="deal_fee_x">Fee (%1$s)</string>
     <string name="deal_volume">VOL</string>
-    <string name="pending_deal">Pending</string>
+    <string name="not_deal">Pending</string>
     <string name="transfer_success">Transfer success</string>
     <string name="save_success">Save success</string>
     <string name="transfer_to_trade_account">Transfer to exchange account</string>
@@ -638,4 +638,5 @@
     <string name="legal_account_out">OTC→Exchange</string>
     <string name="please_set_google_authenticator_first">Please bind Google Authenticator</string>
     <string name="no_enough_coins">Insufficient funds.</string>
+    <string name="complete">Complete</string>
 </resources>

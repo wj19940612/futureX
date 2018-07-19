@@ -9,13 +9,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -28,14 +32,14 @@ import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.local.LocalUser;
-import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.CurrencyUtils;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
-import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.recycler.DividerItemDecor;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
@@ -72,9 +76,9 @@ public class MarketFragment extends BaseFragment {
     @BindView(R.id.radioHeader)
     RadioHeader mRadioHeader;
     @BindView(R.id.currencyPairList)
-    EmptyRecyclerView mCurrencyPairList;
+    RecyclerView mCurrencyPairList;
     @BindView(R.id.optionalList)
-    EmptyRecyclerView mOptionalList;
+    RecyclerView mOptionalList;
     @BindView(R.id.addOptional)
     TextView mAddOptional;
     @BindView(R.id.emptyView)
@@ -88,6 +92,9 @@ public class MarketFragment extends BaseFragment {
     private Map<String, List<CurrencyPair>> mListMap; // memory cache
     private MarketSubscriber mMarketSubscriber;
     private OnNavigationListener mOnNavigationListener;
+    private View mEditToggle;
+    private ImageView mEditIcon;
+    private TextView mCompleteEdit;
 
     @Override
     public void onAttach(Context context) {
@@ -105,10 +112,27 @@ public class MarketFragment extends BaseFragment {
         return view;
     }
 
+    private void showOptionalPairList(boolean b) {
+        if (b) {
+            mOptionalList.setVisibility(View.VISIBLE);
+            mOptionalEmptyView.setVisibility(View.GONE);
+            mCurrencyPairList.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
+        } else {
+            mOptionalList.setVisibility(View.GONE);
+            mOptionalEmptyView.setVisibility(View.GONE);
+            mCurrencyPairList.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
+
+        initTitleBar();
+
         mListMap = new HashMap<>();
 
         mRadioHeader.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
@@ -116,15 +140,15 @@ public class MarketFragment extends BaseFragment {
             public void onTabSelected(int position, String content) {
                 List<CurrencyPair> pairList = mListMap.get(content);
                 if (mRadioHeader.getTabCount() - 1 == position) { // 自选
-                    mCurrencyPairList.hideAll(true);
-                    mOptionalList.hideAll(false);
+                    mEditToggle.setVisibility(View.VISIBLE);
+                    showOptionalPairList(true);
                     if (pairList != null) {
                         mOptionalAdapter.setPairList(pairList);
                     }
                     requestOptionalList(content);
                 } else {
-                    mCurrencyPairList.hideAll(false);
-                    mOptionalList.hideAll(true);
+                    mEditToggle.setVisibility(View.GONE);
+                    showOptionalPairList(false);
                     if (pairList != null) {
                         mCurrencyPairAdapter.setGroupableList(pairList);
                     }
@@ -137,10 +161,10 @@ public class MarketFragment extends BaseFragment {
         initOptionalList();
 
         if (mRadioHeader.getSelectedPosition() == mRadioHeader.getTabCount() - 1) { // 自选
-            mCurrencyPairList.hideAll(true);
+            showOptionalPairList(true);
             requestOptionalList(mRadioHeader.getSelectTab());
         } else {
-            mOptionalList.hideAll(true);
+            showOptionalPairList(false);
             requestCurrencyPairList(mRadioHeader.getSelectTab());
         }
 
@@ -158,13 +182,51 @@ public class MarketFragment extends BaseFragment {
                 }
             }
         });
+    }
 
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+    private void initTitleBar() {
+        View customView = mTitleBar.getCustomView();
+        mEditToggle = customView.findViewById(R.id.editToggle);
+        mEditToggle.setVisibility(View.GONE);
+        mEditIcon = mEditToggle.findViewById(R.id.editIcon);
+        mCompleteEdit = mEditToggle.findViewById(R.id.completeEdit);
+        mEditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openSearchPage();
+                if (!LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                    return;
+                }
+
+                mEditIcon.setVisibility(View.GONE);
+                mCompleteEdit.setVisibility(View.VISIBLE);
+                mOptionalAdapter.setEditMode(true);
             }
         });
+        mCompleteEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEditIcon.setVisibility(View.VISIBLE);
+                mCompleteEdit.setVisibility(View.GONE);
+                mOptionalAdapter.setEditMode(false);
+                requestUpdateOptionalSort();
+            }
+        });
+        customView.findViewById(R.id.search)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openSearchPage();
+                    }
+                });
+    }
+
+    private void requestUpdateOptionalSort() {
+        for (int i = 0; i < mOptionalAdapter.mPairList.size(); i++) {
+            mOptionalAdapter.mPairList.get(i).setSort(i + 1);
+        }
+        String jsonArray = new Gson().toJson(mOptionalAdapter.mPairList);
+        Apic.updateOptionalList(jsonArray).tag(TAG).fireFreely();
     }
 
     private void openSearchPage() {
@@ -211,8 +273,8 @@ public class MarketFragment extends BaseFragment {
 
     private void initOptionalList() {
         mOptionalList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        mOptionalList.addItemDecoration(dividerItemDecoration);
+        DividerItemDecor dividerItemDecor = new DividerItemDecor(getActivity(), DividerItemDecoration.VERTICAL);
+        mOptionalList.addItemDecoration(dividerItemDecor);
         mOptionalAdapter = new OptionalAdapter(getActivity(), new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
@@ -221,14 +283,17 @@ public class MarketFragment extends BaseFragment {
                 }
             }
         });
+        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(mOptionalAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        mOptionalAdapter.setItemTouchHelper(itemTouchHelper);
         mOptionalList.setAdapter(mOptionalAdapter);
-        mOptionalList.setEmptyView(mOptionalEmptyView);
+        itemTouchHelper.attachToRecyclerView(mOptionalList);
     }
 
     private void initCurrencyPairList() {
         mCurrencyPairList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        mCurrencyPairList.addItemDecoration(dividerItemDecoration);
+        DividerItemDecor dividerItemDecor = new DividerItemDecor(getActivity(), DividerItemDecoration.VERTICAL);
+        mCurrencyPairList.addItemDecoration(dividerItemDecor);
         mCurrencyPairAdapter = new CurrencyPairAdapter(getActivity(), new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
@@ -238,7 +303,6 @@ public class MarketFragment extends BaseFragment {
             }
         });
         mCurrencyPairList.setAdapter(mCurrencyPairAdapter);
-        mCurrencyPairList.setEmptyView(mEmptyView);
     }
 
     private void openMarketDetailPage(CurrencyPair currencyPair) {
@@ -256,9 +320,20 @@ public class MarketFragment extends BaseFragment {
                         if (getId().equalsIgnoreCase(mRadioHeader.getSelectTab())) {
                             mListMap.put(getId(), data);
                             mOptionalAdapter.setPairList(data);
+                            showOptionalEmptyView(data);
                         }
                     }
                 }).fireFreely();
+    }
+
+    private void showOptionalEmptyView(List<CurrencyPair> data) {
+        if (data.isEmpty()) {
+            mOptionalEmptyView.setVisibility(View.VISIBLE);
+            mOptionalList.setVisibility(View.GONE);
+        } else {
+            mOptionalEmptyView.setVisibility(View.GONE);
+            mOptionalList.setVisibility(View.VISIBLE);
+        }
     }
 
     private void requestCurrencyPairList(String counterCurrency) {
@@ -272,6 +347,7 @@ public class MarketFragment extends BaseFragment {
                             Collections.sort(data);
                             mListMap.put(getId(), data);
                             mCurrencyPairAdapter.setGroupableList(data);
+                            showCurrencyPairsEmptyView(data);
 
                             if (TextUtils.isEmpty(Preference.get().getDefaultTradePair())) {
                                 if (data.isEmpty()) return;
@@ -280,6 +356,16 @@ public class MarketFragment extends BaseFragment {
                         }
                     }
                 }).fireFreely();
+    }
+
+    private void showCurrencyPairsEmptyView(List<CurrencyPair> data) {
+        if (data.isEmpty()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mCurrencyPairList.setVisibility(View.GONE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
+            mCurrencyPairList.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.addOptional)
@@ -292,12 +378,54 @@ public class MarketFragment extends BaseFragment {
         }
     }
 
-    static class OptionalAdapter extends RecyclerView.Adapter<OptionalAdapter.ViewHolder> {
+    interface ItemTouchHelperAdapter {
+        void onItemMove(int fromPosition, int toPosition);
+    }
+
+    static class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
+
+        private ItemTouchHelperAdapter mTouchHelperAdapter;
+
+        public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter touchHelperAdapter) {
+            mTouchHelperAdapter = touchHelperAdapter;
+        }
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            return makeMovementFlags(dragFlags, 0);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            mTouchHelperAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isItemViewSwipeEnabled() {
+            return false;
+        }
+    }
+
+    static class OptionalAdapter extends RecyclerView.Adapter<OptionalAdapter.ViewHolder>
+            implements ItemTouchHelperAdapter {
 
         private OnRVItemClickListener mOnRVItemClickListener;
         private List<CurrencyPair> mPairList;
         private Map<String, MarketData> mMarketDataList;
         private Context mContext;
+        private boolean mEditMode;
+        private ItemTouchHelper mItemTouchHelper;
 
         public OptionalAdapter(Context context, OnRVItemClickListener onRVItemClickListener) {
             mOnRVItemClickListener = onRVItemClickListener;
@@ -305,14 +433,27 @@ public class MarketFragment extends BaseFragment {
             mContext = context;
         }
 
+        public void setItemTouchHelper(ItemTouchHelper itemTouchHelper) {
+            mItemTouchHelper = itemTouchHelper;
+        }
+
+        public void setEditMode(boolean editMode) {
+            mEditMode = editMode;
+            notifyDataSetChanged();
+        }
+
         public void setPairList(List<CurrencyPair> pairList) {
             mPairList = pairList;
-            notifyDataSetChanged();
+            if (!mEditMode) {
+                notifyDataSetChanged();
+            }
         }
 
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
             mMarketDataList = marketDataList;
-            notifyDataSetChanged();
+            if (!mEditMode) {
+                notifyDataSetChanged();
+            }
         }
 
         @NonNull
@@ -323,13 +464,24 @@ public class MarketFragment extends BaseFragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
             final CurrencyPair pair = mPairList.get(position);
-            holder.bind(pair, mMarketDataList, mContext);
+            holder.bind(pair, mMarketDataList, mContext, mEditMode);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnRVItemClickListener.onItemClick(v, position, pair);
+                    if (!mEditMode) {
+                        mOnRVItemClickListener.onItemClick(v, position, pair);
+                    }
+                }
+            });
+            holder.mDragIcon.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (mEditMode && event.getAction() == MotionEvent.ACTION_DOWN) {
+                        mItemTouchHelper.startDrag(holder);
+                    }
+                    return false;
                 }
             });
         }
@@ -337,6 +489,12 @@ public class MarketFragment extends BaseFragment {
         @Override
         public int getItemCount() {
             return mPairList.size();
+        }
+
+        @Override
+        public void onItemMove(int fromPosition, int toPosition) {
+            Collections.swap(mPairList, fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
@@ -350,13 +508,17 @@ public class MarketFragment extends BaseFragment {
             TextView mLastPrice;
             @BindView(R.id.priceChange)
             TextView mPriceChange;
+            @BindView(R.id.priceLine)
+            LinearLayout mPriceLine;
+            @BindView(R.id.dragIcon)
+            ImageView mDragIcon;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
+            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, final boolean editMode) {
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
@@ -378,6 +540,14 @@ public class MarketFragment extends BaseFragment {
                     } else {
                         mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
                     }
+                }
+
+                if (editMode) {
+                    mPriceLine.setVisibility(View.GONE);
+                    mDragIcon.setVisibility(View.VISIBLE);
+                } else {
+                    mPriceLine.setVisibility(View.VISIBLE);
+                    mDragIcon.setVisibility(View.GONE);
                 }
             }
         }
