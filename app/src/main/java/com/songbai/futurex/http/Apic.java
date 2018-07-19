@@ -67,7 +67,6 @@ public class Apic {
                 new ReqParams()
                         .put("identify", "cn")
                         .put("version", AppInfo.getVersionName(App.getAppContext()))
-//                        .put("version", AppInfo.getVersionName(App.getAppContext()))
                         .put("platform", 0));
     }
 
