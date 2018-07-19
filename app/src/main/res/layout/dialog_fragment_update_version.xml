@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tool="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/transparent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/transparent"
+              android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="305dp"
@@ -23,44 +23,42 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
                 android:text="@string/check_new_version"
                 android:textColor="@color/white"
                 android:textSize="17sp"
                 android:textStyle="bold"/>
 
+            <View
+                android:layout_width="150dp"
+                android:layout_height="20dp"
+                android:layout_alignBottom="@+id/versionName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:background="@color/bg_333B5C6D"/>
 
             <TextView
                 android:id="@+id/versionName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/title"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="64sp"
-                android:textStyle="bold"
-                android:text="1.0.2"
-                android:gravity="center"
-                android:includeFontPadding="false" />
-
-            <View
-                android:layout_width="150dp"
-                android:layout_height="20dp"
-                android:layout_centerHorizontal="true"
-                android:background="@color/bg_333B5C6D"
-                android:layout_alignBottom="@+id/versionName"
-                android:layout_marginBottom="8dp"/>
+                tools:text="1.0.2"/>
 
             <View
                 android:id="@+id/sign"
                 android:layout_width="3dp"
                 android:layout_height="140dp"
-                android:background="@color/bg_5AA1B9"
                 android:layout_below="@+id/versionName"
+                android:layout_marginLeft="40dp"
                 android:layout_marginTop="22dp"
-                android:layout_marginLeft="40dp" />
+                android:background="@color/bg_5AA1B9"/>
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -72,12 +70,12 @@
                     android:id="@+id/updateVersionMsg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:lineSpacingExtra="10dp"
+                    android:paddingBottom="13dp"
                     android:paddingLeft="7dp"
                     android:paddingRight="48dp"
                     android:paddingTop="13dp"
-                    android:paddingBottom="13dp"
-                    android:layout_gravity="center_horizontal"
-                    android:lineSpacingExtra="10dp"
                     android:textColor="@color/white"
                     android:textSize="13sp"/>
             </ScrollView>
@@ -86,24 +84,25 @@
                 android:id="@+id/update"
                 android:layout_width="140dp"
                 android:layout_height="44dp"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/sign"
-                android:layout_marginTop="13dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="22dp"
+                android:layout_marginTop="13dp"
                 android:background="@drawable/btn_dialog_update"
                 android:gravity="center"
                 android:text="@string/update"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="17sp"/>
+                android:textSize="17sp"
+                android:textStyle="bold"/>
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/dialogDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
                 app:srcCompat="@drawable/btn_version_close"/>
 
 

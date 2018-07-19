@@ -35,10 +35,10 @@ public class PushDestUtils {
     }
 
     public static boolean isServiceOnline(String dest) {
-        return IMParam.CUSOOFFLINE.equals(dest);
+        return IMParam.CUSOONLINE.equals(dest);
     }
 
     public static boolean isServiceOffline(String dest) {
-        return IMParam.CUSOONLINE.equals(dest);
+        return IMParam.CUSOOFFLINE.equals(dest);
     }
 }

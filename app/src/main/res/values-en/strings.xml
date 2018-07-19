@@ -213,7 +213,7 @@
     <string name="fast_transfer">Quick transfer</string>
     <string name="funds_transfer">Fund transfer</string>
     <string name="transfer_amount">Amount</string>
-    <string name="most_transfer_amount_type_x">Maximum transferable %1$s&#160;%2$s</string>
+    <string name="most_transfer_amount_type_x">Max %1$s&#160;%2$s</string>
     <string name="transfer_all">Transfer all</string>
     <string name="confirm_transfer">Confirm</string>
     <string name="recharge_coin">Top up</string>
@@ -552,6 +552,7 @@
 
 
     <string name="hello_customer_for_you">Hello! This is %1$s. Glad to service you</string>
+    <string name="current_service_is_offline_change_service">Customer service is offline, switch customer service?</string>
     <string name="trade_with_market_price">Trade at the currently best price</string>
     <string name="android_web_agent">ANDROID_AGENT/1.0</string>
     <string name="network_error_please_reload">Network connection failed. Please reload</string>
