@@ -38,6 +38,7 @@ import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.OtcBankInfoMsg;
 import com.songbai.futurex.model.mine.BankCardBean;
+import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -52,6 +53,7 @@ import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
+import com.songbai.futurex.websocket.msg.MsgProcessor;
 import com.songbai.futurex.websocket.otc.OtcProcessor;
 
 import java.util.ArrayList;
@@ -115,6 +117,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     };
     private OtcBankInfoMsg mBankInfoMsg;
     private int mOtcChatUserId;
+    private MsgProcessor mMsgProcessor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,12 +148,14 @@ public class OtcTradeChatActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         mOtcProcessor.resume();
+        mMsgProcessor.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mOtcProcessor.pause();
+        mMsgProcessor.pause();
     }
 
     @Override
@@ -159,6 +164,7 @@ public class OtcTradeChatActivity extends BaseActivity {
         if (mOtcProcessor != null) {
             mOtcProcessor.unregisterMsg(mOrderId);
             mOtcProcessor.unregisterEntrust(mOtcChatUserId);
+            mMsgProcessor.unregisterMsg();
         }
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
@@ -228,6 +234,23 @@ public class OtcTradeChatActivity extends BaseActivity {
                 }
             }
         });
+
+        mMsgProcessor = new MsgProcessor(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(String data, int code, String dest) {
+                if (PushDestUtils.isMsg(dest)) {
+                    new DataParser<Response<SysMessage>>(data) {
+
+                        @Override
+                        public void onSuccess(Response<SysMessage> resp) {
+                            if (resp.getContent().getDataId() == mOrderId) {
+                                otcOrderDetail();
+                            }
+                        }
+                    }.parse();
+                }
+            }
+        });
     }
 
     private void initAll() {
@@ -237,6 +260,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
     private void initImPush() {
         mOtcProcessor.registerMsg(mOrderId);
+        mMsgProcessor.registerMsg();
     }
 
     private void showKeyboard() {

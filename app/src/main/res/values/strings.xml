@@ -596,7 +596,7 @@
     <string name="please_not_download_again">请勿重复下载</string>
     <string name="download_fail">下载失败</string>
     <string name="check_new_version">发现最新版本</string>
-    <string name="is_latest_version_now">已经是最新版本</string>
+    <string name="is_latest_version_now">已经是最新版本</string>string/confrim_pwd
     <string name="download_complete">下载完成</string>
     <string name="update">更新</string>
 

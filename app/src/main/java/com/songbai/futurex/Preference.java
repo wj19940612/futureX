@@ -15,6 +15,7 @@ public class Preference {
         String DEFAULT_TRADE_PAIR = "default_trade_pair";
         String REFRESH_OPTIONAL = "refresh_optional";
         String REFRESH_POSTER = "refresh_poster";
+        String REFRESH_LANGUAGE = "refresh_language";
     }
 
     private static Preference sInstance;
@@ -119,5 +120,13 @@ public class Preference {
 
     public boolean getPosterListRefresh() {
         return mPrefs.getBoolean(Key.REFRESH_POSTER, false);
+    }
+
+    public void setRefreshLanguage(boolean refresh) {
+        apply(Key.REFRESH_LANGUAGE, refresh);
+    }
+
+    public boolean getRefreshLanguage() {
+        return mPrefs.getBoolean(Key.REFRESH_LANGUAGE, false);
     }
 }

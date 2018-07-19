@@ -90,16 +90,20 @@ public class LanguageUtils {
      * @param context       context
      * @param newUserLocale new user locale
      */
-    public static boolean updateLocale(Context context, Locale newUserLocale) {
+    public static synchronized boolean updateLocale(Context context, Locale newUserLocale) {
         if (needUpdateLocale(context, newUserLocale)) {
-            Configuration configuration = context.getResources().getConfiguration();
+            Resources resources = context.getResources();
+            Configuration configuration = resources.getConfiguration();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 configuration.setLocale(newUserLocale);
             } else {
                 configuration.locale = newUserLocale;
             }
-            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            context.getResources().updateConfiguration(configuration, displayMetrics);
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            resources.updateConfiguration(configuration, displayMetrics);
+            if (needUpdateLocale(context, newUserLocale)) {
+                return false;
+            }
             saveUserLocale(newUserLocale);
             return true;
         }

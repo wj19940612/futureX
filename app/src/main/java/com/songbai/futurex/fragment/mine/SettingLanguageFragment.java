@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -91,6 +92,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
         boolean changed = LanguageUtils.updateLocale(getContext(), locale);
         if (changed) {
             mLanguageAdapter.notifyDataSetChanged();
+            Preference.get().setRefreshLanguage(true);
             Launcher.with(getContext(), MainActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

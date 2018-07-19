@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.HomeFragment;
 import com.songbai.futurex.fragment.LegalCurrencyFragment;
@@ -106,6 +107,10 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
     }
 
     private void checkVersion() {
+        if (Preference.get().getRefreshLanguage()) {
+            Preference.get().setRefreshLanguage(false);
+            return;
+        }
         Apic.queryForceVersion()
                 .callback(new Callback<Resp<AppVersion>>() {
                     @Override

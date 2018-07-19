@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +23,11 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.OtcChatMessage;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
+import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -42,7 +41,7 @@ import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
-import com.songbai.futurex.websocket.otc.OtcProcessor;
+import com.songbai.futurex.websocket.msg.MsgProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private boolean mIsBuyer;
     private boolean mNeedGoogle;
     private WaresUserInfo mWaresUserInfo;
-    private OtcProcessor mOtcProcessor;
+    private MsgProcessor mMsgProcessor;
 
     @Nullable
     @Override
@@ -128,41 +127,39 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void initSocketListener() {
-        mOtcProcessor = new OtcProcessor(new OnDataRecListener() {
+        mMsgProcessor = new MsgProcessor(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
-                Log.e("wtf", "onSuccess: wtf" );
-                if (PushDestUtils.isOtcChat(mOrderId, dest)) {
-                    new DataParser<Response<OtcChatMessage>>(data) {
+                if (PushDestUtils.isMsg(dest)) {
+                    new DataParser<Response<SysMessage>>(data) {
 
                         @Override
-                        public void onSuccess(Response<OtcChatMessage> resp) {
-                            OtcChatMessage otcChatMessage = resp.getContent();
-                            if (otcChatMessage.getDirection() == mTradeDirection) {
-                                return;
+                        public void onSuccess(Response<SysMessage> resp) {
+                            if (resp.getContent().getDataId() == mOrderId) {
+                                otcOrderDetail();
                             }
                         }
                     }.parse();
                 }
             }
         });
-        mOtcProcessor.resume();
+        mMsgProcessor.resume();
     }
 
     private void initMsgPush() {
-        mOtcProcessor.registerMsg(mOrderId);
+        mMsgProcessor.registerMsg();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mOtcProcessor.resume();
+        mMsgProcessor.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mOtcProcessor.pause();
+        mMsgProcessor.pause();
     }
 
     private void otcOrderDetail() {
@@ -379,7 +376,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
-        mOtcProcessor.unregisterMsg(mOrderId);
+        mMsgProcessor.unregisterMsg();
     }
 
     @OnClick({R.id.sellerInfo, R.id.bankEmptyView, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
