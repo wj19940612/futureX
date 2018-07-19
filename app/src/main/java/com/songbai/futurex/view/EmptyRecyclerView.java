@@ -127,9 +127,11 @@ public class EmptyRecyclerView extends RecyclerView {
     }
 
     private void checkIfEmpty() {
-        if (mEmptyView != null && getAdapter() != null && !mHideAll) {
+        if (getAdapter() != null && !mHideAll) {
             boolean emptyViewVisible = getAdapter().getItemCount() == 0;
-            mEmptyView.setVisibility(emptyViewVisible ? VISIBLE : GONE);
+            if (mEmptyView != null) {
+                mEmptyView.setVisibility(emptyViewVisible ? VISIBLE : GONE);
+            }
             setVisibility(emptyViewVisible ? GONE : VISIBLE);
         }
     }
@@ -137,7 +139,9 @@ public class EmptyRecyclerView extends RecyclerView {
     public void hideAll(boolean hideAll) {
         mHideAll = hideAll;
         if (hideAll) {
-            mEmptyView.setVisibility(GONE);
+            if (mEmptyView != null) {
+                mEmptyView.setVisibility(GONE);
+            }
             setVisibility(GONE);
         } else {
             checkIfEmpty();

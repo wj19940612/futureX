@@ -557,4 +557,6 @@
     <string name="revoke_order">撤单</string>
     <string name="revoking_order">撤單中</string>
     <string name="no_enough_balance">余額不足</string>
+    <string name="complete">完成</string>
+
 </resources>

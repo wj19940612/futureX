@@ -636,4 +636,5 @@
     <string name="revoking_order">撤单中</string>
     <string name="entrust_success">委托成功</string>
     <string name="no_enough_balance">余额不足</string>
+    <string name="complete">完成</string>
 </resources>

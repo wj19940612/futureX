@@ -637,4 +637,5 @@
     <string name="legal_account_out">OTC→Exchange</string>
     <string name="please_set_google_authenticator_first">Please bind Google Authenticator</string>
     <string name="no_enough_coins">Insufficient funds.</string>
+    <string name="complete">Complete</string>
 </resources>
