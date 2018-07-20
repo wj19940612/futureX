@@ -88,6 +88,8 @@ public class CustomServiceActivity extends BaseActivity {
     };
     private CustomerService mCustomerService;
     private long idleStart = System.currentTimeMillis();
+    private SmartDialog mReconnectSmartDialog;
+    private boolean mHasShowReconnectDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,15 +122,19 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     private void showReconnectDialog() {
+        if (mHasShowReconnectDialog) {
+            return;
+        }
         MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
             @Override
             public void onConfirmClick() {
                 unregisterImPush();
                 loadServiceData();
+                mHasShowReconnectDialog = false;
             }
         });
-        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-        smartDialog.setCustomViewController(withDrawPsdViewController)
+        mReconnectSmartDialog = SmartDialog.solo(getActivity());
+        mReconnectSmartDialog.setCustomViewController(withDrawPsdViewController)
                 .setCancelableOnTouchOutside(false)
                 .show();
         withDrawPsdViewController.setConfirmText(R.string.reconnect);
@@ -137,11 +143,13 @@ public class CustomServiceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                mHasShowReconnectDialog = false;
             }
         });
         withDrawPsdViewController.setMsg(R.string.long_time_not_contract_need_reconnect);
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
-        withDrawPsdViewController.setCroseVisability(View.GONE);
+        withDrawPsdViewController.setCroseVisibility(View.GONE);
+        mHasShowReconnectDialog = true;
     }
 
     @Override
@@ -245,6 +253,7 @@ public class CustomServiceActivity extends BaseActivity {
             }
         });
         withDrawPsdViewController.setMsg(R.string.current_service_is_offline_change_service);
+        withDrawPsdViewController.setCroseVisibility(View.GONE);
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 

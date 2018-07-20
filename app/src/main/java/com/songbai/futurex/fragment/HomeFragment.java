@@ -275,12 +275,14 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     public void onBannerClick(Banner banner) {
         if (banner.getJumpType() == 1) {
             Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_TITLE, banner.getTitle())
                     .putExtra(WebActivity.EX_URL, banner.getJumpContent())
                     .execute();
-//            Launcher.with(getActivity(), WebActivity.class)
-//                    .putExtra(WebActivity.EX_HTML, banner.getJumpContent())
-//                    .putExtra(WebActivity.EX_TITLE, banner.getTitle())
-//                    .execute();
+        } else if (banner.getJumpType() == 2) {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_HTML, banner.getJumpContent())
+                    .putExtra(WebActivity.EX_TITLE, banner.getTitle())
+                    .execute();
         }
     }
 

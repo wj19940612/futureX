@@ -19,6 +19,7 @@
         android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/totalPropertyType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="个人账户"/>
@@ -31,6 +32,7 @@
         android:includeFontPadding="false"
         android:textColor="@color/sixtyPercentWhite"
         android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@id/propertyAmount"
         app:layout_constraintStart_toStartOf="@+id/accountType"
         app:layout_constraintTop_toBottomOf="@+id/accountType"
         tools:text="@string/total_property_equivalent"/>
@@ -40,17 +42,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="23dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="6dp"
-        app:layout_constraintHorizontal_weight="1"
         android:includeFontPadding="false"
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:layout_marginRight="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/transfer"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="@+id/totalPropertyType"
+        app:layout_constraintRight_toLeftOf="@id/transfer"
         app:layout_constraintTop_toBottomOf="@+id/totalPropertyType"
         tools:text="0.13429464"/>
 

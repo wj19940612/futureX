@@ -137,6 +137,9 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                         public void onSuccess(Response<SysMessage> resp) {
                             if (resp.getContent().getDataId() == mOrderId) {
                                 otcOrderDetail();
+                                Intent data = new Intent();
+                                data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
+                                setResult(LEGAL_CURRENCY_ORDER_RESULT, data);
                             }
                         }
                     }.parse();

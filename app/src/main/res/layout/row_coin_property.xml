@@ -135,7 +135,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
         android:gravity="end"
-        android:singleLine="true"
+        android:maxLines="2"
         android:textColor="@color/text22"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
