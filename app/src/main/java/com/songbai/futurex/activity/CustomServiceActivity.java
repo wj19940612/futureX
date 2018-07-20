@@ -129,6 +129,7 @@ public class CustomServiceActivity extends BaseActivity {
         });
         SmartDialog smartDialog = SmartDialog.solo(getActivity());
         smartDialog.setCustomViewController(withDrawPsdViewController)
+                .setCancelableOnTouchOutside(false)
                 .show();
         withDrawPsdViewController.setConfirmText(R.string.reconnect);
         withDrawPsdViewController.setCloseText(R.string.close_session);
@@ -140,6 +141,7 @@ public class CustomServiceActivity extends BaseActivity {
         });
         withDrawPsdViewController.setMsg(R.string.long_time_not_contract_need_reconnect);
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
+        withDrawPsdViewController.setCroseVisability(View.GONE);
     }
 
     @Override
@@ -232,6 +234,7 @@ public class CustomServiceActivity extends BaseActivity {
         });
         SmartDialog smartDialog = SmartDialog.solo(getActivity());
         smartDialog.setCustomViewController(withDrawPsdViewController)
+                .setCancelableOnTouchOutside(false)
                 .show();
         withDrawPsdViewController.setConfirmText(R.string.confirm);
         withDrawPsdViewController.setCloseText(R.string.close_session);

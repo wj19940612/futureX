@@ -555,7 +555,7 @@
 
     <string name="hello_customer_for_you">Hello! This is %1$s. Glad to service you</string>
     <string name="current_service_is_offline_change_service">Customer service is offline, switch customer service?</string>
-    <string name="long_time_not_contract_need_reconnect">You haven&apos;t contact customer service for a long time，need reconnect</string>
+    <string name="long_time_not_contract_need_reconnect">You have not contact customer service for a long time，need reconnect</string>
     <string name="reconnect">Reconnect</string>
     <string name="close_session">Close session</string>
     <string name="trade_with_market_price">Trade at the currently best price</string>
