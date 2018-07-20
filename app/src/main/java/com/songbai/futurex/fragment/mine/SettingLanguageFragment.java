@@ -91,6 +91,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
         Locale locale = new Locale(supportLang.getLang(), TextUtils.isEmpty(country) ? "" : country);
         boolean changed = LanguageUtils.updateLocale(getContext(), locale);
         if (changed) {
+            Preference.get().setCurrentLangageStr(supportLang.getName());
             mLanguageAdapter.notifyDataSetChanged();
             Preference.get().setRefreshLanguage(true);
             Launcher.with(getContext(), MainActivity.class)

@@ -45,12 +45,12 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
     }
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mLogout.setVisibility(LocalUser.getUser().isLogin() ? View.VISIBLE : View.GONE);
+        mLanguage.setSubText(Preference.get().getCurrentLangageStr());
     }
 
     @Override

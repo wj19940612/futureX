@@ -422,6 +422,8 @@
     <string name="email_auth_code">郵箱驗證碼</string>
     <string name="next">下一步</string>
     <string name="registered_and_go_login">已有賬號，去登錄</string>
+    <string name="i_have_read_and_agree">我已閱讀並同意</string>
+    <string name="service_agreement_with_symbol">《服務協議》</string>
     <string name="set_login_password">設置登錄密碼</string>
     <string name="set_new_login_password">設置新登錄密碼</string>
     <string name="at_least_8_english_characters_number_combination">至少8位英文數字組合</string>

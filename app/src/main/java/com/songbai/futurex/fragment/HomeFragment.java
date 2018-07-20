@@ -39,7 +39,6 @@ import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.StatusBarActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.WebActivity;
-import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
@@ -256,13 +255,14 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             if (mNewsList != null && mNewsList.size() > 0) {
                 int index = (int) mNotice.getTag();
                 final int position = index % mNewsList.size();
-                mNotice.setText(mNewsList.get(position).getTitle());
+                final HomeNews homeNews = mNewsList.get(position);
+                mNotice.setText(homeNews.getTitle());
                 mNotice.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String url = String.format(Apic.url.NOTICE_DETAIL_PAGE, mNewsList.get(position).getId());
                         Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_URL, Api.getH5Url(url))
+                                .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
+                                .putExtra(WebActivity.EX_HTML, homeNews.getContent())
                                 .execute();
                     }
                 });
@@ -277,6 +277,10 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_URL, banner.getJumpContent())
                     .execute();
+//            Launcher.with(getActivity(), WebActivity.class)
+//                    .putExtra(WebActivity.EX_HTML, banner.getJumpContent())
+//                    .putExtra(WebActivity.EX_TITLE, banner.getTitle())
+//                    .execute();
         }
     }
 

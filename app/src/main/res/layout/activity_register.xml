@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -208,7 +208,7 @@
             android:checked="true"
             android:gravity="center_vertical"
             android:paddingLeft="6dp"
-            android:text="我已阅读并同意"
+            android:text="@string/i_have_read_and_agree"
             android:textSize="12sp"/>
 
         <TextView
@@ -216,7 +216,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="《用户协议》"
+            android:text="@string/service_agreement_with_symbol"
             android:textColor="@color/colorPrimary"
             android:textSize="12sp"/>
     </LinearLayout>

@@ -3,8 +3,6 @@ package com.songbai.futurex.activity;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Picture;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -24,14 +22,13 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.sbai.httplib.CookieManger;
 import com.songbai.futurex.AppJs;
-import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.utils.Network;
-import com.songbai.futurex.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +45,8 @@ public class WebActivity extends BaseActivity {
     public static final String EX_URL = "url";
     public static final String EX_TITLE = "title";
     public static final String EX_HTML = "html";
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
+    @BindView(R.id.title)
+    TextView mTitleView;
     @BindView(R.id.progressbar)
     ProgressBar mProgress;
     @BindView(R.id.webView)
@@ -266,15 +263,24 @@ public class WebActivity extends BaseActivity {
         return "<html>" + head + bodyHTML + "</html>";
     }
 
-    @OnClick(R.id.refreshButton)
-    public void onViewClicked() {
-        mWebView.reload();
+    @OnClick({R.id.ivBack, R.id.refreshButton})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ivBack:
+                finish();
+                break;
+            case R.id.refreshButton:
+                mWebView.reload();
+                break;
+            default:
+        }
     }
 
     public void updateTitleText(String titleContent) {
         if (isNeedViewTitle()) {
             mTitle = titleContent;
-            mTitleBar.setTitle(mTitle);
+            mTitleView.setText(mTitle);
+            mTitleView.setSelected(true);
         }
     }
 
@@ -315,9 +321,11 @@ public class WebActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(titleText) && !url.contains(titleText)) {
                     mTitle = titleText;
                 }
-                mTitleBar.setTitle(mTitle);
+                mTitleView.setText(mTitle);
+                mTitleView.setSelected(true);
             } else {
-                mTitleBar.setTitle(mTitle);
+                mTitleView.setText(mTitle);
+                mTitleView.setSelected(true);
             }
         }
 
