@@ -87,6 +87,7 @@ public class CustomServiceActivity extends BaseActivity {
         }
     };
     private CustomerService mCustomerService;
+    private long idleStart = System.currentTimeMillis();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +112,34 @@ public class CustomServiceActivity extends BaseActivity {
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        chatOnline();
+        if (System.currentTimeMillis() - idleStart > 10 * 60 * 1000) {
+            showReconnectDialog();
+        } else {
+            chatOnline();
+        }
+    }
+
+    private void showReconnectDialog() {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                unregisterImPush();
+                loadServiceData();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setConfirmText(R.string.reconnect);
+        withDrawPsdViewController.setCloseText(R.string.close_session);
+        withDrawPsdViewController.setOnColseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        withDrawPsdViewController.setMsg(R.string.long_time_not_contract_need_reconnect);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     @Override
@@ -206,6 +234,13 @@ public class CustomServiceActivity extends BaseActivity {
         smartDialog.setCustomViewController(withDrawPsdViewController)
                 .show();
         withDrawPsdViewController.setConfirmText(R.string.confirm);
+        withDrawPsdViewController.setCloseText(R.string.close_session);
+        withDrawPsdViewController.setOnColseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         withDrawPsdViewController.setMsg(R.string.current_service_is_offline_change_service);
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
@@ -316,6 +351,7 @@ public class CustomServiceActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.send:
                 sendMsg();
+                idleStart = System.currentTimeMillis();
                 break;
             case R.id.addPic:
                 sendPicToCustomer();
@@ -393,6 +429,7 @@ public class CustomServiceActivity extends BaseActivity {
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
+                        idleStart = System.currentTimeMillis();
                         if (resp != null && resp.getData() != null) {
                             requestSendPhotoMsg(resp.getData());
                         }

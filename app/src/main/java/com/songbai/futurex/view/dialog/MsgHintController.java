@@ -25,6 +25,14 @@ public class MsgHintController extends SmartDialog.CustomViewController {
     private int mImgRes;
     private int mMsgRes;
     private int mConfirmText;
+    private TextView mBtnClose;
+    private View.OnClickListener mOnColseClickListener;
+    private int mCloseRes;
+    private ImageView mClose;
+
+    public void setOnColseClickListener(View.OnClickListener onColseClickListener) {
+        mOnColseClickListener = onColseClickListener;
+    }
 
     public interface OnClickListener {
         void onConfirmClick();
@@ -43,8 +51,9 @@ public class MsgHintController extends SmartDialog.CustomViewController {
     @Override
     public void onInitView(View view, final SmartDialog dialog) {
         mHintMsg = (TextView) view.findViewById(R.id.hintMsg);
-        ImageView close = (ImageView) view.findViewById(R.id.close);
+        mClose = (ImageView) view.findViewById(R.id.close);
         mConfirm = (TextView) view.findViewById(R.id.confirm);
+        mBtnClose = (TextView) view.findViewById(R.id.btnClose);
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,13 +61,23 @@ public class MsgHintController extends SmartDialog.CustomViewController {
                 mOnClickListener.onConfirmClick();
             }
         });
-        close.setOnClickListener(new View.OnClickListener() {
+        mClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
+        mBtnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnColseClickListener != null) {
+                    mOnColseClickListener.onClick(v);
+                }
+                dialog.dismiss();
+            }
+        });
         setMsg(mMsgRes);
+        setCloseText(mCloseRes);
         setImageRes(mImgRes);
         if (mConfirmText != 0) {
             setConfirmText(mConfirmText);
@@ -89,6 +108,20 @@ public class MsgHintController extends SmartDialog.CustomViewController {
     public void mConfirm(int titleRes) {
         if (isViewInitialized()) {
             mConfirm.setText(titleRes);
+        }
+    }
+
+    public void setCloseText(int closeRes) {
+        mCloseRes = closeRes;
+        if (isViewInitialized()) {
+            mBtnClose.setVisibility(closeRes == 0 ? View.GONE : View.VISIBLE);
+            mBtnClose.setText(closeRes);
+        }
+    }
+
+    public void setCroseVisability(int visability) {
+        if (isViewInitialized()) {
+            mClose.setVisibility(View.VISIBLE);
         }
     }
 }

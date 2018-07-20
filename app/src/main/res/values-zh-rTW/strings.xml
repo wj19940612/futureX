@@ -502,6 +502,9 @@
     <string name="trade_amt">交易額</string>
     <string name="hello_customer_for_you">尊敬的小主您好，我是%1$s，很高興為您服務。</string>
     <string name="current_service_is_offline_change_service">當前客服已離線，是否切換客服？</string>
+    <string name="long_time_not_contract_need_reconnect">您已長時間未聯繫客服，需重新連線</string>
+    <string name="reconnect">重新連接</string>
+    <string name="close_session">關閉會話</string>
     <string name="trade_with_market_price">以當前最優價格交易</string>
     <string name="android_web_agent">ANDROID_AGENT/1.0</string>
     <string name="network_error_please_reload">網路連接失敗 請重新載入</string>
