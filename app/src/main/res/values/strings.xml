@@ -264,6 +264,7 @@
     <string name="long_press_to_save_qr_code">长按保存二维码</string>
     <string name="copy_success">复制成功</string>
     <string name="save_qr_code">保存二维码</string>
+    <string name="secret_key">秘钥</string>
     <string name="save_success">保存成功</string>
     <string name="copy_address">复制地址</string>
     <string name="recharge_coin_rules">请勿向上述地址充值任何非%1$s资产，否则资产将不可找回。\n您充值至上述地址后，需要整个网络节点的确认，%2$d次网络确认后到账。\n最小充值金额：%3$s ，小于最小金额的充值将不会上账。\n您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。\n请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>

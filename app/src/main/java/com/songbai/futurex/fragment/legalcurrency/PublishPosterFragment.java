@@ -302,6 +302,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                     }
                     if (string.length() > 0) {
                         double rate = Double.valueOf(string);
+                        if (rate < -99) {
+                            rate = -99;
+                            mPremiumRate.setText("-99");
+                            mPremiumRate.setSelection(mPremiumRate.getText().length());
+                        }
                         setFloatingPrice(rate);
                     } else {
                         setFloatingPrice(0);

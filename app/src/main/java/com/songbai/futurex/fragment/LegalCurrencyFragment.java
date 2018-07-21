@@ -23,6 +23,8 @@ import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.legalcurrency.MyPosterFragment;
 import com.songbai.futurex.fragment.legalcurrency.PublishPosterFragment;
 import com.songbai.futurex.fragment.legalcurrency.WantBuyOrSellFragment;
+import com.songbai.futurex.fragment.mine.CashPwdFragment;
+import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.fragment.mine.SelectPayTypeFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -55,6 +57,7 @@ import butterknife.Unbinder;
  * APIs:
  */
 public class LegalCurrencyFragment extends BaseFragment {
+    private static final int SHOULD_BIND_PAY = -1;
     private static int REQUEST_PUBLISH_POSTER = 14321;
 
     @BindView(R.id.titleBar)
@@ -233,14 +236,22 @@ public class LegalCurrencyFragment extends BaseFragment {
                 break;
             case R.id.publishPoster:
                 if (user.isLogin()) {
-                    if (user.getUserInfo().getPayment() > 0) {
-                        UniqueActivity.launcher(this, PublishPosterFragment.class)
-                                .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, mSelectedLegalSymbol)
-                                .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
-                                .execute(this, REQUEST_PUBLISH_POSTER);
-                    } else {
-                        showBIndPayDialog();
+                    if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+                        showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
+                        return;
                     }
+                    if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+                        showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
+                        return;
+                    }
+                    if (LocalUser.getUser().getUserInfo().getPayment() < 1) {
+                        showAlertMsgHint(SHOULD_BIND_PAY);
+                        return;
+                    }
+                    UniqueActivity.launcher(this, PublishPosterFragment.class)
+                            .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, mSelectedLegalSymbol)
+                            .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
+                            .execute(this, REQUEST_PUBLISH_POSTER);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -249,20 +260,59 @@ public class LegalCurrencyFragment extends BaseFragment {
         }
     }
 
-    private void showBIndPayDialog() {
-        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
+    private void showAlertMsgHint(final int code) {
+        int msg = 0;
+        int confirmText = R.string.ok;
+        switch (code) {
+            case SHOULD_BIND_PAY:
+                msg = R.string.have_not_bind_pay;
+                confirmText = R.string.go_to_bind;
+                break;
+            case Resp.Code.CASH_PWD_NONE:
+                msg = R.string.set_draw_cash_pwd_hint;
+                confirmText = R.string.go_to_set;
+                break;
+            case Resp.Code.NEEDS_PRIMARY_CERTIFICATION:
+                msg = R.string.poster_owner_set_needs_primary_certification;
+                confirmText = R.string.go_to;
+                break;
+            case Resp.Code.NEEDS_SENIOR_CERTIFICATION:
+                msg = R.string.poster_owner_set_needs_senior_certification;
+                confirmText = R.string.go_to;
+                break;
+            case Resp.Code.NEEDS_MORE_DEAL_COUNT:
+                msg = R.string.your_deal_count_is_less_than_limit;
+                confirmText = R.string.got_it;
+                break;
+            default:
+        }
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
             @Override
             public void onConfirmClick() {
-                UniqueActivity.launcher(LegalCurrencyFragment.this, SelectPayTypeFragment.class)
-                        .execute();
+                switch (code) {
+                    case SHOULD_BIND_PAY:
+                        UniqueActivity.launcher(LegalCurrencyFragment.this, SelectPayTypeFragment.class)
+                                .execute();
+                        break;
+                    case Resp.Code.CASH_PWD_NONE:
+                        UniqueActivity.launcher(LegalCurrencyFragment.this, CashPwdFragment.class)
+                                .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
+                                .execute();
+                        break;
+                    case Resp.Code.NEEDS_PRIMARY_CERTIFICATION:
+                        UniqueActivity.launcher(LegalCurrencyFragment.this, PrimaryCertificationFragment.class)
+                                .execute();
+                        break;
+                    default:
+                }
             }
         });
         SmartDialog smartDialog = SmartDialog.solo(getActivity());
-        smartDialog.setCustomViewController(msgHintController)
+        smartDialog.setCustomViewController(withDrawPsdViewController)
                 .show();
-        msgHintController.setMsg(R.string.publish_poster_have_not_bind_pay);
-        msgHintController.setConfirmText(R.string.go_to_bind);
-        msgHintController.setImageRes(R.drawable.ic_popup_attention);
+        withDrawPsdViewController.setConfirmText(confirmText);
+        withDrawPsdViewController.setMsg(msg);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     private void showWaresPairFilter() {

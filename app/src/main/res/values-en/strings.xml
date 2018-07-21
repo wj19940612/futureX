@@ -116,9 +116,9 @@
     <string name="confirm_add">Confirm</string>
     <string name="own_bank_name">Bank</string>
     <string name="account_sub_bank_name">Branch</string>
-    <string name="bank_card_number">Card number</string>
+    <string name="bank_card_number">Card Num</string>
     <string name="please_input_account_sub_bank_name">Input bank name</string>
-    <string name="please_input_bank_card_number">Input your bankcard number</string>
+    <string name="please_input_bank_card_number">Input bankcard number</string>
     <string name="draw_coin_address_management">Withdrawal address</string>
     <string name="cn_tw">Taiwan</string>
     <string name="cn_mainland">China mainland</string>
@@ -192,7 +192,7 @@
     <string name="feedback_image_hint">Image(optional, describe your problem)</string>
     <string name="x_faction_x">%1$d/%2$d</string>
     <string name="x_faction_str_x">%1$s/%2$s</string>
-    <string name="feedback_hint">Please discribe the problem you found. Upload a screenshot if possible.</string>
+    <string name="feedback_hint">Please describe the problem you found. Upload a screenshot if possible.</string>
     <string name="confirm_submit">Submit</string>
     <string name="invite_activity_rules">1. Minimum withdrawal amount: XX \n2.Be sure that the address is correct before you apply for withdrawal. Once sent to the block chain network, the transaction is irrevocable.\n3. Confirmation of all network nodes is needed after withdrawal. You can get your token after x times confirmation. \n4. Please do not take your token directly to ICO crowdfunding address, which may prevent you from receiving crowdfunding digital assets. \n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
     <string name="check_activity_rules">Check Rules</string>
@@ -218,8 +218,8 @@
     <string name="google_authenticator">Google Authenticator</string>
     <string name="bind_google_authenticator_success">Google Authenticator bound</string>
     <string name="google_authenticator_settings">Google Authenticator settings</string>
-    <string name="google_authenticator_code">Google verification code</string>
-    <string name="please_input_google_authenticator_code">Input Google verification code</string>
+    <string name="google_authenticator_code">Code</string>
+    <string name="please_input_google_authenticator_code">Input Google code</string>
     <string name="google_authenticator_hint">1. Install Google Authenticator, click "+" at the top right corner, and select "Manual entry" or "Scan barcode". \n2. Scan QR code below, or input the key to add verification token. \n3. The key will be used to find back Google Authenticator when your device is lost or changed. Please backup and save the key below before you bind your mobile.</string>
     <string name="use_google_authenticator_by">Use Google Authenticator to:</string>
     <string name="reset_draw_cash_pwd">Reset fund password</string>
@@ -256,6 +256,7 @@
     <string name="long_press_to_save_qr_code">Long press to save QR code</string>
     <string name="copy_success">Copied</string>
     <string name="save_qr_code">Save QR code</string>
+    <string name="secret_key">Key</string>
     <string name="copy_address">Copy address</string>
     <string name="recharge_coin_rules">Don\'t top up any non-%1$s assets to address above, otherwise it won\'t be found back. \nConfirmation of all network nodes is needed after top-up. You will receive the token after %2$d confirmation. \nMinimum top-up amount: %3$s. Less top-up is invalid. \nThe top-up address seldom changes and you can repeatedly top up. You will be noted by website notice or email if the address changes. \nMake sure that your computer and browser is secure to prevent information from being tampered with or leaked.</string>
     <string name="select_coin_type">Select token</string>

@@ -170,7 +170,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
         mConfirmTransfer.setEnabled(mMaxAmount > 0);
         mTransferAmount.setHint(getString(R.string.most_transfer_amount_type_x,
                 FinanceUtil.formatWithScale(mMaxAmount, 8),
-                mSelectedCoinType.toUpperCase()));
+                ""));
         mTransferAmount.addTextChangedListener(new ValidationWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
