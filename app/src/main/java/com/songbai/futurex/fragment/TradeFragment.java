@@ -524,6 +524,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void switchNewCurrencyPair(CurrencyPair currencyPair) {
         mCurrencyPair = currencyPair;
+        mPairDesc = null;
 
         mPairsPopup.setCurCurrencyPair(mCurrencyPair);
         unsubscribeMarket();
@@ -623,7 +624,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeVolumeView.setDeepList(pairMarket.getDeep().getBuyDeep(), pairMarket.getDeep().getSellDeep());
         MarketData quota = pairMarket.getQuota();
         if (mPairDesc != null && quota != null) {
-//            mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), 8));
             mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
             mPriceChange.setText(CurrencyUtils.getPrefixPercent(quota.getUpDropSpeed()));
             if (quota.getUpDropSpeed() >= 0) {

@@ -185,15 +185,15 @@
                                 android:maxLines="1"
                                 android:textColor="@color/green"
                                 android:textSize="17sp"
-                                app:maxViewWidth="85dp"
-                                app:minTextSize="10sp"
+                                app:maxViewWidth="70dp"
+                                app:minTextSize="12sp"
                                 tools:text="0.00000000"/>
 
                             <TextView
                                 android:id="@+id/priceChange"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="8dp"
+                                android:layout_marginLeft="4dp"
                                 android:maxLines="1"
                                 android:text="0.00%"
                                 android:textColor="@color/green"
