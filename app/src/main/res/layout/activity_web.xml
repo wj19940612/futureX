@@ -47,7 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_alignParentTop="true"
-        android:layout_below="@+id/titleBar"
         android:indeterminateDrawable="@android:color/black"
         android:max="100"
         android:progressDrawable="@drawable/progress"/>
@@ -58,7 +57,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/progressbar"
+        android:layout_below="@id/titleBar"
         android:visibility="visible"/>
 
     <LinearLayout
@@ -84,6 +83,5 @@
             android:text="@string/refresh"
             android:textSize="16sp"/>
     </LinearLayout>
-
 
 </RelativeLayout>

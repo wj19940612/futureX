@@ -260,15 +260,15 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                     return;
                 }
                 if (mType == OTCOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
-                    showAlertMsgHint(Resp.Code.NEEDS_SENIOR_CERTIFICATION);
-                    return;
-                }
-                if (mType == OTCOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getPayment() < 1) {
-                    showAlertMsgHint(SHOULD_BIND_PAY);
+                    showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
                     return;
                 }
                 if (mType == OTCOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
                     showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
+                    return;
+                }
+                if (mType == OTCOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getPayment() < 1) {
+                    showAlertMsgHint(SHOULD_BIND_PAY);
                     return;
                 }
                 showBuyOrSellView(mType, legalCurrencyTrade);

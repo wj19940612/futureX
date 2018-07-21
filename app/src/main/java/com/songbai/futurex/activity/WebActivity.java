@@ -239,10 +239,13 @@ public class WebActivity extends BaseActivity {
     }
 
     protected void loadPage() {
+        updateTitleText(mTitle);
         if (!TextUtils.isEmpty(mPageUrl)) {
             mWebView.loadUrl(mPageUrl);
         } else if (!TextUtils.isEmpty(mPureHtml)) {
             openWebView(mPureHtml);
+        } else if (TextUtils.isEmpty(mPureHtml)) {
+            mProgress.setVisibility(View.GONE);
         }
     }
 
@@ -321,7 +324,7 @@ public class WebActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(titleText) && !url.contains(titleText)) {
                     mTitle = titleText;
                 }
-                Log.e("wtf", "onPageFinished: " +mTitle);
+                Log.e("wtf", "onPageFinished: " + mTitle);
                 mTitleView.setText(mTitle);
                 mTitleView.setSelected(true);
             } else {

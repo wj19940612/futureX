@@ -184,7 +184,7 @@ public class PasswordEditText extends LinearLayout {
         }
         editText.setPadding(0, padding, 0, padding);
         editText.setTextColor(ContextCompat.getColor(getContext(), R.color.text22));
-        editText.setTextSize(15);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
         editText.setMaxLines(1);
         editText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.text99));
         Field f;

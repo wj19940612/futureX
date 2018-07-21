@@ -121,16 +121,16 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     private void alignText() {
         Locale userLocale = LanguageUtils.getUserLocale(getContext());
         boolean chinese = "zh".equals(userLocale.getLanguage());
-        mAreaText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mMainlandBankNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mMainlandBankBranchText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mMainlandCardNumberText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mTwBankNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mBankCodeText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mTwBankBranchText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mTwCardNumberText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mRealNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
-        mWithDrawPassText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mAreaText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mMainlandBankNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mMainlandBankBranchText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mMainlandCardNumberText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mTwBankNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mBankCodeText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mTwBankBranchText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mTwCardNumberText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mRealNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
+        mWithDrawPassText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(90, getResources()));
     }
 
     private void setViewByArea(boolean isMainland) {

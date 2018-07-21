@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
@@ -400,9 +399,12 @@ public class CustomServiceActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(ReqError reqError) {
-                super.onFailure(reqError);
-//                updateSendMsgUI(text, CustomServiceChat.SEND_FAILED);
+            protected void onRespFailure(Resp failedResp) {
+                if (failedResp.getCode() == 6003) {
+                    showReconnectDialog();
+                } else {
+                    super.onRespFailure(failedResp);
+                }
             }
         }).fireFreely();
     }
@@ -415,9 +417,12 @@ public class CustomServiceActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(ReqError reqError) {
-                super.onFailure(reqError);
-//                updateSendPhotoUI(photoAddress, CustomServiceChat.SEND_FAILED);
+            protected void onRespFailure(Resp failedResp) {
+                if (failedResp.getCode() == 6003) {
+                    showReconnectDialog();
+                } else {
+                    super.onRespFailure(failedResp);
+                }
             }
         }).fireFreely();
     }
