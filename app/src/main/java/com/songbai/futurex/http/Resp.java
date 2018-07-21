@@ -15,7 +15,6 @@ public class Resp<T> {
 
     private int code;
     private String msg;
-
     private T data;
 
     public int getCode() {

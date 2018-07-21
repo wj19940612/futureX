@@ -19,12 +19,44 @@
     <string name="ok">OK</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="user_invalid">The user has expired. Please login again.</string>
 
+    <!--订单成交状态-->
+    <string name="not_deal">Pending</string>
+    <string name="deal_with_arrow">Filled></string>
+    <string name="revoking">Cancelling</string>
+    <string name="revoked">Cancelled</string>
+    <string name="part_deal_with_arrow">Partially filled></string>
+    <string name="system_revoked">System Cancelled</string>
+    <string name="part_deal_part_revoked_with_arrow">Partially cancelled></string>
+    <string name="unknown_status">Unknown status</string>
+
+    <!--委托单-->
+    <string name="revoke_order">Cancel order</string>
+    <string name="entrust_price_x">Price (%1$s)</string>
+    <string name="entrust_volume_x">Amt (%1$s)</string>
+    <string name="actual_deal_x">Filled (%1$s)</string>
+
+    <!--历史单-->
+    <string name="deal_total_amt_x">Turnover (%1$s)</string>
+    <string name="deal_average_price_x">Avg price (%1$s)</string>
+    <string name="deal_volume_x">Filled amt (%1$s)</string>
+
+    <!--交易详情-->
+    <string name="deal_price">Deal price</string>
+    <string name="deal_volume">Filled amt</string>
+    <string name="fee">Fee</string>
+
+    <!--拍照-->
     <string name="please_select_portrait">Select image</string>
     <string name="take_phone_from_camera">Camera</string>
     <string name="look_big_picture">Click to enlarge</string>
     <string name="take_phone_from_phone">Select from album</string>
     <string name="take_phone_cancel">Cancel</string>
+
+    <!--币币交易列表 Filter-->
+    <string name="filter">Filter</string>
+    <string name="please_chose_counter_currency">Unit</string>
 
     <string name="click_login">Log in</string>
     <string name="property">Assets</string>
@@ -242,7 +274,6 @@
     <string name="please_input_cash_pwd">Input fund password</string>
     <string name="amount">Amount</string>
     <string name="all">All</string>
-    <string name="fee">Fee</string>
     <string name="cash_pwd">Fund password</string>
     <string name="set_cash_pwd_rules">Notice: Your fund password will be used for trade, withdrawal and security setting. It is suggested to be different than login password. The platform will take no responsibility if your account is stolen because of the password.</string>
     <string name="confirm_with_draw">Confirm</string>
@@ -583,16 +614,6 @@
     <string name="obtainable_currency_x_x">Gainable &#160;%1$s&#160;%2$s</string>
     <string name="trade_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
     <string name="please_choose_limited_condition">Select the conditions</string>
-    <string name="entrust_price_x">Order price (%1$s)</string>
-    <string name="entrust_volume_x">Order amount (%1$s)</string>
-    <string name="actual_deal_x">Filled (%1$s)</string>
-    <string name="deal_total_amt_x">total(%1$s)</string>
-    <string name="deal_average_price_x">Filled price (%1$s)</string>
-    <string name="deal_volume_x">VOL (%1$s)</string>
-    <string name="revoked">Cancelled</string>
-    <string name="system_revoked">Cancelled by system</string>
-    <string name="unknown_status">Unknown operation</string>
-    <string name="filter">Filter</string>
     <string name="trading_on">Pair</string>
     <string name="select_currency">Select currency unit</string>
     <string name="search_currency_pairs">Search</string>
@@ -607,22 +628,15 @@
     <string name="draw_cash_pwd_can_not_short_than_8">Fund password should not be less than 8 digits</string>
     <string name="entrust_success">Entrust success</string>
     <string name="revoking_order">Revoking</string>
-    <string name="revoke_order">Revoke</string>
     <string name="deal_detail">Order Detail</string>
     <string name="time_x">Time %1$s</string>
     <string name="deal_fee_x">Fee (%1$s)</string>
-    <string name="deal_volume">VOL</string>
-    <string name="not_deal">Pending</string>
+
     <string name="transfer_success">Transfer success</string>
     <string name="save_success">Save success</string>
     <string name="transfer_to_trade_account">Transfer to exchange account</string>
     <string name="quota_price">Price:</string>
     <string name="are_you_sure_to_transfer">Confirm transfer?</string>
-    <string name="deal_price">Fill price</string>
-    <string name="deal_with_arrow">Filled</string>
-    <string name="revoking">Cancelling</string>
-    <string name="part_deal_with_arrow">Partially filled</string>
-    <string name="part_deal_part_revoked_with_arrow">Partially filled &amp; partially cancelled</string>
     <string name="is_latest_version_now">Latest version</string>
     <string name="over_500">Your words cannot exceed 500 characters</string>
     <string name="input_msg_hell">Input...</string>

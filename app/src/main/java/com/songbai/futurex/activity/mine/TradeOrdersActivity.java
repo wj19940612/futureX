@@ -145,8 +145,10 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             @Override
             public void onTabSelected(int position, String content) {
                 if (position == 0) {
+                    mEmptyView.setVisibility(View.GONE);
                     mOrderAdapter.setOrderType(Order.TYPE_CUR_ENTRUST);
                 } else {
+                    mEmptyView.setVisibility(View.GONE);
                     mOrderAdapter.setOrderType(Order.TYPE_HIS_ENTRUST);
                 }
                 mPage = 0;

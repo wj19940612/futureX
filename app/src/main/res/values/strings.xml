@@ -18,7 +18,39 @@
     <string name="ok">确定</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
+    <string name="user_invalid">用户已过期，请重新登录</string>
 
+    <!--订单成交状态-->
+    <string name="not_deal">未成交</string>
+    <string name="deal_with_arrow">完全成交></string>
+    <string name="revoking">撤单中</string>
+    <string name="revoked">已撤单</string>
+    <string name="part_deal_with_arrow">部分成交></string>
+    <string name="system_revoked">系统撤单</string>
+    <string name="part_deal_part_revoked_with_arrow">部分成交已撤></string>
+    <string name="unknown_status">未知状态</string>
+
+    <!--委托单-->
+    <string name="revoke_order">撤單</string>
+    <string name="entrust_price_x">委托价 (%1$s)</string>
+    <string name="entrust_volume_x">委托量 (%1$s)</string>
+    <string name="actual_deal_x">实际成交 (%1$s)</string>
+
+    <!--历史单-->
+    <string name="deal_total_amt_x">成交总额 (%1$s)</string>
+    <string name="deal_average_price_x">成交均价 (%1$s)</string>
+    <string name="deal_volume_x">成交量 (%1$s)</string>
+
+    <!--交易详情-->
+    <string name="deal_price">成交价</string>
+    <string name="deal_volume">成交量</string>
+    <string name="fee">手续费</string>
+
+    <!--币币交易列表 Filter-->
+    <string name="filter">筛选</string>
+    <string name="please_chose_counter_currency">请选择计价货币</string>
+
+    <!--拍照-->
     <string name="please_select_portrait">请选择头像</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="look_big_picture">查看大图</string>
@@ -251,7 +283,6 @@
     <string name="please_input_cash_pwd">请输入资金密码</string>
     <string name="amount">数量</string>
     <string name="all">全部</string>
-    <string name="fee">手续费</string>
     <string name="cash_pwd">资金密码</string>
     <string name="set_cash_pwd_rules">注意：您的资金密码是用来交易和提现和账户安全设置，建议您不要设置与登录密码一致，由此产生的账户被盗，本站概不负责。</string>
     <string name="confirm_with_draw">确认提币</string>
@@ -617,31 +648,15 @@
     <string name="obtainable_currency_x_x">可得&#160;%1$s&#160;%2$s</string>
     <string name="trade_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
     <string name="please_choose_limited_condition">请选择限制条件</string>
-    <string name="entrust_price_x">委托价 (%1$s)</string>
-    <string name="entrust_volume_x">委托量 (%1$s)</string>
-    <string name="actual_deal_x">实际成交 (%1$s)</string>
-    <string name="deal_total_amt_x">成交总额 (%1$s)</string>
-    <string name="deal_average_price_x">成交均价 (%1$s)</string>
-    <string name="deal_price">成交价</string>
-    <string name="deal_volume_x">成交量 (%1$s)</string>
-    <string name="deal_volume">成交量</string>
-    <string name="not_deal">未成交</string>
-    <string name="deal_with_arrow">完全成交></string>
-    <string name="revoking">撤单中</string>
-    <string name="revoked">已撤销</string>
-    <string name="part_deal_with_arrow">部分成交></string>
-    <string name="system_revoked">系统撤销</string>
-    <string name="part_deal_part_revoked_with_arrow">部分成交已撤销></string>
-    <string name="unknown_status">未知状态</string>
-    <string name="filter">筛选</string>
+
     <string name="trading_on">交易对</string>
     <string name="select_currency">请选择计价货币</string>
     <string name="search_currency_pairs">搜索币种</string>
     <string name="deal_fee_x">手续费 (%1$s)</string>
     <string name="time_x">时间 %1$s</string>
     <string name="deal_detail">成交明细</string>
-    <string name="revoke_order">撤單</string>
     <string name="entrust_success">委托成功</string>
     <string name="no_enough_balance">余额不足</string>
     <string name="complete">完成</string>
+
 </resources>

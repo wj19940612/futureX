@@ -210,7 +210,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
     private void checkUserStatus() {
         if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(OtcTradeChatActivity.this, LoginActivity.class).executeForResult(REQ_LOGIN);
+            Launcher.with(OtcTradeChatActivity.this, LoginActivity.class).execute(REQ_CODE_LOGIN);
         }
     }
 
@@ -428,7 +428,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
+        if (requestCode == REQ_CODE_LOGIN && resultCode == RESULT_OK) {
             initAll();
         }
     }

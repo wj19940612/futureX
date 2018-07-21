@@ -105,7 +105,7 @@ public class WebActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case LoginActivity.REQ_LOGIN:
+                case LoginActivity.REQ_CODE_LOGIN:
                     // init cookies
                     mWebView.postDelayed(new Runnable() {
                         @Override
