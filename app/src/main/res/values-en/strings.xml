@@ -347,6 +347,7 @@
     <string name="set_draw_cash_pwd_hint">Please set your fund password first</string>
     <string name="go_to_set">Set it now</string>
     <string name="publish_poster_have_not_bind_pay">You need to set the OTC payments before posting ads</string>
+    <string name="have_not_bind_pay">You need to set the OTC payments before</string>
     <string name="go_to_bind">Set it now</string>
     <string name="please_select_price_type">Select price type</string>
     <string name="floating_price_rate">Premium rate</string>

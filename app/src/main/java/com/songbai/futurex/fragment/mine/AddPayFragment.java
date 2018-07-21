@@ -50,6 +50,10 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     Unbinder unbinder;
+    @BindView(R.id.nameText)
+    TextView mNameText;
+    @BindView(R.id.withDrawPassText)
+    TextView mWithDrawPassText;
     private boolean mIsAlipay;
     private String mName;
     private BindBankList mBindBankList;

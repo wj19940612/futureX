@@ -23,21 +23,16 @@
         android:layout_marginTop="12dp"
         android:background="@color/white">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/areaText"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="14dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:minWidth="105dp"
-                android:text="@string/location"
-                android:textColor="@color/text22"
-                android:textSize="16sp"/>
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="14dp"
+            android:text="@string/location"
+            android:textColor="@color/text22"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/bankArea"
@@ -45,7 +40,7 @@
             android:layout_height="match_parent"
             android:drawableRight="@drawable/ic_common_pop_arrow_down"
             android:gravity="center_vertical"
-            android:paddingLeft="16dp"
+            android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:textColor="@color/text22"
             android:textSize="16sp"
@@ -66,11 +61,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/mainlandBankNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/own_bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -95,11 +90,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/mainlandBankBranchText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/account_sub_bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -122,11 +117,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/mainlandCardNumberText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/bank_card_number"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -138,8 +133,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_bank_card_number"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"/>
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -157,11 +152,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/twBankNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -184,11 +179,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/bankCodeText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/bank_code"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -211,11 +206,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/twBankBranchText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/sub_bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -238,11 +233,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/twCardNumberText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/bank_card_account"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -265,11 +260,11 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/realNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
-                android:minWidth="105dp"
                 android:text="@string/bank_card_account_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -294,11 +289,11 @@
         android:background="@color/white">
 
         <TextView
+            android:id="@+id/withDrawPassText"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
             android:gravity="center_vertical"
-            android:minWidth="105dp"
             android:text="@string/with_draw_pass"
             android:textColor="@color/text22"
             android:textSize="16sp"/>

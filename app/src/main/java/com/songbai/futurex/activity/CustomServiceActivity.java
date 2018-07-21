@@ -3,7 +3,6 @@ package com.songbai.futurex.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,10 +20,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
@@ -296,6 +291,14 @@ public class CustomServiceActivity extends BaseActivity {
                 updateCustomerService(resp.getData());
                 registerImPush();
                 chatOnline();
+            }
+
+            @Override
+            protected void onRespFailure(Resp failedResp) {
+                super.onRespFailure(failedResp);
+                if (failedResp.getCode() == 6003) {
+                    showReconnectDialog();
+                }
             }
         }).fireFreely();
     }
@@ -649,7 +652,7 @@ public class CustomServiceActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(final OnRetryClickListener onRetryClickListener, CustomerService customerService, Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, final int position, final int itemCount) {
+            public void bindingData(final OnRetryClickListener onRetryClickListener, CustomerService customerService, Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
                 if (customerService != null) {
                     GlideApp.with(context).load(customerService.getUserPortrait())
                             .placeholder(R.drawable.ic_default_head_portrait)
@@ -665,22 +668,6 @@ public class CustomServiceActivity extends BaseActivity {
 
                 if (customServiceChat.isPhoto()) {
                     GlideApp.with(context).load(customServiceChat.getContent())
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    if (isFirstResource) {
-                                        if (position == itemCount - 1) {
-
-                                        }
-                                    }
-                                    return false;
-                                }
-                            })
                             .centerCrop()
                             .transform(new ThumbTransform(context))
                             .into(mPhoto);

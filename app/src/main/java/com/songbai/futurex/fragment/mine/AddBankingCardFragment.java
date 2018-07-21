@@ -25,9 +25,12 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.BankBindData;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankListBean;
+import com.songbai.futurex.utils.Display;
+import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.view.PasswordEditText;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +69,26 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     LinearLayout mTwGroup;
     @BindView(R.id.confirm_add)
     TextView mConfirmAdd;
+    @BindView(R.id.areaText)
+    TextView mAreaText;
+    @BindView(R.id.mainlandBankNameText)
+    TextView mMainlandBankNameText;
+    @BindView(R.id.mainlandBankBranchText)
+    TextView mMainlandBankBranchText;
+    @BindView(R.id.mainlandCardNumberText)
+    TextView mMainlandCardNumberText;
+    @BindView(R.id.twBankNameText)
+    TextView mTwBankNameText;
+    @BindView(R.id.bankCodeText)
+    TextView mBankCodeText;
+    @BindView(R.id.twBankBranchText)
+    TextView mTwBankBranchText;
+    @BindView(R.id.twCardNumberText)
+    TextView mTwCardNumberText;
+    @BindView(R.id.realNameText)
+    TextView mRealNameText;
+    @BindView(R.id.withDrawPassText)
+    TextView mWithDrawPassText;
     private Unbinder mBind;
     private ArrayList<BankListBean> mMainland;
     private ArrayList<BankListBean> mTw;
@@ -90,8 +113,24 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         option.add(getString(R.string.cn_mainland));
         option.add(getString(R.string.cn_tw));
+        alignText();
         setViewByArea(isMainland);
         getBankList();
+    }
+
+    private void alignText() {
+        Locale userLocale = LanguageUtils.getUserLocale(getContext());
+        boolean chinese = "zh".equals(userLocale.getLanguage());
+        mAreaText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mMainlandBankNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mMainlandBankBranchText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mMainlandCardNumberText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mTwBankNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mBankCodeText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mTwBankBranchText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mTwCardNumberText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mRealNameText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
+        mWithDrawPassText.setMinWidth(chinese ? 0 : (int) Display.dp2Px(105, getResources()));
     }
 
     private void setViewByArea(boolean isMainland) {

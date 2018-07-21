@@ -338,6 +338,7 @@
     <string name="set_draw_cash_pwd_hint">您還未設置資金密碼，為了您賬戶的安全，請先設置</string>
     <string name="go_to_set">去設置</string>
     <string name="publish_poster_have_not_bind_pay">為了交易的安全和順利進行，您需先進行法幣支付綁定才可發布廣告</string>
+    <string name="have_not_bind_pay">為了交易的安全和順利進行，您需先進行法幣支付綁定</string>
     <string name="go_to_bind">去綁定</string>
     <string name="please_select_price_type">請選擇價格類型</string>
     <string name="floating_price_rate">溢價比例</string>

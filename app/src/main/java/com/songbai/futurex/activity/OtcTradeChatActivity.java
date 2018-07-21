@@ -542,7 +542,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
             @Override
             public void onReScroll() {
-//                updateRecyclerViewPosition(false);
+                updateRecyclerViewPosition(false);
             }
         };
     }
