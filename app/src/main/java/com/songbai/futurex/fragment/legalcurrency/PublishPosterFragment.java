@@ -265,7 +265,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 break;
             case OtcWarePoster.FLOATING_PRICE:
                 mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext(), true, true)
-                        .filterMin(-100).filterMax(1000)});
+                        .filterMin(-99).filterMax(1000)});
                 mPremiumRate.setText(waresModel.getPercent());
                 break;
             default:
@@ -877,7 +877,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 break;
             case OtcWarePoster.FLOATING_PRICE:
                 mPremiumRate.setFilters(new InputFilter[]{new MoneyValueFilter(getContext(), true, true)
-                        .filterMin(-100).filterMax(1000)});
+                        .filterMin(-99).filterMax(1000)});
                 mPremiumRate.setText(mWaresModel.getPercent());
                 mPriceType.setText(R.string.floating_price);
                 mPriceText.setText(R.string.floating_price_rate);

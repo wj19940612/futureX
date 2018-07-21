@@ -518,6 +518,8 @@
     <string name="email_auth_code">邮箱验证码</string>
     <string name="next">下一步</string>
     <string name="registered_and_go_login">已有账号，去登录</string>
+    <string name="i_have_read_and_agree">我已阅读并同意</string>
+    <string name="service_agreement_with_symbol">《服务协议》</string>
     <string name="set_login_password">设置登录密码</string>
     <string name="set_new_login_password">设置新登录密码</string>
     <string name="at_least_8_english_characters_number_combination">至少8位英文数字组合</string>
@@ -627,7 +629,7 @@
     <string name="please_not_download_again">请勿重复下载</string>
     <string name="download_fail">下载失败</string>
     <string name="check_new_version">发现最新版本</string>
-    <string name="is_latest_version_now">已经是最新版本</string>
+    <string name="is_latest_version_now">已经是最新版本</string>string/confrim_pwd
     <string name="download_complete">下载完成</string>
     <string name="update">更新</string>
 

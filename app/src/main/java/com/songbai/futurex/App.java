@@ -76,8 +76,8 @@ public class App extends Application {
     }
 
     private void setLanguage() {
-        Locale locale = LanguageUtils.getCurrentLocale(this);
-        LanguageUtils.updateLocale(this, locale);
+        Locale locale = LanguageUtils.getUserLocale(getAppContext());
+        LanguageUtils.updateLocale(getAppContext(), locale);
     }
 
     private void processCaughtException() {

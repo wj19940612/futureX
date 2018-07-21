@@ -23,7 +23,6 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
 import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragment;
-import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
@@ -116,7 +115,8 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                 if (mPageType == PAGE_TYPE_NOTICE) {
                     String url = String.format(Apic.url.NOTICE_DETAIL_PAGE, sysMessage.getId());
                     Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_URL, Api.getH5Url(url))
+                            .putExtra(WebActivity.EX_HTML, sysMessage.getContent())
+                            .putExtra(WebActivity.EX_TITLE, sysMessage.getTitle())
                             .execute();
                 } else {
                     int direct = 0;

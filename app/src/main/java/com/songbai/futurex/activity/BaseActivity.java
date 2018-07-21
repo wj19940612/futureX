@@ -131,7 +131,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
     }
 
     private void setLanguage() {
-        Locale locale = LanguageUtils.getCurrentLocale(this);
+        Locale locale = LanguageUtils.getUserLocale(this);
         LanguageUtils.updateLocale(this, locale);
     }
 

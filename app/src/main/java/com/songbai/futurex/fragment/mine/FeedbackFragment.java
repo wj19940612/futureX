@@ -53,6 +53,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
     private ArrayList<String> mImages = new ArrayList<>();
     private FeedbackPicAdapter mPicAdapter;
     private String mContent;
+    private int mPosition = -1;
 
     @Nullable
     @Override
@@ -92,18 +93,28 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
     };
 
     private void selectImage(final int position) {
+        int maxImageAmount = MAX_IMAGE_SIZE - mImages.size();
+        if (mImages.size() > position) {
+            maxImageAmount = MAX_IMAGE_SIZE - mImages.size() + 1;
+        }
+        mPosition = position;
         UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY,
-                "", -1, "", MAX_IMAGE_SIZE - mImages.size())
+                "", -1, "", maxImageAmount)
                 .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
                     public void onImagePath(int index, String imagePath) {
                         String[] split = imagePath.split(",");
-                        if (mImages.size()>position) {
-                            mImages.remove(position);
-                        }
                         for (String aSplit : split) {
                             if (!mImages.contains(aSplit)) {
-                                mImages.add(aSplit);
+                                if (mPosition != -1) {
+                                    if (mImages.size() > mPosition) {
+                                        mImages.remove(position);
+                                    }
+                                    mImages.add(position, aSplit);
+                                    mPosition = -1;
+                                } else {
+                                    mImages.add(aSplit);
+                                }
                             }
                         }
                         mPicAdapter.notifyDataSetChanged();
