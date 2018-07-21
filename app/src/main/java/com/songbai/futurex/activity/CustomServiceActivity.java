@@ -3,6 +3,7 @@ package com.songbai.futurex.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
@@ -90,6 +95,7 @@ public class CustomServiceActivity extends BaseActivity {
     private long idleStart = System.currentTimeMillis();
     private SmartDialog mReconnectSmartDialog;
     private boolean mHasShowReconnectDialog;
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,7 +192,8 @@ public class CustomServiceActivity extends BaseActivity {
                 }
             }
         });
-        mRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecycleView.setLayoutManager(mLinearLayoutManager);
         mRecycleView.setAdapter(mChatAdapter);
 
         mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -332,9 +339,8 @@ public class CustomServiceActivity extends BaseActivity {
         customServiceChat.setContent(getString(R.string.hello_customer_for_you, data.getName()));
         mCustomServiceChats.add(customServiceChat);
         mChatAdapter.notifyDataSetChanged();
-        updateRecyclerViewPosition(false);
+        scrollToBottom();
     }
-
 
     private void loadChatData(List<CustomServiceChat> data) {
         mCustomServiceChats.clear();
@@ -482,10 +488,24 @@ public class CustomServiceActivity extends BaseActivity {
 
     private void updateRecyclerViewPosition(boolean isSend) {
         if (isSend) {
-            mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount());
+            mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount() - 1);
         } else if (((LinearLayoutManager) mRecycleView.getLayoutManager()).findLastCompletelyVisibleItemPosition() == mChatAdapter.getItemCount() - 2) {
             mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount());
         }
+    }
+
+    private void scrollToBottom() {
+        mLinearLayoutManager.scrollToPositionWithOffset(mChatAdapter.getItemCount() - 1, 0);//先要滚动到这个位置
+        mRecycleView.post(new Runnable() {
+            @Override
+            public void run() {
+                View target = mLinearLayoutManager.findViewByPosition(mChatAdapter.getItemCount() - 1);//然后才能拿到这个View
+                if (target != null) {
+                    mLinearLayoutManager.scrollToPositionWithOffset(mChatAdapter.getItemCount() - 1,
+                            mRecycleView.getMeasuredHeight() - target.getMeasuredHeight());//滚动偏移到底部
+                }
+            }
+        });
     }
 
     static class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -629,7 +649,7 @@ public class CustomServiceActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(final OnRetryClickListener onRetryClickListener, CustomerService customerService, Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
+            public void bindingData(final OnRetryClickListener onRetryClickListener, CustomerService customerService, Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, final int position, final int itemCount) {
                 if (customerService != null) {
                     GlideApp.with(context).load(customerService.getUserPortrait())
                             .placeholder(R.drawable.ic_default_head_portrait)
@@ -645,6 +665,22 @@ public class CustomServiceActivity extends BaseActivity {
 
                 if (customServiceChat.isPhoto()) {
                     GlideApp.with(context).load(customServiceChat.getContent())
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    if (isFirstResource) {
+                                        if (position == itemCount - 1) {
+
+                                        }
+                                    }
+                                    return false;
+                                }
+                            })
                             .centerCrop()
                             .transform(new ThumbTransform(context))
                             .into(mPhoto);

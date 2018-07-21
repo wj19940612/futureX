@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
+                android:minWidth="105dp"
                 android:text="@string/location"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -69,6 +70,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/own_bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -97,6 +99,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/account_sub_bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -123,6 +126,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/bank_card_number"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -157,6 +161,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -183,6 +188,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/bank_code"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -209,6 +215,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/sub_bank_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -235,6 +242,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/bank_card_account"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -261,6 +269,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="14dp"
                 android:gravity="center_vertical"
+                android:minWidth="105dp"
                 android:text="@string/bank_card_account_name"
                 android:textColor="@color/text22"
                 android:textSize="16sp"/>
@@ -289,6 +298,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
             android:gravity="center_vertical"
+            android:minWidth="105dp"
             android:text="@string/with_draw_pass"
             android:textColor="@color/text22"
             android:textSize="16sp"/>

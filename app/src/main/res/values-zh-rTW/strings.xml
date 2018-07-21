@@ -59,7 +59,7 @@
     <string name="please_add_handle_certification_pic">請添加手持證件照片</string>
     <string name="submit_success">提交成功</string>
     <string name="example">示例</string>
-    <string name="upload_pic_rules">照片要求：\n1. 照片文件大小不能超過4M！文件格式須為jpg或者png！\n2. 請確保照片無水印，無污漬，身份信息清晰，頭像完整且非文字反向照片！\n 3. 需您提供本人雙手手持證件照的照片，請確保照片上證件照清晰可見，無妝容完整露出雙手手臂，手持位置未遮擋證件信息，且證件未遮擋您的臉部！\n點擊添加可查看示例，請提交您本人的身份材料照片。照片請勿進行PS處理！</string>
+    <string name="upload_pic_rules">照片要求：\n1. 照片文件大小不能超過4M！文件格式須為jpg或者png！\n2. 請確保照片無水印，無污漬，身份信息清晰，頭像完整且非文字反向照片！\n3. 需您提供本人雙手手持證件照的照片，請確保照片上證件照清晰可見，無妝容完整露出雙手手臂，手持位置未遮擋證件信息，且證件未遮擋您的臉部！\n點擊添加可查看示例，請提交您本人的身份材料照片。照片請勿進行PS處理！</string>
     <string name="legal_currency_pay_management">法幣支付管理</string>
     <string name="legal_currency_pay">法幣支付</string>
     <string name="delete">删除</string>
@@ -233,6 +233,7 @@
     <string name="set_cash_pwd_rules">注意：您的資金密碼是用來交易和提現和賬戶安全設置，建議您不要設置與登錄密碼一致，由此產生的賬戶被盜，本站概不負責。</string>
     <string name="confirm_with_draw">確認提幣</string>
     <string name="with_draw_rules_x">1.最小提幣數量為：%1$s\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網路便不可撤回。\n3.您提幣至上述地址後，需要整個網路節點的確認，%2$d次網路確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或泄露。</string>
+    <string name="arrivals_num">到賬數量</string>
     <string name="filtrate">篩選</string>
     <string name="coin_type">幣種</string>
     <string name="flow_type">流水類型</string>
