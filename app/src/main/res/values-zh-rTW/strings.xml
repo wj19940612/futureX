@@ -1,30 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="colon_symbol">:</string>
-    <string name="pound_sign_x">#%1$s</string>
     <string name="app_name">BITFUTURE</string>
+
+    <!-- http 請求信息 -->
     <string name="http_error_null">空數據異常</string>
-    <string name="http_error_timeout">網路請求超時</string>
-    <string name="http_error_network">網路異常</string>
+    <string name="http_error_timeout">網絡請求超時</string>
+    <string name="http_error_network">網絡異常</string>
     <string name="http_error_parse">數據解析異常</string>
-    <string name="http_error_server">伺服器有事出去一會兒稍等一下,馬上回來</string>
+    <string name="http_error_server">服務器有事出去一會兒稍等一下,馬上回來</string>
+    <!--data 處理異常-->
     <string name="data_parse_error">DATA 數據解析異常</string>
-    <string name="restart_app">重啟應用</string>
+
+    <!-- Crash -->
+    <string name="restart_app">重啓應用</string>
     <string name="cut">剪切</string>
+
+    <!-- Dialog -->
     <string name="ok">確定</string>
     <string name="confirm">確認</string>
     <string name="cancel">取消</string>
+    <string name="user_invalid">用戶已過期，請重新登錄</string>
+
+    <!--訂單成交狀態-->
+    <string name="not_deal">未成交</string>
+    <string name="deal_with_arrow">完全成交></string>
+    <string name="revoking">撤單中</string>
+    <string name="revoked">已撤單</string>
+    <string name="part_deal_with_arrow">部分成交></string>
+    <string name="system_revoked">系統撤單</string>
+    <string name="part_deal_part_revoked_with_arrow">部分成交已撤></string>
+    <string name="unknown_status">未知狀態</string>
+
+    <!--委託單-->
+    <string name="revoke_order">撤單</string>
+    <string name="entrust_price_x">委託價 (%1$s)</string>
+    <string name="entrust_volume_x">委託量 (%1$s)</string>
+    <string name="actual_deal_x">實際成交 (%1$s)</string>
+
+    <!--歷史單-->
+    <string name="deal_total_amt_x">成交總額 (%1$s)</string>
+    <string name="deal_average_price_x">成交均價 (%1$s)</string>
+    <string name="deal_volume_x">成交量 (%1$s)</string>
+
+    <!--交易詳情-->
+    <string name="deal_price">成交價</string>
+    <string name="deal_volume">成交量</string>
+    <string name="fee">手續費</string>
+
+    <!--幣幣交易列表 Filter-->
+    <string name="filter">篩選</string>
+    <string name="please_chose_counter_currency">請選擇計價貨幣</string>
+
+    <!--拍照-->
     <string name="please_select_portrait">請選擇頭像</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="look_big_picture">查看大圖</string>
     <string name="take_phone_from_phone">從相冊選擇</string>
     <string name="take_phone_cancel">取消</string>
+
     <string name="click_login">點擊登錄</string>
     <string name="property">我的資產</string>
     <string name="trade_order_log">幣幣交易歷史</string>
     <string name="legal_currency_trade_order">法幣交易訂單</string>
-    <string name="invite">邀請返佣</string>
-    <string name="invite_friends_can_get">邀請好友可獲佣</string>
+    <string name="invite">邀請返傭</string>
+    <string name="invite_friends_can_get">邀請好友可獲傭</string>
     <string name="message_center">消息中心</string>
     <string name="notice_center">公告中心</string>
     <string name="safety_center">安全中心</string>
@@ -32,7 +70,7 @@
     <string name="settings">設置</string>
     <string name="personal_data">個人信息</string>
     <string name="head_portrait">頭像</string>
-    <string name="nick_name">昵稱</string>
+    <string name="nick_name">暱稱</string>
     <string name="real_name">真實姓名</string>
     <string name="phone_certification">手機認證</string>
     <string name="mail_certification">郵箱認證</string>
@@ -59,10 +97,12 @@
     <string name="please_add_handle_certification_pic">請添加手持證件照片</string>
     <string name="submit_success">提交成功</string>
     <string name="example">示例</string>
-    <string name="upload_pic_rules">照片要求：\n1. 照片文件大小不能超過4M！文件格式須為jpg或者png！\n2. 請確保照片無水印，無污漬，身份信息清晰，頭像完整且非文字反向照片！\n 3. 需您提供本人雙手手持證件照的照片，請確保照片上證件照清晰可見，無妝容完整露出雙手手臂，手持位置未遮擋證件信息，且證件未遮擋您的臉部！\n點擊添加可查看示例，請提交您本人的身份材料照片。照片請勿進行PS處理！</string>
+    <string name="upload_pic_rules">照片要求：\n1. 照片文件大小不能超過4M！文件格式須為jpg或者png！\n2. 請確保照片無水印，無污漬，身份信息清晰，頭像完整且非文字反向照片！\n3. 需您提供本人雙手手持證件照的照片，請確保照片上證件照清晰可見，無妝容完整露出雙手手臂，手持位置未遮擋證件信息，且證件未遮擋您的臉部！\n點擊添加可查看示例，請提交您本人的身份材料照片。照片請勿進行PS處理！</string>
     <string name="legal_currency_pay_management">法幣支付管理</string>
     <string name="legal_currency_pay">法幣支付</string>
-    <string name="delete">删除</string>
+    <string name="delete_success">刪除成功</string>
+    <string name="really_want_to_delete">真的要刪除嗎？</string>
+    <string name="delete">刪除</string>
     <string name="add_gathering_account">添加收款方式</string>
     <string name="add_ali_pay">添加支付寶</string>
     <string name="ali_pay_account">支付寶賬號</string>
@@ -102,8 +142,8 @@
     <string name="edit">編輯</string>
     <string name="please_set">請設置</string>
     <string name="not_set">未設置</string>
-    <string name="set_nick">設置昵稱</string>
-    <string name="please_input_nick_name">請輸入昵稱</string>
+    <string name="set_nick">設置暱稱</string>
+    <string name="please_input_nick_name">請輸入暱稱</string>
     <string name="save">保存</string>
     <string name="update_success">更新成功</string>
     <string name="bind_phone">綁定手機</string>
@@ -111,9 +151,9 @@
     <string name="used_phone_auth_code">舊手機驗證碼</string>
     <string name="please_input_phone_num">請輸入手機號碼</string>
     <string name="send_auth_code">發送驗證碼</string>
-    <string name="message_auth_code">簡訊驗證碼</string>
+    <string name="message_auth_code">短信驗證碼</string>
     <string name="mail_auth_code">郵箱驗證碼</string>
-    <string name="bind_mail">綁定郵箱</string>
+    <string name="bind_mail" translatable="false">綁定郵箱</string>
     <string name="confirm_bind">確認綁定</string>
     <string name="modify_mail">修改郵箱</string>
     <string name="confirm_modify">確認修改</string>
@@ -122,19 +162,24 @@
     <string name="please_input_mail">請輸入郵箱</string>
     <string name="please_input_mail_auth_code">請輸入郵箱驗證碼</string>
     <string name="please_input_phone_auth_code">請輸入手機驗證碼</string>
-    <string name="please_open_camera_permission">請打開相機許可權</string>
+
+    <string name="please_open_camera_permission">請打開相機權限</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
+
     <string name="send">發送</string>
     <string name="gallery">相冊</string>
     <string name="preview">預覽</string>
     <string name="all_image">所有圖片</string>
+
     <string name="save_to_the_gallery">是否保存到相冊</string>
     <string name="image_save_to_">圖片保存至%1$s</string>
     <string name="image_save_fail">圖片保存失敗</string>
     <string name="is_sure_delete_photo">要刪除這張照片嗎?</string>
-    <string name="total_property_equivalent">總資產摺合（BTC）</string>
-    <string name="promoted_property_equivalent">推廣返佣摺合（BTC）</string>
+
+    <string name="total_property_equivalent">總資產折合（BTC）</string>
+    <string name="promoted_property_equivalent">推廣返傭折合（BTC）</string>
     <string name="invite_num_x">共邀請用戶\n%1$d人</string>
+
     <string name="language">語言</string>
     <string name="about_us">關於我們</string>
     <string name="feedback">意見反饋</string>
@@ -152,13 +197,14 @@
     <string name="x_faction_str_x">%1$s/%2$s</string>
     <string name="feedback_hint">請描述問題發生的具體場景，最好附上截圖說明</string>
     <string name="confirm_submit">確認提交</string>
-    <string name="invite_activity_rules">1.最小提幣數量為：XX\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網路便不可撤回。\n3.您提幣至上述地址後，需要整個網路節點的確認，X次網路確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或泄露。</string>
+    <string name="invite_activity_rules">1.最小提幣數量為：XX\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網絡便不可撤回。\n3.您提幣至上述地址後，需要整個網絡節點的確認，X次網絡確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或洩露。</string>
     <string name="check_activity_rules">查看活動規則</string>
     <string name="join_now">馬上入群</string>
     <string name="invite_code">邀請碼</string>
     <string name="copy">複製</string>
     <string name="invite_buddies">邀請好友加入</string>
     <string name="create_customization_poster">生成專屬海報</string>
+
     <string name="change_cash_pwd">修改資金密碼</string>
     <string name="set_cash_pwd">設置資金密碼</string>
     <string name="set_cash_pwd_success">資金密碼設置成功</string>
@@ -167,17 +213,19 @@
     <string name="send_sms_auth_code_phone_hint_x">已發送至您的手機號：%1$s，請注意查收</string>
     <string name="send_mail_auth_code_hint_x">已發送至您的郵箱：%1$s，請注意查收</string>
     <string name="the_two_passwords_differ">兩次密碼輸入不一致</string>
+    <string name="draw_cash_pwd_can_not_short_than_8">資金密碼不能小於8位</string>
     <string name="change_login_pwd">修改登錄密碼</string>
     <string name="new_login_pwd">新登錄密碼</string>
     <string name="please_input_new_login_pwd">請輸入新登錄密碼</string>
     <string name="confirm_login_pwd">確認登錄密碼</string>
-    <string name="please_input_sms_auth_code">请输入短信验证码</string>
+    <string name="please_input_sms_auth_code">請輸入短信驗證碼</string>
     <string name="google_authenticator">Google認證</string>
     <string name="bind_google_authenticator_success">谷歌驗證綁定成功</string>
     <string name="google_authenticator_settings">Google驗證設置</string>
+    <string name="please_set_google_authenticator_first">請先綁定Google驗證</string>
     <string name="google_authenticator_code">谷歌驗證碼</string>
     <string name="please_input_google_authenticator_code">請輸入谷歌驗證碼</string>
-    <string name="google_authenticator_hint">1.安裝在「Google Authenticator」應用程序中，點擊右上角「+」號，然後選擇「手動輸入驗證碼」或「掃描條形碼」。 2.掃描下方二維碼或手動輸入下述密鑰添加驗證令牌。 3.密鑰用於手機更換或遺失時找回谷歌驗證器，綁定前請務必將下述密鑰備份保存。</string>
+    <string name="google_authenticator_hint">1.安裝在「Google Authenticator」應用程序中，點擊右上角「+」號，然後選擇「手動輸入驗證碼」或「掃描條形碼」。\n2.掃描下方二維碼或手動輸入下述密鑰添加驗證令牌。\n3.密鑰用於手機更換或遺失時找回谷歌驗證器，綁定前請務必將下述密鑰備份保存。</string>
     <string name="use_google_authenticator_by">將Google驗證應用於：</string>
     <string name="reset_draw_cash_pwd">重置資金密碼</string>
     <string name="confirm_otc_tread">法幣交易確認</string>
@@ -188,21 +236,26 @@
     <string name="please_set_gesture_pwd">請設置手勢密碼</string>
     <string name="set_gesture_pwd_hint">創建您的解鎖圖案，讓他人拿到您的手機後，無法打開應用</string>
     <string name="gesture_pwd_must_less_than_four">手勢密碼不能少於4個點</string>
+
     <string name="draw_coin_address">提幣地址</string>
     <string name="add_address">添加地址</string>
     <string name="address">地址</string>
-    <string name="remark">備註</string>
+    <string name="remark">備注</string>
     <string name="input_or_paste_address">輸入或粘貼地址</string>
     <string name="no_record">暫無記錄</string>
+
     <string name="coin_coin_account">幣幣賬戶</string>
     <string name="legal_currency_account">法幣賬戶</string>
-    <string name="transfer">劃轉</string>
-    <string name="fast_transfer">一鍵劃轉</string>
-    <string name="funds_transfer">資金劃轉</string>
-    <string name="transfer_amount">劃轉數量</string>
+    <string name="transfer">划轉</string>
+    <string name="fast_transfer">一鍵划轉</string>
+    <string name="transfer_to_trade_account">划轉至幣幣賬戶</string>
+    <string name="are_you_sure_to_transfer">確定要划轉嗎？</string>
+    <string name="funds_transfer">資金划轉</string>
+    <string name="transfer_amount">划轉數量</string>
     <string name="most_transfer_amount_type_x">最多可轉%1$s&#160;%2$s</string>
-    <string name="transfer_all">全部劃轉</string>
-    <string name="confirm_transfer">確認劃轉</string>
+    <string name="transfer_all">全部划轉</string>
+    <string name="confirm_transfer">確認划轉</string>
+    <string name="transfer_success">划轉成功</string>
     <string name="recharge_coin">充幣</string>
     <string name="available_amount_space">可用\n</string>
     <string name="freeze_amount_space">凍結\n</string>
@@ -211,10 +264,12 @@
     <string name="long_press_to_save_qr_code">長按保存二維碼</string>
     <string name="copy_success">複製成功</string>
     <string name="save_qr_code">保存二維碼</string>
+    <string name="save_success">保存成功</string>
     <string name="copy_address">複製地址</string>
-    <string name="recharge_coin_rules"> 請勿向上述地址充值任何非%1$s資產，否則資產將不可找回。\n您充值至上述地址後，需要整個網路節點的確認，%2$d次網路確認後到賬。\n最小充值金額：%3$s ，小於最小金額的充值將不會上賬。\n您的充值地址不會經常改變，可以重複充值；如有更改，我們會盡量通過網站公告或郵件通知您。\n請務必確認電腦及瀏覽器安全，防止信息被篡改或泄露。</string>
+    <string name="recharge_coin_rules">請勿向上述地址充值任何非%1$s資產，否則資產將不可找回。\n您充值至上述地址後，需要整個網絡節點的確認，%2$d次網絡確認後到賬。\n最小充值金額：%3$s ，小於最小金額的充值將不會上賬。\n您的充值地址不會經常改變，可以重復充值；如有更改，我們會盡量通過網站公告或郵件通知您。\n請務必確認電腦及瀏覽器安全，防止信息被篡改或洩露。</string>
     <string name="select_coin_type">選擇幣種</string>
     <string name="draw_coin">提幣</string>
+    <string name="select_draw_coin_address">選擇提幣地址</string>
     <string name="draw_coin_success">提幣成功</string>
     <string name="min_draw_amount_coin_x">最小提幣數量&#160;%1$s&#160;%2$s</string>
     <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
@@ -228,11 +283,10 @@
     <string name="please_input_cash_pwd">請輸入資金密碼</string>
     <string name="amount">數量</string>
     <string name="all">全部</string>
-    <string name="fee">手續費</string>
     <string name="cash_pwd">資金密碼</string>
     <string name="set_cash_pwd_rules">注意：您的資金密碼是用來交易和提現和賬戶安全設置，建議您不要設置與登錄密碼一致，由此產生的賬戶被盜，本站概不負責。</string>
     <string name="confirm_with_draw">確認提幣</string>
-    <string name="with_draw_rules_x">1.最小提幣數量為：%1$s\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網路便不可撤回。\n3.您提幣至上述地址後，需要整個網路節點的確認，%2$d次網路確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或泄露。</string>
+    <string name="with_draw_rules_x">1.最小提幣數量為：%1$s\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網絡便不可撤回。\n3.您提幣至上述地址後，需要整個網絡節點的確認，%2$d次網絡確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或洩露。</string>
     <string name="filtrate">篩選</string>
     <string name="coin_type">幣種</string>
     <string name="flow_type">流水類型</string>
@@ -242,6 +296,7 @@
     <string name="time">時間</string>
     <string name="to">到</string>
     <string name="reset">重置</string>
+
     <string name="withdraw_cash">提幣</string>
     <string name="buy_order">委託買入</string>
     <string name="sell_order">委託賣出</string>
@@ -250,24 +305,18 @@
     <string name="deal_fee">交易手續費</string>
     <string name="promoter_account_transfer_into">推廣賬戶轉入</string>
     <string name="otc_trade_in">OTC交易轉入</string>
-    <string name="please_set_google_authenticator_first">請先綁定Google驗證</string>
-    <string name="draw_cash_pwd_can_not_short_than_8">資金密碼不能小於8位</string>
-    <string name="transfer_to_trade_account">劃轉至幣幣賬戶</string>
-    <string name="are_you_sure_to_transfer">確定要劃轉嗎？</string>
-    <string name="transfer_success">劃轉成功</string>
-    <string name="save_success">保存成功</string>
     <string name="otc_trade_out">OTC交易轉出</string>
     <string name="agency_to">代理賬戶轉入</string>
     <string name="legal_account_in">法幣賬戶轉入</string>
     <string name="legal_account_out">法幣賬戶轉出</string>
     <string name="coin_account_in">幣幣賬戶轉入</string>
     <string name="type">類型</string>
-    <string name="trade_rebate">交易返佣</string>
+    <string name="trade_rebate">交易返傭</string>
     <string name="transfer_to_personal_account">轉至個人賬戶</string>
+
     <string name="completed">已完成</string>
     <string name="freeze">凍結</string>
     <string name="withdraw_coin_rejected">提幣駁回</string>
-    <string name="select_draw_coin_address">選擇提幣地址</string>
     <string name="entrust_return">用戶撤單</string>
     <string name="freeze_deduct">凍結扣除</string>
     <string name="cancel_trade_freeze">取消交易解凍</string>
@@ -275,15 +324,17 @@
     <string name="poster_off_shelf_return">廣告下架返還</string>
     <string name="sys_withdraw">系統撤單</string>
     <string name="freeze_return">凍結返還</string>
+
     <string name="detail">詳情</string>
     <string name="address_two_space">地&#8195;&#8195;址</string>
-    <string name="fee_two_half_space">手&#8195;續&#8195;費</string>
+    <string name="fee_two_half_space">手&#8194;續&#8194;費</string>
     <string name="time_two_space">時&#8195;&#8195;間</string>
+
     <string name="set_read">標為已讀</string>
     <string name="pay_addr_change">您的充值地址發生了變化，趕緊去看看</string>
     <string name="otc_buy_order">您的廣告已有買家下單，趕緊去看看吧>></string>
     <string name="otc_sell_order">您的廣告已有賣家下單，趕緊去看看吧>></string>
-    <string name="otc_buy_pay">您的法幣交易訂單，買家已付款，請儘快做確認>></string>
+    <string name="otc_buy_pay">您的法幣交易訂單，買家已付款，請盡快做確認>></string>
     <string name="otc_sell_pay">您的法幣交易訂單，賣家已確認收款，並轉幣，請查收>></string>
     <string name="otc_order_msg">您的訂單已經回復,趕緊去看看吧>></string>
     <string name="user_auth_fail">您提交的認證信息審核失敗，點擊查看詳情</string>
@@ -294,30 +345,38 @@
     <string name="otc_order_delay">您的訂單已延期</string>
     <string name="plus_sign_x">+%1$s</string>
     <string name="increasing_ranks">漲幅榜</string>
+
+    <!--LEGAL_CURRENCY-->
+    <string-array name="legal_currency_header">
+        <item>我想買</item>
+        <item>我要賣</item>
+        <item>我的廣告</item>
+    </string-array>
     <string name="order">訂單</string>
     <string name="x_space_x">%1$s&#160;%2$s</string>
     <string name="amount_limit">限制金額：&#160;%1$s-%2$s</string>
     <string name="own_amount">擁有數量：&#160;%1$s</string>
     <string name="x_done_count_done_rate_x">%1$d單&#8194;完成率%2$s</string>
-    <string name="publish_ad">發布廣告</string>
+    <string name="publish_ad">發佈廣告</string>
     <string name="buy_x">買入%1$s</string>
     <string name="sell_x">賣出%1$s</string>
     <string name="price_type">價格類型</string>
     <string name="premium_rate">溢價比例</string>
     <string name="trade_limit">交易限制</string>
     <string name="trade_amount">交易數量</string>
+    <string name="account_balance">當前賬戶餘額：</string>
     <string name="pay_type">支付方式</string>
     <string name="optional">（選填）</string>
     <string name="buyer_limit">對方限制</string>
     <string name="authentication_with_symbol">認證：</string>
-    <string name="trade_count_more_than">交易成功次數大於：</string>
+    <string name="trade_count_more_than">交易成功次數大於：</string>ø
     <string name="contract_info">聯繫方式</string>
     <string name="read_and_agree">我已閱讀並同意</string>
     <string name="coin_trade_protocol">《法幣交易協議》</string>
     <string name="attention_rules">注意事項</string>
-    <string name="attention_rules_text">1.交易過程中，請先確認款項入賬後再釋放數字貨幣。\n2.交易過程中，不要透漏與您賬戶安全有關的敏感信息。\n3.請不要將您的電子郵箱直接透漏給買家，否則可能會收到詐騙信件及對賬戶安全造成危害。\n4.請將平台網站記錄在書籤上，確保您在正確的網站上進行交易，避免誤闖釣魚網站。\n5.平台員工禁止以官方名義與您交易，故請不要與自稱是本平台員工的投資者交易，避免您的利益損失。</string>
+    <string name="attention_rules_text">1.交易過程中，請先確認款項入賬後再釋放數字貨幣。\n\n2.交易過程中，不要透漏與您賬戶安全有關的敏感信息。\n\n3.請不要將您的電子郵箱直接透漏給買家，否則可能會收到詐騙信件及對賬戶安全造成危害。\n\n4.請將平台網站記錄在書簽上，確保您在正確的網站上進行交易，避免誤闖釣魚網站。\n\n5.平台員工禁止以官方名義與您交易，故請不要與自稱是本平台員工的投資者交易，避免您的利益損失。</string>
     <string name="attention_hint">特別提醒</string>
-    <string name="attention_hint_text">為了保證投資者的交易安全，平台將採用數字貨幣託管系統，任何投資者嚴禁繞過平台私下交易，違者自行承擔損失。\n請在交易說明及交易備註中，詳細寫下您所希望的交易條件，以及與您交易所需注意的事項，明確的信息將提升您的交易成功率及評價。\n請勿在平台嘗試欺詐行為，違者將會導致賬號被凍結，並承擔法律責任。\n發布廣告後請旅行契約精神，惡意抬價或者是反悔，被投訴將凍結賬戶3-14天不等。</string>
+    <string name="attention_hint_text">為了保證投資者的交易安全，平台將採用數字貨幣托管系統，任何投資者嚴禁繞過平台私下交易，違者自行承擔損失。\n請在交易說明及交易備注中，詳細寫下您所希望的交易條件，以及與您交易所需注意的事項，明確的信息將提升您的交易成功率及評價。\n請勿在平台嘗試欺詐行為，違者將會導致賬號被凍結，並承擔法律責任。\n發佈廣告後請旅行契約精神，惡意抬價或者是反悔，被投訴將凍結賬戶3-14天不等。</string>
     <string name="single_price">單價</string>
     <string name="limit">限制</string>
     <string name="update_time">更新時間</string>
@@ -326,6 +385,7 @@
     <string name="floating_price_x_symbol">溢價&#160;%1$s&#160;%%</string>
     <string name="fixed_price">固定價格</string>
     <string name="floating_price">浮動價格</string>
+    <string name="deal_count_limit_unset">交易次數限制未填寫</string>
     <string name="limit_range_x">%1$s-%2$s</string>
     <string name="buy_blank_symbol_x">買入&#160;%1$s</string>
     <string name="sell_blank_symbol_x">賣出&#160;%1$s</string>
@@ -336,7 +396,12 @@
     <string name="delete_poster_hint_msg">您確實要刪除廣告嗎</string>
     <string name="set_draw_cash_pwd_hint">您還未設置資金密碼，為了您賬戶的安全，請先設置</string>
     <string name="go_to_set">去設置</string>
-    <string name="publish_poster_have_not_bind_pay">為了交易的安全和順利進行，您需先進行法幣支付綁定才可發布廣告</string>
+    <string name="poster_owner_set_needs_primary_certification">廣告主設置交易需完成初級認證</string>
+    <string name="poster_owner_set_needs_senior_certification">廣告主設置交易需完成高級認證</string>
+    <string name="go_to">前往</string>
+    <string name="your_deal_count_is_less_than_limit">您的歷史交易筆數未達到對方要求</string>
+    <string name="got_it">知道了</string>
+    <string name="publish_poster_have_not_bind_pay">為了交易的安全和順利進行，您需先進行法幣支付綁定才可發佈廣告</string>
     <string name="go_to_bind">去綁定</string>
     <string name="please_select_price_type">請選擇價格類型</string>
     <string name="floating_price_rate">溢價比例</string>
@@ -347,7 +412,7 @@
     <string name="minLimit">最小限制</string>
     <string name="maxLimit">最大限制</string>
     <string name="please_select_pay_type">請選擇支付方式</string>
-    <string name="remark_will_send_to_buy_default">備註內容會默認發送給對方</string>
+    <string name="remark_will_send_to_buy_default">備注內容會默認發送給對方</string>
     <string name="preview_poster_with_symbol">預覽廣告：</string>
     <string name="tread_type_with_symbol">買賣方式：</string>
     <string name="single_price_with_symbol">單價：</string>
@@ -357,9 +422,9 @@
     <string name="please_input_right_tread_limit">請輸入正確的限制金額</string>
     <string name="tread_amount_with_symbol">交易數量：</string>
     <string name="pay_type_with_symbol">交易方式：</string>
-    <string name="remark_with_symbol">備註：</string>
+    <string name="remark_with_symbol">備注：</string>
     <string name="demand_with_symbol">要求對方：</string>
-    <string name="publish_poster">發布廣告</string>
+    <string name="publish_poster">發佈廣告</string>
     <string name="buy_symbol_x">買入%1$s</string>
     <string name="sell_symbol_x">賣出%1$s</string>
     <string name="authentication">認證</string>
@@ -368,8 +433,17 @@
     <string name="edit_content">編輯內容</string>
     <string name="delete_poster">刪除廣告</string>
     <string name="pricing_currency">計價貨幣</string>
+    <string name="quota_price">價格：</string>
     <string name="passed_primary_certification">必須通過初級認證</string>
     <string name="deal_count_more_than_x">交易成功次數大於%1$s</string>
+    <!--LEGAL_CURRENCY_ORDER-->
+    <string-array name="legal_currency_order_header">
+        <item>@string/all</item>
+        <item>@string/unpaid</item>
+        <item>@string/paid</item>
+        <item>@string/canceled</item>
+        <item>@string/completed</item>
+    </string-array>
     <string name="unpaid">未付款</string>
     <string name="paid">已付款</string>
     <string name="canceled">已取消</string>
@@ -378,20 +452,24 @@
     <string name="trade_amount_empty_hint">您還未輸入交易數量</string>
     <string name="cash_pwd_empty_hint">您還未輸入資金密碼</string>
     <string name="turnover">交易金額</string>
+    <string name="pound_sign_x">#%1$s</string>
     <string name="trade_count_symbol_x">交易金額：%1$s&#160;%2$s</string>
     <string name="pay_info">支付信息</string>
-    <string name="trade_rules_description">請務必向對方詢問交易方式，並且與平台所留方式進行對比，若不一致，請慎重付款\n1.轉帳時請備註「訂單編號後4位」以加快確認速度\n2.請勿在匯款備註內填寫比特幣、BTC、OTC等任何數字幣有關字眼，防止您的匯款被銀行攔截\n3.訂單有效期為15分鐘，請您在有效期內及時付款並點擊「已轉賬」按鈕，數字幣才可以釋放給您\n4.如果您無法在15分鐘內完成付款，該筆訂單將被取消\n5.開始交易後數字幣由系統鎖定託管，請安心下單</string>
+    <string name="trade_rules_description">請務必向對方詢問交易方式，並且與平台所留方式進行對比，若不一致，請慎重付款\n\n1.轉帳時請備注「訂單編號後4位」以加快確認速度\n\n2.請勿在匯款備注內填寫比特幣、BTC、OTC等任何數字幣有關字眼，防止您的匯款被銀行攔截\n\n3.訂單有效期為15分鐘，請您在有效期內及時付款並點擊「已轉賬」按鈕，數字幣才可以釋放給您\n\n4.如果您無法在15分鐘內完成付款，該筆訂單將被取消\n\n5.開始交易後數字幣由系統鎖定托管，請安心下單</string>
     <string name="order_detail_price_x">價格：%1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">數量：%1$f&#160;%2$s</string>
     <string name="otc_trade_complete_desc">已成交</string>
+    <string name="wait_buyer_to_pay">待買家付款</string>
+    <string name="buyer_have_paid">買家已付款</string>
     <string name="seller_info">賣家信息</string>
     <string name="buyer_info">買家信息</string>
     <string name="register_time">註冊時間：%1$s</string>
-    <string name="click_to_ask_contract_info">點擊諮詢支付方式</string>
+    <string name="click_to_ask_contract_info">點擊咨詢支付方式</string>
     <string name="contact_each_other">聯繫對方</string>
     <string name="cancel_trade">取消交易</string>
     <string name="cancel_trade_hin_msg">如果您已經向賣家付款，請千萬不要取消交易。取消規則：買方當日累計5筆取消，將會限制當天的買入功能。</string>
     <string name="confirm_have_not_pay_to_seller">我確認還沒有付款給對方</string>
+    <string name="colon_symbol">:</string>
     <string name="appeal">申訴</string>
     <string name="i_have_paid">我已付款</string>
     <string name="confirm_transfer_coin">確認轉幣</string>
@@ -402,11 +480,29 @@
     <string name="pay_info_safety_hint_to_seller">已向買家發送以上信息，請與買家確認</string>
     <string name="pay_info_safety_hint_to_buyer">以上為賣家預留收款賬號，請與賣家確認後付款。請謹慎付款到與預留賬號不一致的賬戶，請勿付款到與賣家認證姓名不一致的賬戶。</string>
     <string name="sold_x">出售&#160;%1$s</string>
+
+    <!-- bottom tabs -->
     <string name="home">首頁</string>
     <string name="market">行情</string>
     <string name="legal_currency">法幣</string>
     <string name="coin_coin">幣幣</string>
     <string name="mine">我的</string>
+    <string-array name="tabTexts">
+        <item>@string/home</item>
+        <item>@string/market</item>
+        <item>@string/legal_currency</item>
+        <item>@string/coin_coin</item>
+        <item>@string/mine</item>
+    </string-array>
+    <integer-array name="tabIcons">
+        <item>@drawable/tab_home</item>
+        <item>@drawable/tab_legal_currency</item>
+        <item>@drawable/tab_market</item>
+        <item>@drawable/tab_trade</item>
+        <item>@drawable/tab_mine</item>
+    </integer-array>
+
+    <!--Login/Register/SetPsd/-->
     <string name="login_x">登錄%1$s</string>
     <string name="phone_or_email">手機號或郵箱</string>
     <string name="login">登錄</string>
@@ -418,7 +514,7 @@
     <string name="phone">手機號</string>
     <string name="email_sample">郵箱&#160;&#160;例abc@gmail.com</string>
     <string name="get_auth_code">獲取驗證碼</string>
-    <string name="sms_auth_code">簡訊驗證碼</string>
+    <string name="sms_auth_code">短信驗證碼</string>
     <string name="email_auth_code">郵箱驗證碼</string>
     <string name="next">下一步</string>
     <string name="registered_and_go_login">已有賬號，去登錄</string>
@@ -428,7 +524,7 @@
     <string name="password_strength_colon">密碼強度：</string>
     <string name="weak">弱</string>
     <string name="mid">中</string>
-    <string name="strong">强</string>
+    <string name="strong">強</string>
     <string name="login_password">登錄密碼</string>
     <string name="confirm_password">確認密碼</string>
     <string name="find_password">找回密碼</string>
@@ -446,6 +542,14 @@
     <string name="click_and_refresh_auth_code">點擊刷新驗證碼</string>
     <string name="login_success">登錄成功</string>
     <string name="password_inputs_is_not_same">密碼輸入不一致</string>
+
+    <!--Market&Trade-->
+    <string-array name="market_radio_header">
+        <item>USDT</item>
+        <item>BTC</item>
+        <item>ETH</item>
+        <item>@string/optional_text</item>
+    </string-array>
     <string name="optional_text">自選</string>
     <string name="main_area">主區</string>
     <string name="creative_area">創新區</string>
@@ -474,6 +578,10 @@
     <string name="high">高</string>
     <string name="low">低</string>
     <string name="more">更多</string>
+    <string-array name="trade_detail_radio">
+        <item>深度</item>
+        <item>成交</item>
+    </string-array>
     <string name="open_price_x">開&#160;%1$s</string>
     <string name="highest_price_x">高&#160;%1$s</string>
     <string name="lowest_price_x">低&#160;%1$s</string>
@@ -491,73 +599,57 @@
     <string name="price_x">價格 (%1$s)</string>
     <string name="direction">方向</string>
     <string name="already_added">已添加</string>
-    <string name="depth_merge">深度合并</string>
+    <string name="depth_merge">深度合併</string>
     <string name="x_scale_decimal">%1$s位小數</string>
+    <string-array name="trade_dir_radio">
+        <item>@string/buy_in</item>
+        <item>@string/sell_out</item>
+    </string-array>
     <string name="buy_limit">限價買入</string>
     <string name="sell_limit">限價賣出</string>
     <string name="market_price">市價</string>
     <string name="limit_price">限價</string>
     <string name="trade_amt">交易額</string>
+
+
+    <string name="input_msg_hell">在此輸入您的對話...</string>
+
+    <string name="over_500">發言不能超過500字符</string>
     <string name="hello_customer_for_you">尊敬的小主您好，我是%1$s，很高興為您服務。</string>
     <string name="current_service_is_offline_change_service">當前客服已離線，是否切換客服？</string>
     <string name="trade_with_market_price">以當前最優價格交易</string>
     <string name="android_web_agent">ANDROID_AGENT/1.0</string>
-    <string name="network_error_please_reload">網路連接失敗 請重新載入</string>
+    <string name="network_error_please_reload">網絡連接失敗 請重新加載</string>
     <string name="refresh">刷新</string>
+
     <string name="downloading">正在下載: %1$s</string>
     <string name="download_start">開始下載</string>
-    <string name="please_not_download_again">請勿重複下載</string>
+    <string name="please_not_download_again">請勿重復下載</string>
     <string name="download_fail">下載失敗</string>
     <string name="check_new_version">發現最新版本</string>
+    <string name="is_latest_version_now">已經是最新版本</string>
     <string name="download_complete">下載完成</string>
     <string name="update">更新</string>
+
     <string name="entrust">委託</string>
     <string name="history">歷史</string>
+    <string-array name="order_list_radio">
+        <item>@string/entrust</item>
+        <item>@string/history</item>
+    </string-array>
     <string name="available_currency_x_x">可用&#160;%1$s&#160;%2$s</string>
     <string name="obtainable_currency_x_x">可得&#160;%1$s&#160;%2$s</string>
     <string name="trade_currency_range_0_to_x_x">0&#160;-&#160;%1$s&#160;%2$s</string>
     <string name="please_choose_limited_condition">請選擇限制條件</string>
-    <string name="entrust_price_x">委託價 (%1$s)</string>
-    <string name="entrust_volume_x">委託量 (%1$s)</string>
-    <string name="actual_deal_x">實際成交 (%1$s)</string>
-    <string name="deal_total_amt_x">成交總額 (%1$s)</string>
-    <string name="deal_average_price_x">成交均價 (%1$s)</string>
-    <string name="deal_volume_x">成交量 (%1$s)</string>
-    <string name="revoked">已撤銷</string>
-    <string name="system_revoked">系統撤銷</string>
-    <string name="unknown_status">未知狀態</string>
-    <string name="filter">篩選</string>
+
     <string name="trading_on">交易對</string>
     <string name="select_currency">請選擇計價貨幣</string>
-    <string name="search_currency_pairs">" 搜索幣種"</string>
-    <string name="delete_success">刪除成功</string>
-    <string name="really_want_to_delete">真的要刪除嗎？</string>
-    <string name="account_balance">當前賬戶餘額：</string>
-    <string name="deal_count_limit_unset">交易次數限制未填寫</string>
-    <string name="poster_owner_set_needs_primary_certification">廣告主設置交易需完成初級認證</string>
-    <string name="poster_owner_set_needs_senior_certification">廣告主設置交易需完成高級認證</string>
-    <string name="go_to">前往</string>
-    <string name="your_deal_count_is_less_than_limit">您的歷史交易筆數未達到對方要求</string>
-    <string name="got_it">知道了</string>
-    <string name="quota_price">價格：</string>
-    <string name="wait_buyer_to_pay">待買家付款</string>
-    <string name="buyer_have_paid">買家已付款</string>
-    <string name="input_msg_hell">在此輸入您的對話...</string>
-    <string name="over_500">發言不能超過500字元</string>
-    <string name="is_latest_version_now">已經是最新版本</string>
-    <string name="deal_price">成交價</string>
-    <string name="deal_volume">成交量</string>
-    <string name="not_deal">等待成交</string>
-    <string name="deal_with_arrow">已成交></string>
-    <string name="revoking">正在撤單</string>
-    <string name="part_deal_with_arrow">部分成交></string>
-    <string name="part_deal_part_revoked_with_arrow">部分成交部分撤單></string>
+    <string name="search_currency_pairs">搜索幣種</string>
     <string name="deal_fee_x">手續費 (%1$s)</string>
     <string name="time_x">時間 %1$s</string>
     <string name="deal_detail">成交明細</string>
-    <string name="revoke_order">撤单</string>
-    <string name="revoking_order">撤單中</string>
-    <string name="no_enough_balance">余額不足</string>
+    <string name="entrust_success">委託成功</string>
+    <string name="no_enough_balance">餘額不足</string>
     <string name="complete">完成</string>
 
 </resources>

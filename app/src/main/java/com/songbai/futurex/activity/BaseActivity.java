@@ -16,6 +16,7 @@ import android.widget.AbsListView;
 import android.widget.ScrollView;
 
 import com.sbai.httplib.ReqIndeterminate;
+import com.songbai.futurex.R;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.model.local.LocalUser;
@@ -41,12 +42,9 @@ import java.util.Locale;
 public class BaseActivity extends StatusBarActivity implements ReqIndeterminate, TimerHandler.TimerCallback {
 
     public static final String ACTION_TOKEN_EXPIRED = "com.sbai.fin.token_expired";
-    public static final String ACTION_LOGIN_SUCCESS = "com.sbai.fin.login_success";
-
     public static final String EX_TOKEN_EXPIRED_MESSAGE = "ex_token_expired_message";
 
-    public static final int REQ_LOGIN = 808;
-
+    public static final int REQ_CODE_LOGIN = 808;
 
     protected String TAG;
 
@@ -60,10 +58,31 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
                 LocalUser.getUser().logout();
 //                SimpleConnector.get().disconnect();
 //                SimpleConnector.get().connect();
-                Launcher.with(getActivity(), LoginActivity.class).execute();
+                showUserInvalidDialog();
             }
         }
     };
+
+    private void showUserInvalidDialog() {
+        SmartDialog.solo(getActivity(), R.string.user_invalid)
+                .setCancelableOnTouchOutside(false)
+                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog) {
+                        reopenMainPage();
+                    }
+                }).setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog) {
+                Launcher.with(getActivity(), LoginActivity.class).execute(REQ_CODE_LOGIN);
+            }
+        }).show();
+    }
+
+    private void reopenMainPage() {
+        Launcher.with(getActivity(), MainActivity.class)
+                .execute();
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -74,17 +93,35 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = this.getClass().getSimpleName();
+
         mRequestProgress = new RequestProgress(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                //Api.cancel(TAG);
+                Api.cancel(TAG);
             }
         });
+
+        // umeng 统计场景初始化
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+
+        // Push 初始化
         PushAgent.getInstance(this).onAppStart();
+
+        // 时间同步
         SysTime.getSysTime().sync();
+
+        // 触发消息连接，页面切换就触发，已连接就不会触发连接
         MessageProcessor.get().connect();
+
         setLanguage();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_LOGIN && resultCode != RESULT_OK) {
+            reopenMainPage();
+        }
     }
 
     @Override
@@ -98,6 +135,11 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         LanguageUtils.updateLocale(this, locale);
     }
 
+    /**
+     * 点击 anchor 向上滚动 AbsListView / RecyclerView / ScrollView
+     *
+     * @param view
+     */
     private void scrollToTop(View view) {
         if (view instanceof AbsListView) {
             ((AbsListView) view).smoothScrollToPositionFromTop(0, 0);
@@ -107,13 +149,6 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
             ((ScrollView) view).smoothScrollTo(0, 0);
         }
     }
-
-    /**
-     * 点击 anchor 向上滚动 AbsListView / RecyclerView / ScrollView
-     *
-     * @param anchor
-     * @param view
-     */
     protected void scrollToTop(View anchor, final View view) {
         anchor.setOnClickListener(new View.OnClickListener() {
             @Override

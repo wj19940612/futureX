@@ -3,8 +3,6 @@ package com.songbai.futurex.activity;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Picture;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -27,7 +25,6 @@ import android.widget.ProgressBar;
 
 import com.sbai.httplib.CookieManger;
 import com.songbai.futurex.AppJs;
-import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.utils.Network;
@@ -108,7 +105,7 @@ public class WebActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case LoginActivity.REQ_LOGIN:
+                case LoginActivity.REQ_CODE_LOGIN:
                     // init cookies
                     mWebView.postDelayed(new Runnable() {
                         @Override

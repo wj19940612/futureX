@@ -51,7 +51,6 @@ import butterknife.OnClick;
 
 public class RegisterActivity extends BaseActivity {
 
-    private static final int REQ_CODE_LOGIN = 91;
     private static final int REQ_CODE_SET_PASS = 92;
 
     @BindView(R.id.closePage)

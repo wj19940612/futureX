@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 
 import com.songbai.futurex.activity.WebActivity;
@@ -149,7 +148,7 @@ public class AppJs {
                     public void run() {
                         Launcher.with(mContext, LoginActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                                .executeForResult(LoginActivity.REQ_LOGIN);
+                                .execute(LoginActivity.REQ_CODE_LOGIN);
                     }
                 });
                 break;
