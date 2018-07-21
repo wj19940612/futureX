@@ -168,10 +168,11 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         MobclickAgent.onPageStart(TAG);
         MobclickAgent.onResume(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_TOKEN_EXPIRED));
     }
 
     @Override
@@ -179,17 +180,6 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         super.onPause();
         MobclickAgent.onPageEnd(TAG);
         MobclickAgent.onPause(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_TOKEN_EXPIRED));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
