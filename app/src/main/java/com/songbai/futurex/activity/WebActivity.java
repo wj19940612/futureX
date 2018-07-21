@@ -321,6 +321,7 @@ public class WebActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(titleText) && !url.contains(titleText)) {
                     mTitle = titleText;
                 }
+                Log.e("wtf", "onPageFinished: " +mTitle);
                 mTitleView.setText(mTitle);
                 mTitleView.setSelected(true);
             } else {

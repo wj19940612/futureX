@@ -119,7 +119,6 @@
             android:layout_weight="1"
             android:background="@drawable/bg_f5_r4"
             android:gravity="center"
-            android:paddingLeft="15dp"
             android:textColor="@color/text22"
             android:textSize="13sp"/>
 
@@ -140,7 +139,6 @@
             android:layout_weight="1"
             android:background="@drawable/bg_f5_r4"
             android:gravity="center"
-            android:paddingLeft="15dp"
             android:textColor="@color/text22"
             android:textSize="13sp"/>
     </LinearLayout>

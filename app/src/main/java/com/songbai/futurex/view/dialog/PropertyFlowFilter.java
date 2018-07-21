@@ -24,6 +24,7 @@ import com.songbai.futurex.model.status.CurrencyFlowType;
 import com.songbai.futurex.model.status.OTCFlowStatus;
 import com.songbai.futurex.model.status.OTCFlowType;
 import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.Display;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -161,19 +162,25 @@ public class PropertyFlowFilter {
             long timeMillion = getTimeMillion(mTempStartTime);
             if (timeMillion > 0) {
                 mStartTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                mStartTime.setPadding(0, 0, 0, 0);
                 mStartTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
             }
         } else {
+            mStartTime.setPadding((int) Display.dp2Px(15, mContext.getResources()), 0, 0, 0);
             mStartTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_history_calendar, 0, 0, 0);
+            mStartTime.setText("");
         }
         if (!TextUtils.isEmpty(mTempEndTime)) {
             long timeMillion = getTimeMillion(mTempEndTime);
             if (timeMillion > 0) {
                 mEndTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                mStartTime.setPadding(0, 0, 0, 0);
                 mEndTime.setText(DateUtil.format(timeMillion, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
             }
         } else {
+            mEndTime.setPadding((int) Display.dp2Px(15, mContext.getResources()), 0, 0, 0);
             mEndTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_history_calendar, 0, 0, 0);
+            mEndTime.setText("");
         }
     }
 
@@ -435,7 +442,8 @@ public class PropertyFlowFilter {
     public void setSelectedTime(View view, Date date) {
         TextView textView = (TextView) view;
         textView.setText(DateUtil.format(date.getTime(), DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
-        textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        textView.setPadding(0, 0, 0, 0);
         switch (view.getId()) {
             case R.id.startTime:
                 mTempStartTime = DateUtil.format(date.getTime(), DateUtil.FORMAT_UTZ_STANDARD);

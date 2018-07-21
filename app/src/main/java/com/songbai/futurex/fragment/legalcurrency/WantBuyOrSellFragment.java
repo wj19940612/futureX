@@ -26,6 +26,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.mine.CashPwdFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
+import com.songbai.futurex.fragment.mine.SelectPayTypeFragment;
 import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -63,6 +64,7 @@ import sbai.com.glide.GlideApp;
  * @date 2018/6/21
  */
 public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRVItemClickListener {
+    private static final int SHOULD_BIND_PAY = -1;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
     @BindView(R.id.swipe_target)
@@ -257,6 +259,14 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                     ToastUtil.show(R.string.can_not_trade_with_self);
                     return;
                 }
+                if (mType == OTCOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+                    showAlertMsgHint(Resp.Code.NEEDS_SENIOR_CERTIFICATION);
+                    return;
+                }
+                if (mType == OTCOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getPayment() < 1) {
+                    showAlertMsgHint(SHOULD_BIND_PAY);
+                    return;
+                }
                 if (mType == OTCOrderStatus.ORDER_DIRECT_BUY && LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
                     showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
                     return;
@@ -362,6 +372,10 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
         int msg = 0;
         int confirmText = R.string.ok;
         switch (code) {
+            case SHOULD_BIND_PAY:
+                msg = R.string.have_not_bind_pay;
+                confirmText = R.string.go_to_bind;
+                break;
             case Resp.Code.CASH_PWD_NONE:
                 msg = R.string.set_draw_cash_pwd_hint;
                 confirmText = R.string.go_to_set;
@@ -384,6 +398,10 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
             @Override
             public void onConfirmClick() {
                 switch (code) {
+                    case SHOULD_BIND_PAY:
+                        UniqueActivity.launcher(WantBuyOrSellFragment.this, SelectPayTypeFragment.class)
+                                .execute();
+                        break;
                     case Resp.Code.CASH_PWD_NONE:
                         UniqueActivity.launcher(WantBuyOrSellFragment.this, CashPwdFragment.class)
                                 .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)

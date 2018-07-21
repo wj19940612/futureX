@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.ValidationWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,19 +95,15 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        getLegalCoin();
+        getOtcAccountList();
+        getAccountByUser();
         setView();
     }
 
     private void setView() {
-        getLegalCoin();
         mFromAccount.setText(mTransferType == 0 ? R.string.coin_coin_account : R.string.legal_currency_account);
         mToAccount.setText(mTransferType == 1 ? R.string.coin_coin_account : R.string.legal_currency_account);
-        if (mTransferType == 0) {
-            getOtcAccountList();
-        }
-        if (mTransferType == 1) {
-            getAccountByUser();
-        }
         setSelectedItem(mSelectedCoinType);
     }
 
@@ -127,6 +125,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                         AccountList accountList = resp.getData();
                         if (accountList != null) {
                             mOtcAccountList = accountList.getAccount();
+                            setView();
                         }
                     }
                 })
@@ -141,6 +140,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                         AccountList accountList = resp.getData();
                         if (accountList != null) {
                             mUserAccount = accountList.getAccount();
+                            setView();
                         }
                     }
                 })
@@ -152,46 +152,38 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
         mCoinType.setText(selectedCoinType.toUpperCase());
         double otcAbleCoin = 0;
         double ableCoin = 0;
-        switch (mTransferType) {
-            case 0:
-                if (mUserAccount != null) {
-                    for (AccountBean accountBean : mUserAccount) {
-                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
-                            ableCoin = accountBean.getAbleCoin();
-                        }
-                    }
+        if (mUserAccount != null) {
+            for (AccountBean accountBean : mUserAccount) {
+                if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
+                    ableCoin = accountBean.getAbleCoin();
                 }
-                if (mOtcAccountList != null) {
-                    for (AccountBean accountBean : mOtcAccountList) {
-                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
-                            otcAbleCoin = accountBean.getAbleCoin();
-                        }
-                    }
+            }
+        }
+        if (mOtcAccountList != null) {
+            for (AccountBean accountBean : mOtcAccountList) {
+                if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
+                    otcAbleCoin = accountBean.getAbleCoin();
                 }
-                break;
-            case 1:
-                if (mUserAccount != null) {
-                    for (AccountBean accountBean : mUserAccount) {
-                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
-                            otcAbleCoin = accountBean.getAbleCoin();
-                        }
-                    }
-                }
-                if (mOtcAccountList != null) {
-                    for (AccountBean accountBean : mOtcAccountList) {
-                        if (accountBean.getCoinType().equalsIgnoreCase(selectedCoinType)) {
-                            ableCoin = accountBean.getAbleCoin();
-                        }
-                    }
-                }
-                break;
-            default:
+            }
         }
         mMaxAmount = mTransferType == 0 ? ableCoin : otcAbleCoin;
-        mConfirmTransfer.setEnabled(ableCoin > 0);
+        mConfirmTransfer.setEnabled(mMaxAmount > 0);
         mTransferAmount.setHint(getString(R.string.most_transfer_amount_type_x,
-                FinanceUtil.formatWithScale(ableCoin),
+                FinanceUtil.formatWithScale(mMaxAmount, 8),
                 mSelectedCoinType.toUpperCase()));
+        mTransferAmount.addTextChangedListener(new ValidationWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = mTransferAmount.getText().toString();
+                if (!TextUtils.isEmpty(string)) {
+                    double value = Double.valueOf(string);
+                    if (value > Double.valueOf(FinanceUtil.subZeroAndDot(mMaxAmount, 8))) {
+                        mTransferAmount.setText(FinanceUtil.subZeroAndDot(mMaxAmount, 8));
+                        mTransferAmount.setSelection(mTransferAmount.getText().length());
+                    }
+                }
+            }
+        });
         fixAmount(mMaxAmount);
     }
 
@@ -206,7 +198,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
     }
 
     private void accountTransfer(String coinType, int type, String count) {
-        Apic.accountTransfer(coinType, type, count).tag(TAG)
+        Apic.accountTransfer(coinType, type, count).tag(TAG).indeterminate(this)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -234,6 +226,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                 } else {
                     mTransferType = 0;
                 }
+                mTransferAmount.setText("");
                 setView();
                 break;
             case R.id.coinType:
@@ -248,7 +241,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.transferAll:
-                mTransferAmount.setText(FinanceUtil.formatWithScale(mMaxAmount, 8));
+                mTransferAmount.setText(FinanceUtil.subZeroAndDot(mMaxAmount, 8));
                 mTransferAmount.setSelection(mTransferAmount.getText().length());
                 break;
             case R.id.confirmTransfer:

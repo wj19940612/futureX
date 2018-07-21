@@ -239,19 +239,7 @@ public class LegalCurrencyFragment extends BaseFragment {
                                 .putExtra(ExtraKeys.SELECTED_CURRENCY_SYMBOL, mSelectedCurrencySymbol)
                                 .execute(this, REQUEST_PUBLISH_POSTER);
                     } else {
-                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
-                            @Override
-                            public void onConfirmClick() {
-                                UniqueActivity.launcher(LegalCurrencyFragment.this, SelectPayTypeFragment.class)
-                                        .execute();
-                            }
-                        });
-                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-                        smartDialog.setCustomViewController(msgHintController)
-                                .show();
-                        msgHintController.setMsg(R.string.publish_poster_have_not_bind_pay);
-                        msgHintController.setConfirmText(R.string.go_to_bind);
-                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
+                        showBIndPayDialog();
                     }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -259,6 +247,22 @@ public class LegalCurrencyFragment extends BaseFragment {
                 break;
             default:
         }
+    }
+
+    private void showBIndPayDialog() {
+        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                UniqueActivity.launcher(LegalCurrencyFragment.this, SelectPayTypeFragment.class)
+                        .execute();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(msgHintController)
+                .show();
+        msgHintController.setMsg(R.string.publish_poster_have_not_bind_pay);
+        msgHintController.setConfirmText(R.string.go_to_bind);
+        msgHintController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     private void showWaresPairFilter() {

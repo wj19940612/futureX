@@ -96,7 +96,7 @@
     <string name="please_add_handle_certification_pic">Add your pic with certificate in hand</string>
     <string name="submit_success">Submitted</string>
     <string name="example">Example</string>
-    <string name="upload_pic_rules">Requires: \n1. Your pic must be jpg or png and less than 4M. \n2. Confirm that the photo has no watermark, no stains, the identity information must be clear, the head must be clear, and should not be text-revise photo. \n3. Please provide the photo with your ID certificate held by both your hands. Be sure that the ID photo is clearly visible, no makeup and fully expose your arms and hands, the ID info are not covered by your hands, and your face is not covered by the certificate. \n Click "Add" to check the example. You are required to prove your own photo without PS.</string>
+    <string name="upload_pic_rules">Requires: \n1. Your pic must be jpg or png and less than 4M. \n2. Confirm that the photo has no watermark, no stains, the identity information must be clear, the head must be clear, and should not be text-revise photo. \n3. Please provide the photo with your ID certificate held by both your hands. Be sure that the ID photo is clearly visible, no makeup and fully expose your arms and hands, the ID info are not covered by your hands, and your face is not covered by the certificate. \nClick "Add" to check the example. You are required to prove your own photo without PS.</string>
     <string name="legal_currency_pay_management">OTC payments</string>
     <string name="legal_currency_pay">OTC payments</string>
     <string name="delete">Delete</string>
@@ -129,7 +129,7 @@
     <string name="please_input_sub_bank_name">Input branch name</string>
     <string name="bank_card_account">Card Num</string>
     <string name="please_input_bank_card_account">Input bankcard number</string>
-    <string name="bank_card_account_name">Account name</string>
+    <string name="bank_card_account_name">User name</string>
     <string name="please_input_bank_card_account_name">Input account name</string>
     <string name="select_pay_type">Select payment</string>
     <string name="bank_card">Bankcard</string>
@@ -257,7 +257,7 @@
     <string name="copy_success">Copied</string>
     <string name="save_qr_code">Save QR code</string>
     <string name="copy_address">Copy address</string>
-    <string name="recharge_coin_rules">Don&apos;t top up any non-%1$s assets to address above, otherwise it won&apos;t be found back. \n Confirmation of all network nodes is needed after top-up. You will recieve the token after %2$d confirmation. \n Minimum top-up amount: %3$s. Less top-up is invalid. \n The top-up address seldom changes and you can repeatedly top up. You will be noted by website notice or email if the address changes. \n Make sure that your computer and browser is secure to prevent information from being tampered with or leaked.</string>
+    <string name="recharge_coin_rules">Don\'t top up any non-%1$s assets to address above, otherwise it won\'t be found back. \nConfirmation of all network nodes is needed after top-up. You will receive the token after %2$d confirmation. \nMinimum top-up amount: %3$s. Less top-up is invalid. \nThe top-up address seldom changes and you can repeatedly top up. You will be noted by website notice or email if the address changes. \nMake sure that your computer and browser is secure to prevent information from being tampered with or leaked.</string>
     <string name="select_coin_type">Select token</string>
     <string name="draw_coin">Withdraw</string>
     <string name="select_draw_coin_address">Select draw coin address</string>
@@ -278,6 +278,7 @@
     <string name="set_cash_pwd_rules">Notice: Your fund password will be used for trade, withdrawal and security setting. It is suggested to be different than login password. The platform will take no responsibility if your account is stolen because of the password.</string>
     <string name="confirm_with_draw">Confirm</string>
     <string name="with_draw_rules_x">1. Minimum withdrawal: %1$s \n2. Make sure the address is correct before you withdraw. Once sent to the block chain network, the transaction is irrevocable. \n3. After transfer to the address above, you need the confirmation of all network nodes. %2$d times network confirm later, you are able to get the coins. \n4. Please do not take coins directly to ICO's crowdfunding address, which will prevent you from receiving crowdfunding digital assets. \n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
+    <string name="arrivals_num">Arrivals</string>
     <string name="filtrate">Filter</string>
     <string name="coin_type">Token</string>
     <string name="flow_type">Statement type</string>
@@ -351,13 +352,13 @@
     <string name="buyer_limit">Other party</string>
     <string name="authentication_with_symbol">Authentication:</string>
     <string name="trade_count_more_than">Trades ≥</string>ø
-    <string name="contract_info">Contact info</string>
+    <string name="contract_info">Tel</string>
     <string name="read_and_agree">I have read and agree</string>
     <string name="coin_trade_protocol">OTC Trade Agreement</string>
     <string name="attention_rules">Attention:</string>
     <string name="attention_rules_text">1.Please confirm the payment before releasing cryptocurrency. \n\n2. Do not disclose sensitive information related to your account security during the transaction. \n\n3. Do not give your email address directly to the buyer, otherwise you may receive fraud mails which may endanger your account. \n\n4. Please record the platform website on the bookmark to make sure you trade on the correct website and avoid visiting phishing websites. \n\n5. Platform staff is prohibited from trading with you in the official name. Please do not trade with investors who claim to be employees of the platform to avoid the loss of your interest.</string>
     <string name="attention_hint">Special Notes</string>
-    <string name="attention_hint_text">In order to ensure the trading safety of investors, the platform will use a cryptocurrency escrow system. Any investor is forbidden to bypass the platform to make a private trading, and the violator will bear the loss. \n Please write down in detail your terms and conditions, as well as the matters to be noted in the transaction notes. Clear information will improve your transaction success rate and evaluation. \n Fraud is not allowed on the platform. The violators will cause their accounts frozen and assume the legal responsibility. \n Please fulfill the spirit of contract after publishing an AD. If you bid up the price maliciously or pull back, your account will be frozen for 3-14 days once reported.</string>
+    <string name="attention_hint_text">In order to ensure the trading safety of investors, the platform will use a cryptocurrency escrow system. Any investor is forbidden to bypass the platform to make a private trading, and the violator will bear the loss. \nPlease write down in detail your terms and conditions, as well as the matters to be noted in the transaction notes. Clear information will improve your transaction success rate and evaluation. \nFraud is not allowed on the platform. The violators will cause their accounts frozen and assume the legal responsibility. \nPlease fulfill the spirit of contract after publishing an AD. If you bid up the price maliciously or pull back, your account will be frozen for 3-14 days once reported.</string>
     <string name="single_price">Unit price</string>
     <string name="limit">Limit</string>
     <string name="update_time">Update time</string>
@@ -377,6 +378,7 @@
     <string name="set_draw_cash_pwd_hint">Please set your fund password first</string>
     <string name="go_to_set">Set it now</string>
     <string name="publish_poster_have_not_bind_pay">You need to set the OTC payments before posting ads</string>
+    <string name="have_not_bind_pay">You need to set the OTC payments before</string>
     <string name="go_to_bind">Set it now</string>
     <string name="please_select_price_type">Select price type</string>
     <string name="floating_price_rate">Premium rate</string>
@@ -421,8 +423,8 @@
     <string name="unpaid">Unpaid</string>
     <string name="paid">Paid</string>
     <string name="canceled">Cancelled</string>
-    <string name="max_buy_amount">Maximum buy &#160;%1$s</string>
-    <string name="max_sell_amount">Maximum sell &#160;%1$s</string>
+    <string name="max_buy_amount">Max buy &#160;%1$s</string>
+    <string name="max_sell_amount">Max sell &#160;%1$s</string>
     <string name="trade_amount_empty_hint">Token number must be filled</string>
     <string name="cash_pwd_empty_hint">Please input fund password</string>
     <string name="turnover">Trade amount</string>
@@ -432,8 +434,8 @@
     <string name="order_detail_price_x">Price: %1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">Amount: %1$f&#160;%2$s</string>
     <string name="otc_trade_complete_desc">Completed</string>
-    <string name="seller_info">Seller&apos;s info</string>
-    <string name="buyer_info">Buyer&apos;s info</string>
+    <string name="seller_info">Seller\'s info</string>
+    <string name="buyer_info">Buyer\'s info</string>
     <string name="register_time">Register time：%1$s</string>
     <string name="click_to_ask_contract_info">Ask for payment</string>
     <string name="contact_each_other">Contact him/her</string>
@@ -448,7 +450,7 @@
     <string name="pay_info_hint_to_seller">The buyer has ordered, requiring for payment.</string>
     <string name="pay_info_hint_to_buyer">Ordered. Please check payment with the seller.</string>
     <string name="pay_info_safety_hint_to_seller">Info above has been sent to the buyer. Please check it with him/her</string>
-    <string name="pay_info_safety_hint_to_buyer">Account above is left by the seller. Please check it with him/her before payment. Be careful if seller provides a different account. Stop paying if the account name is inconsistent with seller&apos;s authenticated one.</string>
+    <string name="pay_info_safety_hint_to_buyer">Account above is left by the seller. Please check it with him/her before payment. Be careful if seller provides a different account. Stop paying if the account name is inconsistent with seller\'s authenticated one.</string>
     <string name="sold_x">Sell &#160;%1$s</string>
 
     <!-- bottom tabs -->
@@ -501,7 +503,7 @@
     <string name="confirm_password">Confirm password</string>
     <string name="find_password">Forgot password</string>
     <string name="auth_code_send_to">Verification code has been sent to</string>
-    <string name="for_your_account_safe_please_input_auth_code">For the security of your account \n please fill in the verification code</string>
+    <string name="for_your_account_safe_please_input_auth_code">For the security of your account \nplease fill in the verification code</string>
     <string name="please_input_auth_code">Input verification code</string>
     <string name="graphic_auth_code">Captcha</string>
     <string name="please_input_if_you_have_invitation_code">Input invitation code if you have</string>
@@ -586,6 +588,9 @@
 
     <string name="hello_customer_for_you">Hello! This is %1$s. Glad to service you</string>
     <string name="current_service_is_offline_change_service">Customer service is offline, switch customer service?</string>
+    <string name="long_time_not_contract_need_reconnect">You have not contact customer service for a long time，need reconnect</string>
+    <string name="reconnect">Reconnect</string>
+    <string name="close_session">Close session</string>
     <string name="trade_with_market_price">Trade at the currently best price</string>
     <string name="android_web_agent">ANDROID_AGENT/1.0</string>
     <string name="network_error_please_reload">Network connection failed. Please reload</string>

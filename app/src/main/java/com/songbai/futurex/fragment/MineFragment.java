@@ -160,7 +160,7 @@ public class MineFragment extends BaseFragment {
                 mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
                 mAuthenticationStatus.setText(R.string.senior_certification);
             } else {
-                mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
+                mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_uncertificated_star, 0, 0, 0);
                 mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.text99));
                 mAuthenticationStatus.setText(R.string.uncertificated);
             }

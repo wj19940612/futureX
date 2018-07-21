@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
+        app:hasBottomSplitLine="true"
         app:titleText="@string/custom_service"
         app:titleTextColor="@color/text22"
         app:titleTextSize="17sp"/>

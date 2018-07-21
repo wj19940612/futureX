@@ -87,6 +87,10 @@ public class CustomServiceActivity extends BaseActivity {
         }
     };
     private CustomerService mCustomerService;
+    private long idleStart = System.currentTimeMillis();
+    private SmartDialog mReconnectSmartDialog;
+    private boolean mHasShowReconnectDialog;
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +115,42 @@ public class CustomServiceActivity extends BaseActivity {
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        chatOnline();
+        if (System.currentTimeMillis() - idleStart > 10 * 60 * 1000) {
+            showReconnectDialog();
+        } else {
+            chatOnline();
+        }
+    }
+
+    private void showReconnectDialog() {
+        if (mHasShowReconnectDialog) {
+            return;
+        }
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                unregisterImPush();
+                loadServiceData();
+                mHasShowReconnectDialog = false;
+            }
+        });
+        mReconnectSmartDialog = SmartDialog.solo(getActivity());
+        mReconnectSmartDialog.setCustomViewController(withDrawPsdViewController)
+                .setCancelableOnTouchOutside(false)
+                .show();
+        withDrawPsdViewController.setConfirmText(R.string.reconnect);
+        withDrawPsdViewController.setCloseText(R.string.close_session);
+        withDrawPsdViewController.setOnColseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                mHasShowReconnectDialog = false;
+            }
+        });
+        withDrawPsdViewController.setMsg(R.string.long_time_not_contract_need_reconnect);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
+        withDrawPsdViewController.setCroseVisibility(View.GONE);
+        mHasShowReconnectDialog = true;
     }
 
     @Override
@@ -148,7 +187,8 @@ public class CustomServiceActivity extends BaseActivity {
                 }
             }
         });
-        mRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecycleView.setLayoutManager(mLinearLayoutManager);
         mRecycleView.setAdapter(mChatAdapter);
 
         mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -204,9 +244,18 @@ public class CustomServiceActivity extends BaseActivity {
         });
         SmartDialog smartDialog = SmartDialog.solo(getActivity());
         smartDialog.setCustomViewController(withDrawPsdViewController)
+                .setCancelableOnTouchOutside(false)
                 .show();
         withDrawPsdViewController.setConfirmText(R.string.confirm);
+        withDrawPsdViewController.setCloseText(R.string.close_session);
+        withDrawPsdViewController.setOnColseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         withDrawPsdViewController.setMsg(R.string.current_service_is_offline_change_service);
+        withDrawPsdViewController.setCroseVisibility(View.GONE);
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
@@ -242,6 +291,14 @@ public class CustomServiceActivity extends BaseActivity {
                 updateCustomerService(resp.getData());
                 registerImPush();
                 chatOnline();
+            }
+
+            @Override
+            protected void onRespFailure(Resp failedResp) {
+                super.onRespFailure(failedResp);
+                if (failedResp.getCode() == 6003) {
+                    showReconnectDialog();
+                }
             }
         }).fireFreely();
     }
@@ -285,9 +342,8 @@ public class CustomServiceActivity extends BaseActivity {
         customServiceChat.setContent(getString(R.string.hello_customer_for_you, data.getName()));
         mCustomServiceChats.add(customServiceChat);
         mChatAdapter.notifyDataSetChanged();
-        updateRecyclerViewPosition(false);
+        scrollToBottom();
     }
-
 
     private void loadChatData(List<CustomServiceChat> data) {
         mCustomServiceChats.clear();
@@ -316,6 +372,7 @@ public class CustomServiceActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.send:
                 sendMsg();
+                idleStart = System.currentTimeMillis();
                 break;
             case R.id.addPic:
                 sendPicToCustomer();
@@ -393,6 +450,7 @@ public class CustomServiceActivity extends BaseActivity {
                 .callback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
+                        idleStart = System.currentTimeMillis();
                         if (resp != null && resp.getData() != null) {
                             requestSendPhotoMsg(resp.getData());
                         }
@@ -433,10 +491,24 @@ public class CustomServiceActivity extends BaseActivity {
 
     private void updateRecyclerViewPosition(boolean isSend) {
         if (isSend) {
-            mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount());
+            mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount() - 1);
         } else if (((LinearLayoutManager) mRecycleView.getLayoutManager()).findLastCompletelyVisibleItemPosition() == mChatAdapter.getItemCount() - 2) {
             mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount());
         }
+    }
+
+    private void scrollToBottom() {
+        mLinearLayoutManager.scrollToPositionWithOffset(mChatAdapter.getItemCount() - 1, 0);//先要滚动到这个位置
+        mRecycleView.post(new Runnable() {
+            @Override
+            public void run() {
+                View target = mLinearLayoutManager.findViewByPosition(mChatAdapter.getItemCount() - 1);//然后才能拿到这个View
+                if (target != null) {
+                    mLinearLayoutManager.scrollToPositionWithOffset(mChatAdapter.getItemCount() - 1,
+                            mRecycleView.getMeasuredHeight() - target.getMeasuredHeight());//滚动偏移到底部
+                }
+            }
+        });
     }
 
     static class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

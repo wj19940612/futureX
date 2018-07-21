@@ -78,16 +78,16 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
                     .callback(new Callback<Resp<AppVersion>>() {
                         @Override
                         protected void onRespSuccess(Resp<AppVersion> resp) {
-                            if (resp.getData() != null && (resp.getData().isForceUpdate() || resp.getData().isNeedUpdate())) {
+                            if (resp.getData() != null && ((resp.getData().isForceUpdate() || resp.getData().isNeedUpdate()))) {
                                 UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
                                         .show(getChildFragmentManager());
-                            }else{
+                            } else {
                                 ToastUtil.show(R.string.is_latest_version_now);
                             }
                         }
                     })
                     .fireFreely();
-        } else if (mAppVersion.isForceUpdate() || mAppVersion.isForceUpdate()) {
+        } else if ((mAppVersion.isForceUpdate() || mAppVersion.isNeedUpdate())) {
             UpdateVersionDialogFragment.newInstance(mAppVersion, mAppVersion.isForceUpdate())
                     .show(getChildFragmentManager());
         }

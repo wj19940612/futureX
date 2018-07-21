@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -118,6 +117,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     private OtcBankInfoMsg mBankInfoMsg;
     private int mOtcChatUserId;
     private MsgProcessor mMsgProcessor;
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -182,7 +182,8 @@ public class OtcTradeChatActivity extends BaseActivity {
                 }
             }
         });
-        mRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecycleView.setLayoutManager(mLinearLayoutManager);
         mChatAdapter.setRightDirection(mTradeDirection);
         mRecycleView.setAdapter(mChatAdapter);
 
@@ -336,7 +337,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                         mBankInfoMsg.setBankCardBeans(resp.getData());
                         mOtcChatMessages.add(0, mBankInfoMsg);
                         mChatAdapter.notifyDataSetChanged();
-                        updateRecyclerViewPosition(false);
+                        scrollToBottom();
                     }
                 }).fire();
     }
@@ -416,8 +417,7 @@ public class OtcTradeChatActivity extends BaseActivity {
         if (mBankInfoMsg != null) {
             mOtcChatMessages.add(0, mBankInfoMsg);
         }
-        mChatAdapter.notifyDataSetChanged();
-        updateRecyclerViewPosition(false);
+        scrollToBottom();
     }
 
     private void loadChatData(OtcChatMessage data) {
@@ -542,7 +542,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
             @Override
             public void onReScroll() {
-//                updateRecyclerViewPosition(false);
+                updateRecyclerViewPosition(false);
             }
         };
     }
@@ -558,11 +558,23 @@ public class OtcTradeChatActivity extends BaseActivity {
     private void updateRecyclerViewPosition(boolean isSend) {
         if (isSend) {
             mRecycleView.smoothScrollToPosition(mChatAdapter.getItemCount() - 1);
-            Log.e("wtf", "updateRecyclerViewPosition: " + "send");
         } else if (((LinearLayoutManager) mRecycleView.getLayoutManager()).findLastCompletelyVisibleItemPosition() == mChatAdapter.getItemCount() - 2) {
             mRecycleView.scrollToPosition(mChatAdapter.getItemCount() - 1);
-            Log.e("wtf", "updateRecyclerViewPosition: " + "not send");
         }
+    }
+
+    private void scrollToBottom() {
+        mLinearLayoutManager.scrollToPositionWithOffset(mChatAdapter.getItemCount() - 1, 0);//先要滚动到这个位置
+        mRecycleView.post(new Runnable() {
+            @Override
+            public void run() {
+                View target = mLinearLayoutManager.findViewByPosition(mChatAdapter.getItemCount() - 1);//然后才能拿到这个View
+                if (target != null) {
+                    mLinearLayoutManager.scrollToPositionWithOffset(mChatAdapter.getItemCount() - 1,
+                            mRecycleView.getMeasuredHeight() - target.getMeasuredHeight());//滚动偏移到底部
+                }
+            }
+        });
     }
 
     static class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
