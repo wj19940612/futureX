@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,7 +70,7 @@ public class ChartsRadio extends LinearLayout {
 
     private void initChartsRadioDropMenu() {
         final int moreTabIndex = mChartsRadioMain.getChildCount() - 1;
-        for (int i = 0; i < mChartsRadioDropMenu.getChildCount(); i++) {
+        for (int i = 0; i < mChartsRadioDropMenu.getChildCount() - 1; i++) {
             final int finalI = i;
             mChartsRadioDropMenu.getChildAt(i).setOnClickListener(new OnClickListener() {
                 @Override
@@ -77,8 +78,9 @@ public class ChartsRadio extends LinearLayout {
                     mMoreTriangle.setImageResource(R.drawable.ic_triangle);
                     closeDropMenu();
 
-                    if (v instanceof TextView) {
-                        mMoreTab.setText(((TextView) v).getText());
+                    if (v instanceof ViewGroup && ((ViewGroup) v).getChildAt(0) instanceof TextView) {
+                        View childAt = ((ViewGroup) v).getChildAt(0);
+                        mMoreTab.setText(((TextView) childAt).getText());
                     }
 
                     select(moreTabIndex);
