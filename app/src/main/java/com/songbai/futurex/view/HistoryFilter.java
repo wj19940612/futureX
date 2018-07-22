@@ -82,6 +82,7 @@ public class HistoryFilter {
     private OnFilterListener mOnFilterListener;
     private View mDimView;
     private FilterResult mFilterResult;
+    private OnCurrencySelectorShowListener mOnCurrencySelectorShowListener;
 
     public FilterResult getFilterResult() {
         return mFilterResult;
@@ -89,6 +90,10 @@ public class HistoryFilter {
 
     public interface OnFilterListener {
         void onFilter(FilterResult filterResult);
+    }
+
+    public interface OnCurrencySelectorShowListener {
+        void onCurrencySelectorShow();
     }
 
     public HistoryFilter(View view, final View dimView) {
@@ -180,6 +185,10 @@ public class HistoryFilter {
             mPvOptions.setPicker(mCounterCurrencyList);
         }
         mPvOptions.show();
+
+        if (mOnCurrencySelectorShowListener != null) {
+            mOnCurrencySelectorShowListener.onCurrencySelectorShow();
+        }
     }
 
     private void selectCounterCurrency(String counterCurrency) {
@@ -188,6 +197,10 @@ public class HistoryFilter {
 
     public void setOnFilterListener(OnFilterListener onFilterListener) {
         mOnFilterListener = onFilterListener;
+    }
+
+    public void setOnCurrencySelectorShowListener(OnCurrencySelectorShowListener onCurrencySelectorShowListener) {
+        mOnCurrencySelectorShowListener = onCurrencySelectorShowListener;
     }
 
     public void show() {
