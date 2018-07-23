@@ -469,8 +469,8 @@
     </string-array>
     <integer-array name="tabIcons">
         <item>@drawable/tab_home</item>
-        <item>@drawable/tab_legal_currency</item>
         <item>@drawable/tab_market</item>
+        <item>@drawable/tab_legal_currency</item>
         <item>@drawable/tab_trade</item>
         <item>@drawable/tab_mine</item>
     </integer-array>

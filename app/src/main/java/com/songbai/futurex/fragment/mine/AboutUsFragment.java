@@ -63,7 +63,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp<AppVersion>>() {
                     @Override
                     protected void onRespSuccess(Resp<AppVersion> resp) {
-                        if (resp.getData() != null && (resp.getData().isForceUpdate() || resp.getData().isNeedUpdate())) {
+                        if (resp.getData() != null && resp.getData().isLastVersionLawful()) {
                             mVersionIcon.setVisibility(View.VISIBLE);
                             mAppVersion = resp.getData();
                         }
@@ -72,13 +72,13 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
                 .fireFreely();
     }
 
-    private void queryForceVersion() {
+    private void queryVersionAndShowDialog() {
         if (mAppVersion == null) {
             Apic.queryForceVersion().tag(TAG)
                     .callback(new Callback<Resp<AppVersion>>() {
                         @Override
                         protected void onRespSuccess(Resp<AppVersion> resp) {
-                            if (resp.getData() != null && ((resp.getData().isForceUpdate() || resp.getData().isNeedUpdate()))) {
+                            if (resp.getData() != null && resp.getData().isLastVersionLawful()) {
                                 UpdateVersionDialogFragment.newInstance(resp.getData(), resp.getData().isForceUpdate())
                                         .show(getChildFragmentManager());
                             } else {
@@ -87,7 +87,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
                         }
                     })
                     .fireFreely();
-        } else if ((mAppVersion.isForceUpdate() || mAppVersion.isNeedUpdate())) {
+        } else if (mAppVersion.isLastVersionLawful()) {
             UpdateVersionDialogFragment.newInstance(mAppVersion, mAppVersion.isForceUpdate())
                     .show(getChildFragmentManager());
         }
@@ -112,7 +112,7 @@ public class AboutUsFragment extends UniqueActivity.UniFragment {
                 Launcher.with(this, CustomServiceActivity.class).execute();
                 break;
             case R.id.versionLayout:
-                queryForceVersion();
+                queryVersionAndShowDialog();
                 break;
             default:
         }
