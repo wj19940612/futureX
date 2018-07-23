@@ -287,7 +287,7 @@
     <string name="cash_pwd">資金密碼</string>
     <string name="set_cash_pwd_rules">注意：您的資金密碼是用來交易和提現和賬戶安全設置，建議您不要設置與登錄密碼一致，由此產生的賬戶被盜，本站概不負責。</string>
     <string name="confirm_with_draw">確認提幣</string>
-    <string name="with_draw_rules_x">1.最小提幣數量為：%1$s\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網路便不可撤回。\n3.您提幣至上述地址後，需要整個網路節點的確認，%2$d次網路確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或泄露。</string>
+    <string name="with_draw_rules_x">1.最小提幣數量為：%1$s\n2.申請提幣前請您確保提幣地址準確無誤，交易一旦發送到區塊鏈網路便不可撤回。\n3.您提幣至上述地址後，需要整個網路節點的確認，%2$d次網路確認後方可到賬提幣。\n4.請不要直接提幣到ICO的眾籌地址，這會導致您無法收取眾籌到的數字資產。\n5.請務必確認電腦及瀏覽器安全，防止信息被篡改或洩露。</string>
     <string name="arrivals_num">到賬數量</string>
     <string name="filtrate">篩選</string>
     <string name="coin_type">幣種</string>
@@ -659,5 +659,6 @@
     <string name="entrust_success">委託成功</string>
     <string name="no_enough_balance">餘額不足</string>
     <string name="complete">完成</string>
+    <string name="volume">數量</string>
 
 </resources>

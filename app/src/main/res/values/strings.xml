@@ -659,5 +659,6 @@
     <string name="entrust_success">委托成功</string>
     <string name="no_enough_balance">余额不足</string>
     <string name="complete">完成</string>
+    <string name="volume">数量</string>
 
 </resources>
