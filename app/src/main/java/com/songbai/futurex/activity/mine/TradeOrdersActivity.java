@@ -31,6 +31,8 @@ import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.KeyBoardHelper;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.HistoryFilter;
@@ -83,12 +85,28 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     private TextView mFilter;
     private HistoryFilter mHistoryFilter;
     private MarketSubscriber mMarketSubscriber;
+    private KeyBoardHelper mKeyBoardHelper;
+    private boolean mKeyboardVisible;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade_orders);
         ButterKnife.bind(this);
+
+        mKeyBoardHelper = new KeyBoardHelper(getActivity());
+        mKeyBoardHelper.onCreate();
+        mKeyBoardHelper.setOnKeyBoardStatusChangeListener(new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
+            @Override
+            public void OnKeyBoardPop(int keyboardHeight) {
+                mKeyboardVisible = true;
+            }
+
+            @Override
+            public void OnKeyBoardClose(int oldKeyboardHeight) {
+                mKeyboardVisible = false;
+            }
+        });
 
         initTitleBar();
         initFilterView();
@@ -123,6 +141,12 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         });
 
         requestOrderList();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mKeyBoardHelper.onDestroy();
     }
 
     @Override
@@ -175,6 +199,14 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 mPage = 0;
                 requestOrderList();
                 mHistoryFilter.dismiss();
+            }
+        });
+        mHistoryFilter.setOnCurrencySelectorShowListener(new HistoryFilter.OnCurrencySelectorShowListener() {
+            @Override
+            public void onCurrencySelectorShow() {
+                if (mKeyboardVisible) {
+                    KeyBoardUtils.closeKeyboard(mFilterView);
+                }
             }
         });
     }
