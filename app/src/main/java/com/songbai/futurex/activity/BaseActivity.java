@@ -69,11 +69,13 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
                 .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog) {
+                        dialog.dismiss();
                         reopenMainPage();
                     }
                 }).setPositive(R.string.ok, new SmartDialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog) {
+                dialog.dismiss();
                 Launcher.with(getActivity(), LoginActivity.class).execute(REQ_CODE_LOGIN);
             }
         }).show();

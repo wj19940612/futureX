@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.utils.RegularExpUtils;
 import com.songbai.futurex.utils.ValidationWatcher;
+import com.songbai.futurex.utils.inputfilter.EmojiFilter;
 import com.songbai.futurex.utils.inputfilter.PasswordInputFilter;
 
 import java.lang.reflect.Field;
@@ -176,7 +177,7 @@ public class PasswordEditText extends LinearLayout {
                 getResources().getDisplayMetrics());
         EditText editText = new EditText(getContext());
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        editText.setFilters(new InputFilter[]{new PasswordInputFilter(), new InputFilter.LengthFilter(mMaxCharNum)});
+        editText.setFilters(new InputFilter[]{new PasswordInputFilter(), new InputFilter.LengthFilter(mMaxCharNum), new EmojiFilter()});
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             editText.setBackground(null);
         } else {
