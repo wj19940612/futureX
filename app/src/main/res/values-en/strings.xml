@@ -49,9 +49,10 @@
 
     <!--拍照-->
     <string name="please_select_portrait">Select image</string>
+    <string name="please_select_image">Select image</string>
     <string name="take_phone_from_camera">Camera</string>
     <string name="look_big_picture">Click to enlarge</string>
-    <string name="take_phone_from_phone">Select from album</string>
+    <string name="take_phone_from_phone">Album</string>
     <string name="take_phone_cancel">Cancel</string>
 
     <!--币币交易列表 Filter-->
@@ -122,7 +123,9 @@
     <string name="draw_coin_address_management">Withdrawal address</string>
     <string name="cn_tw">Taiwan</string>
     <string name="cn_mainland">China mainland</string>
+    <string name="select_bank">Select bank</string>
     <string name="bank_name">Bank</string>
+    <string name="input_bank_name">Input bank name</string>
     <string name="bank_code">Bank code</string>
     <string name="please_input_bank_code">Bank code</string>
     <string name="sub_bank_name">Branch</string>
@@ -212,7 +215,9 @@
     <string name="the_two_passwords_differ">Inconsistent password</string>
     <string name="change_login_pwd">Change login password</string>
     <string name="new_login_pwd">New password</string>
+    <string name="old_login_pwd">Old login password</string>
     <string name="please_input_new_login_pwd">Input new login password</string>
+    <string name="please_input_old_login_pwd">Input old login password</string>
     <string name="confirm_login_pwd">Confirm</string>
     <string name="please_input_sms_auth_code">Input SMS code</string>
     <string name="google_authenticator">Google Authenticator</string>
@@ -430,12 +435,12 @@
     <string name="trade_amount_empty_hint">Token number must be filled</string>
     <string name="cash_pwd_empty_hint">Please input fund password</string>
     <string name="turnover">Amount</string>
-    <string name="trade_count_symbol_x">Amount: %1$s&#160;%2$s</string>
+    <string name="trade_count_symbol_x">Volume: %1$s&#160;%2$s</string>
     <string name="pay_info">Payment</string>
     <string name="trade_rules">Instructions</string>
     <string name="trade_rules_description">Ask the other party how the transaction will be done and compare it with he/she listed on the platform. If inconsistent, be careful to pay. \n\n1. Please note last 4 letters of order number to speed up the confirmation. \n\n2. Please do not fill in any word about cryptocurrency such as Bitcoin, BTC, OTC, etc., in order to prevent the remittance from being intercepted by the bank. \n\n3. The order is valid for 15 minutes. Please pay in time and click the "paid" button, and then the token can be released to you. \n\n4. If you are unable to complete payment within 15 minutes, the order will be cancelled. \n\n5. The cryptocurrency is hosted by the system during the transaction. Please feel free to place an order.</string>
     <string name="order_detail_price_x">Price: %1$s&#160;%2$s/%3$s</string>
-    <string name="order_detail_amount_x">Amount: %1$f&#160;%2$s</string>
+    <string name="order_detail_amount_x">Volume: %1$f&#160;%2$s</string>
     <string name="otc_trade_complete_desc">Completed</string>
     <string name="seller_info">Seller\'s info</string>
     <string name="buyer_info">Buyer\'s info</string>
@@ -446,7 +451,7 @@
     <string name="cancel_trade_hin_msg">If you have paid to the seller, do not cancel the trade. If the buyer has 5 cancellations within a day, he/she will be forbidden to buy tokens in this day.</string>
     <string name="confirm_have_not_pay_to_seller">I have not paid the counter party</string>
     <string name="appeal">Appeal</string>
-    <string name="i_have_paid">I have paid</string>
+    <string name="i_have_paid">I\'ve paid</string>
     <string name="confirm_transfer_coin">Release</string>
     <string name="order_time_with_symbol_x">Order time: %1$s</string>
     <string name="wait_to_pay">Waiting to pay</string>
@@ -629,7 +634,7 @@
     <string name="delete_success">Deleted</string>
     <string name="really_want_to_delete">Really want to delete?</string>
     <string name="draw_cash_pwd_can_not_short_than_8">Fund password should not be less than 8 digits</string>
-    <string name="entrust_success">Entrust success</string>
+    <string name="entrust_success">Success</string>
     <string name="revoking_order">Revoking</string>
     <string name="deal_detail">Order Detail</string>
     <string name="time_x">Time %1$s</string>

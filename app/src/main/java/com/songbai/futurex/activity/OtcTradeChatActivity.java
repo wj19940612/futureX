@@ -507,7 +507,8 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void sendPicToCustomer() {
-        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY)
+        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY,
+                "", -1, getString(R.string.please_select_image))
                 .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
                     public void onImagePath(int index, String imagePath) {

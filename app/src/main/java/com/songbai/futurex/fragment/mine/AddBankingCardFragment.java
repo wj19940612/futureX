@@ -14,6 +14,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.songbai.futurex.ExtraKeys;
@@ -95,6 +96,8 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     private PopupWindow mPopupWindow;
     private ArrayList<String> option = new ArrayList<>();
     boolean isMainland = true;
+    private OptionsPickerView mPvOptions;
+    private OptionsPickerView mBankPvOptions;
 
     @Nullable
     @Override
@@ -219,7 +222,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
         for (BankListBean bankListBean : bankListBeans) {
             banks.add(bankListBean.getBankName());
         }
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
+        mBankPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
                 if (isMainland) {
@@ -228,22 +231,60 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
                     mTwBankName.setText(bankListBeans.get(options1).getBankName());
                 }
             }
+        }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                TextView cancel = v.findViewById(R.id.cancel);
+                TextView confirm = v.findViewById(R.id.confirm);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mBankPvOptions.dismiss();
+                    }
+                });
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mBankPvOptions.returnData();
+                        mBankPvOptions.dismiss();
+                    }
+                });
+            }
         }).build();
-        pvOptions.setPicker(banks, null, null);
-        pvOptions.show();
+        mBankPvOptions.setPicker(banks, null, null);
+        mBankPvOptions.show();
     }
 
     private void showAreaSelect() {
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
+        mPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
                 mBankArea.setText(option.get(options1));
                 isMainland = options1 == 0;
                 setViewByArea(isMainland);
             }
+        }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                TextView cancel = v.findViewById(R.id.cancel);
+                TextView confirm = v.findViewById(R.id.confirm);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPvOptions.dismiss();
+                    }
+                });
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPvOptions.returnData();
+                        mPvOptions.dismiss();
+                    }
+                });
+            }
         }).build();
-        pvOptions.setPicker(option, null, null);
-        pvOptions.show();
+        mPvOptions.setPicker(option, null, null);
+        mPvOptions.show();
     }
 
     private void bankBand(BankBindData bankBindData) {

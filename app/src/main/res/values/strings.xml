@@ -52,6 +52,7 @@
 
     <!--拍照-->
     <string name="please_select_portrait">请选择头像</string>
+    <string name="please_select_image">请选择图片</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="look_big_picture">查看大图</string>
     <string name="take_phone_from_phone">从相册选择</string>
@@ -127,7 +128,9 @@
     <string name="draw_coin_address_management">提币地址管理</string>
     <string name="cn_tw">中国台湾</string>
     <string name="cn_mainland">中国大陆</string>
+    <string name="select_bank">选择银行</string>
     <string name="bank_name">银行名称</string>
+    <string name="input_bank_name">请填写银行名称</string>
     <string name="bank_code">银行代码</string>
     <string name="please_input_bank_code">请填写银行代码</string>
     <string name="sub_bank_name">分行名称</string>
@@ -217,8 +220,10 @@
     <string name="the_two_passwords_differ">两次密码输入不一致</string>
     <string name="draw_cash_pwd_can_not_short_than_8">资金密码不能小于8位</string>
     <string name="change_login_pwd">修改登录密码</string>
+    <string name="old_login_pwd">旧密码</string>
     <string name="new_login_pwd">新登录密码</string>
     <string name="please_input_new_login_pwd">请输入新登录密码</string>
+    <string name="please_input_old_login_pwd">请输入旧登录密码</string>
     <string name="confirm_login_pwd">确认登录密码</string>
     <string name="please_input_sms_auth_code">请输入短信验证码</string>
     <string name="google_authenticator">Google认证</string>

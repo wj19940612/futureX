@@ -487,7 +487,7 @@ public class Apic {
      * POST
      * 修改登录密码
      */
-    public static Api updateLoginPass(String newUserPass, String oldUserPass) {
+    public static Api updateLoginPass(String oldUserPass, String newUserPass) {
         return Api.post("/api/user/user/updateLoginPass.do",
                 new ReqParams()
                         .put("newUserPass", newUserPass)
