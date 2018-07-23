@@ -126,6 +126,7 @@ public class MineFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         setUserInfo();
+        getUserInfo();
     }
 
     @Override
@@ -191,9 +192,11 @@ public class MineFragment extends BaseFragment {
 
     private void getUserInfo() {
         Apic.findUserInfo().tag(TAG)
-                .callback(new Callback<Resp<Object>>() {
+                .callback(new Callback<Resp<UserInfo>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        LocalUser.getUser().setUserInfo(resp.getData());
+                        setUserInfo();
                     }
                 })
                 .fire();
