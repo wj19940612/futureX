@@ -483,7 +483,7 @@
     </integer-array>
 
     <!--Login/Register/SetPsd/-->
-    <string name="login_x">Log in %1$s</string>
+    <string name="login_x">Login %1$s</string>
     <string name="phone_or_email">Phone or email</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
@@ -516,7 +516,7 @@
     <string name="graphic_auth_code">Captcha</string>
     <string name="please_input_if_you_have_invitation_code">Input invitation code if you have</string>
     <string name="skip">Skip</string>
-    <string name="invitation_code">Invitation code</string>
+    <string name="invitation_code">INVT code</string>
     <string name="please_choose_country_area_code">Select area code</string>
     <string name="x_seconds">%1$ds</string>
     <string name="regain">Regain</string>
@@ -591,7 +591,7 @@
     <string name="sell_limit">Sell(limited price)</string>
     <string name="market_price">Market price</string>
     <string name="limit_price">Limited price</string>
-    <string name="trade_amt">Trade amount</string>
+    <string name="trade_amt">Amount</string>
 
 
     <string name="hello_customer_for_you">Hello! This is %1$s. Glad to service you</string>
@@ -636,7 +636,7 @@
     <string name="draw_cash_pwd_can_not_short_than_8">Fund password should not be less than 8 digits</string>
     <string name="entrust_success">Success</string>
     <string name="revoking_order">Revoking</string>
-    <string name="deal_detail">Order Detail</string>
+    <string name="deal_detail">Details</string>
     <string name="time_x">Time %1$s</string>
     <string name="deal_fee_x">Fee (%1$s)</string>
 
@@ -671,4 +671,5 @@
     <string name="primary_certification_simply">Primary</string>
     <string name="senior_certification_simply">Senior</string>
     <string name="tel_with_symbol">Tel:</string>
+    <string name="volume">Volume</string>
 </resources>
