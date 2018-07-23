@@ -131,21 +131,14 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                     .execute();
                             break;
                         case 2:
+                        case 4:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
                                     .execute();
                             break;
                         case 7:
-
-                            break;
                         case 8:
-                        case 4:
-                            Launcher.with(getActivity(), OtcOrderCompletedActivity.class)
-                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
-                                    .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
-                                    .execute();
-                            break;
                         case 10:
                             if (msg.contains("direct")) {
                                 try {

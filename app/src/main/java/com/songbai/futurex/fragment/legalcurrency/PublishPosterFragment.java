@@ -607,6 +607,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         String phone = mPhone.getText().toString();
         if (!TextUtils.isEmpty(phone)) {
             mWaresModel.setTelephone(phone);
+            mWaresModel.setAreaCode(mAreaCode.getText().toString());
         }
         if (mConditionKeyValue.containsKey(OtcWarePoster.CONDITION_TRADE)) {
             String value = mTradeCountLimit.getText().toString();

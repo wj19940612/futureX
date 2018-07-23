@@ -402,7 +402,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/wares_btn_primary_broad_f5_r2"
                     android:gravity="center"
-                    android:text="@string/primary_certification"/>
+                    android:text="@string/primary_certification_simply"/>
 
                 <com.songbai.futurex.view.autofit.AutofitTextView
                     android:id="@+id/seniorCertification"
@@ -412,7 +412,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/wares_btn_primary_broad_f5_r2"
                     android:gravity="center"
-                    android:text="@string/senior_certification"/>
+                    android:text="@string/senior_certification_simply"/>
 
             </LinearLayout>
 

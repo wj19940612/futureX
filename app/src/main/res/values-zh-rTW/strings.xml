@@ -52,6 +52,7 @@
 
     <!--拍照-->
     <string name="please_select_portrait">請選擇頭像</string>
+    <string name="please_select_image">請選擇圖片</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="look_big_picture">查看大圖</string>
     <string name="take_phone_from_phone">從相冊選擇</string>
@@ -76,6 +77,7 @@
     <string name="mail_certification">郵箱認證</string>
     <string name="certificating">認證中</string>
     <string name="primary_certification">初級認證</string>
+    <string name="primary_certification_simply">初級認證</string>
     <string name="primary_certification_complete">初級驗證完成</string>
     <string name="pleas_select_credentials_type">請選擇證件類型</string>
     <string name="mainland_id_card">中國大陸身份證</string>
@@ -125,7 +127,9 @@
     <string name="draw_coin_address_management">提幣地址管理</string>
     <string name="cn_tw">中國台灣</string>
     <string name="cn_mainland">中國大陸</string>
+    <string name="select_bank">選擇銀行</string>
     <string name="bank_name">銀行名稱</string>
+    <string name="input_bank_name">請填寫銀行名稱</string>
     <string name="bank_code">銀行代碼</string>
     <string name="please_input_bank_code">請填寫銀行代碼</string>
     <string name="sub_bank_name">分行名稱</string>
@@ -216,7 +220,9 @@
     <string name="draw_cash_pwd_can_not_short_than_8">資金密碼不能小於8位</string>
     <string name="change_login_pwd">修改登錄密碼</string>
     <string name="new_login_pwd">新登錄密碼</string>
+    <string name="old_login_pwd">舊登錄密碼</string>
     <string name="please_input_new_login_pwd">請輸入新登錄密碼</string>
+    <string name="please_input_old_login_pwd">請輸入舊登錄密碼</string>
     <string name="confirm_login_pwd">確認登錄密碼</string>
     <string name="please_input_sms_auth_code">請輸入短信驗證碼</string>
     <string name="google_authenticator">Google認證</string>
@@ -280,7 +286,6 @@
     <string name="search_property">搜索資產</string>
     <string name="available">可用</string>
     <string name="input_or_long_press_paste_address">輸入或長按粘貼地址</string>
-    <string name="with_draw_amount_hint">最小提幣數量&#160;200&#160;BTC</string>
     <string name="please_input_cash_pwd">請輸入資金密碼</string>
     <string name="amount">數量</string>
     <string name="all">全部</string>
@@ -358,7 +363,7 @@
     <string name="x_space_x">%1$s&#160;%2$s</string>
     <string name="amount_limit">限制金額：&#160;%1$s-%2$s</string>
     <string name="own_amount">擁有數量：&#160;%1$s</string>
-    <string name="x_done_count_done_rate_x">%1$d單&#8194;完成率%2$s</string>
+    <string name="x_done_count_done_rate_x">%1$d單</string>
     <string name="publish_ad">發佈廣告</string>
     <string name="buy_x">買入%1$s</string>
     <string name="sell_x">賣出%1$s</string>
@@ -371,7 +376,7 @@
     <string name="optional">（選填）</string>
     <string name="buyer_limit">對方限制</string>
     <string name="authentication_with_symbol">認證：</string>
-    <string name="trade_count_more_than">交易成功次數大於：</string>ø
+    <string name="trade_count_more_than">交易成功次數大於：</string>
     <string name="contract_info">聯繫方式</string>
     <string name="read_and_agree">我已閱讀並同意</string>
     <string name="coin_trade_protocol">《法幣交易協議》</string>
@@ -438,6 +443,7 @@
     <string name="pricing_currency">計價貨幣</string>
     <string name="quota_price">價格：</string>
     <string name="passed_primary_certification">必須通過初級認證</string>
+    <string name="passed_senior_certification">必須通過高級認證</string>
     <string name="deal_count_more_than_x">交易成功次數大於%1$s</string>
     <!--LEGAL_CURRENCY_ORDER-->
     <string-array name="legal_currency_order_header">
@@ -445,8 +451,9 @@
         <item>@string/unpaid</item>
         <item>@string/paid</item>
         <item>@string/canceled</item>
-        <item>@string/completed</item>
+        <item>@string/finished</item>
     </string-array>
+    <string name="finished">已完成</string>
     <string name="unpaid">未付款</string>
     <string name="paid">已付款</string>
     <string name="canceled">已取消</string>
@@ -458,6 +465,7 @@
     <string name="pound_sign_x">#%1$s</string>
     <string name="trade_count_symbol_x">交易金額：%1$s&#160;%2$s</string>
     <string name="pay_info">支付信息</string>
+    <string name="trade_rules">支付信息</string>
     <string name="trade_rules_description">請務必向對方詢問交易方式，並且與平台所留方式進行對比，若不一致，請慎重付款\n\n1.轉帳時請備注「訂單編號後4位」以加快確認速度\n\n2.請勿在匯款備注內填寫比特幣、BTC、OTC等任何數字幣有關字眼，防止您的匯款被銀行攔截\n\n3.訂單有效期為15分鐘，請您在有效期內及時付款並點擊「已轉賬」按鈕，數字幣才可以釋放給您\n\n4.如果您無法在15分鐘內完成付款，該筆訂單將被取消\n\n5.開始交易後數字幣由系統鎖定托管，請安心下單</string>
     <string name="order_detail_price_x">價格：%1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">數量：%1$f&#160;%2$s</string>
@@ -659,6 +667,8 @@
     <string name="entrust_success">委託成功</string>
     <string name="no_enough_balance">餘額不足</string>
     <string name="complete">完成</string>
+    <string name="senior_certification_simply">高級認證</string>
+    <string name="tel_with_symbol">聯繫方式:</string>
     <string name="volume">數量</string>
 
 </resources>

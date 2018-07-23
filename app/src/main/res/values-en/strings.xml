@@ -16,7 +16,7 @@
     <string name="cut">Cut</string>
 
     <!-- Dialog -->
-    <string name="ok">OK</string>
+    <string name="ok">Confirm</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="user_invalid">The user has expired. Please login again.</string>
@@ -49,9 +49,10 @@
 
     <!--拍照-->
     <string name="please_select_portrait">Select image</string>
+    <string name="please_select_image">Select image</string>
     <string name="take_phone_from_camera">Camera</string>
     <string name="look_big_picture">Click to enlarge</string>
-    <string name="take_phone_from_phone">Select from album</string>
+    <string name="take_phone_from_phone">Album</string>
     <string name="take_phone_cancel">Cancel</string>
 
     <!--币币交易列表 Filter-->
@@ -69,10 +70,10 @@
     <string name="safety_center">Security</string>
     <string name="custom_service">Customer service</string>
     <string name="settings">Settings</string>
-    <string name="personal_data">Personal info</string>
-    <string name="head_portrait">Image</string>
+    <string name="personal_data">Profile</string>
+    <string name="head_portrait">Profile photo</string>
     <string name="nick_name">Nickname</string>
-    <string name="real_name">Realname</string>
+    <string name="real_name">Real name</string>
     <string name="phone_certification">Mobile</string>
     <string name="mail_certification">Email</string>
     <string name="certificating">Verifying</string>
@@ -82,25 +83,25 @@
     <string name="mainland_id_card">China mainland ID card</string>
     <string name="tw_id_card">Taiwan ID card</string>
     <string name="passport">Passport</string>
-    <string name="type_of_certification">Certificate type</string>
-    <string name="certification_number">ID number</string>
+    <string name="type_of_certification">Certificate</string>
+    <string name="certification_number">ID NO.</string>
     <string name="please_input_real_name">Input your real name</string>
     <string name="please_input_certification_number">Input the ID number</string>
     <string name="senior_certification">Advanced Auth</string>
     <string name="add_certification_pic">Add certificate photo</string>
-    <string name="certification_front_pic">Front</string>
+    <string name="certification_front_pic">Front</string>p
     <string name="certification_back_pic">Back</string>
     <string name="handle_certification_pic">Pic with certificate in hand</string>
-    <string name="please_add_certification_front_pic">Add front pic of certificate</string>
-    <string name="please_add_certification_back_pic">Add back pic of certificate</string>
-    <string name="please_add_handle_certification_pic">Add your pic with certificate in hand</string>
+    <string name="please_add_certification_front_pic">Select image</string>
+    <string name="please_add_certification_back_pic">Select image</string>
+    <string name="please_add_handle_certification_pic">Select image</string>
     <string name="submit_success">Submitted</string>
     <string name="example">Example</string>
     <string name="upload_pic_rules">Requires: \n1. Your pic must be jpg or png and less than 4M. \n2. Confirm that the photo has no watermark, no stains, the identity information must be clear, the head must be clear, and should not be text-revise photo. \n3. Please provide the photo with your ID certificate held by both your hands. Be sure that the ID photo is clearly visible, no makeup and fully expose your arms and hands, the ID info are not covered by your hands, and your face is not covered by the certificate. \nClick "Add" to check the example. You are required to prove your own photo without PS.</string>
     <string name="legal_currency_pay_management">OTC payments</string>
     <string name="legal_currency_pay">OTC payments</string>
     <string name="delete">Delete</string>
-    <string name="add_gathering_account">Add collection method</string>
+    <string name="add_gathering_account">Add payment</string>
     <string name="add_ali_pay">Add Alipay</string>
     <string name="ali_pay_account">Alipay account</string>
     <string name="add_wei_chat_pay">Add WeChat</string>
@@ -116,13 +117,15 @@
     <string name="confirm_add">Confirm</string>
     <string name="own_bank_name">Bank</string>
     <string name="account_sub_bank_name">Branch</string>
-    <string name="bank_card_number">Card Num</string>
-    <string name="please_input_account_sub_bank_name">Input bank name</string>
+    <string name="bank_card_number">Card NO.</string>
+    <string name="please_input_account_sub_bank_name">Input branch name</string>
     <string name="please_input_bank_card_number">Input bankcard number</string>
     <string name="draw_coin_address_management">Withdrawal address</string>
     <string name="cn_tw">Taiwan</string>
     <string name="cn_mainland">China mainland</string>
+    <string name="select_bank">Select bank</string>
     <string name="bank_name">Bank</string>
+    <string name="input_bank_name">Input bank name</string>
     <string name="bank_code">Bank code</string>
     <string name="please_input_bank_code">Bank code</string>
     <string name="sub_bank_name">Branch</string>
@@ -143,8 +146,8 @@
     <string name="please_input_nick_name">Input nickname</string>
     <string name="save">Save</string>
     <string name="update_success">Updated</string>
-    <string name="bind_phone">Bind phone number</string>
-    <string name="edit_phone">Change phone number</string>
+    <string name="bind_phone">Bind phone</string>
+    <string name="edit_phone">Change phone</string>
     <string name="used_phone_auth_code">SMS code of old phone</string>
     <string name="please_input_phone_num">Input phone number</string>
     <string name="send_auth_code">Send</string>
@@ -154,11 +157,11 @@
     <string name="confirm_bind">Confirm</string>
     <string name="modify_mail">Change email</string>
     <string name="confirm_modify">Confirm</string>
-    <string name="please_input_used_mail_auth_code">Input verification code  of old email</string>
+    <string name="please_input_used_mail_auth_code">Verification code of old email</string>
     <string name="bind_success">Success</string>
     <string name="please_input_mail">Input email</string>
-    <string name="please_input_mail_auth_code">Input email code</string>
-    <string name="please_input_phone_auth_code">Input SMS code</string>
+    <string name="please_input_mail_auth_code">Email code</string>
+    <string name="please_input_phone_auth_code">SMS code</string>
 
     <string name="please_open_camera_permission">Need permission to use camera</string>
     <string name="sd_is_not_useful">SD card unavailable</string>
@@ -170,10 +173,10 @@
 
     <string name="save_to_the_gallery">Save to album?</string>
     <string name="image_save_to_">Save image to%1$s</string>
-    <string name="image_save_fail">Fail to save image</string>
+    <string name="image_save_fail">Failed to save image</string>
     <string name="is_sure_delete_photo">Sure to delete?</string>
 
-    <string name="total_property_equivalent">Estimated Value(BTC)</string>
+    <string name="total_property_equivalent">Estimated Total Value(BTC)</string>
     <string name="promoted_property_equivalent">Cashback(BTC)</string>
     <string name="invite_num_x">\n%1$d invited</string>
 
@@ -188,7 +191,7 @@
     <string name="connect_customer_service">Customer Service</string>
     <string name="version_updating">Update</string>
     <string name="version_x">V%1$s</string>
-    <string name="feedback_content">Feedback</string>
+    <string name="feedback_content">Content</string>
     <string name="feedback_image_hint">Image(optional, describe your problem)</string>
     <string name="x_faction_x">%1$d/%2$d</string>
     <string name="x_faction_str_x">%1$s/%2$s</string>
@@ -212,14 +215,16 @@
     <string name="the_two_passwords_differ">Inconsistent password</string>
     <string name="change_login_pwd">Change login password</string>
     <string name="new_login_pwd">New password</string>
+    <string name="old_login_pwd">Old login password</string>
     <string name="please_input_new_login_pwd">Input new login password</string>
+    <string name="please_input_old_login_pwd">Input old login password</string>
     <string name="confirm_login_pwd">Confirm</string>
     <string name="please_input_sms_auth_code">Input SMS code</string>
     <string name="google_authenticator">Google Authenticator</string>
     <string name="bind_google_authenticator_success">Google Authenticator bound</string>
-    <string name="google_authenticator_settings">Google Authenticator settings</string>
+    <string name="google_authenticator_settings">Set Google Authenticator</string>
     <string name="google_authenticator_code">Code</string>
-    <string name="please_input_google_authenticator_code">Input Google code</string>
+    <string name="please_input_google_authenticator_code">Input GA code</string>
     <string name="google_authenticator_hint">1. Install Google Authenticator, click "+" at the top right corner, and select "Manual entry" or "Scan barcode". \n2. Scan QR code below, or input the key to add verification token. \n3. The key will be used to find back Google Authenticator when your device is lost or changed. Please backup and save the key below before you bind your mobile.</string>
     <string name="use_google_authenticator_by">Use Google Authenticator to:</string>
     <string name="reset_draw_cash_pwd">Reset fund password</string>
@@ -266,12 +271,11 @@
     <string name="min_draw_amount_coin_x">Minimum amount &#160;%1$s&#160;%2$s</string>
     <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
     <string name="property_flow">Statements</string>
-    <string name="hide_zero_amount_coin">Hide small balances</string>
+    <string name="hide_zero_amount_coin">Hide zero balances</string>
     <string name="promoted_account">Promotion account</string>
     <string name="search_property">Search</string>
     <string name="available">Available</string>
     <string name="input_or_long_press_paste_address">Input or long press to paste address</string>
-    <string name="with_draw_amount_hint">Minimum &#160;200&#160;BTC</string>
     <string name="please_input_cash_pwd">Input fund password</string>
     <string name="amount">Amount</string>
     <string name="all">All</string>
@@ -282,7 +286,7 @@
     <string name="arrivals_num">Arrivals</string>
     <string name="filtrate">Filter</string>
     <string name="coin_type">Token</string>
-    <string name="flow_type">Statement type</string>
+    <string name="flow_type">Type</string>
     <string name="all_type">All types</string>
     <string name="status">Status</string>
     <string name="all_status">All status</string>
@@ -315,7 +319,7 @@
     <string name="fee_two_half_space">Fee</string>
     <string name="time_two_space">Time</string>
 
-    <string name="set_read">Tag as "Read"</string>
+    <string name="set_read">Read all</string>
     <string name="pay_addr_change">Your top-up address changed. Check it now</string>
     <string name="otc_buy_order">A buyer replied your ad. Check it now>></string>
     <string name="otc_sell_order">A seller replied your ad. Check it now>></string>
@@ -332,27 +336,27 @@
 
     <!--LEGAL_CURRENCY-->
     <string-array name="legal_currency_header">
-        <item>I wanna buy</item>
-        <item>I wanna sell</item>
+        <item>Buy</item>
+        <item>Sell</item>
         <item>My ads</item>
     </string-array>
     <string name="order">Orders</string>
     <string name="x_space_x">%1$s&#160;%2$s</string>
     <string name="amount_limit">Limit:&#160;%1$s-%2$s</string>
     <string name="own_amount">Amount:&#160;%1$s</string>
-    <string name="x_done_count_done_rate_x">%1$d Trades&#8194;Complete rate%2$s</string>
+    <string name="x_done_count_done_rate_x">%1$d Trades</string>
     <string name="publish_ad">Post ad</string>
-    <string name="buy_x">Buy%1$s</string>
-    <string name="sell_x">Sell%1$s</string>
+    <string name="buy_x">Buy&#160;%1$s</string>
+    <string name="sell_x">Sell&#160;%1$s</string>
     <string name="price_type">Price type</string>
     <string name="premium_rate">Premium rate</string>
     <string name="trade_limit">Trade limit</string>
-    <string name="trade_amount">Trade amount</string>
+    <string name="trade_amount">Available</string>
     <string name="pay_type">Payment</string>
     <string name="optional">(Optional)</string>
     <string name="buyer_limit">Other party</string>
     <string name="authentication_with_symbol">Authentication:</string>
-    <string name="trade_count_more_than">Trades ≥</string>
+    <string name="trade_count_more_than">Trades ></string>
     <string name="contract_info">Tel</string>
     <string name="read_and_agree">I have read and agree&#160;</string>
     <string name="coin_trade_protocol">OTC Trade Agreement</string>
@@ -360,9 +364,9 @@
     <string name="attention_rules_text">1.Please confirm the payment before releasing cryptocurrency. \n\n2. Do not disclose sensitive information related to your account security during the transaction. \n\n3. Do not give your email address directly to the buyer, otherwise you may receive fraud mails which may endanger your account. \n\n4. Please record the platform website on the bookmark to make sure you trade on the correct website and avoid visiting phishing websites. \n\n5. Platform staff is prohibited from trading with you in the official name. Please do not trade with investors who claim to be employees of the platform to avoid the loss of your interest.</string>
     <string name="attention_hint">Special Notes</string>
     <string name="attention_hint_text">In order to ensure the trading safety of investors, the platform will use a cryptocurrency escrow system. Any investor is forbidden to bypass the platform to make a private trading, and the violator will bear the loss. \nPlease write down in detail your terms and conditions, as well as the matters to be noted in the transaction notes. Clear information will improve your transaction success rate and evaluation. \nFraud is not allowed on the platform. The violators will cause their accounts frozen and assume the legal responsibility. \nPlease fulfill the spirit of contract after publishing an AD. If you bid up the price maliciously or pull back, your account will be frozen for 3-14 days once reported.</string>
-    <string name="single_price">Unit price</string>
+    <string name="single_price">Price</string>
     <string name="limit">Limit</string>
-    <string name="update_time">Update time</string>
+    <string name="update_time">Time</string>
     <string name="fixed_price_x">Fixed price %1$s</string>
     <string name="floating_price_x">Premium price %1$s</string>
     <string name="floating_price_x_symbol">Premium&#160;%1$s&#160;%%</string>
@@ -391,27 +395,28 @@
     <string name="maxLimit">Maximum</string>
     <string name="please_select_pay_type">Select payment</string>
     <string name="remark_will_send_to_buy_default">Remark will be sent to the other party by default</string>
-    <string name="preview_poster_with_symbol">Preview the ad</string>
-    <string name="tread_type_with_symbol">Trade mode:</string>
+    <string name="preview_poster_with_symbol">Preview the ad:</string>
+    <string name="tread_type_with_symbol">Trade:</string>
     <string name="single_price_with_symbol">Unit price:</string>
     <string name="tread_limit_with_symbol">Trade limit:</string>
     <string name="tread_limit_hint">Minimum - Maximum</string>
     <string name="tread_limit_min_max_symbol_x">%1$s－%2$s&#160;%3$s</string>
     <string name="please_input_right_tread_limit">Please input right limit</string>
     <string name="tread_amount_with_symbol">Trade amount:</string>
-    <string name="pay_type_with_symbol">Trade mode:</string>
+    <string name="pay_type_with_symbol">Payment:</string>
     <string name="remark_with_symbol">Remark:</string>
-    <string name="demand_with_symbol">Other party should:</string>
-    <string name="publish_poster">Post ads</string>
+    <string name="demand_with_symbol">Limits:</string>
+    <string name="publish_poster">Post ad</string>
     <string name="buy_symbol_x">Buy %1$s</string>
     <string name="sell_symbol_x">Sell %1$s</string>
     <string name="authentication">Authentication</string>
     <string name="deal_success_count">Completed trades</string>
     <string name="please_select_edit_type">Select edit type</string>
     <string name="edit_content">Edit</string>
-    <string name="delete_poster">Delete ad</string>
+    <string name="delete_poster">Delete</string>
     <string name="pricing_currency">Currency unit</string>
-    <string name="passed_primary_certification">Primary authentication needed</string>
+    <string name="passed_primary_certification">Need primary authentication </string>
+    <string name="passed_senior_certification">Need senior authentication </string>
     <string name="deal_count_more_than_x">Completed trades ＞ %1$s</string>
     <!--LEGAL_CURRENCY_ORDER-->
     <string-array name="legal_currency_order_header">
@@ -419,33 +424,35 @@
         <item>@string/unpaid</item>
         <item>@string/paid</item>
         <item>@string/canceled</item>
-        <item>@string/completed</item>
+        <item>@string/finished</item>
     </string-array>
+    <string name="finished">Finished</string>
     <string name="unpaid">Unpaid</string>
     <string name="paid">Paid</string>
     <string name="canceled">Cancelled</string>
-    <string name="max_buy_amount">Max buy &#160;%1$s</string>
-    <string name="max_sell_amount">Max sell &#160;%1$s</string>
+    <string name="max_buy_amount">Max&#160;%1$s</string>
+    <string name="max_sell_amount">Max&#160;%1$s</string>
     <string name="trade_amount_empty_hint">Token number must be filled</string>
     <string name="cash_pwd_empty_hint">Please input fund password</string>
-    <string name="turnover">Trade amount</string>
-    <string name="trade_count_symbol_x">Amount: %1$s&#160;%2$s</string>
-    <string name="pay_info">Payment info</string>
+    <string name="turnover">Amount</string>
+    <string name="trade_count_symbol_x">Volume: %1$s&#160;%2$s</string>
+    <string name="pay_info">Payment</string>
+    <string name="trade_rules">Instructions</string>
     <string name="trade_rules_description">Ask the other party how the transaction will be done and compare it with he/she listed on the platform. If inconsistent, be careful to pay. \n\n1. Please note last 4 letters of order number to speed up the confirmation. \n\n2. Please do not fill in any word about cryptocurrency such as Bitcoin, BTC, OTC, etc., in order to prevent the remittance from being intercepted by the bank. \n\n3. The order is valid for 15 minutes. Please pay in time and click the "paid" button, and then the token can be released to you. \n\n4. If you are unable to complete payment within 15 minutes, the order will be cancelled. \n\n5. The cryptocurrency is hosted by the system during the transaction. Please feel free to place an order.</string>
     <string name="order_detail_price_x">Price: %1$s&#160;%2$s/%3$s</string>
-    <string name="order_detail_amount_x">Amount: %1$f&#160;%2$s</string>
+    <string name="order_detail_amount_x">Volume: %1$f&#160;%2$s</string>
     <string name="otc_trade_complete_desc">Completed</string>
     <string name="seller_info">Seller\'s info</string>
     <string name="buyer_info">Buyer\'s info</string>
     <string name="register_time">Register time：%1$s</string>
     <string name="click_to_ask_contract_info">Ask for payment</string>
-    <string name="contact_each_other">Contact him/her</string>
+    <string name="contact_each_other">Message</string>
     <string name="cancel_trade">Cancel the trade</string>
     <string name="cancel_trade_hin_msg">If you have paid to the seller, do not cancel the trade. If the buyer has 5 cancellations within a day, he/she will be forbidden to buy tokens in this day.</string>
     <string name="confirm_have_not_pay_to_seller">I have not paid the counter party</string>
     <string name="appeal">Appeal</string>
-    <string name="i_have_paid">I have already paid</string>
-    <string name="confirm_transfer_coin">Sure to release</string>
+    <string name="i_have_paid">I\'ve paid</string>
+    <string name="confirm_transfer_coin">Release</string>
     <string name="order_time_with_symbol_x">Order time: %1$s</string>
     <string name="wait_to_pay">Waiting to pay</string>
     <string name="pay_info_hint_to_seller">The buyer has ordered, requiring for payment.</string>
@@ -619,12 +626,12 @@
     <string name="select_currency">Select currency unit</string>
     <string name="search_currency_pairs">Search</string>
 
-    <string name="see_passport_sample_image_below">Check the passport number in refer to the example</string>
+    <string name="see_passport_sample_image_below">Input passport NO.</string>
     <string name="colon_symbol">:</string>
     <string name="pound_sign_x">#%1$s</string>
     <string name="passport_code">Passport No.</string>
     <string name="increasing_ranks">Top Gainers</string>
-    <string name="delete_success">Delete success</string>
+    <string name="delete_success">Deleted</string>
     <string name="really_want_to_delete">Really want to delete?</string>
     <string name="draw_cash_pwd_can_not_short_than_8">Fund password should not be less than 8 digits</string>
     <string name="entrust_success">Success</string>
@@ -633,7 +640,7 @@
     <string name="time_x">Time %1$s</string>
     <string name="deal_fee_x">Fee (%1$s)</string>
 
-    <string name="transfer_success">Transfer success</string>
+    <string name="transfer_success">Success</string>
     <string name="save_success">Saved</string>
     <string name="transfer_to_trade_account">Transfer to exchange account</string>
     <string name="quota_price">Price:</string>
@@ -641,8 +648,8 @@
     <string name="is_latest_version_now">Latest version</string>
     <string name="over_500">Your words cannot exceed 500 characters</string>
     <string name="input_msg_hell">Input...</string>
-    <string name="buyer_have_paid">Buyer has paid</string>
-    <string name="wait_buyer_to_pay">Waiting for payment</string>
+    <string name="buyer_have_paid">Paid</string>
+    <string name="wait_buyer_to_pay">Paying</string>
     <string name="got_it">OK</string>
     <string name="your_deal_count_is_less_than_limit">Your trade number cannot reach the requirement</string>
     <string name="go_to">Go</string>
@@ -661,5 +668,8 @@
     <string name="please_set_google_authenticator_first">Please bind Google Authenticator</string>
     <string name="no_enough_coins">Insufficient funds.</string>
     <string name="complete">Complete</string>
+    <string name="primary_certification_simply">Primary</string>
+    <string name="senior_certification_simply">Senior</string>
+    <string name="tel_with_symbol">Tel:</string>
     <string name="volume">Volume</string>
 </resources>
