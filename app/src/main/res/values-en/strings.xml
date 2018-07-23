@@ -501,7 +501,7 @@
     <string name="next">Next</string>
     <string name="registered_and_go_login">Have account? Login now</string>
     <string name="i_have_read_and_agree">I have read and agree</string>
-    <string name="service_agreement_with_symbol">Service Agreement</string>
+    <string name="service_agreement_with_symbol">&#160;Service Agreement</string>
     <string name="set_login_password">Set login password</string>
     <string name="set_new_login_password">Set new login password</string>
     <string name="at_least_8_english_characters_number_combination">Combination of at least 8 Eng/num</string>
@@ -544,7 +544,7 @@
     <string name="volume_24h_x">24H VOL&#160;%1$s</string>
     <string name="volume_24h">24H</string>
     <string name="search_currency">Search</string>
-    <string name="nothing_for_now">No data</string>
+    <string name="nothing_for_now">No record</string>
     <string name="history_record">History</string>
     <string name="clear_record">Clear records</string>
     <string name="optional_added">Added</string>
@@ -591,8 +591,8 @@
     </string-array>
     <string name="buy_limit">Buy(limited price)</string>
     <string name="sell_limit">Sell(limited price)</string>
-    <string name="market_price">Market price</string>
-    <string name="limit_price">Limited price</string>
+    <string name="market_price">Market</string>
+    <string name="limit_price">Limit</string>
     <string name="trade_amt">Amount</string>
 
 
