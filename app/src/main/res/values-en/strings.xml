@@ -627,14 +627,14 @@
     <string name="delete_success">Delete success</string>
     <string name="really_want_to_delete">Really want to delete?</string>
     <string name="draw_cash_pwd_can_not_short_than_8">Fund password should not be less than 8 digits</string>
-    <string name="entrust_success">Entrust success</string>
+    <string name="entrust_success">Success</string>
     <string name="revoking_order">Revoking</string>
     <string name="deal_detail">Order Detail</string>
     <string name="time_x">Time %1$s</string>
     <string name="deal_fee_x">Fee (%1$s)</string>
 
     <string name="transfer_success">Transfer success</string>
-    <string name="save_success">Save success</string>
+    <string name="save_success">Saved</string>
     <string name="transfer_to_trade_account">Transfer to exchange account</string>
     <string name="quota_price">Price:</string>
     <string name="are_you_sure_to_transfer">Confirm transfer?</string>
