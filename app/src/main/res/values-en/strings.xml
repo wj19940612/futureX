@@ -499,7 +499,7 @@
     <string name="next">Next</string>
     <string name="registered_and_go_login">Have account? Login now</string>
     <string name="i_have_read_and_agree">I have read and agree</string>
-    <string name="service_agreement_with_symbol">Service Agreement</string>
+    <string name="service_agreement_with_symbol">&#160;Service Agreement</string>
     <string name="set_login_password">Set login password</string>
     <string name="set_new_login_password">Set new login password</string>
     <string name="at_least_8_english_characters_number_combination">Combination of at least 8 Eng/num</string>
