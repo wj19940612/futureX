@@ -76,6 +76,7 @@
     <string name="mail_certification">邮箱认证</string>
     <string name="certificating">认证中</string>
     <string name="primary_certification">初级认证</string>
+    <string name="primary_certification_simply">初级认证</string>
     <string name="primary_certification_complete">初级验证完成</string>
     <string name="pleas_select_credentials_type">请选择证件类型</string>
     <string name="mainland_id_card">中国大陆身份证</string>
@@ -88,6 +89,7 @@
     <string name="passport_code">护照编码</string>
     <string name="see_passport_sample_image_below">参考下边示例查看护照编码</string>
     <string name="senior_certification">高级认证</string>
+    <string name="senior_certification_simply">高级认证</string>
     <string name="add_certification_pic">添加证件照片</string>
     <string name="certification_front_pic">证件正面照</string>
     <string name="certification_back_pic">证件背面照</string>
@@ -153,7 +155,7 @@
     <string name="send_auth_code">发送验证码</string>
     <string name="message_auth_code">短信验证码</string>
     <string name="mail_auth_code">邮箱验证码</string>
-    <string name="bind_mail" translatable="false">绑定邮箱</string>
+    <string name="bind_mail">绑定邮箱</string>
     <string name="confirm_bind">确认绑定</string>
     <string name="modify_mail">修改邮箱</string>
     <string name="confirm_modify">确认修改</string>
@@ -280,7 +282,6 @@
     <string name="search_property">搜索资产</string>
     <string name="available">可用</string>
     <string name="input_or_long_press_paste_address">输入或长按粘贴地址</string>
-    <string name="with_draw_amount_hint">最小提币数量&#160;200&#160;BTC</string>
     <string name="please_input_cash_pwd">请输入资金密码</string>
     <string name="amount">数量</string>
     <string name="all">全部</string>
@@ -358,7 +359,7 @@
     <string name="x_space_x">%1$s&#160;%2$s</string>
     <string name="amount_limit">限制金额：&#160;%1$s-%2$s</string>
     <string name="own_amount">拥有数量：&#160;%1$s</string>
-    <string name="x_done_count_done_rate_x">%1$d单&#8194;完成率%2$s</string>
+    <string name="x_done_count_done_rate_x">%1$d单</string>
     <string name="publish_ad">发布广告</string>
     <string name="buy_x">买入%1$s</string>
     <string name="sell_x">卖出%1$s</string>
@@ -371,7 +372,7 @@
     <string name="optional">（选填）</string>
     <string name="buyer_limit">对方限制</string>
     <string name="authentication_with_symbol">认证：</string>
-    <string name="trade_count_more_than">交易成功次数大于：</string>ø
+    <string name="trade_count_more_than">交易成功次数大于：</string>
     <string name="contract_info">联系方式</string>
     <string name="read_and_agree">我已阅读并同意</string>
     <string name="coin_trade_protocol">《法币交易协议》</string>
@@ -427,6 +428,7 @@
     <string name="pay_type_with_symbol">交易方式：</string>
     <string name="remark_with_symbol">备注：</string>
     <string name="demand_with_symbol">要求对方：</string>
+    <string name="tel_with_symbol">联系方式：</string>
     <string name="publish_poster">发布广告</string>
     <string name="buy_symbol_x">买入%1$s</string>
     <string name="sell_symbol_x">卖出%1$s</string>
@@ -438,6 +440,7 @@
     <string name="pricing_currency">计价货币</string>
     <string name="quota_price">价格：</string>
     <string name="passed_primary_certification">必须通过初级认证</string>
+    <string name="passed_senior_certification">必须通过高级认证</string>
     <string name="deal_count_more_than_x">交易成功次数大于%1$s</string>
     <!--LEGAL_CURRENCY_ORDER-->
     <string-array name="legal_currency_order_header">
@@ -445,8 +448,9 @@
         <item>@string/unpaid</item>
         <item>@string/paid</item>
         <item>@string/canceled</item>
-        <item>@string/completed</item>
+        <item>@string/finished</item>
     </string-array>
+    <string name="finished">已完成</string>
     <string name="unpaid">未付款</string>
     <string name="paid">已付款</string>
     <string name="canceled">已取消</string>
@@ -458,6 +462,7 @@
     <string name="pound_sign_x">#%1$s</string>
     <string name="trade_count_symbol_x">交易金额：%1$s&#160;%2$s</string>
     <string name="pay_info">支付信息</string>
+    <string name="trade_rules">交易说明</string>
     <string name="trade_rules_description">请务必向对方询问交易方式，并且与平台所留方式进行对比，若不一致，请慎重付款\n\n1.转帐时请备注「订单编号后4位」以加快确认速度\n\n2.请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n3.订单有效期为15分钟，请您在有效期内及时付款并点击「已转账」按钮，数字币才可以释放给您\n\n4.如果您无法在15分钟内完成付款，该笔订单将被取消\n\n5.开始交易后数字币由系统锁定托管，请安心下单</string>
     <string name="order_detail_price_x">价格：%1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">数量：%1$f&#160;%2$s</string>

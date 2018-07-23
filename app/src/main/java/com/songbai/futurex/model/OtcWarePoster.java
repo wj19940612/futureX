@@ -63,6 +63,7 @@ public class OtcWarePoster {
     private double percent;
     private int priceType;
     private String remark;
+    private String telephone;
     private int status;
     private double totalCount;
     private double tradeCount;
@@ -251,6 +252,14 @@ public class OtcWarePoster {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
     public List<BankCardBean> getBankList() {

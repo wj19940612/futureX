@@ -40,6 +40,8 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
     TextView mRemark;
     @BindView(R.id.demand)
     TextView mDemand;
+    @BindView(R.id.tel)
+    TextView mTel;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
     private OtcWarePoster mOtcWarePoster;
@@ -97,6 +99,7 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
         mTreadAmount.setText(String.valueOf(otcWarePoster.getTradeCount()));
         setPayInfo(otcWarePoster.getBankList());
         mRemark.setText(otcWarePoster.getRemark());
+        mTel.setText(otcWarePoster.getTelephone());
         setDemand(otcWarePoster);
     }
 
@@ -117,7 +120,7 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
                 if ("1".equals(values[i])) {
                     sb.append(mContext.getString(R.string.passed_primary_certification));
                 } else if ("2".equals(values[i])) {
-                    sb.append(mContext.getString(R.string.passed_primary_certification));
+                    sb.append(mContext.getString(R.string.passed_senior_certification));
                 }
             }
             if (type.equals(OtcWarePoster.CONDITION_TRADE)) {

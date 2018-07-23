@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.sbai.httplib.BitmapCfg;
 import com.sbai.httplib.ReqCallback;
 import com.sbai.httplib.ReqError;
@@ -65,7 +64,6 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.confirmBind)
     TextView mConfirmBind;
     private Unbinder mBind;
-    private OptionsPickerView mPvOptions;
     private List<AreaCode> mAreaCodes;
     private String mPhoneNum;
     private String mMailAuth;

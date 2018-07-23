@@ -213,7 +213,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="30dp"
-                android:text="@string/pay_info"
+                android:text="@string/trade_rules"
                 android:textColor="@color/text99"
                 android:textSize="17sp"/>
 

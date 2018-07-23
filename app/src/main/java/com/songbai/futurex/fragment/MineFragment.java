@@ -126,7 +126,9 @@ public class MineFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         setUserInfo();
-        getUserInfo();
+        if (LocalUser.getUser().isLogin()) {
+            getUserInfo();
+        }
     }
 
     @Override
@@ -154,12 +156,12 @@ public class MineFragment extends BaseFragment {
                     || authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_GOING
                     || authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR_FAIL) {
                 mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_primary_star, 0, 0, 0);
-                mAuthenticationStatus.setText(R.string.primary_certification);
+                mAuthenticationStatus.setText(R.string.primary_certification_simply);
                 mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             } else if (authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR) {
                 mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
                 mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-                mAuthenticationStatus.setText(R.string.senior_certification);
+                mAuthenticationStatus.setText(R.string.senior_certification_simply);
             } else {
                 mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_uncertificated_star, 0, 0, 0);
                 mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.text99));

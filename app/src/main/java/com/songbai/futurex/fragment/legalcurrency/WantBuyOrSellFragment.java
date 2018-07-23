@@ -661,8 +661,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                         FinanceUtil.trimTrailingZero(legalCurrencyTrade.getMaxTurnover())));
                 mOwnCount.setText(getString(R.string.own_amount, legalCurrencyTrade.getChangeCount()));
                 mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,
-                        legalCurrencyTrade.getCountDeal(),
-                        FinanceUtil.formatToPercentage(legalCurrencyTrade.getDoneRate())));
+                        legalCurrencyTrade.getCountDeal()));
                 String payInfo = legalCurrencyTrade.getPayInfo();
                 mWechatPayIcon.setVisibility(payInfo.contains(PayType.WXPAY) ? View.VISIBLE : View.GONE);
                 mAliPayIcon.setVisibility(payInfo.contains(PayType.ALIPAY) ? View.VISIBLE : View.GONE);

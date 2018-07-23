@@ -144,8 +144,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         }
         mUserName.setText(waresUserInfo.getUsername());
         mCountDealRate.setText(getString(R.string.x_done_count_done_rate_x,
-                waresUserInfo.getCountDeal(),
-                FinanceUtil.formatToPercentage(waresUserInfo.getDoneRate())));
+                waresUserInfo.getCountDeal()));
     }
 
     @Override
