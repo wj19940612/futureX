@@ -73,7 +73,7 @@
     <string name="personal_data">Profile</string>
     <string name="head_portrait">Profile photo</string>
     <string name="nick_name">Nickname</string>
-    <string name="real_name">Real name</string>
+    <string name="real_name">Name</string>
     <string name="phone_certification">Mobile</string>
     <string name="mail_certification">Email</string>
     <string name="certificating">Verifying</string>
@@ -266,7 +266,8 @@
     <string name="recharge_coin_rules">Don\'t top up any non-%1$s assets to address above, otherwise it won\'t be found back. \nConfirmation of all network nodes is needed after top-up. You will receive the token after %2$d confirmation. \nMinimum top-up amount: %3$s. Less top-up is invalid. \nThe top-up address seldom changes and you can repeatedly top up. You will be noted by website notice or email if the address changes. \nMake sure that your computer and browser is secure to prevent information from being tampered with or leaked.</string>
     <string name="select_coin_type">Select token</string>
     <string name="draw_coin">Withdraw</string>
-    <string name="select_draw_coin_address">Select draw coin address</string>
+    <string name="select_draw_coin_address">Select withdraw address</string>
+    <string name="no_draw_coin_address">No withdrawal address, please input or paste manually</string>
     <string name="draw_coin_success">Success</string>
     <string name="min_draw_amount_coin_x">Minimum amount &#160;%1$s&#160;%2$s</string>
     <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
@@ -447,12 +448,13 @@
     <string name="register_time">Register time：%1$s</string>
     <string name="click_to_ask_contract_info">Ask for payment</string>
     <string name="contact_each_other">Message</string>
-    <string name="cancel_trade">Cancel the trade</string>
+    <string name="cancel_trade">Cancel</string>
     <string name="cancel_trade_hin_msg">If you have paid to the seller, do not cancel the trade. If the buyer has 5 cancellations within a day, he/she will be forbidden to buy tokens in this day.</string>
     <string name="confirm_have_not_pay_to_seller">I have not paid the counter party</string>
     <string name="appeal">Appeal</string>
     <string name="i_have_paid">I\'ve paid</string>
     <string name="confirm_transfer_coin">Release</string>
+    <string name="received_confirm_transfer_coin">Confirm</string>
     <string name="order_time_with_symbol_x">Order time: %1$s</string>
     <string name="wait_to_pay">Waiting to pay</string>
     <string name="pay_info_hint_to_seller">The buyer has ordered, requiring for payment.</string>

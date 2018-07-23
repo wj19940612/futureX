@@ -278,6 +278,7 @@
     <string name="select_coin_type">选择币种</string>
     <string name="draw_coin">提币</string>
     <string name="select_draw_coin_address">选择提币地址</string>
+    <string name="no_draw_coin_address">未设置提币地址</string>
     <string name="draw_coin_success">提币成功</string>
     <string name="min_draw_amount_coin_x">最小提币数量&#160;%1$s&#160;%2$s</string>
     <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
@@ -486,6 +487,7 @@
     <string name="appeal">申诉</string>
     <string name="i_have_paid">我已付款</string>
     <string name="confirm_transfer_coin">确认转币</string>
+    <string name="received_confirm_transfer_coin">已收款，确认转币</string>
     <string name="order_time_with_symbol_x">订单时间：%1$s</string>
     <string name="wait_to_pay">等待付款</string>
     <string name="pay_info_hint_to_seller">对方已成功下单，正在向您询问支付方式。</string>
