@@ -352,9 +352,9 @@
     <string name="optional">(Optional)</string>
     <string name="buyer_limit">Other party</string>
     <string name="authentication_with_symbol">Authentication:</string>
-    <string name="trade_count_more_than">Trades ≥</string>ø
+    <string name="trade_count_more_than">Trades ≥</string>
     <string name="contract_info">Tel</string>
-    <string name="read_and_agree">I have read and agree</string>
+    <string name="read_and_agree">I have read and agree&#160;</string>
     <string name="coin_trade_protocol">OTC Trade Agreement</string>
     <string name="attention_rules">Attention:</string>
     <string name="attention_rules_text">1.Please confirm the payment before releasing cryptocurrency. \n\n2. Do not disclose sensitive information related to your account security during the transaction. \n\n3. Do not give your email address directly to the buyer, otherwise you may receive fraud mails which may endanger your account. \n\n4. Please record the platform website on the bookmark to make sure you trade on the correct website and avoid visiting phishing websites. \n\n5. Platform staff is prohibited from trading with you in the official name. Please do not trade with investors who claim to be employees of the platform to avoid the loss of your interest.</string>
