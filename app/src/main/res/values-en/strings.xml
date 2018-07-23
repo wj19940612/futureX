@@ -535,7 +535,7 @@
     <string name="volume_24h_x">24H VOL&#160;%1$s</string>
     <string name="volume_24h">24H</string>
     <string name="search_currency">Search</string>
-    <string name="nothing_for_now">No data</string>
+    <string name="nothing_for_now">No record</string>
     <string name="history_record">History</string>
     <string name="clear_record">Clear records</string>
     <string name="optional_added">Added</string>
@@ -582,8 +582,8 @@
     </string-array>
     <string name="buy_limit">Buy(limited price)</string>
     <string name="sell_limit">Sell(limited price)</string>
-    <string name="market_price">Market price</string>
-    <string name="limit_price">Limited price</string>
+    <string name="market_price">Market</string>
+    <string name="limit_price">Limit</string>
     <string name="trade_amt">Amount</string>
 
 
