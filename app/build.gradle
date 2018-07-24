@@ -31,7 +31,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../bitfuture.jks')
+            storeFile file('../future.jks')
             storePassword xStorePassword
             keyAlias xKeyAlias
             keyPassword xKeyPassword
