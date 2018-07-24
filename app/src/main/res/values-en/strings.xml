@@ -306,7 +306,7 @@
     <string name="agency_to">Agency→Exchange</string>
     <string name="legal_account_in">OTC→Exchange</string>
     <string name="coin_account_in">Exchange→OTC</string>
-    <string name="coin_account_out">OTC→Exchange</string>
+    <string name="coin_account_out">Exchange→OTC</string>
 
     <string name="completed">Completed</string>
     <string name="freeze">Frozen</string>
@@ -319,8 +319,8 @@
     <string name="special_trade">Special trade</string>
     <string name="cashback">cashback</string>
     <string name="invt_reward">Invt reward</string>
-    <string name="distributed_rev">Distributed rev</string>
-    <string name="release_bfb">Release bfb</string>
+    <string name="distributed_rev">Distributed REV</string>
+    <string name="release_bfb">Release BFB</string>
     <string name="miners_rewar">Miners rewar</string>
     <string name="shared_fee">Shared fee</string>
     <string name="subscription">subscription</string>
