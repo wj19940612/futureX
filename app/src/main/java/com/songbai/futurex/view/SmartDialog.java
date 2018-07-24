@@ -60,7 +60,7 @@ public class SmartDialog {
     private static Map<String, List<SmartDialog>> mListMap = new HashMap<>();
 
     public static SmartDialog solo(Activity activity, String msg) {
-        String key = String.valueOf(activity.hashCode());
+        String key = getKey(activity);
         List<SmartDialog> dialogList = mListMap.get(key);
         SmartDialog dialog;
         if (dialogList != null && dialogList.size() > 0) {
@@ -96,8 +96,12 @@ public class SmartDialog {
         return with(activity, null);
     }
 
+    private static String getKey(Activity activity) {
+        return String.valueOf(activity.hashCode());
+    }
+
     private static void addMap(Activity activity, SmartDialog dialog) {
-        String key = activity.getClass().getSimpleName();
+        String key = getKey(activity);
         List<SmartDialog> dialogList = mListMap.get(key);
         if (dialogList == null) {
             dialogList = new LinkedList<>();
@@ -107,7 +111,7 @@ public class SmartDialog {
     }
 
     public static void dismiss(Activity activity) {
-        String key = activity.getClass().getSimpleName();
+        String key = getKey(activity);
         List<SmartDialog> dialogList = mListMap.get(key);
         if (dialogList != null) {
             for (SmartDialog dialog : dialogList) {
