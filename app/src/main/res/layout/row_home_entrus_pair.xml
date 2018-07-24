@@ -21,35 +21,38 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/entrustPairs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:includeFontPadding="false"
+            android:singleLine="true"
             android:textColor="@color/text22"
             android:textSize="14sp"
             android:textStyle="bold"
             tools:text="BTC/USDT"/>
 
-        <TextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:includeFontPadding="false"
+            android:singleLine="true"
             android:textColor="@color/text22"
             android:textSize="17sp"
             android:textStyle="bold"
             tools:text="9426.99"/>
 
-        <TextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/upDropSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"
             android:layout_marginTop="6dp"
             android:includeFontPadding="false"
+            android:singleLine="true"
             android:textColor="@color/green_selected_red_color"
             android:textSize="12sp"
             android:textStyle="bold"

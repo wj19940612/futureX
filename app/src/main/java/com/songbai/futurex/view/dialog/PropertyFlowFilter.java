@@ -67,13 +67,20 @@ public class PropertyFlowFilter {
             CurrencyFlowType.DRAW, CurrencyFlowType.DEPOSITE, CurrencyFlowType.ENTRUST_BUY,
             CurrencyFlowType.ENTRUST_SELL, CurrencyFlowType.OTC_TRADE_OUT, CurrencyFlowType.DRAW_FEE,
             CurrencyFlowType.TRADE_FEE, CurrencyFlowType.PROMOTER_TO, CurrencyFlowType.OTC_TRADE_IN,
-            CurrencyFlowType.AGENCY_TO, CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT
+            CurrencyFlowType.AGENCY_TO, CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT,
+            CurrencyFlowType.PERIODIC_RELEASE, CurrencyFlowType.SPECIAL_TRADE, CurrencyFlowType.CASHBACK,
+            CurrencyFlowType.INVT_REWARD, CurrencyFlowType.DISTRIBUTED_REV, CurrencyFlowType.RELEASED_BFB,
+            CurrencyFlowType.MINERS_REWAR, CurrencyFlowType.SHARED_FEE, CurrencyFlowType.SUBSCRIPTION
     };
     private final int[] currencyFlowTypeStrRes = new int[]{
             R.string.all_type, R.string.withdraw_cash, R.string.recharge_coin,
             R.string.buy_order, R.string.sell_order, R.string.otc_transfer_out,
             R.string.withdraw_fee, R.string.deal_fee, R.string.promoter_account_transfer_into,
-            R.string.otc_trade_in, R.string.agency_to, R.string.legal_account_in, R.string.coin_account_in};
+            R.string.otc_trade_in, R.string.agency_to, R.string.legal_account_in, R.string.coin_account_out,
+            R.string.periodic_release, R.string.special_trade, R.string.cashback,
+            R.string.invt_reward, R.string.distributed_rev, R.string.release_bfb,
+            R.string.miners_rewar, R.string.shared_fee, R.string.subscription,
+    };
 
     private final int[] otcFlowType = new int[]{ALL,
             OTCFlowType.COIN_ACCOUNT_IN, OTCFlowType.LEGAL_CURRENCY_ACCOUNT_OUT,

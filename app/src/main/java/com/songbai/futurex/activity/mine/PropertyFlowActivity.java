@@ -24,8 +24,8 @@ import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
-import com.songbai.futurex.model.status.CurrencyFlowStatus;
-import com.songbai.futurex.model.status.OTCFlowStatus;
+import com.songbai.futurex.model.status.CurrencyFlowType;
+import com.songbai.futurex.model.status.OTCFlowType;
 import com.songbai.futurex.swipeload.BaseSwipeLoadActivity;
 import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -69,24 +69,35 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private boolean mAllType;
     private String mCoinType;
     private PropertyFlowAdapter mAdapter;
-    private final int[] flowStatus = new int[]{TYPE_ALL,
-            CurrencyFlowStatus.SUCCESS, CurrencyFlowStatus.FREEZE, CurrencyFlowStatus.DRAW_REJECT,
-            CurrencyFlowStatus.ENTRUS_RETURN, CurrencyFlowStatus.FREEZE_DEDUCT, CurrencyFlowStatus.ENTRUSE_RETURN_SYS,
-            CurrencyFlowStatus.FREEZE_RETURN};
-    private final int[] flowStatusStrRes = new int[]{
-            R.string.all_status, R.string.completed, R.string.freeze, R.string.withdraw_coin_rejected,
-            R.string.entrust_return, R.string.freeze_deduct, R.string.sys_withdraw, R.string.freeze_return};
+    private final int[] currencyFlowType = new int[]{TYPE_ALL,
+            CurrencyFlowType.DRAW, CurrencyFlowType.DEPOSITE, CurrencyFlowType.ENTRUST_BUY,
+            CurrencyFlowType.ENTRUST_SELL, CurrencyFlowType.OTC_TRADE_OUT, CurrencyFlowType.DRAW_FEE,
+            CurrencyFlowType.TRADE_FEE, CurrencyFlowType.PROMOTER_TO, CurrencyFlowType.OTC_TRADE_IN,
+            CurrencyFlowType.AGENCY_TO, CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT,
+            CurrencyFlowType.PERIODIC_RELEASE, CurrencyFlowType.SPECIAL_TRADE, CurrencyFlowType.CASHBACK,
+            CurrencyFlowType.INVT_REWARD, CurrencyFlowType.DISTRIBUTED_REV, CurrencyFlowType.RELEASED_BFB,
+            CurrencyFlowType.MINERS_REWAR, CurrencyFlowType.SHARED_FEE, CurrencyFlowType.SUBSCRIPTION
+    };
+    private final int[] currencyFlowTypeStrRes = new int[]{
+            R.string.all_type, R.string.withdraw_cash, R.string.recharge_coin,
+            R.string.buy_order, R.string.sell_order, R.string.otc_transfer_out,
+            R.string.withdraw_fee, R.string.deal_fee, R.string.promoter_account_transfer_into,
+            R.string.otc_trade_in, R.string.agency_to, R.string.legal_account_in, R.string.coin_account_out,
+            R.string.periodic_release, R.string.special_trade, R.string.cashback,
+            R.string.invt_reward, R.string.distributed_rev, R.string.release_bfb,
+            R.string.miners_rewar, R.string.shared_fee, R.string.subscription,
+    };
 
-    private final int[] otcFlowStatus = new int[]{TYPE_ALL,
-            OTCFlowStatus.SUCCESS, OTCFlowStatus.FREEZE, OTCFlowStatus.FREEZE_DEDUCT,
-            OTCFlowStatus.CANCEL_TRADE_FREEZE, OTCFlowStatus.SYS_CANCEL_TRADE_FREEZE, OTCFlowStatus.POSTER_OFF_SHELF_RETURN,};
-
-    private final int[] otcFlowStatusStrRes = new int[]{
-            R.string.all_status, R.string.completed, R.string.freeze, R.string.freeze_deduct,
-            R.string.cancel_trade_freeze, R.string.sys_cancel_trade_freeze, R.string.poster_off_shelf_return};
+    private final int[] otcFlowType = new int[]{TYPE_ALL,
+            OTCFlowType.COIN_ACCOUNT_IN, OTCFlowType.LEGAL_CURRENCY_ACCOUNT_OUT,
+            OTCFlowType.OTC_TRADE_IN, OTCFlowType.OTC_TRADE_OUT
+    };
+    private final int[] otcFlowTypeStrRes = new int[]{R.string.all_type,
+            R.string.coin_account_in, R.string.legal_account_out,
+            R.string.otc_trade_in, R.string.otc_trade_out};
     private OptionsPickerView<String> mPvOptions;
-    private ArrayList<String> mFlowStatusStr;
-    private ArrayList<Integer> mFlowStatus;
+    private ArrayList<String> mFlowTypeStr;
+    private ArrayList<Integer> mFlowType;
     private PropertyFlowFilter mPropertyFlowFilter;
     private int mAccountType;
 
@@ -111,12 +122,12 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
                 if (mAllType) {
                     showAllPropertyFilter();
                 } else {
-                    showSelector(mFlowStatusStr, mFlowStatus);
+                    showSelector(mFlowTypeStr, mFlowType);
                 }
             }
         });
-        mFlowStatusStr = new ArrayList<>();
-        mFlowStatus = new ArrayList<>();
+        mFlowTypeStr = new ArrayList<>();
+        mFlowType = new ArrayList<>();
         createStr();
         mSwipeTarget.setEmptyView(mEmptyView);
         mSwipeTarget.setLayoutManager(new LinearLayoutManager(this));
@@ -142,19 +153,19 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private void createStr() {
         switch (mAccountType) {
             case 0:
-                for (int status : flowStatus) {
-                    mFlowStatus.add(status);
+                for (int status : currencyFlowType) {
+                    mFlowType.add(status);
                 }
-                for (int flowStatusStrRe : flowStatusStrRes) {
-                    mFlowStatusStr.add(getString(flowStatusStrRe));
+                for (int flowStatusStrRe : currencyFlowTypeStrRes) {
+                    mFlowTypeStr.add(getString(flowStatusStrRe));
                 }
                 break;
             case 1:
-                for (int status : otcFlowStatus) {
-                    mFlowStatus.add(status);
+                for (int status : otcFlowType) {
+                    mFlowType.add(status);
                 }
-                for (int flowStatusStrRe : otcFlowStatusStrRes) {
-                    mFlowStatusStr.add(getString(flowStatusStrRe));
+                for (int flowStatusStrRe : otcFlowTypeStrRes) {
+                    mFlowTypeStr.add(getString(flowStatusStrRe));
                 }
                 break;
             case 2:
@@ -309,10 +320,10 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     }
 
     private void showSelector(final List<String> item, final ArrayList<Integer> origin) {
-        String status = mGetUserFinanceFlowData.getStatus();
+        String status = mGetUserFinanceFlowData.getFlowType();
         int selectedOption = 0;
         if (!TextUtils.isEmpty(status)) {
-            selectedOption = mFlowStatus.indexOf(Integer.valueOf(status));
+            selectedOption = mFlowType.indexOf(Integer.valueOf(status));
         }
         mPvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
@@ -352,7 +363,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
 
     private void filterStatus(int options1, List<String> item, ArrayList<Integer> origin) {
         int status = (int) origin.get(options1);
-        mGetUserFinanceFlowData.setStatus(status == TYPE_ALL ? "" : String.valueOf(status));
+        mGetUserFinanceFlowData.setFlowType(status == TYPE_ALL ? "" : String.valueOf(status));
         mPage = 0;
         getUserFinanceFlow();
     }

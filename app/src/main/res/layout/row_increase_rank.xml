@@ -19,9 +19,9 @@
         android:background="@drawable/bg_green_left_r10"
         android:gravity="center"
         android:minWidth="17dp"
-        android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="12sp"
+        android:textStyle="bold"
         tools:text="1"/>
 
     <android.support.constraint.ConstraintLayout
@@ -79,13 +79,14 @@
             tools:text="11037.13"/>
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
+    <com.songbai.futurex.view.autofit.AutofitTextView
         android:id="@+id/upDropSpeed"
         android:layout_width="70dp"
         android:layout_height="28dp"
         android:layout_marginRight="14dp"
         android:background="@drawable/bg_green_r2"
         android:gravity="center"
+        android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
