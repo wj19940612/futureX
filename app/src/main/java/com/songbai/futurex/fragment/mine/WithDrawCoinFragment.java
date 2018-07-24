@@ -199,6 +199,8 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
                         mCoinAddresses = resp.getData();
                         if (mCoinAddresses.size() > 1) {
                             showAddressPicker();
+                        } else {
+                            ToastUtil.show(R.string.no_draw_coin_address);
                         }
                     }
                 })
@@ -206,7 +208,7 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
     }
 
     private void showAddressPicker() {
-        if (mCoinAddresses != null) {
+        if (mCoinAddresses != null && mCoinAddresses.size() > 0) {
             ItemSelectController addressSelector = new ItemSelectController(getContext());
             DrawCoinAddressListAdapter adapter = new DrawCoinAddressListAdapter();
             adapter.setList(mCoinAddresses);

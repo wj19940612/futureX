@@ -412,7 +412,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/wares_btn_primary_broad_f5_r2"
                     android:gravity="center"
-                    android:text="@string/senior_certification_simply"/>
+                    android:text="@string/advanced_certification_simply"/>
 
             </LinearLayout>
 

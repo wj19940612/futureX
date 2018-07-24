@@ -89,8 +89,8 @@
     <string name="please_input_certification_number">请输入该证件号码</string>
     <string name="passport_code">护照编码</string>
     <string name="see_passport_sample_image_below">参考下边示例查看护照编码</string>
-    <string name="senior_certification">高级认证</string>
-    <string name="senior_certification_simply">高级认证</string>
+    <string name="advanced_certification">高级认证</string>
+    <string name="advanced_certification_simply">高级认证</string>
     <string name="add_certification_pic">添加证件照片</string>
     <string name="certification_front_pic">证件正面照</string>
     <string name="certification_back_pic">证件背面照</string>
@@ -278,6 +278,7 @@
     <string name="select_coin_type">选择币种</string>
     <string name="draw_coin">提币</string>
     <string name="select_draw_coin_address">选择提币地址</string>
+    <string name="no_draw_coin_address">未设置提币地址</string>
     <string name="draw_coin_success">提币成功</string>
     <string name="min_draw_amount_coin_x">最小提币数量&#160;%1$s&#160;%2$s</string>
     <string name="amount_space_coin_x">%1$s&#160;%2$s</string>
@@ -405,7 +406,7 @@
     <string name="set_draw_cash_pwd_hint">您还未设置资金密码，为了您账户的安全，请先设置</string>
     <string name="go_to_set">去设置</string>
     <string name="poster_owner_set_needs_primary_certification">广告主设置交易需完成初级认证</string>
-    <string name="poster_owner_set_needs_senior_certification">广告主设置交易需完成高级认证</string>
+    <string name="poster_owner_set_needs_advanced_certification">广告主设置交易需完成高级认证</string>
     <string name="go_to">前往</string>
     <string name="your_deal_count_is_less_than_limit">您的历史交易笔数未达到对方要求</string>
     <string name="got_it">知道了</string>
@@ -445,7 +446,7 @@
     <string name="pricing_currency">计价货币</string>
     <string name="quota_price">价格：</string>
     <string name="passed_primary_certification">必须通过初级认证</string>
-    <string name="passed_senior_certification">必须通过高级认证</string>
+    <string name="passed_advanced_certification">必须通过高级认证</string>
     <string name="deal_count_more_than_x">交易成功次数大于%1$s</string>
     <!--LEGAL_CURRENCY_ORDER-->
     <string-array name="legal_currency_order_header">
@@ -486,6 +487,7 @@
     <string name="appeal">申诉</string>
     <string name="i_have_paid">我已付款</string>
     <string name="confirm_transfer_coin">确认转币</string>
+    <string name="received_confirm_transfer_coin">已收款，确认转币</string>
     <string name="order_time_with_symbol_x">订单时间：%1$s</string>
     <string name="wait_to_pay">等待付款</string>
     <string name="pay_info_hint_to_seller">对方已成功下单，正在向您询问支付方式。</string>

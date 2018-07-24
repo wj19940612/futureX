@@ -385,7 +385,7 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 confirmText = R.string.go_to;
                 break;
             case Resp.Code.NEEDS_SENIOR_CERTIFICATION:
-                msg = R.string.poster_owner_set_needs_senior_certification;
+                msg = R.string.poster_owner_set_needs_advanced_certification;
                 confirmText = R.string.go_to;
                 break;
             case Resp.Code.NEEDS_MORE_DEAL_COUNT:

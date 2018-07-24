@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
@@ -46,7 +47,13 @@ public class GoogleAuthCodeViewController extends SmartDialog.CustomViewControll
         mTitle = view.findViewById(R.id.topTitle);
         mAuthCodeInput = (EditText) view.findViewById(R.id.authCodeInput);
         mConfirm = (TextView) view.findViewById(R.id.confirm);
-
+        ImageView close = (ImageView) view.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         mAuthCodeInput.addTextChangedListener(new ValidationWatcher() {
             @Override
             public void afterTextChanged(Editable s) {

@@ -21,7 +21,6 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.DateUtil;
-import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.view.TitleBar;
 
 import butterknife.BindView;
@@ -129,7 +128,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
         }
         if (authStatus == 2) {
             mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
-            mAuthenticationStatus.setText(R.string.senior_certification);
+            mAuthenticationStatus.setText(R.string.advanced_certification);
             mSeniorCertificationState.setText(R.string.certificated);
             mSeniorCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
             mSeniorCertification.setSelected(true);

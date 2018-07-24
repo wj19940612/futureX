@@ -439,6 +439,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         SmartDialog smartDialog = SmartDialog.solo(getActivity());
         smartDialog.setCustomViewController(withDrawPsdViewController)
                 .show();
+        withDrawPsdViewController.mConfirm(R.string.received_confirm_transfer_coin);
     }
 
     private static class CancelConfirmController extends SmartDialog.CustomViewController {

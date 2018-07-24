@@ -126,7 +126,7 @@ public class MineFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         setUserInfo();
-        if (LocalUser.getUser().isLogin()) {
+        if (getUserVisibleHint() && LocalUser.getUser().isLogin()) {
             getUserInfo();
         }
     }
@@ -160,8 +160,8 @@ public class MineFragment extends BaseFragment {
                 mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             } else if (authenticationStatus == AuthenticationStatus.AUTHENTICATION_SENIOR) {
                 mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_senior_star, 0, 0, 0);
-                mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-                mAuthenticationStatus.setText(R.string.senior_certification_simply);
+                mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.yellow));
+                mAuthenticationStatus.setText(R.string.advanced_certification_simply);
             } else {
                 mAuthenticationStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_uncertificated_star, 0, 0, 0);
                 mAuthenticationStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.text99));
@@ -183,13 +183,15 @@ public class MineFragment extends BaseFragment {
     }
 
     private void getMessageCount() {
-        Apic.getMsgCount().tag(TAG)
-                .callback(new Callback<Resp<UnreadMessageCount>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<UnreadMessageCount> resp) {
-                        setUnreadMessageCount(resp.getData().getCount());
-                    }
-                }).fire();
+        if (getUserVisibleHint()) {
+            Apic.getMsgCount().tag(TAG)
+                    .callback(new Callback<Resp<UnreadMessageCount>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<UnreadMessageCount> resp) {
+                            setUnreadMessageCount(resp.getData().getCount());
+                        }
+                    }).fire();
+        }
     }
 
     private void getUserInfo() {
