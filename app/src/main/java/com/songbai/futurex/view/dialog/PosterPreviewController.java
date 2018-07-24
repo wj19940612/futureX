@@ -120,7 +120,7 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
                 if ("1".equals(values[i])) {
                     sb.append(mContext.getString(R.string.passed_primary_certification));
                 } else if ("2".equals(values[i])) {
-                    sb.append(mContext.getString(R.string.passed_senior_certification));
+                    sb.append(mContext.getString(R.string.passed_advanced_certification));
                 }
             }
             if (type.equals(OtcWarePoster.CONDITION_TRADE)) {

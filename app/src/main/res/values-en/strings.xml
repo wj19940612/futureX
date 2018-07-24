@@ -87,7 +87,7 @@
     <string name="certification_number">ID NO.</string>
     <string name="please_input_real_name">Input your real name</string>
     <string name="please_input_certification_number">Input the ID number</string>
-    <string name="senior_certification">Advanced Auth</string>
+    <string name="advanced_certification">Advanced Auth</string>
     <string name="add_certification_pic">Add certificate photo</string>
     <string name="certification_front_pic">Front</string>p
     <string name="certification_back_pic">Back</string>
@@ -417,7 +417,7 @@
     <string name="delete_poster">Delete</string>
     <string name="pricing_currency">Currency unit</string>
     <string name="passed_primary_certification">Need primary authentication </string>
-    <string name="passed_senior_certification">Need senior authentication </string>
+    <string name="passed_advanced_certification">Need advanced authentication </string>
     <string name="deal_count_more_than_x">Completed trades ＞ %1$s</string>
     <!--LEGAL_CURRENCY_ORDER-->
     <string-array name="legal_currency_order_header">
@@ -655,7 +655,7 @@
     <string name="got_it">OK</string>
     <string name="your_deal_count_is_less_than_limit">Your trade number cannot reach the requirement</string>
     <string name="go_to">Go</string>
-    <string name="poster_owner_set_needs_senior_certification">Advanced authentication is required by the other party</string>
+    <string name="poster_owner_set_needs_advanced_certification">Advanced authentication is required by the other party</string>
     <string name="poster_owner_set_needs_primary_certification">Primary authentication is required by the other party</string>
     <string name="deal_count_limit_unset">Please fill in the limit of trade number</string>
     <string name="account_balance">Balance:</string>
@@ -671,7 +671,7 @@
     <string name="no_enough_coins">Insufficient funds.</string>
     <string name="complete">Complete</string>
     <string name="primary_certification_simply">Primary</string>
-    <string name="senior_certification_simply">Senior</string>
+    <string name="advanced_certification_simply">Advanced</string>
     <string name="tel_with_symbol">Tel:</string>
     <string name="volume">Volume</string>
 </resources>

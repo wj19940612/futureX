@@ -185,7 +185,9 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     @Override
     public void onResume() {
         super.onResume();
-        requestData();
+        if (getUserVisibleHint()) {
+            requestData();
+        }
         startScheduleJobRightNow(1000);
     }
 

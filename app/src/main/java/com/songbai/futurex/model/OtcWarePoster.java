@@ -63,6 +63,7 @@ public class OtcWarePoster {
     private double percent;
     private int priceType;
     private String remark;
+    private String areaCode;
     private String telephone;
     private int status;
     private double totalCount;
@@ -252,6 +253,14 @@ public class OtcWarePoster {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public String getTelephone() {

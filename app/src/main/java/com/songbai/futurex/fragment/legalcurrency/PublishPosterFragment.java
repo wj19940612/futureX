@@ -179,6 +179,8 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             mWaresModel.setPriceType(mOtcWarePoster.getPriceType());
             mWaresModel.setCoinSymbol(mLegalCoinSymbol);
             mWaresModel.setPayCurrency(mLegalPaySymbol);
+            mWaresModel.setAreaCode(mOtcWarePoster.getAreaCode());
+            mWaresModel.setTelephone(mOtcWarePoster.getTelephone());
             switch (mOtcWarePoster.getPriceType()) {
                 case OtcWarePoster.FIXED_PRICE:
                     mWaresModel.setFixedPrice(FinanceUtil.trimTrailingZero(mOtcWarePoster.getFixedPrice()));
@@ -214,12 +216,12 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                         case BankCardBean.PAYTYPE_BANK:
                             payInfo.append(PayType.BANK_PAY);
                             payInfo.append(",");
+                            mWaresModel.setPayIds(String.valueOf(bankCardBean.getId()));
                             break;
                         default:
                     }
                 }
                 mWaresModel.setPayInfo(payInfo.substring(0, payInfo.length() - 1));
-                mWaresModel.setPayIds(mOtcWarePoster.getPayIds());
             }
         } else {
             mPayCurrencySymbol.setText(mLegalPaySymbol.toUpperCase());
@@ -290,6 +292,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
         }
         setConditionType(conditionType);
         setConditionValue(mConditionKeyValue);
+        String telephone = mWaresModel.getTelephone();
+        if (!TextUtils.isEmpty(telephone)) {
+            mPhone.setText(telephone);
+            mAreaCode.setText(mWaresModel.getAreaCode());
+        }
         mBuyIn.setText(getString(R.string.buy_symbol_x, mLegalCoinSymbol.toUpperCase()));
         mSellOut.setText(getString(R.string.sell_symbol_x, mLegalCoinSymbol.toUpperCase()));
         mPremiumRate.addTextChangedListener(new ValidationWatcher() {
@@ -474,7 +481,10 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                         if (!data.isEmpty()) {
                             mAreaCodes = data;
                             String areaCode = data.get(0).getTeleCode();
-                            mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode));
+                            String waresModelAreaCode = mWaresModel.getAreaCode();
+                            if (TextUtils.isEmpty(waresModelAreaCode)) {
+                                mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode));
+                            }
                         }
                     }
                 }).fireFreely();
