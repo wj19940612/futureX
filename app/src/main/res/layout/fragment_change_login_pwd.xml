@@ -46,7 +46,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView9"
             app:maxCharNum="50"
             app:splitLineColor="@color/bgF5"
-            app:textHint="@string/please_input_new_login_pwd"/>
+            app:textHint="@string/please_input_old_login_pwd"/>
 
         <TextView
             android:id="@+id/textView11"

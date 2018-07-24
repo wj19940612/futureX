@@ -77,7 +77,7 @@ public class LegalCurrencyFragment extends BaseFragment {
     private String mSelectedLegalSymbol;
     private ArrayList<BaseFragment> mFragments;
     private boolean isPrepared;
-    private boolean mInited;
+    private boolean mInitialized;
     private Network.NetworkChangeReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
@@ -112,10 +112,10 @@ public class LegalCurrencyFragment extends BaseFragment {
     }
 
     private void initView() {
-        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol) || mInited) {
+        if (TextUtils.isEmpty(mSelectedCurrencySymbol) || TextUtils.isEmpty(mSelectedLegalSymbol) || mInitialized) {
             return;
         }
-        mInited = true;
+        mInitialized = true;
         mTitle.setText(getString(R.string.x_faction_str_x,
                 mSelectedLegalSymbol.toUpperCase(),
                 mSelectedCurrencySymbol.toUpperCase()));
@@ -212,7 +212,7 @@ public class LegalCurrencyFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-        mInited = false;
+        mInitialized = false;
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
