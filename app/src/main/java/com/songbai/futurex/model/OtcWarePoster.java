@@ -33,7 +33,7 @@ public class OtcWarePoster {
      * maxTurnover : 100000.0
      * minTurnover : 1000.0
      * payCurrency : cny
-     * payIds : 113,112
+     * payIds : 113
      * payInfo : aliPay,bankPay
      * percent : 999.0
      * priceType : 2

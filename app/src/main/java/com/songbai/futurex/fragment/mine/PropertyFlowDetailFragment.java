@@ -107,7 +107,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
                 mFlowType.setText(R.string.legal_account_in);
                 break;
             case CurrencyFlowType.COIN_ACCOUNT_OUT:
-                mFlowType.setText(R.string.coin_account_in);
+                mFlowType.setText(R.string.coin_account_out);
                 break;
             default:
         }

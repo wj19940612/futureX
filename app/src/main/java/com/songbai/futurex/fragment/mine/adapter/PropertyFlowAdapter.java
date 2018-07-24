@@ -144,7 +144,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     }
                 }
             });
-            mAmount.setText(FinanceUtil.subZeroAndDot(coinPropertyFlow.getValue(),8));
+            mAmount.setText(FinanceUtil.subZeroAndDot(coinPropertyFlow.getValue(), 8));
             mTimestamp.setText(DateUtil.format(coinPropertyFlow.getCreateTime(), "HH:mm MM/dd"));
         }
 
@@ -186,9 +186,11 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     mType.setText(R.string.legal_account_in);
                     break;
                 case CurrencyFlowType.COIN_ACCOUNT_OUT:
-                    mType.setText(R.string.coin_account_in);
+                    mType.setText(R.string.coin_account_out);
                     break;
                 default:
+                    mType.setText(R.string.others);
+                    break;
             }
             int status = coinPropertyFlow.getStatus();
             switch (status) {
@@ -214,6 +216,8 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     mStatus.setText(R.string.freeze_return);
                     break;
                 default:
+                    mStatus.setText(R.string.others);
+                    break;
             }
         }
 
@@ -234,6 +238,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     mType.setText(R.string.otc_trade_out);
                     break;
                 default:
+                    mType.setText(R.string.others);
             }
             int status = coinPropertyFlow.getStatus();
             switch (status) {
@@ -256,6 +261,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     mStatus.setText(R.string.poster_off_shelf_return);
                     break;
                 default:
+                    mStatus.setText(R.string.others);
             }
         }
 
@@ -273,6 +279,8 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     mStatus.setText(R.string.transfer_to_personal_account);
                     break;
                 default:
+                    mType.setText(R.string.others);
+                    mStatus.setText(R.string.others);
             }
         }
     }

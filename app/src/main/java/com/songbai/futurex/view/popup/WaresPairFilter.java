@@ -43,8 +43,10 @@ public class WaresPairFilter {
         mPricingCurrencyAdapter.setList(mLegalCoins);
         mPricingCurrencyAdapter.setOnItemClickListener(mOnItemClickListener);
         pricingCurrency.setAdapter(mPricingCurrencyAdapter);
+        pricingCurrency.setNestedScrollingEnabled(false);
         RecyclerView legalCurrency = mView.findViewById(R.id.legalCurrency);
         legalCurrency.setLayoutManager(new GridLayoutManager(context, 3));
+        legalCurrency.setNestedScrollingEnabled(false);
         mCurrencyAdapter = new CurrencyAdapter();
         mCurrencyAdapter.setList(mCountryCurrencies);
         mCurrencyAdapter.setOnItemClickListener(mOnItemClickListener);

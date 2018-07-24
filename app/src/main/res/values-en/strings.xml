@@ -59,7 +59,7 @@
     <string name="filter">Filter</string>
     <string name="please_chose_counter_currency">Unit</string>
 
-    <string name="click_login">Log in</string>
+    <string name="click_login">Login</string>
     <string name="property">Assets</string>
     <string name="trade_order_log">Exchange history</string>
     <string name="legal_currency_trade_order">OTC orders</string>
@@ -306,6 +306,7 @@
     <string name="agency_to">Agency→Exchange</string>
     <string name="legal_account_in">OTC→Exchange</string>
     <string name="coin_account_in">Exchange→OTC</string>
+    <string name="coin_account_out">Exchange→OTC</string>
 
     <string name="completed">Completed</string>
     <string name="freeze">Frozen</string>
@@ -314,6 +315,15 @@
     <string name="freeze_deduct">Deduct from frozen</string>
     <string name="sys_withdraw">System cancel</string>
     <string name="freeze_return">Return from Frozen</string>
+    <string name="periodic_release">Periodic release</string>
+    <string name="special_trade">Special trade</string>
+    <string name="cashback">cashback</string>
+    <string name="invt_reward">Invt reward</string>
+    <string name="distributed_rev">Distributed REV</string>
+    <string name="release_bfb">Release BFB</string>
+    <string name="miners_rewar">Miners rewar</string>
+    <string name="shared_fee">Shared fee</string>
+    <string name="subscription">subscription</string>
 
     <string name="detail">Details</string>
     <string name="address_two_space">Address</string>
@@ -344,7 +354,7 @@
     <string name="order">Orders</string>
     <string name="x_space_x">%1$s&#160;%2$s</string>
     <string name="amount_limit">Limit:&#160;%1$s-%2$s</string>
-    <string name="own_amount">Amount:&#160;%1$s</string>
+    <string name="own_amount">Volume:&#160;%1$s</string>
     <string name="x_done_count_done_rate_x">%1$d Trades</string>
     <string name="publish_ad">Post ad</string>
     <string name="buy_x">Buy&#160;%1$s</string>
@@ -436,7 +446,7 @@
     <string name="trade_amount_empty_hint">Token number must be filled</string>
     <string name="cash_pwd_empty_hint">Please input fund password</string>
     <string name="turnover">Amount</string>
-    <string name="trade_count_symbol_x">Volume: %1$s&#160;%2$s</string>
+    <string name="trade_count_symbol_x">Amount: %1$s&#160;%2$s</string>
     <string name="pay_info">Payment</string>
     <string name="trade_rules">Instructions</string>
     <string name="trade_rules_description">Ask the other party how the transaction will be done and compare it with he/she listed on the platform. If inconsistent, be careful to pay. \n\n1. Please note last 4 letters of order number to speed up the confirmation. \n\n2. Please do not fill in any word about cryptocurrency such as Bitcoin, BTC, OTC, etc., in order to prevent the remittance from being intercepted by the bank. \n\n3. The order is valid for 15 minutes. Please pay in time and click the "paid" button, and then the token can be released to you. \n\n4. If you are unable to complete payment within 15 minutes, the order will be cancelled. \n\n5. The cryptocurrency is hosted by the system during the transaction. Please feel free to place an order.</string>
@@ -663,6 +673,7 @@
     <string name="sys_cancel_trade_freeze">Thawing from system cancellation</string>
     <string name="cancel_trade_freeze">Thawing from cancellation</string>
     <string name="transfer_to_personal_account">Transfer to personal account</string>
+    <string name="others">others</string>
     <string name="trade_rebate">cashback</string>
     <string name="type">Type</string>
     <string name="otc_trade_out">OTC sell</string>

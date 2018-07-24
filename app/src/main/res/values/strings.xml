@@ -319,9 +319,11 @@
     <string name="legal_account_in">法币账户转入</string>
     <string name="legal_account_out">法币账户转出</string>
     <string name="coin_account_in">币币账户转入</string>
+    <string name="coin_account_out">币币账户转出</string>
     <string name="type">类型</string>
     <string name="trade_rebate">交易返佣</string>
     <string name="transfer_to_personal_account">转至个人账户</string>
+    <string name="others">其他</string>
 
     <string name="completed">已完成</string>
     <string name="freeze">冻结</string>
@@ -333,6 +335,15 @@
     <string name="poster_off_shelf_return">广告下架返还</string>
     <string name="sys_withdraw">系统撤单</string>
     <string name="freeze_return">冻结返还</string>
+    <string name="periodic_release">周期解锁</string>
+    <string name="special_trade">特殊交易</string>
+    <string name="cashback">手续费返还</string>
+    <string name="invt_reward">邀请奖励</string>
+    <string name="distributed_rev">收入分配</string>
+    <string name="release_bfb">挖矿解锁</string>
+    <string name="miners_rewar">挖矿奖励</string>
+    <string name="shared_fee">手续费分成</string>
+    <string name="subscription">认购交易</string>
 
     <string name="detail">详情</string>
     <string name="address_two_space">地&#8195;&#8195;址</string>
