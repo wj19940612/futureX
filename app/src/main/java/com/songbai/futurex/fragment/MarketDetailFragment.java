@@ -27,8 +27,8 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
-import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.CurrencyUtils;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.ChartsRadio;
 import com.songbai.futurex.view.RadioHeader;
@@ -173,7 +173,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     new DataParser<Response<PairMarket>>(data) {
                         @Override
                         public void onSuccess(Response<PairMarket> pairMarketResponse) {
-                            if (pairMarketResponse.getContent() == null) return;
+                            if (pairMarketResponse.getContent() == null || mPairDesc == null) return;
+
                             updateMarketDataView(pairMarketResponse.getContent().getQuota());
                             updateDeepDataView(pairMarketResponse.getContent().getDeep());
                             updateTradeDealView(pairMarketResponse.getContent().getDetail());
@@ -311,8 +312,30 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         mPairDesc = data;
                         initCharts();
                         initMarketViews();
+                        requestDeepList();
+                        requestDealList();
                         requestTrendData();
                         updateOptionalStatus();
+                    }
+                }).fireFreely();
+    }
+
+    private void requestDeepList() {
+        Apic.getMarketDeepList(mCurrencyPair.getPairs()).tag(TAG)
+                .callback(new Callback4Resp<Resp<PairMarket.Deep>, PairMarket.Deep>() {
+                    @Override
+                    protected void onRespData(PairMarket.Deep data) {
+                        updateDeepDataView(data);
+                    }
+                }).fireFreely();
+    }
+
+    private void requestDealList() {
+        Apic.getTradeDealList(mCurrencyPair.getPairs()).tag(TAG)
+                .callback(new Callback4Resp<Resp<List<DealData>>, List<DealData>>() {
+                    @Override
+                    protected void onRespData(List<DealData> data) {
+                        updateTradeDealView(data);
                     }
                 }).fireFreely();
     }

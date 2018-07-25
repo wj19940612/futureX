@@ -35,6 +35,32 @@ public class Apic {
     }
 
     /**
+     * 成交明细列表
+     *
+     * @param paris
+     * @return
+     */
+    public static Api getTradeDealList(String paris) {
+        return Api.get("/api/quota/quota/{code}/detail",
+                new ReqParams()
+                        .put("code", paris)
+                        .put("limit", 20));
+    }
+
+    /**
+     * 获取深度列表
+     *
+     * @param pairs
+     * @return
+     */
+    public static Api getMarketDeepList(String pairs) {
+        return Api.get("/api/quota/match/deep/{code}",
+                new ReqParams()
+                        .put("code", pairs)
+                        .put("size", 10));
+    }
+
+    /**
      * 提交自选列表 jsonarray：[{"pairs":"eth_usdt","sort":1},{"pairs":"btc_usdt","sort":2}]
      *
      * @param jsonArray
