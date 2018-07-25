@@ -188,6 +188,33 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                 case CurrencyFlowType.COIN_ACCOUNT_OUT:
                     mType.setText(R.string.coin_account_out);
                     break;
+                case CurrencyFlowType.PERIODIC_RELEASE:
+                    mType.setText(R.string.periodic_release);
+                    break;
+                case CurrencyFlowType.SPECIAL_TRADE:
+                    mType.setText(R.string.special_trade);
+                    break;
+                case CurrencyFlowType.CASHBACK:
+                    mType.setText(R.string.cashback);
+                    break;
+                case CurrencyFlowType.INVT_REWARD:
+                    mType.setText(R.string.invt_reward);
+                    break;
+                case CurrencyFlowType.DISTRIBUTED_REV:
+                    mType.setText(R.string.distributed_rev);
+                    break;
+                case CurrencyFlowType.RELEASED_BFB:
+                    mType.setText(R.string.release_bfb);
+                    break;
+                case CurrencyFlowType.MINERS_REWAR:
+                    mType.setText(R.string.miners_rewar);
+                    break;
+                case CurrencyFlowType.SHARED_FEE:
+                    mType.setText(R.string.shared_fee);
+                    break;
+                case CurrencyFlowType.SUBSCRIPTION:
+                    mType.setText(R.string.subscription);
+                    break;
                 default:
                     mType.setText(R.string.others);
                     break;

@@ -90,6 +90,7 @@ public class CustomServiceActivity extends BaseActivity {
     private SmartDialog mReconnectSmartDialog;
     private boolean mHasShowReconnectDialog;
     private LinearLayoutManager mLinearLayoutManager;
+    private boolean mConnected;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,10 +115,12 @@ public class CustomServiceActivity extends BaseActivity {
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        if (System.currentTimeMillis() - idleStart > 10 * 60 * 1000) {
-            showReconnectDialog();
-        } else {
-            chatOnline();
+        if (mConnected) {
+            if (System.currentTimeMillis() - idleStart > 10 * 60 * 1000) {
+                showReconnectDialog();
+            } else {
+                chatOnline();
+            }
         }
     }
 
@@ -287,6 +290,8 @@ public class CustomServiceActivity extends BaseActivity {
         Apic.chat().tag(TAG).callback(new Callback<Resp<CustomerService>>() {
             @Override
             protected void onRespSuccess(Resp<CustomerService> resp) {
+                mConnected = true;
+                idleStart = System.currentTimeMillis();
                 updateCustomerService(resp.getData());
                 registerImPush();
                 chatOnline();
@@ -295,9 +300,8 @@ public class CustomServiceActivity extends BaseActivity {
             @Override
             protected void onRespFailure(Resp failedResp) {
                 super.onRespFailure(failedResp);
-                if (failedResp.getCode() == 6003) {
-                    showReconnectDialog();
-                }
+                mConnected = false;
+                stopScheduleJob();
             }
         }).fireFreely();
     }
