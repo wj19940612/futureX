@@ -248,7 +248,7 @@ public class SmartDialog {
     }
 
     public void show() {
-        if (mBuilder == null) { // solo dialog, the dialog of this is already existed.
+        if (mBuilder == null) { // solo dialog, the builder is already existed.
             mBuilder = new AlertDialog.Builder(mActivity);
         }
 
@@ -280,6 +280,7 @@ public class SmartDialog {
         } else {
             mBuilder.setMessage(mMessageText);
             mBuilder.setTitle(mTitleText);
+            mBuilder.setView(null);
 
             if (mPositiveId != -1) {
                 mBuilder.setPositiveButton(mPositiveId, new DialogInterface.OnClickListener() {

@@ -58,6 +58,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
                 LocalUser.getUser().logout();
 //                SimpleConnector.get().disconnect();
 //                SimpleConnector.get().connect();
+
                 showUserInvalidDialog();
             }
         }
