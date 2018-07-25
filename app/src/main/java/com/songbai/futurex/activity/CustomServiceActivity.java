@@ -287,6 +287,7 @@ public class CustomServiceActivity extends BaseActivity {
         Apic.chat().tag(TAG).callback(new Callback<Resp<CustomerService>>() {
             @Override
             protected void onRespSuccess(Resp<CustomerService> resp) {
+                idleStart = System.currentTimeMillis();
                 updateCustomerService(resp.getData());
                 registerImPush();
                 chatOnline();
@@ -295,9 +296,7 @@ public class CustomServiceActivity extends BaseActivity {
             @Override
             protected void onRespFailure(Resp failedResp) {
                 super.onRespFailure(failedResp);
-                if (failedResp.getCode() == 6003) {
-                    showReconnectDialog();
-                }
+                stopScheduleJob();
             }
         }).fireFreely();
     }

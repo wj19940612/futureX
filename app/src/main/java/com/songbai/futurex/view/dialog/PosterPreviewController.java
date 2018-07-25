@@ -99,7 +99,10 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
         mTreadAmount.setText(String.valueOf(otcWarePoster.getTradeCount()));
         setPayInfo(otcWarePoster.getBankList());
         mRemark.setText(otcWarePoster.getRemark());
-        mTel.setText(otcWarePoster.getAreaCode() + "-" + otcWarePoster.getTelephone());
+        String telephone = otcWarePoster.getTelephone();
+        if (!TextUtils.isEmpty(telephone)) {
+            mTel.setText(otcWarePoster.getAreaCode() + "-" + telephone);
+        }
         setDemand(otcWarePoster);
     }
 

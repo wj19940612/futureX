@@ -53,9 +53,16 @@ import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.view.HomeBanner;
+import com.songbai.futurex.websocket.DataParser;
+import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
+import com.songbai.futurex.websocket.Response;
+import com.songbai.futurex.websocket.market.MarketSubscriber;
+import com.songbai.futurex.websocket.model.MarketData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,6 +105,9 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         }
     };
     private OnNavigationListener mOnNavigationListener;
+    private MarketSubscriber mMarketSubscriber;
+    private List<EntrustPair.LatelyBean> mLatelyBeans;
+    private ArrayList<PairRiseListBean> mPairRiseListBeans;
 
     @Override
     public void onAttach(Context context) {
@@ -165,6 +175,45 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             }
         });
         Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+
+        mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(final String data, final int code, String dest) {
+                if (PushDestUtils.isAllMarket(dest)) {
+                    new DataParser<Response<Map<String, MarketData>>>(data) {
+                        @Override
+                        public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
+                            Map<String, MarketData> content = mapResponse.getContent();
+                            if (content != null) {
+                                for (Map.Entry<String, MarketData> dataEntry : content.entrySet()) {
+                                    MarketData value = dataEntry.getValue();
+                                    if (mLatelyBeans != null) {
+                                        for (EntrustPair.LatelyBean latelyBean : mLatelyBeans) {
+                                            if (latelyBean.getPairs().equals(dataEntry.getKey())) {
+                                                latelyBean.setLastVolume(value.getLastVolume());
+                                                latelyBean.setUpDropSpeed(value.getUpDropSpeed());
+                                                latelyBean.setLastPrice(value.getLastPrice());
+                                            }
+                                        }
+                                    }
+                                    if (mPairRiseListBeans != null) {
+                                        for (PairRiseListBean pairRiseListBean : mPairRiseListBeans) {
+                                            if (pairRiseListBean.getPairs().equals(dataEntry.getKey())) {
+                                                pairRiseListBean.setVolume(value.getLastVolume());
+                                                pairRiseListBean.setUpDropSpeed(value.getUpDropSpeed());
+                                                pairRiseListBean.setLastPrice(value.getLastPrice());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            mAdapter.notifyDataSetChanged();
+                            mIncreaseRankAdapter.notifyDataSetChanged();
+                        }
+                    }.parse();
+                }
+            }
+        });
     }
 
     private void requestData() {
@@ -188,6 +237,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         if (getUserVisibleHint()) {
             requestData();
         }
+        mMarketSubscriber.resume();
+        mMarketSubscriber.subscribeAll();
         startScheduleJobRightNow(1000);
     }
 
@@ -230,7 +281,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 .callback(new Callback<Resp<EntrustPair>>() {
                     @Override
                     protected void onRespSuccess(Resp<EntrustPair> resp) {
-                        mAdapter.setList(resp.getData().getLately());
+                        mLatelyBeans = resp.getData().getLately();
+                        mAdapter.setList(mLatelyBeans);
                         mAdapter.notifyDataSetChanged();
                     }
                 })
@@ -242,7 +294,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 .callback(new Callback<Resp<ArrayList<PairRiseListBean>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<PairRiseListBean>> resp) {
-                        mIncreaseRankAdapter.setList(resp.getData());
+                        mPairRiseListBeans = resp.getData();
+                        mIncreaseRankAdapter.setList(mPairRiseListBeans);
                         mIncreaseRankAdapter.notifyDataSetChanged();
                     }
                 })
@@ -329,6 +382,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+        mMarketSubscriber.pause();
+        mMarketSubscriber.unSubscribeAll();
     }
 
     @Override
