@@ -190,7 +190,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                                     if (mLatelyBeans != null) {
                                         for (EntrustPair.LatelyBean latelyBean : mLatelyBeans) {
                                             if (latelyBean.getPairs().equals(dataEntry.getKey())) {
-                                                latelyBean.setLastVolume(value.getLastVolume());
+                                                latelyBean.setLastVolume(value.getVolume());
                                                 latelyBean.setUpDropSpeed(value.getUpDropSpeed());
                                                 latelyBean.setLastPrice(value.getLastPrice());
                                             }
@@ -199,7 +199,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                                     if (mPairRiseListBeans != null) {
                                         for (PairRiseListBean pairRiseListBean : mPairRiseListBeans) {
                                             if (pairRiseListBean.getPairs().equals(dataEntry.getKey())) {
-                                                pairRiseListBean.setVolume(value.getLastVolume());
+                                                pairRiseListBean.setVolume(value.getVolume());
                                                 pairRiseListBean.setUpDropSpeed(value.getUpDropSpeed());
                                                 pairRiseListBean.setLastPrice(value.getLastPrice());
                                             }
