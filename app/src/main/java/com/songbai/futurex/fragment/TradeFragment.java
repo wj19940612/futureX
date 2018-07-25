@@ -933,11 +933,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void requestOrderList() {
         if (!LocalUser.getUser().isLogin()) return;
-        if (mCurrencyPair == null) return;
         int type = mOrderListRadio.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime,
-                mCurrencyPair.getPrefixSymbol(), mCurrencyPair.getSuffixSymbol())
+        Apic.getEntrustOrderList(mPage, type, endTime,null, null)
                 .id(mOrderListRadio.getSelectTab())
                 .tag(TAG)
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {

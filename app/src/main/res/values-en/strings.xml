@@ -599,8 +599,8 @@
         <item>@string/buy_in</item>
         <item>@string/sell_out</item>
     </string-array>
-    <string name="buy_limit">Buy(limited price)</string>
-    <string name="sell_limit">Sell(limited price)</string>
+    <string name="buy_limit">Buy(limit)</string>
+    <string name="sell_limit">Sell(limit)</string>
     <string name="market_price">Market</string>
     <string name="limit_price">Limit</string>
     <string name="trade_amt">Amount</string>
