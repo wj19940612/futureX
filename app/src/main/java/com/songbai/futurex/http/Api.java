@@ -268,7 +268,7 @@ public class Api extends RequestManager {
                 || BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
             return "http://" + BuildConfig.HOST;
         }
-        return "http://" + BuildConfig.HOST;
+        return "https://" + BuildConfig.HOST;
     }
 
     public static void cancel(String tag) {
