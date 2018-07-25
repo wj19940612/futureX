@@ -19,7 +19,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField('String', 'HOST', '\"ex.bitfutu.re\"')
+        buildConfigField('String', 'HOST', '\"m.bitfutu.re\"')
         buildConfigField('boolean', 'IS_PROD', 'true')
         buildConfigField('String', 'PUSH_SECRET', '\"a1eddf08c530b6109ffed1b516e3934e\"')
 
@@ -76,6 +76,9 @@ android {
                     UMENG_APP_KEY: "5b2ba7b0f43e4873cf000052",
                     UMENG_CHANNEL: "android"
             ]
+        }
+        pro {
+
         }
 
     }
