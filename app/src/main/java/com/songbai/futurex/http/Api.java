@@ -264,8 +264,7 @@ public class Api extends RequestManager {
     }
 
     public static String getFixedHost() {
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("dev")
-                || BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+        if (!BuildConfig.IS_PROD) {
             return "http://" + BuildConfig.HOST;
         }
         return "https://" + BuildConfig.HOST;
