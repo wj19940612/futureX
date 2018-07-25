@@ -317,13 +317,13 @@
     <string name="freeze_return">Return from Frozen</string>
     <string name="periodic_release">Periodic release</string>
     <string name="special_trade">Special trade</string>
-    <string name="cashback">cashback</string>
-    <string name="invt_reward">Invt reward</string>
+    <string name="cashback">Cashback</string>
+    <string name="invt_reward">INVT reward</string>
     <string name="distributed_rev">Distributed REV</string>
-    <string name="release_bfb">Release BFB</string>
-    <string name="miners_rewar">Miners rewar</string>
+    <string name="release_bfb">Released BFB</string>
+    <string name="miners_rewar">Miner\'s Rewar</string>
     <string name="shared_fee">Shared fee</string>
-    <string name="subscription">subscription</string>
+    <string name="subscription">Subscription</string>
 
     <string name="detail">Details</string>
     <string name="address_two_space">Address</string>

@@ -213,7 +213,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                     mType.setText(R.string.shared_fee);
                     break;
                 case CurrencyFlowType.SUBSCRIPTION:
-                    mType.setText(R.string.shared_fee);
+                    mType.setText(R.string.subscription);
                     break;
                 default:
                     mType.setText(R.string.others);
