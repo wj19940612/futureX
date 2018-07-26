@@ -185,12 +185,7 @@ public class PropertyListFragment extends BaseFragment {
                 mHideZero.setSelected(!mHideZero.isSelected());
                 boolean selected = mHideZero.isSelected();
                 mCheck.setImageResource(selected ? R.drawable.ic_common_checkmark : 0);
-                if (selected) {
-                    filterData(mSearchProperty.getText().toString());
-                } else {
-                    mAdapter.setList(mAccountBeans);
-                    mAdapter.notifyDataSetChanged();
-                }
+                filterData(mSearchProperty.getText().toString());
                 break;
             default:
         }

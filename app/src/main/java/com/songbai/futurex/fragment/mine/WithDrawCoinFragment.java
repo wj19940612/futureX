@@ -30,6 +30,7 @@ import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.ItemSelectController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -89,13 +90,29 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         getCoinTypeDrawLimit();
         mUsableAmount.setText(getString(R.string.amount_space_coin_x,
                 FinanceUtil.formatWithScale(mAccountBean.getAbleCoin(), 8), mAccountBean.getCoinType().toUpperCase()));
+        mEtWithDrawAddress.addTextChangedListener(mWatcher);
         mWithDrawAmount.addTextChangedListener(mWatcher);
+        mCashPwd.addTextChangedListener(mWatcher);
+        mGoogleAuthCode.addTextChangedListener(mWatcher);
     }
 
     private ValidationWatcher mWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
             setFeeAndResult();
+            String address = mEtWithDrawAddress.getText().toString().trim();
+            String trim = mWithDrawAmount.getText().toString().trim();
+            String cashPwd = mCashPwd.getText().toString().trim();
+            if (TextUtils.isEmpty(address) || TextUtils.isEmpty(trim) || TextUtils.isEmpty(cashPwd)) {
+                mConfirmDraw.setEnabled(false);
+            } else {
+                String googleCode = mGoogleAuthCode.getText().toString().trim();
+                if (mNeedGoogle) {
+                    mConfirmDraw.setEnabled(!TextUtils.isEmpty(googleCode));
+                } else {
+                    mConfirmDraw.setEnabled(true);
+                }
+            }
         }
     };
 
@@ -115,8 +132,14 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         }
         double fee = mWithdrawRate;
         mFee.setText(getString(R.string.amount_space_coin_x, FinanceUtil.formatWithScale(fee, 8), mAccountBean.getCoinType().toUpperCase()));
-        mResultAmount.setText(getString(R.string.amount_space_coin_x,
-                FinanceUtil.formatWithScale(FinanceUtil.subtraction(value, fee).doubleValue(), 8), mAccountBean.getCoinType().toUpperCase()));
+        BigDecimal result = FinanceUtil.subtraction(value, fee);
+        if (result.doubleValue() < 0) {
+            mResultAmount.setText(getString(R.string.amount_space_coin_x,
+                    FinanceUtil.subZeroAndDot(0, 8), mAccountBean.getCoinType().toUpperCase()));
+        } else {
+            mResultAmount.setText(getString(R.string.amount_space_coin_x,
+                    FinanceUtil.formatWithScale(result.doubleValue(), 8), mAccountBean.getCoinType().toUpperCase()));
+        }
     }
 
     private void needGoogle() {
@@ -167,11 +190,16 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
                 mWithDrawAmount.setText(FinanceUtil.formatWithScale(mAccountBean.getAbleCoin(), 8));
                 break;
             case R.id.confirmDraw:
+                String s = mWithDrawAmount.getText().toString();
+                if (TextUtils.isEmpty(s)) {
+                    s = "0";
+                }
+                String value = mCashPwd.getText().toString();
                 drawCoin(mAccountBean.getCoinType(),
                         mEtWithDrawAddress.getText().toString(),
-                        Double.valueOf(mWithDrawAmount.getText().toString()),
+                        Double.valueOf(s),
                         mNeedGoogle ? mGoogleAuthCode.getText().toString() : "",
-                        md5Encrypt(mCashPwd.getText().toString()));
+                        md5Encrypt(value));
                 break;
             default:
         }

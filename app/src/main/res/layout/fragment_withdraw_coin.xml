@@ -298,6 +298,7 @@
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/btn_primary"
+                    android:enabled="false"
                     android:gravity="center"
                     android:text="@string/confirm_with_draw"
                     android:textColor="@color/white"
