@@ -25,6 +25,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.CoinAccountBalance;
 import com.songbai.futurex.model.mine.CoinPropertyFlow;
@@ -33,7 +34,9 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.StrUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.dialog.MsgHintController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -224,6 +227,10 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.withDraw:
                 if (mAccountBean.getIsCanDraw() == AccountBean.CAN_DRAW) {
+                    if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+                        showAlertMsgHint();
+                        return;
+                    }
                     UniqueActivity.launcher(getContext(), WithDrawCoinFragment.class)
                             .putExtra(ExtraKeys.ACCOUNT_BEAN, mAccountBean)
                             .execute(this, REQUEST_WITHDRAW_COIN);
@@ -231,5 +238,22 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 break;
             default:
         }
+    }
+
+    private void showAlertMsgHint() {
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                UniqueActivity.launcher(CoinPropertyFragment.this, CashPwdFragment.class)
+                        .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
+                        .execute();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setConfirmText(R.string.go_to_set);
+        withDrawPsdViewController.setMsg(R.string.set_draw_cash_pwd_hint);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 }
