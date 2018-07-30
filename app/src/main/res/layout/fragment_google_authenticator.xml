@@ -11,6 +11,7 @@
     android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -62,18 +63,21 @@
                     android:text="@string/secret_key"
                     android:textColor="@color/text66"
                     android:textSize="16sp"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/secretKey"/>
+                    app:layout_constraintBaseline_toBaselineOf="@+id/secretKey"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
 
                 <TextView
                     android:id="@+id/secretKey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
+                    android:includeFontPadding="false"
                     android:textColor="@color/text22"
                     app:layout_constraintEnd_toStartOf="@+id/copy"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="@+id/googleAuthCode"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
                     tools:text="9Pu2gy9Pu2"/>
 
                 <TextView
@@ -96,13 +100,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/secretKey"/>
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/googleAuthCodeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/google_authenticator_code"
                     android:textColor="@color/text66"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/googleAuthCode"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/googleAuthCode"
                     app:layout_constraintTop_toTopOf="@+id/googleAuthCode"/>
 
                 <EditText
@@ -111,13 +118,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginTop="41dp"
+                    android:layout_marginTop="23dp"
                     android:hint="@string/please_input_google_authenticator_code"
+                    android:includeFontPadding="false"
                     android:paddingLeft="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/textView5"
-                    app:layout_constraintTop_toBottomOf="@+id/secretKey"/>
+                    app:layout_constraintBottom_toTopOf="@id/authCode"
+                    app:layout_constraintLeft_toRightOf="@+id/authCodeText"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/secretKey"
+                    app:layout_constraintVertical_chainStyle="packed"/>
 
                 <View
                     android:id="@+id/view3"
@@ -126,6 +135,54 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/bgF5"
                     app:layout_constraintTop_toBottomOf="@+id/googleAuthCode"/>
+
+                <TextView
+                    android:id="@+id/authCodeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/google_authenticator_code"
+                    android:textColor="@color/text66"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/authCode"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/authCode"
+                    app:layout_constraintTop_toTopOf="@+id/authCode"/>
+
+                <EditText
+                    android:id="@+id/authCode"
+                    style="@style/SingleEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="23dp"
+                    android:hint="@string/please_input_google_authenticator_code"
+                    android:includeFontPadding="false"
+                    android:paddingLeft="20dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/authCodeText"
+                    app:layout_constraintRight_toLeftOf="@id/getAuthCode"
+                    app:layout_constraintTop_toBottomOf="@+id/googleAuthCode"/>
+
+                <TextView
+                    android:id="@+id/getAuthCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/get_auth_code"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/authCode"
+                    app:layout_constraintLeft_toRightOf="@id/authCode"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/authCode"/>
+
+                <View
+                    android:id="@+id/view4"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/bgF5"
+                    app:layout_constraintTop_toBottomOf="@+id/authCode"/>
             </android.support.constraint.ConstraintLayout>
 
             <TextView

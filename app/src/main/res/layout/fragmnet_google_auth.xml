@@ -11,51 +11,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/safety_center"/>
+        app:titleText="@string/google_authentication"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/setCashPwd"
+        android:id="@+id/googleAuthenticator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/set_cash_pwd"
+        app:rowText="@string/google_authenticator"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/changeLoginPwd"
+        android:id="@+id/resetGoogleAuthenticator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/change_login_pwd"
+        app:rowText="@string/reset_google_auth"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"/>
 
     <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/googleAuthenticator"
+        android:id="@+id/googleAuthenticatorSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/google_authentication"
+        app:rowText="@string/google_authenticator_settings"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
         app:subTextColor="@color/text99"
         app:subTextSize="14sp"/>
 
-    <com.songbai.futurex.view.IconTextRow
-        android:id="@+id/gesturePwd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_pressed_f5"
-        android:visibility="gone"
-        app:rowText="@string/gesture_pwd"
-        app:rowTextColor="@color/text22"
-        app:rowTextSize="16sp"/>
 </LinearLayout>

@@ -684,4 +684,11 @@
     <string name="tel_with_symbol">聯繫方式:</string>
     <string name="volume">數量</string>
 
+    <string name="trading_mining">交易挖礦</string>
+    <string name="mining_rules">挖礦規則</string>
+    <string name="mining_output_yesterday">昨日挖礦產出</string>
+    <string name="mining_output_today">今日待分配收入累計摺合</string>
+    <string name="bfb_total_amount">BFB流通總量</string>
+    <string name="google_authentication">Google身份驗證</string>
+    <string name="reset_google_auth">重置Google驗證</string>
 </resources>

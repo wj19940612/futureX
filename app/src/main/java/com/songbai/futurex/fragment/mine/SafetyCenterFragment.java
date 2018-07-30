@@ -17,7 +17,6 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -107,7 +106,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.setCashPwd, R.id.changeLoginPwd, R.id.googleAuthenticator, R.id.googleAuthenticatorSettings, R.id.gesturePwd})
+    @OnClick({R.id.setCashPwd, R.id.changeLoginPwd, R.id.googleAuthenticator, R.id.gesturePwd})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.setCashPwd:
@@ -119,17 +118,7 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
                 UniqueActivity.launcher(this, ChangeLoginPwdFragment.class).execute();
                 break;
             case R.id.googleAuthenticator:
-                if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
-                    return;
-                }
-                UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
-                break;
-            case R.id.googleAuthenticatorSettings:
-                if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
-                    UniqueActivity.launcher(this, GoogleAuthenticatorSettingsFragment.class).execute();
-                    return;
-                }
-                ToastUtil.show(R.string.please_set_google_authenticator_first);
+                UniqueActivity.launcher(this, GoogleAuthFragment.class).execute();
                 break;
             case R.id.gesturePwd:
                 Launcher.with(this, SetGesturePwdActivity.class).execute();
