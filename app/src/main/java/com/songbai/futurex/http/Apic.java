@@ -700,6 +700,15 @@ public class Apic {
     }
 
     /**
+     * http://ex.esongbai.abc/api/quota/quota/bfbInfo.do
+     * GET
+     * 获取bfb的挖矿交易数和分红数量
+     */
+    public static Api bfbInfo() {
+        return Api.get("/api/quota/quota/bfbInfo.do");
+    }
+
+    /**
      * /api/entrust/selfPairs/indexRiseList
      * GET
      * 首页涨幅榜排名

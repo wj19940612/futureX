@@ -684,4 +684,7 @@
     <string name="complete">完成</string>
     <string name="volume">数量</string>
 
+    <string name="trading_mining">交易挖矿</string>
+    <string name="mining_output_yesterday">昨日挖矿产出</string>
+
 </resources>

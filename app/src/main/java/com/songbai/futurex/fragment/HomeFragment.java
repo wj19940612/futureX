@@ -43,6 +43,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.model.home.BFBInfo;
 import com.songbai.futurex.model.home.Banner;
 import com.songbai.futurex.model.home.EntrustPair;
 import com.songbai.futurex.model.home.HomeNews;
@@ -53,6 +54,7 @@ import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.view.HomeBanner;
+import com.songbai.futurex.view.autofit.AutofitTextView;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
@@ -66,6 +68,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -87,6 +90,12 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     RecyclerView mIncreaseRank;
     @BindView(R.id.nestedScrollView)
     NestedScrollView mNestedScrollView;
+    @BindView(R.id.yesterdayAmount)
+    AutofitTextView mYesterdayAmount;
+    @BindView(R.id.todayAmount)
+    AutofitTextView mTodayAmount;
+    @BindView(R.id.bfbTotal)
+    AutofitTextView mBfbTotal;
 
     private Unbinder mBind;
     private EntrustPairAdapter mAdapter;
@@ -175,7 +184,10 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             }
         });
         Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+        initMarketPush();
+    }
 
+    private void initMarketPush() {
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(final String data, final int code, String dest) {
@@ -220,6 +232,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         findBannerList();
         findNewsList(1);
         entrustPairsList();
+        bfbInfo();
         indexRiseList();
     }
 
@@ -284,6 +297,20 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                         mLatelyBeans = resp.getData().getLately();
                         mAdapter.setList(mLatelyBeans);
                         mAdapter.notifyDataSetChanged();
+                    }
+                })
+                .fire();
+    }
+
+    private void bfbInfo() {
+        Apic.bfbInfo().tag(TAG)
+                .callback(new Callback<Resp<BFBInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<BFBInfo> resp) {
+                        BFBInfo bfbInfo = resp.getData();
+                        mYesterdayAmount.setText(bfbInfo.getFrontProduce() + " BFB");
+                        mTodayAmount.setText(bfbInfo.getNowProduce() + " BTC");
+                        mBfbTotal.setText(bfbInfo.getVolume() + " BFB");
                     }
                 })
                 .fire();
@@ -401,6 +428,10 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         super.onDestroyView();
         mBind.unbind();
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+    }
+
+    @OnClick(R.id.miningRules)
+    public void onViewClicked() {
     }
 
     private interface OnItemClickListener {
