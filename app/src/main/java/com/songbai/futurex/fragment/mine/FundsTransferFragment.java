@@ -105,6 +105,18 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
         mFromAccount.setText(mTransferType == 0 ? R.string.coin_coin_account : R.string.legal_currency_account);
         mToAccount.setText(mTransferType == 1 ? R.string.coin_coin_account : R.string.legal_currency_account);
         setSelectedItem(mSelectedCoinType);
+        mTransferAmount.addTextChangedListener(new ValidationWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String amount = mTransferAmount.getText().toString().trim();
+                if (!TextUtils.isEmpty(amount)) {
+                    mConfirmTransfer.setEnabled(mMaxAmount > 0);
+                    mConfirmTransfer.setEnabled(Double.valueOf(amount) > 0);
+                }else{
+                    mConfirmTransfer.setEnabled(false);
+                }
+            }
+        });
     }
 
     private void getLegalCoin() {
@@ -167,7 +179,6 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
             }
         }
         mMaxAmount = mTransferType == 0 ? ableCoin : otcAbleCoin;
-        mConfirmTransfer.setEnabled(mMaxAmount > 0);
         mTransferAmount.setHint(getString(R.string.most_transfer_amount_type_x,
                 FinanceUtil.formatWithScale(mMaxAmount, 8),
                 ""));

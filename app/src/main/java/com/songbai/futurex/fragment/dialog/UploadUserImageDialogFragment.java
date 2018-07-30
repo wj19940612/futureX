@@ -76,7 +76,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     /**
      * 打开图册的请求码
      */
-    private static final int REQ_CODE_TAKE_PHONE_FROM_PHONES = 600;
+    public static final int REQ_CODE_TAKE_PHONE_FROM_PHONES = 600;
     /**
      * 打开自定义裁剪页面的请求码
      */

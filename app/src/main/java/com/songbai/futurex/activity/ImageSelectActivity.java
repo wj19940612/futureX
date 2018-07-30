@@ -84,8 +84,9 @@ public class ImageSelectActivity extends BaseActivity {
             listPath.addAll(mGroupMap.get("所有图片"));
             mImageSelectAdapter.update(listPath);
             mRecyclerView.scrollToPosition(mImageSelectAdapter.getItemCount() - 1);
-            if (mPopupWindow != null)
+            if (mPopupWindow != null) {
                 mPopupWindow.notifyDataChanged();
+            }
         }
     };
 
@@ -143,8 +144,9 @@ public class ImageSelectActivity extends BaseActivity {
 
             } else {//取消选中
                 //从集合中移除
-                if (listSelectedPath.contains(path))
+                if (listSelectedPath.contains(path)) {
                     listSelectedPath.remove(path);
+                }
             }
             //如果没有选中的按钮不可点击
             if (listSelectedPath.size() == 0 && mCanSelectedAmount == 0) {
@@ -254,12 +256,16 @@ public class ImageSelectActivity extends BaseActivity {
             Map.Entry<String, List<String>> next = iterator.next();
             ImageData imageData = new ImageData();
             imageData.setFileName(next.getKey());
-            imageData.setFirstPicPath(next.getValue().get(0));
-            imageData.setCount(next.getValue().size());
-            if (next.getKey().equals("所有图片"))
+            List<String> value = next.getValue();
+            if (!value.isEmpty()) {
+                imageData.setFirstPicPath(value.get(0));
+                imageData.setCount(value.size());
+            }
+            if (next.getKey().equals("所有图片")) {
                 list.add(0, imageData);
-            else
+            } else {
                 list.add(imageData);
+            }
         }
     }
 

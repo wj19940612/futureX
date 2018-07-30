@@ -98,7 +98,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
             maxImageAmount = MAX_IMAGE_SIZE - mImages.size() + 1;
         }
         mPosition = position;
-        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY,
+        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.REQ_CODE_TAKE_PHONE_FROM_PHONES,
                 "", -1, getString(R.string.please_select_image), maxImageAmount)
                 .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
