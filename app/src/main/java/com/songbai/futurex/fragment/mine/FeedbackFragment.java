@@ -23,6 +23,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.image.ImageUtils;
 
@@ -47,6 +48,8 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
     TextView mTextSize;
     @BindView(R.id.imageNum)
     TextView mImageNum;
+    @BindView(R.id.submit)
+    TextView mSubmit;
     private Unbinder mBind;
     private static final int MAX_TEXT_SIZE = 200;
     private static final int MAX_IMAGE_SIZE = 4;
@@ -83,14 +86,23 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         mEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_TEXT_SIZE)});
         mTextSize.setText(getString(R.string.x_faction_x, 0, MAX_TEXT_SIZE));
         mImageNum.setText(getString(R.string.x_faction_x, mImages.size(), MAX_IMAGE_SIZE));
+
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
             mTextSize.setText(getString(R.string.x_faction_x, s.length(), MAX_TEXT_SIZE));
+            boolean enable = checkSubmitButtonEnable();
+            if (enable != mSubmit.isEnabled()) {
+                mSubmit.setEnabled(enable);
+            }
         }
     };
+
+    private boolean checkSubmitButtonEnable() {
+        return !TextUtils.isEmpty(mEditText.getText().toString());
+    }
 
     private void selectImage(final int position) {
         int maxImageAmount = MAX_IMAGE_SIZE - mImages.size();
@@ -144,6 +156,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         mEditText.setText(null);
         mImages.clear();
         mPicAdapter.notifyDataSetChanged();
+        mImageNum.setText(getString(R.string.x_faction_x, mImages.size(), MAX_IMAGE_SIZE));
     }
 
     public void addFeedback(String content, String feedbackPic) {
@@ -152,11 +165,12 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         if (user.isLogin()) {
             contactInfo = user.getLastAct();
         }
-        Apic.addFeedback(content, contactInfo, feedbackPic)
+        Apic.addFeedback(content, contactInfo, feedbackPic).tag(TAG)
                 .callback(new Callback<Object>() {
                     @Override
                     protected void onRespSuccess(Object resp) {
                         restView();
+                        ToastUtil.show(R.string.submit_success);
                     }
                 }).fire();
     }
@@ -241,6 +255,11 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
                     GlideApp
                             .with(context)
                             .load(list.get(position))
+                            .into(mImage);
+                } else {
+                    GlideApp
+                            .with(context)
+                            .load(R.drawable.ic_authentication_add)
                             .into(mImage);
                 }
                 mImage.setOnClickListener(new View.OnClickListener() {
