@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
@@ -22,6 +24,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.AuthenticationName;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
+import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.TitleBar;
 
@@ -29,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -54,6 +58,10 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     TextView mNameText;
     @BindView(R.id.withDrawPassText)
     TextView mWithDrawPassText;
+    @BindView(R.id.paymentCode)
+    ImageView mPaymentCode;
+    @BindView(R.id.paymentCodeText)
+    TextView mPaymentCodeText;
     private boolean mIsAlipay;
     private String mName;
     private BindBankList mBindBankList;
@@ -97,10 +105,11 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 mAccountNum.setText(mBindBankList.getAliPay().getCardNumber());
                 otcBankAccount(mBindBankList.getAliPay().getId());
             }
+            mPaymentCodeText.setText(R.string.alipay_payment_code);
         } else {
-            mTitleBar.setTitle(R.string.add_wei_chat_pay);
-            mAccountName.setText(R.string.wei_chat_account);
-            mAccountNum.setHint(R.string.please_input_wei_chat_account);
+            mTitleBar.setTitle(R.string.add_wechat_pay);
+            mAccountName.setText(R.string.wechat_account);
+            mAccountNum.setHint(R.string.please_input_wechat_account);
             if (mBindBankList != null) {
                 String cardNumber = mBindBankList.getWechat().getCardNumber();
                 if (!TextUtils.isEmpty(cardNumber)) {
@@ -109,6 +118,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 }
                 mAccountNum.setText(cardNumber);
                 otcBankAccount(mBindBankList.getWechat().getId());
+                mPaymentCodeText.setText(R.string.wechat_payment_code);
             }
         }
     }
@@ -176,24 +186,66 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
         unbinder.unbind();
     }
 
-    @OnClick(R.id.confirm_add)
-    public void onViewClicked() {
-        String account = mAccountNum.getText().toString();
-        String realName = mRealName.getText().toString();
-        if (mHasBind) {
-            updateBankAccount(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY,
-                    account,
-                    mName,
-                    md5Encrypt(mWithDrawPass.getPassword()));
-        } else {
-            BankBindData bankBindData = BankBindData.Builder
-                    .aBankBindData()
-                    .payType(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY)
-                    .cardNumber(account)
-                    .realName(mName)
-                    .withDrawPass(md5Encrypt(mWithDrawPass.getPassword()))
-                    .build();
-            bankBand(bankBindData);
+    @OnClick({R.id.confirm_add, R.id.uploadPaymentCode})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.confirm_add:
+                String account = mAccountNum.getText().toString();
+                String realName = mRealName.getText().toString();
+                if (mHasBind) {
+                    updateBankAccount(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY,
+                            account,
+                            mName,
+                            md5Encrypt(mWithDrawPass.getPassword()));
+                } else {
+                    BankBindData bankBindData = BankBindData.Builder
+                            .aBankBindData()
+                            .payType(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY)
+                            .cardNumber(account)
+                            .realName(mName)
+                            .withDrawPass(md5Encrypt(mWithDrawPass.getPassword()))
+                            .build();
+                    bankBand(bankBindData);
+                }
+                break;
+            case R.id.uploadPaymentCode:
+                selectImage();
+                break;
+            default:
         }
     }
+
+    private void selectImage() {
+        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.REQ_CODE_TAKE_PHONE_FROM_PHONES,
+                "", -1, getString(R.string.please_select_image))
+                .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
+                    @Override
+                    public void onImagePath(int index, String imagePath) {
+                        sendImage(imagePath);
+                    }
+                }).show(getChildFragmentManager());
+    }
+
+    private void sendImage(final String path) {
+        String image = ImageUtils.compressImageToBase64(path, getActivity());
+        Apic.uploadImage(image).tag(TAG).indeterminate(this)
+                .callback(new Callback<Resp<String>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<String> resp) {
+                        if (resp != null && resp.getData() != null) {
+                            setImage(resp.getData());
+                        }
+                    }
+                })
+                .fireFreely();
+    }
+
+    private void setImage(String data) {
+        GlideApp
+                .with(this)
+                .load(data)
+                .into(mPaymentCode);
+        // TODO: 2018/7/31 新接口
+    }
+
 }

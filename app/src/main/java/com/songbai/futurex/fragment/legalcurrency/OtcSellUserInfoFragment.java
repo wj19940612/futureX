@@ -112,7 +112,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
                 .load(waresUserInfo.getUserPortrait())
                 .circleCrop()
                 .into(mHeadPortrait);
-        mRegisterTime.setText(getString(R.string.register_time, DateUtil.format(waresUserInfo.getRegisterTime(), "yyyy-MM-dd")));
+        mRegisterTime.setText(getString(R.string.register_time_x, DateUtil.format(waresUserInfo.getRegisterTime(), "yyyy-MM-dd")));
         int authStatus = waresUserInfo.getAuthStatus();
         mPrimaryCertificationState.setText(R.string.uncertificated);
         mPrimaryCertificationState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mistake, 0, 0, 0);

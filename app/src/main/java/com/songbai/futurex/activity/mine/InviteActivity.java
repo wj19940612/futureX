@@ -10,12 +10,15 @@ import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.mine.MyInviteFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.PromoterInfo;
 import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,12 +35,20 @@ public class InviteActivity extends BaseActivity {
     TextView mInviteCode;
     @BindView(R.id.checkDetail)
     TextView mCheckDetail;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite);
         ButterKnife.bind(this);
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UniqueActivity.launcher(InviteActivity.this, MyInviteFragment.class).execute();
+            }
+        });
         Apic.getCurrentPromoterMsg().tag(TAG)
                 .callback(new Callback<Resp<PromoterInfo>>() {
                     @Override
@@ -76,26 +87,24 @@ public class InviteActivity extends BaseActivity {
         }
     }
 
-    // 展开
     private void expand(final View view) {
         AnimatorUtil.expandVertical(view, new AnimatorUtil.OnAnimatorFactionListener() {
             @Override
             public void onFaction(float fraction) {
                 if (fraction == 1) {
-                    mCheckDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_invitation_angle_up, 0);
+                    mCheckDetail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_invitation_angle_up, 0);
                 }
             }
         });
     }
 
-    // 折叠
     private void collapse(final View view) {
         AnimatorUtil.collapseVertical(view, new AnimatorUtil.OnAnimatorFactionListener() {
             @Override
             public void onFaction(float fraction) {
                 if (fraction == 1) {
                     view.setVisibility(View.GONE);
-                    mCheckDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_invitation_angle_down, 0);
+                    mCheckDetail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_invitation_angle_down, 0);
                 }
             }
         });

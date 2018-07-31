@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_with_under_line"
+    android:paddingBottom="16dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="16dp">
+
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        tools:text="2018/4/5 11:23:45"/>
+
+    <TextView
+        android:id="@+id/coinType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        tools:text="EOS"/>
+
+    <TextView
+        android:id="@+id/volume"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="end"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        tools:text="22"/>
+
+</LinearLayout>

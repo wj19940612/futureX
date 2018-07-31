@@ -109,8 +109,8 @@
     <string name="add_gathering_account">添加收款方式</string>
     <string name="add_ali_pay">添加支付宝</string>
     <string name="ali_pay_account">支付宝账号</string>
-    <string name="add_wei_chat_pay">添加微信支付</string>
-    <string name="wei_chat_account">微信账号</string>
+    <string name="add_wechat_pay">添加微信支付</string>
+    <string name="wechat_account">微信账号</string>
     <string name="name">姓名</string>
     <string name="please_input_name">请填写姓名</string>
     <string name="add_banking_card">添加银行卡</string>
@@ -118,7 +118,7 @@
     <string name="with_draw_pass">资金密码</string>
     <string name="please_input_with_draw_pass">请输入资金密码</string>
     <string name="please_input_ali_pay_account">请填写支付宝账号</string>
-    <string name="please_input_wei_chat_account">请填写微信号</string>
+    <string name="please_input_wechat_account">请填写微信号</string>
     <string name="confirm_add">确认添加</string>
     <string name="own_bank_name">所属银行</string>
     <string name="account_sub_bank_name">开户支行</string>
@@ -488,7 +488,7 @@
     <string name="buyer_have_paid">买家已付款</string>
     <string name="seller_info">卖家信息</string>
     <string name="buyer_info">买家信息</string>
-    <string name="register_time">注册时间：%1$s</string>
+    <string name="register_time_x">注册时间：%1$s</string>
     <string name="click_to_ask_contract_info">点击咨询支付方式</string>
     <string name="contact_each_other">联系对方</string>
     <string name="cancel_trade">取消交易</string>
@@ -691,5 +691,18 @@
     <string name="bfb_total_amount">BFB流通总量</string>
     <string name="google_authentication">Google身份验证</string>
     <string name="reset_google_auth">重置Google验证</string>
-
+    <string name="upload_payment_code">上传收款码</string>
+    <string name="wechat_payment_code">微信付款码</string>
+    <string name="alipay_payment_code">支付宝付款码</string>
+    <string name="my_invite">我的邀请</string>
+    <string name="my_invite_num">共邀请用户</string>
+    <string name="gained_bfb_award">获得奖励(BFB)</string>
+    <string-array name="invite_header">
+        <item>邀请记录</item>
+        <item>奖励记录</item>
+    </string-array>
+    <string name="invitees">被邀请人</string>
+    <string name="register_time">注册时间</string>
+    <string name="deal_count">交易笔数</string>
+    <string name="total_contribution">累计贡献</string>
 </resources>
