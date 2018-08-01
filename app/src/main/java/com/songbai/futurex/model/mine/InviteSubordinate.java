@@ -74,6 +74,7 @@ public class InviteSubordinate {
         private int commission;
         private int dealCount;
         private int userId;
+        private long registerTime;
         private String userPortrait;
         private String username;
 
@@ -91,6 +92,14 @@ public class InviteSubordinate {
 
         public void setDealCount(int dealCount) {
             this.dealCount = dealCount;
+        }
+
+        public long getRegisterTime() {
+            return registerTime;
+        }
+
+        public void setRegisterTime(long registerTime) {
+            this.registerTime = registerTime;
         }
 
         public int getUserId() {

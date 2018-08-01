@@ -10,10 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
-import com.songbai.futurex.fragment.BaseFragment;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.InviteSubordinate;
+import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
+import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.autofit.AutofitTextView;
+import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
+import com.zcmrr.swipelayout.header.RefreshHeaderView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,13 +35,21 @@ import butterknife.Unbinder;
  * @author yangguangda
  * @date 2018/7/31
  */
-public class InviteHistoryFragment extends BaseFragment {
+public class InviteHistoryFragment extends BaseSwipeLoadFragment {
 
-    @BindView(R.id.recyclerView)
+    @BindView(R.id.swipe_target)
     EmptyRecyclerView mRecyclerView;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
+    @BindView(R.id.swipe_refresh_header)
+    RefreshHeaderView mSwipeRefreshHeader;
+    @BindView(R.id.swipe_load_more_footer)
+    LoadMoreFooterView mSwipeLoadMoreFooter;
+    @BindView(R.id.swipeToLoadLayout)
+    SwipeToLoadLayout mSwipeToLoadLayout;
     private Unbinder mBind;
+    private InviteHistoryAdapter mAdapter;
+    private int mPage;
 
     public static InviteHistoryFragment newInstance() {
         Bundle bundle = new Bundle();
@@ -50,7 +70,10 @@ public class InviteHistoryFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(new InviteHistoryAdapter());
+        mRecyclerView.setEmptyView(mEmptyView);
+        mAdapter = new InviteHistoryAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+        findCommissionOfSubordinate();
     }
 
     @Override
@@ -59,7 +82,73 @@ public class InviteHistoryFragment extends BaseFragment {
         mBind.unbind();
     }
 
+    private void findCommissionOfSubordinate() {
+        Apic.findCommissionOfSubordinate(mPage, 20).tag(TAG)
+                .callback(new Callback<Resp<InviteSubordinate>>() {
+
+                    @Override
+                    protected void onRespSuccess(Resp<InviteSubordinate> resp) {
+                        InviteSubordinate inviteSubordinate = resp.getData();
+                        mAdapter.setList(inviteSubordinate);
+                        mAdapter.notifyDataSetChanged();
+                        stopFreshOrLoadAnimation();
+                        if (inviteSubordinate.getTotal() - 1 > mPage) {
+                            mPage++;
+                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                        } else {
+                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                        }
+                        if (inviteSubordinate.getStart() == 0) {
+                            mRecyclerView.hideAll(false);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+
+                    }
+                })
+                .fire();
+    }
+
+    @Override
+    public void onLoadMore() {
+        findCommissionOfSubordinate();
+    }
+
+    @Override
+    public void onRefresh() {
+        mPage = 0;
+        findCommissionOfSubordinate();
+    }
+
+    @NonNull
+    @Override
+    public Object getSwipeTargetView() {
+        return mRecyclerView;
+    }
+
+    @NonNull
+    @Override
+    public SwipeToLoadLayout getSwipeToLoadLayout() {
+        return mSwipeToLoadLayout;
+    }
+
+    @NonNull
+    @Override
+    public RefreshHeaderView getRefreshHeaderView() {
+        return mSwipeRefreshHeader;
+    }
+
+    @NonNull
+    @Override
+    public LoadMoreFooterView getLoadMoreFooterView() {
+        return mSwipeLoadMoreFooter;
+    }
+
     class InviteHistoryAdapter extends RecyclerView.Adapter {
+
+        private List<InviteSubordinate.DataBean> mList = new ArrayList<>();
 
         @NonNull
         @Override
@@ -71,12 +160,21 @@ public class InviteHistoryFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+            if (holder instanceof InviteHistoryHolder) {
+                ((InviteHistoryHolder) holder).bindData(mList.get(position));
+            }
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mList.size();
+        }
+
+        public void setList(InviteSubordinate inviteSubordinate) {
+            if (inviteSubordinate.getStart() == 0) {
+                mList.clear();
+            }
+            mList.addAll(inviteSubordinate.getData());
         }
 
         class InviteHistoryHolder extends RecyclerView.ViewHolder {
@@ -94,8 +192,11 @@ public class InviteHistoryFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindData() {
-
+            public void bindData(InviteSubordinate.DataBean dataBean) {
+                mInvitees.setText(dataBean.getUsername());
+                mRegisterTime.setText(DateUtil.format(dataBean.getRegisterTime(), "yyyy/MM/dd"));
+                mDealCount.setText(String.valueOf(dataBean.getDealCount()));
+                mTotalContribution.setText(String.valueOf(dataBean.getCommission()));
             }
         }
     }

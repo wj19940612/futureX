@@ -697,6 +697,8 @@
     <string name="my_invite">我的邀请</string>
     <string name="my_invite_num">共邀请用户</string>
     <string name="gained_bfb_award">获得奖励(BFB)</string>
+    <string name="x_bfb">%1$s&#160;BFB</string>
+    <string name="x_btc">%1$s&#160;BTC</string>
     <string-array name="invite_header">
         <item>邀请记录</item>
         <item>奖励记录</item>

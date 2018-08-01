@@ -308,9 +308,9 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     @Override
                     protected void onRespSuccess(Resp<BFBInfo> resp) {
                         BFBInfo bfbInfo = resp.getData();
-                        mYesterdayAmount.setText(bfbInfo.getFrontProduce() + " BFB");
-                        mTodayAmount.setText(bfbInfo.getNowProduce() + " BTC");
-                        mBfbTotal.setText(bfbInfo.getVolume() + " BFB");
+                        mYesterdayAmount.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getFrontProduce())));
+                        mTodayAmount.setText(getString(R.string.x_btc, String.valueOf(bfbInfo.getNowProduce())));
+                        mBfbTotal.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getVolume())));
                     }
                 })
                 .fire();

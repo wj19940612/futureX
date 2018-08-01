@@ -26,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
@@ -38,7 +37,6 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
-import com.songbai.futurex.model.mine.InviteSubordinate;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
@@ -183,25 +181,6 @@ public class MyPropertyActivity extends BaseActivity {
                 mPropertyCardPager.setTranslationX(0);
             }
         }
-    }
-
-    private void findCommissionOfSubordinate() {
-        Apic.findCommissionOfSubordinate().tag(TAG)
-                .callback(new Callback<Resp<InviteSubordinate>>() {
-
-                    @Override
-                    protected void onRespSuccess(Resp<InviteSubordinate> resp) {
-                        InviteSubordinate inviteSubordinate = resp.getData();
-                        int resultCount = inviteSubordinate.getResultCount();
-                        mPropertyCardAdapter.setInviteCount(resultCount);
-                    }
-
-                    @Override
-                    public void onFailure(ReqError reqError) {
-
-                    }
-                })
-                .fire();
     }
 
     @Override

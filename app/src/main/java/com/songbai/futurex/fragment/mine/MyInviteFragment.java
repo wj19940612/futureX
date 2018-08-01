@@ -13,6 +13,10 @@ import android.view.ViewGroup;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.PromoterInfo;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.autofit.AutofitTextView;
 
@@ -78,6 +82,20 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                 mViewPager.setCurrentItem(position);
             }
         });
+        getCurrentPromoterMsg();
+    }
+
+    private void getCurrentPromoterMsg() {
+        Apic.getCurrentPromoterMsg().tag(TAG)
+                .callback(new Callback<Resp<PromoterInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<PromoterInfo> resp) {
+                        PromoterInfo promoterInfo = resp.getData();
+                        mInviteNum.setText(String.valueOf(promoterInfo.getMyUsersCount()));
+                        mAwardAmount.setText(getString(R.string.x_bfb, String.valueOf(promoterInfo.getTotalCom())));
+                    }
+                })
+                .fire();
     }
 
     @Override

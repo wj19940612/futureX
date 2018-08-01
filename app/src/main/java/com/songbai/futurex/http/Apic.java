@@ -306,8 +306,11 @@ public class Apic {
      * GET
      * 最近/全部 邀请用户
      */
-    public static Api findCommissionOfSubordinate() {
-        return Api.get("/api/user/user/findCommissionOfSubordinate");
+    public static Api findCommissionOfSubordinate(int page, int pageSize) {
+        return Api.get("/api/user/user/findCommissionOfSubordinate",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 
     /**
@@ -570,6 +573,18 @@ public class Apic {
      */
     public static Api getCurrentPromoterMsg() {
         return Api.get("/api/user/user/getCurrentPromoterMsg.do");
+    }
+
+    /**
+     * /api/user/user/inviteAward
+     * GET
+     * 奖励记录
+     */
+    public static Api inviteAward(int page, int pageSize) {
+        return Api.get("/api/user/user/inviteAward",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 
     /**
