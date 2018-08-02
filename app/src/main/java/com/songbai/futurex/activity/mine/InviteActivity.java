@@ -6,23 +6,30 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.fragment.mine.MyInviteFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.PromoterInfo;
+import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AnimatorUtil;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.view.TitleBar;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -37,6 +44,9 @@ public class InviteActivity extends BaseActivity {
     TextView mCheckDetail;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
+    @BindView(R.id.eventPic)
+    ImageView mEventPic;
+    private String mPromotionGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +68,20 @@ public class InviteActivity extends BaseActivity {
                     }
                 })
                 .fire();
+
+        Apic.promotionRule().tag(TAG)
+                .callback(new Callback<Resp<PromotionInfos>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<PromotionInfos> resp) {
+                        PromotionInfos promotionInfos = resp.getData();
+                        GlideApp
+                                .with(InviteActivity.this)
+                                .load("")
+                                .into(mEventPic);
+                        mRules.setText(promotionInfos.getPromotionRule());
+                        mPromotionGroup = promotionInfos.getPromotionGroup();
+                    }
+                }).fireFreely();
     }
 
     @OnClick({R.id.checkDetail, R.id.joinNow, R.id.copy, R.id.inviteBuddies, R.id.createPoster})
@@ -72,6 +96,9 @@ public class InviteActivity extends BaseActivity {
                 }
                 break;
             case R.id.joinNow:
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, "t.me" + mPromotionGroup)
+                        .execute();
                 break;
             case R.id.copy:
                 ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -80,6 +107,11 @@ public class InviteActivity extends BaseActivity {
                 ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.inviteBuddies:
+                new ShareAction(getActivity())
+                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)//传入平台
+                        .withText("hello")//分享内容
+//                        .setCallback(umShareListener)//回调监听器
+                        .share();
                 break;
             case R.id.createPoster:
                 break;

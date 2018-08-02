@@ -576,6 +576,15 @@ public class Apic {
     }
 
     /**
+     * http://ex.esongbai.abc/api/user/user/promotionRule.do
+     * GET
+     * 推广返佣活动相关内容
+     */
+    public static Api promotionRule() {
+        return Api.get("/api/user/user/promotionRule.do");
+    }
+
+    /**
      * /api/user/user/inviteAward
      * GET
      * 奖励记录

@@ -104,7 +104,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="12dp"
         android:src="@drawable/ic_common_right_arrow"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/timestamp"
         app:layout_constraintLeft_toRightOf="@id/timeText"
         app:layout_constraintRight_toRightOf="parent"

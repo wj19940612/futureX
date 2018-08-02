@@ -707,4 +707,6 @@
     <string name="register_time">注册时间</string>
     <string name="deal_count">交易笔数</string>
     <string name="total_contribution">累计贡献</string>
+    <string name="share_link">分享链接</string>
+    <string name="share_exclusive_poster">分享专属海报</string>
 </resources>

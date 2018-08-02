@@ -29,6 +29,12 @@
             android:value="a1eddf08c530b6109ffed1b516e3934e"/>
 
         <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
