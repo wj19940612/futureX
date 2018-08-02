@@ -275,6 +275,9 @@ public class SmartDialog {
         if (mCustomViewController != null) {
             View view = mCustomViewController.onCreateView();
             mBuilder.setView(view);
+            mBuilder.setPositiveButton("",null);
+            mBuilder.setNegativeButton("",null);
+            mBuilder.setTitle("");
             mCustomViewController.onInitView(view, this);
             mCustomViewController.finishViewInit();
         } else {
