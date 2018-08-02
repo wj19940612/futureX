@@ -24,6 +24,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.AuthenticationName;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
+import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.TitleBar;
@@ -62,10 +63,15 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     ImageView mPaymentCode;
     @BindView(R.id.paymentCodeText)
     TextView mPaymentCodeText;
+    @BindView(R.id.deleteImage)
+    TextView mDeleteImage;
+    @BindView(R.id.uploadPaymentCode)
+    TextView mUploadPaymentCode;
     private boolean mIsAlipay;
     private String mName;
     private BindBankList mBindBankList;
     private boolean mHasBind;
+    private String mImage = "";
 
     @Nullable
     @Override
@@ -150,10 +156,20 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                             mName = bankCardBean.getRealName();
                             mRealName.setText(mName);
                             mAccountNum.setText(bankCardBean.getCardNumber());
+                            setPaymentCodeBtn();
                         }
                     }
                 })
                 .fire();
+    }
+
+    private void setPaymentCodeBtn() {
+        ViewGroup.LayoutParams layoutParams = mPaymentCode.getLayoutParams();
+        layoutParams.width = (int) Display.dp2Px(TextUtils.isEmpty(mImage) ? 74 : 100, getResources());
+        layoutParams.height = (int) Display.dp2Px(TextUtils.isEmpty(mImage) ? 74 : 100, getResources());
+        mPaymentCode.setLayoutParams(layoutParams);
+        mDeleteImage.setVisibility(TextUtils.isEmpty(mImage) ? View.INVISIBLE : View.VISIBLE);
+        mUploadPaymentCode.setVisibility(TextUtils.isEmpty(mImage) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void bankBand(BankBindData bankBindData) {
@@ -168,8 +184,8 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 .fireFreely();
     }
 
-    private void updateBankAccount(String type, String account, String name, String withDrawPass) {
-        Apic.updateBankAccount(type, account, name, withDrawPass).tag(TAG)
+    private void updateBankAccount(String type, String account, String name, String payPic, String withDrawPass) {
+        Apic.updateBankAccount(type, account, name, payPic, withDrawPass).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -186,7 +202,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.confirm_add, R.id.uploadPaymentCode})
+    @OnClick({R.id.confirm_add, R.id.uploadPaymentCode, R.id.deleteImage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.confirm_add:
@@ -196,6 +212,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                     updateBankAccount(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY,
                             account,
                             mName,
+                            mImage,
                             md5Encrypt(mWithDrawPass.getPassword()));
                 } else {
                     BankBindData bankBindData = BankBindData.Builder
@@ -203,6 +220,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                             .payType(mIsAlipay ? BankBindData.PAY_TYPE_ALIPAY : BankBindData.PAY_TYPE_WECHATPAY)
                             .cardNumber(account)
                             .realName(mName)
+                            .image(mImage)
                             .withDrawPass(md5Encrypt(mWithDrawPass.getPassword()))
                             .build();
                     bankBand(bankBindData);
@@ -210,6 +228,14 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 break;
             case R.id.uploadPaymentCode:
                 selectImage();
+                break;
+            case R.id.deleteImage:
+                mImage = "";
+                setPaymentCodeBtn();
+                GlideApp
+                        .with(this)
+                        .load(R.drawable.ic_payment_qc_code)
+                        .into(mPaymentCode);
                 break;
             default:
         }
@@ -233,11 +259,13 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
                         if (resp != null && resp.getData() != null) {
-                            setImage(resp.getData());
+                            mImage = resp.getData();
+                            setImage(mImage);
+                            setPaymentCodeBtn();
                         }
                     }
                 })
-                .fireFreely();
+                .fire();
     }
 
     private void setImage(String data) {

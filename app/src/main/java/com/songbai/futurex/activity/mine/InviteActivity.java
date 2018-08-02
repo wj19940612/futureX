@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,9 +23,9 @@ import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.songbai.futurex.view.dialog.ShareFriendsController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -107,11 +108,13 @@ public class InviteActivity extends BaseActivity {
                 ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.inviteBuddies:
-                new ShareAction(getActivity())
-                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)//传入平台
-                        .withText("hello")//分享内容
-//                        .setCallback(umShareListener)//回调监听器
-                        .share();
+                ShareFriendsController shareFriendsController = new ShareFriendsController(this);
+                SmartDialog.solo(getActivity())
+                        .setCustomViewController(shareFriendsController)
+                        .setWindowGravity(Gravity.BOTTOM)
+                        .setWidthScale(1)
+                        .setHeightScale(1)
+                        .show();
                 break;
             case R.id.createPoster:
                 break;

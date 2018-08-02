@@ -241,11 +241,6 @@ public class LegalCurrencyFragment extends BaseFragment {
                         return;
                     }
                     if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
-                        SmartDialog smartDialog = SmartDialog.solo(getActivity())
-                                .setTitle("hhhh")
-                                .setPositive(R.string.ok)
-                                .setNegative(R.string.cancel,null);
-                        smartDialog.show();
                         showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
                         return;
                     }

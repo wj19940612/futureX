@@ -6,6 +6,13 @@
     android:background="@color/bgF5"
     android:orientation="vertical">
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"/>
+
     <TextView
         android:id="@+id/selectHint"
         android:layout_width="match_parent"
@@ -21,9 +28,10 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="never"/>
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:overScrollMode="never"
+        android:paddingTop="5dp"/>
 
     <TextView
         android:id="@+id/cancel"

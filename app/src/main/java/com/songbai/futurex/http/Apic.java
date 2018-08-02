@@ -223,12 +223,13 @@ public class Apic {
      * POST
      * 修改微信/支付宝账户
      */
-    public static Api updateBankAccount(String type, String account, String name, String withDrawPass) {
+    public static Api updateBankAccount(String type, String account, String name, String payPic, String withDrawPass) {
         return Api.post("/api/otc/bank/updateBankAccount",
                 new ReqParams()
                         .put("type", type)
                         .put("account", account)
                         .put("name", name)
+                        .put("payPic", payPic)
                         .put("withDrawPass", withDrawPass));
     }
 
