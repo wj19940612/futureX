@@ -634,7 +634,9 @@ public class Apic {
     public static Api addFeedback(String content, String contactInfo, String feedbackPic) {
         return Api.post("/api/user/userFeedback/addFeedback.do",
                 new ReqParams()
-                        .put("content", content));
+                        .put("content", content)
+                        .put("contactInfo", contactInfo)
+                        .put("feedbackPic", feedbackPic));
     }
 
     /**
