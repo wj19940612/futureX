@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tool="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background"
+              android:orientation="vertical">
+
+    <com.songbai.wrapres.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:titleText="@string/location"
+        app:titleTextColor="@color/text"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="42dp"
+        android:text="@string/location_hint"
+        android:textColor="@color/unluckyText"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:drawableLeft="@drawable/ic_location"
+        android:drawablePadding="8dp"
+        android:padding="14dp"
+        android:text="@string/restart_get_location"
+        android:textColor="@color/text"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="14dp"
+        android:text="@string/location_choice"
+        android:textColor="@color/unluckyText"
+        android:textSize="14sp"/>
+
+    <com.songbai.wrapres.IconTextRow
+        android:id="@+id/choiceLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/choice_location"
+        app:rowTextColor="@color/text"
+        app:rowTextSize="15sp"
+        app:subTextColor="@color/greyAssist"/>
+</LinearLayout>

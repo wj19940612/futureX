@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/dialogClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:src="@drawable/ic_popup_delete"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialogClose"
+        android:background="@drawable/bg_white_small_round"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/please_input_image_auth_code"
+            android:textColor="@color/text"
+            android:textSize="15sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/authCodeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:digits="0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
+                android:hint="@string/image_auth_code"
+                android:maxLength="6"
+                android:maxLines="1"
+                android:textColor="@color/text"
+                android:textColorHint="@color/unluckyText"
+                android:textSize="14sp"/>
+
+            <ImageView
+                android:id="@+id/imageAuthCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="25dp"
+                android:minWidth="76dp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/split"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/warnTip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="10sp"
+                tools:text="@string/auth_code_error"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_image_auth_code"
+                android:textSize="10sp"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/changeImageAuthCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_image"
+                android:textColor="#476E92"
+                android:textSize="10sp"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="14dp">
+
+            <TextView
+                android:id="@+id/confirm"
+                android:layout_width="120dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_reward_other_money_rounded"
+                android:enabled="false"
+                android:gravity="center"
+                android:text="@string/confirm"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

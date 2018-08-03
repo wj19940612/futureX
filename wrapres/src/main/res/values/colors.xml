@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#228CD7</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorPrimaryLight">#228CD7</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryTrans">#7F228CD7</color>
+
+    <color name="textColorPrimary">#228CD7</color>
+    <color name="textColorPrimaryBg">#FFF9E4</color>
+    <color name="assistPrimary">#6684A0</color>
+    <color name="textAssistPrimary">#476E92</color>
+    <color name="disable">#83868A</color>
+
+    <color name="unluckyText">#999</color>
+    <color name="luckyText">#666</color>
+    <color name="text">#222</color>
+    <color name="assistText">#494949</color>
+    <color name="background">#F5F5F5</color>
+    <color name="split">#ddd</color>
+
+    <color name="white">#FFF</color>
+    <color name="collect">#444</color>
+    <color name="progressText">#CCC</color>
+
+    <color name="greenPrimary">#39AE13</color>
+    <color name="redPrimary">#F62048</color>
+    <color name="price">#FF1E40</color>
+
+    <color name="shadowBlack">#1f000000</color>
+    <color name="marketBgBlack">#1C1F23</color>
+
+    <color name="blackPrimary">#222</color>
+
+    <color name="redTheoryTraining">#EF5053</color>
+    <color name="violetTechnologyTraining">#8268E4</color>
+    <color name="yellowFundamentalTraining">#FFB51F</color>
+    <color name="blueComprehensiveTraining">#53A5F2</color>
+    <color name="redTheoryCountDown">#E44B58</color>
+    <color name="violetTechnologyCountDown">#6843C4</color>
+    <color name="yellowFundamentalCountDown">#F9B727</color>
+    <color name="yellowColor2">#FEC022</color>
+    <color name="greyAssist">#7B7B7B</color>
+
+    <color name="yellowBorder">#F3B071</color>
+</resources>

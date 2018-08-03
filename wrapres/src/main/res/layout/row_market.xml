@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white"
+    android:minHeight="80dp"
+    android:paddingBottom="12dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="12dp">
+
+    <TextView
+        android:id="@+id/bourseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/assistText"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="火币pro"/>
+
+    <TextView
+        android:id="@+id/marketName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/assistText"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bourseName"
+        tools:text="ETH"/>
+
+    <TextView
+        android:id="@+id/dealNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/assistText"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/marketName"
+        tools:text="量 1288"/>
+
+    <TextView
+        android:id="@+id/numberCurrency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/marketName"
+        app:layout_constraintLeft_toRightOf="@+id/marketName"
+        app:layout_constraintVertical_bias="@+id/marketName"
+        tools:text="USDT"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/usPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/redPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="$18222"/>
+
+        <TextView
+            android:id="@+id/yuanPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/redPrimary"
+            android:textSize="12sp"
+            tools:text="¥500000.555"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/priceChangeRatio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_product_change_percent"
+        android:gravity="center"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="22.12%"/>
+</android.support.constraint.ConstraintLayout>

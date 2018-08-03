@@ -30,11 +30,11 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.ImageSelectActivity;
 import com.songbai.futurex.activity.LookBigPictureActivity;
-import com.songbai.futurex.activity.mine.ClipHeadImageActivity;
 import com.songbai.futurex.utils.FileUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.PermissionUtil;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.wrapper.WrapClipHeadImageActivity;
 
 import java.io.File;
 
@@ -405,7 +405,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
 
     private void dealImagePath(String imaUri) {
         if (mImageDealType == IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE) {
-            Intent intent = new Intent(getActivity(), ClipHeadImageActivity.class);
+            Intent intent = new Intent(getActivity(), WrapClipHeadImageActivity.class);
             intent.putExtra(ExtraKeys.IMAGE_PATH, imaUri);
             getActivity().startActivityForResult(intent, REQ_CLIP_HEAD_IMAGE_PAGE);
         } else {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.songbai.wrapres.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hasBottomSplitLine="true"
+        app:titleText="@string/game"/>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:divider="@null"
+        android:dividerHeight="14dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/titleBar"/>
+</android.support.constraint.ConstraintLayout>

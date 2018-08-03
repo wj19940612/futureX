@@ -18,6 +18,13 @@ public class ReqHeaders {
         return this;
     }
 
+    public String get(String key) {
+        if (mHeaders != null) {
+            return mHeaders.get(key);
+        }
+        return null;
+    }
+
     public HashMap<String, String> get() {
         return mHeaders;
     }

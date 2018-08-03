@@ -1,0 +1,184 @@
+<resources>
+    <string name="app_name">WrapRes</string>
+
+    <string name="check_your_net">加载失败，请检查网络后重试</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+
+    <string name="market">行情</string>
+    <string name="news">资讯</string>
+    <string name="game">训练</string>
+    <string name="mine">我的</string>
+    <string-array name="wrapTabTexts">
+        <item>@string/news</item>
+        <item>@string/market</item>
+        <item>@string/mine</item>
+        <item>@string/game</item>
+    </string-array>
+    <integer-array name="wrapTabIcons">
+        <item>@drawable/tab_news</item>
+        <item>@drawable/tab_home</item>
+        <item>@drawable/tab_mine</item>
+        <item>@drawable/tab_training</item>
+    </integer-array>
+    <string name="market_volume">量%1$s</string>
+    <string name="me_want_contribute">我要投稿</string>
+    <string name="feed_back">意见反馈</string>
+    <string name="setting">设置</string>
+    <string name="click_login">点击登录</string>
+    <string name="collect">收藏</string>
+    <string name="history">历史</string>
+    <string name="please_add_us_wechat_account">请添加我们的微信号%1$s\n我们坐下来慢慢详谈</string>
+    <string name="copy_us_wechat_account">复制微信号</string>
+    <string name="copy_success">复制成功</string>
+    <string name="send_message_connect">您好，欢迎反馈！反馈时附上界面截屏，可以更好地给我们反馈问题哦~</string>
+    <string name="expect_your_feedback">期待您的反馈</string>
+    <string name="receive_new_notification">接收新消息通知</string>
+    <string name="logout">退出</string>
+    <string name="personal_data">个人资料</string>
+    <string name="account_manager">账号管理</string>
+    <string name="affirm_logout">确定要退出登录吗</string>
+    <string name="head_portrait">头像</string>
+    <string name="nick_name">昵称</string>
+    <string name="sex">性别</string>
+    <string name="birthday">生日</string>
+    <string name="location">地区</string>
+    <string name="personal_introduce">个人简介</string>
+    <string name="please_select">请选择</string>
+    <string name="please_set_introduce">请设置个人简介</string>
+    <string name="thirty">30</string>
+    <string name="please_input_introduce">让别人瞻仰下不凡的你吧</string>
+    <string name="save">保存</string>
+    <string name="introduce_is_too_more">简介太丰富了</string>
+    <!--login-->
+    <string name="auth_code_login">验证码登录</string>
+    <string name="wechat_login">微信登录</string>
+    <string name="login_agree">登录即同意</string>
+    <string name="bcnews_agreement">《币链用户协议》</string>
+    <string name="phone_number">手机号</string>
+    <string name="auth_code">验证码</string>
+    <string name="get_auth_code">获取验证码</string>
+    <string name="fast_login">快速登录</string>
+    <string name="login_success">登录成功</string>
+    <string name="cancel_login">取消登录</string>
+    <string name="cancel_bind">取消绑定</string>
+    <string name="auth_code_had_sent_">验证码已发送至%1$s</string>
+    <string name="reset_password_success">重设密码成功，请重新登录</string>
+    <string name="_seconds">%1$ds</string>
+    <string name="obtain_auth_code_continue">重新获取</string>
+    <string name="login_ing">登录中</string>
+    <string name="bind_phone">关联手机号</string>
+    <string name="this_account_forbid_login">该账号被禁止登录</string>
+
+    <!-- 图形验证码输入框 -->
+    <string name="please_input_image_auth_code">请输入图形验证码</string>
+    <string name="auth_code_error">图形验证码有误</string>
+    <string name="image_auth_code">图形验证码</string>
+    <string name="change_image_auth_code">看不清？</string>
+    <string name="change_image">换一张</string>
+    <string name="input_text_is_more_rich">简介太丰富了</string>
+    <string name="update_success">修改成功</string>
+    <string name="please_input_nick_name">请输入昵称</string>
+    <string name="set_nick_name">设置昵称</string>
+    <string name="use_wechat_portrait_and_name">是否使用微信的头像和昵称？</string>
+
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="now_refresh">立即刷新</string>
+    <string name="no_more_data">没有更多内容了</string>
+
+    <string name="train_count">完成 %1$d 次</string>
+    <string name="have_no_train">还未进行训练</string>
+    <string name="level">L%1$d</string>
+    <string name="start_training">开始游戏 !</string>
+    <string name="duration">时长</string>
+    <string name="difficulty">难度</string>
+    <string name="train_level">L%1$d</string>
+    <string name="complete_number">%1$d人已完成</string>
+    <string name="training_experience">训练心得</string>
+    <string name="more_count">更多%1$d条</string>
+    <string name="share_your_experience">分享你训练的心得和感想</string>
+    <string name="praise">赞</string>
+    <string name="achieved">已达成</string>
+    <string name="not_achieved">未达成</string>
+    <string name="relevant_knowledge">题目好难? 去学一学吧</string>
+    <string name="subject_so_difficult">题目好难?</string>
+    <string name="to_study">去学一学吧</string>
+    <string name="_minutes_complete">%1$d分钟内完成</string>
+    <string name="_minutes_x_seconds_complete">%1$d分%2$d秒内完成</string>
+    <string name="_seconds_complete">%1$d秒内完成</string>
+    <string name="_minutes_x_seconds">%1$d分%2$d秒</string>
+    <string name="_minutes">%1$d分钟</string>
+    <string name="mission_complete">成功完成任务</string>
+    <string name="accuracy_to_">准确率达到%1$s</string>
+
+    <string name="remove_train_rule">将相对应的K线牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。规定时间内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
+    <string name="match_star_train_rule">将相对应的解释牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。规定时间内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
+    <string name="sort_train_rule">按照年报生成顺序，将材料投入生成炉内，成功生成年报，则完成训练。\n年报需要在规定时间内生成。</string>
+    <string name="judgement_train_rule">均线会自动移动，移动到某些交叉点，均线会停止，此时用户需要选择这个交叉点后的行情是涨还是跌。\n规定时间内未完成训练，则训练失败</string>
+
+    <string name="judge_right">Nice~正确</string>
+    <string name="judge_wrong">ohoh～错了</string>
+
+    <string name="exit_train_will_not_save_train_record">现在退出训练，训练记录将不会保存的哟</string>
+    <string name="exit_will_not_save_content">现在放弃，已输入的内容将不会保存</string>
+    <string name="is_sure_exit_train">确定要退出训练吗?</string>
+    <string name="exit_train">退出训练</string>
+    <string name="continue_train">继续训练</string>
+    <string name="retry">再试一次</string>
+    <string name="my_grade">我的成绩</string>
+    <string name="achieveGoal">完成目标</string>
+    <string name="what_a_pity_you_do_not_finish">真可惜，没有完成训练哦</string>
+    <string name="accuracy_">准确率：%1$s</string>
+    <string name="how_play">怎么玩?</string>
+    <string name="accuracy">准确率</string>
+    <string name="ma5">MA5</string>
+    <string name="ma5_chinese">5日移动平均线</string>
+    <string name="ma30">MA30</string>
+    <string name="ma30_chinese">30日移动平均线</string>
+    <string name="knowledge">小知识</string>
+    <string name="i_see">知道了</string>
+    <string name="forecast_up_down">预测一下涨跌吧</string>
+    <string name="open_gps">请打开网络或者GPS</string>
+
+    <string name="location_hint">定位到当前位置</string>
+    <string name="location_choice">手动选择地区</string>
+    <string name="choice_location">选择地区</string>
+    <string name="restart_get_location">点击重新获取位置</string>
+    <string name="open_gps_permission">请在设置中开启 定位服务权限</string>
+
+    <string name="nick_name_hint">1-8个字符，可由中英文、数字组成</string>
+    <string name="modify_user_name">修改用户名</string>
+    <string name="please_input_user_name">请输入用户名</string>
+    <string name="is_only_a_chinese_name">姓名填写不正确</string>
+    <string name="modify_success">修改成功</string>
+    <string name="modify_user_info">修改用户信息</string>
+    <string name="modify_head_pic">修改头像</string>
+    <string name="nickname">昵称</string>
+    <string name="age">年龄</string>
+
+    <string name="boy">男</string>
+    <string name="girl">女</string>
+    <string name="send">发送</string>
+
+    <string name="volume">交易量</string>
+    <string name="market_value">市值</string>
+    <string name="highest">最高</string>
+    <string name="lowest">最低</string>
+    <string name="ask_price_1">买一</string>
+    <string name="bid_price_1">卖一</string>
+    <string name="trend_chart">分时图</string>
+    <string name="day_k_line">日K</string>
+    <string name="five_min_k">5分</string>
+    <string name="fifteen_min_k">15分</string>
+    <string name="thirty_min_k">30分</string>
+    <string name="sixty_min_k">60分</string>
+    <string name="there_is_no_more_data">没有更多数据了</string>
+    <string name="open_">开:%1$s</string>
+    <string name="highest_">高:%1$s</string>
+    <string name="lowest_">低:%1$s</string>
+    <string name="close_">收:%1$s</string>
+    <string name="confirm">确认</string>
+
+
+</resources>

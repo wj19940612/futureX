@@ -1,0 +1,86 @@
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:id="@+id/headLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_mine_head_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/headPortrait"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="47dp"
+            tools:src="@drawable/ic_default_head_portrait"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headPortrait"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="17dp"
+            android:textColor="@color/text"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headPortrait"
+            tools:text="溺水的鱼"/>
+    </RelativeLayout>
+
+    <com.songbai.wrapres.IconTextRow
+        android:id="@+id/contribute"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/headLayout"
+        app:leftIcon="@drawable/ic_mine_contribute"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/me_want_contribute"
+        app:rowTextColor="@color/text"
+        app:rowTextSize="16sp"
+        app:rowVerticalPadding="0dp"/>
+
+    <com.songbai.wrapres.IconTextRow
+        android:id="@+id/feedBack"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/contribute"
+        app:leftIcon="@drawable/ic_mine_feed_back"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/feed_back"
+        app:rowTextColor="@color/text"
+        app:rowTextSize="16sp"
+        app:rowVerticalPadding="0dp"
+        app:splitLineColor="@color/background"/>
+
+    <com.songbai.wrapres.IconTextRow
+        android:id="@+id/setting"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/feedBack"
+        app:leftIcon="@drawable/ic_mine_setting"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/setting"
+        app:rowTextColor="@color/text"
+        app:rowTextSize="16sp"
+        app:rowVerticalPadding="0dp"/>
+</android.support.constraint.ConstraintLayout>
