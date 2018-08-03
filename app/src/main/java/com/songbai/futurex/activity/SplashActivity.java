@@ -55,7 +55,8 @@ public class SplashActivity extends StatusBarActivity {
                 //Launcher.with(getActivity(), MainActivity.class).execute();
                 //Launcher.with(getActivity(), WrapMainActivity.class).execute();
                 //finish();
-                requestHost();
+                //requestHost();
+                openApp(new Host());
             }
         }, 1500);
     }

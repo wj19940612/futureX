@@ -24,8 +24,7 @@ public class Host {
     private String host;
     private String location;
 
-    public Host(String host) {
-        this.host = host;
+    public Host() {
     }
 
     public String getHost() {
