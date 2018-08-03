@@ -57,7 +57,7 @@ android {
         dev {
 //            applicationIdSuffix '.dev'
             versionName "1.0"
-            minSdkVersion 21
+            minSdkVersion 19
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
             buildConfigField('String', 'PUSH_SECRET', '\"bf708983112c150a7e548b95bef83075\"')

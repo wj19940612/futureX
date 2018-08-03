@@ -141,6 +141,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
             public void onItemClick(int id) {
                 UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowDetailFragment.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mAccountType)
                         .execute();
             }
         });

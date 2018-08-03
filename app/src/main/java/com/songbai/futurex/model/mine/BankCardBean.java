@@ -39,6 +39,7 @@ public class BankCardBean implements Parcelable {
     private int id;
     private int payType;
     private String realName;
+    private String payPic;
     private int status;
     private long updateTime;
     private int userId;
@@ -123,6 +124,14 @@ public class BankCardBean implements Parcelable {
         this.realName = realName;
     }
 
+    public String getPayPic() {
+        return payPic;
+    }
+
+    public void setPayPic(String payPic) {
+        this.payPic = payPic;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -167,6 +176,7 @@ public class BankCardBean implements Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.payType);
         dest.writeString(this.realName);
+        dest.writeString(this.payPic);
         dest.writeInt(this.status);
         dest.writeLong(this.updateTime);
         dest.writeInt(this.userId);
@@ -183,6 +193,7 @@ public class BankCardBean implements Parcelable {
         this.id = in.readInt();
         this.payType = in.readInt();
         this.realName = in.readString();
+        this.payPic = in.readString();
         this.status = in.readInt();
         this.updateTime = in.readLong();
         this.userId = in.readInt();

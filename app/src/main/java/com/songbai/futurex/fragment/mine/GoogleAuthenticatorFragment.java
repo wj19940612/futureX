@@ -130,8 +130,8 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
                 .fire();
     }
 
-    private void bindGoogleKey(String googleCode, String drawPass, String googleKey) {
-        Apic.bindGoogleKey(googleCode, drawPass, googleKey).tag(TAG)
+    private void bindGoogleKey(String googleCode, String drawPass, String googleKey, String msgCode) {
+        Apic.bindGoogleKey(googleCode, drawPass, googleKey, msgCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -181,7 +181,7 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
                 ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.confirm:
-                bindGoogleKey(mGoogleAuthCode.getText().toString(), "", mSecretKey.getText().toString());
+                bindGoogleKey(mGoogleAuthCode.getText().toString(), "", mSecretKey.getText().toString(), mReset ? mAuthCode.getText().toString().trim() : "");
                 break;
             default:
         }

@@ -17,10 +17,15 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.mine.InviteAwardHistory;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
+import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,9 +78,10 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
 
     private void getAwardHistory() {
         Apic.inviteAward(mPage, mPageSize)
-                .callback(new Callback<Resp<PagingWrap<Object>>>() {
+                .callback(new Callback<Resp<PagingWrap<InviteAwardHistory>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<PagingWrap<Object>> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<InviteAwardHistory>> resp) {
+                        mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
                         if (resp.getData().getTotal() - 1 > mPage) {
                             mPage++;
@@ -133,6 +139,8 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
 
     class InviteAwardHistoryAdapter extends RecyclerView.Adapter {
 
+        private List<InviteAwardHistory> mList = new ArrayList<>();
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -143,12 +151,21 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+            if (holder instanceof InviteAwardHistoryHolder) {
+                ((InviteAwardHistoryHolder) holder).bindData(mList.get(position));
+            }
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mList.size();
+        }
+
+        public void setList(PagingWrap<InviteAwardHistory> pagingWrap) {
+            if (pagingWrap.getStart() == 0) {
+                mList.clear();
+            }
+            mList.addAll(pagingWrap.getData());
         }
 
         class InviteAwardHistoryHolder extends RecyclerView.ViewHolder {
@@ -164,8 +181,10 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindData() {
-
+            public void bindData(InviteAwardHistory inviteAwardHistory) {
+                mTimestamp.setText(DateUtil.format(inviteAwardHistory.getCreateTime(), "yyyy/MM/dd"));
+                mCoinType.setText(String.valueOf(inviteAwardHistory.getCoinType().toUpperCase()));
+                mVolume.setText(String.valueOf(inviteAwardHistory.getValue()));
             }
         }
     }

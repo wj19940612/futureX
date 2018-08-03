@@ -2,6 +2,7 @@ package com.songbai.futurex.view.dialog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.songbai.futurex.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -62,6 +64,7 @@ public class ShareFriendsController extends SmartDialog.CustomViewController {
         });
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
         mRecyclerView.setAdapter(new ShareItemAdapter());
+        mViewPager.setAdapter(new ImageAdapter());
     }
 
     class ShareItemAdapter extends RecyclerView.Adapter {
@@ -100,6 +103,36 @@ public class ShareFriendsController extends SmartDialog.CustomViewController {
                 mPlatformIcon.setImageResource(shareIcons[position]);
                 mPlatformName.setText(shareTexts[position]);
             }
+        }
+    }
+
+    private class ImageAdapter extends PagerAdapter {
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            ImageView imageView = new ImageView(container.getContext());
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            GlideApp.with(container.getContext())
+                    .load("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2726105652,2082554593&fm=173&app=25&f=JPEG?w=640&h=480&s=69F8AB46345B97D4527CE1830300E093")
+                    .into(imageView);
+            container.addView(imageView);
+            return imageView;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return view == object;
         }
     }
 }

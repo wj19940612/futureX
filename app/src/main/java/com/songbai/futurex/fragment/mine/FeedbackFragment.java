@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,6 +73,7 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         mPicAdapter = new FeedbackPicAdapter(getContext());
         mPicAdapter.setList(mImages);
@@ -86,7 +88,6 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         mEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_TEXT_SIZE)});
         mTextSize.setText(getString(R.string.x_faction_x, 0, MAX_TEXT_SIZE));
         mImageNum.setText(getString(R.string.x_faction_x, mImages.size(), MAX_IMAGE_SIZE));
-
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {

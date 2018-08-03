@@ -65,7 +65,9 @@ public class InviteActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<PromoterInfo> resp) {
                         PromoterInfo promoterInfo = resp.getData();
-                        mInviteCode.setText(promoterInfo.getCode());
+                        if (promoterInfo != null) {
+                            mInviteCode.setText(promoterInfo.getCode());
+                        }
                     }
                 })
                 .fire();
@@ -98,7 +100,7 @@ public class InviteActivity extends BaseActivity {
                 break;
             case R.id.joinNow:
                 Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, "t.me" + mPromotionGroup)
+                        .putExtra(WebActivity.EX_URL, "t.me/" + mPromotionGroup)
                         .execute();
                 break;
             case R.id.copy:
@@ -108,18 +110,23 @@ public class InviteActivity extends BaseActivity {
                 ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.inviteBuddies:
-                ShareFriendsController shareFriendsController = new ShareFriendsController(this);
-                SmartDialog.solo(getActivity())
-                        .setCustomViewController(shareFriendsController)
-                        .setWindowGravity(Gravity.BOTTOM)
-                        .setWidthScale(1)
-                        .setHeightScale(1)
-                        .show();
+                showShareDialog();
                 break;
             case R.id.createPoster:
+                showShareDialog();
                 break;
             default:
         }
+    }
+
+    private void showShareDialog() {
+        ShareFriendsController shareFriendsController = new ShareFriendsController(this);
+        SmartDialog.solo(getActivity())
+                .setCustomViewController(shareFriendsController)
+                .setWindowGravity(Gravity.BOTTOM)
+                .setWidthScale(1)
+                .setHeightScale(1)
+                .show();
     }
 
     private void expand(final View view) {

@@ -710,4 +710,6 @@
     <string name="total_contribution">累计贡献</string>
     <string name="share_link">分享链接</string>
     <string name="share_exclusive_poster">分享专属海报</string>
+    <string name="confirmation_volume">确&#8194;认&#8194;数</string>
+    <string name="status_three_space">状&#8194;&#8195;&#8194;态</string>
 </resources>

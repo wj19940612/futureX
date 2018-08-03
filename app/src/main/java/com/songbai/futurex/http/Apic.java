@@ -428,6 +428,17 @@ public class Apic {
     }
 
     /**
+     * /api/user/wallet/getUserOtcFinanceFlow.do
+     * GET
+     * 获取otc流水的详细信息
+     */
+    public static Api getUserOtcFinanceFlow(int id) {
+        return Api.get("/api/user/wallet/getUserOtcFinanceFlow.do",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
      * /api/user/wallet/getDepositWalletAddrByCoinType.do
      * GET
      * 获取充值地址（叶海啸）
@@ -538,12 +549,13 @@ public class Apic {
      * POST
      * 绑定谷歌验证--薛松
      */
-    public static Api bindGoogleKey(String googleCode, String drawPass, String googleKey) {
+    public static Api bindGoogleKey(String googleCode, String drawPass, String googleKey, String msgCode) {
         return Api.post("/api/user/userSafe/bindGoogleKey.do",
                 new ReqParams()
                         .put("googleCode", googleCode)
                         .put("drawPass", drawPass)
-                        .put("googleKey", googleKey));
+                        .put("googleKey", googleKey)
+                        .put("msgCode", msgCode));
     }
 
     /**
@@ -659,7 +671,9 @@ public class Apic {
     public static Api addFeedback(String content, String contactInfo, String feedbackPic) {
         return Api.post("/api/user/userFeedback/addFeedback.do",
                 new ReqParams()
-                        .put("content", content));
+                        .put("content", content)
+                        .put("contactInfo", contactInfo)
+                        .put("feedbackPic", feedbackPic));
     }
 
     /**
@@ -1390,6 +1404,17 @@ public class Apic {
         return Api.get("/api/entrust/entrust/dealLog",
                 new ReqParams()
                         .put("entrustId", orderId));
+    }
+
+    /**
+     * /api/user/userDeviced/addBindToken.do
+     * POST
+     * 友盟token绑定新增
+     */
+    public static Api addBindToken(String umengToken) {
+        return Api.post("/api/user/userDeviced/addBindToken.do",
+                new ReqParams()
+                        .put("platform", 1).put("umengToken", umengToken));
     }
 
 }

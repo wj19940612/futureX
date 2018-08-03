@@ -16,14 +16,15 @@
         app:titleText="@string/detail"/>
 
     <TextView
+        android:id="@+id/amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="50dp"
-        android:text="- 615.3845 BTC"
         android:textColor="@color/text22"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        tools:text="- 615.3845 BTC"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -50,11 +51,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/addressGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -74,11 +77,64 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/volumeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirmation_volume"
+            android:textColor="@color/text99"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/confirmAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:textColor="@color/text22"
+            android:textSize="16sp"
+            tools:text="12/12"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_three_space"
+            android:textColor="@color/text99"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:textColor="@color/text22"
+            android:textSize="16sp"
+            tools:text="@string/completed"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/feeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

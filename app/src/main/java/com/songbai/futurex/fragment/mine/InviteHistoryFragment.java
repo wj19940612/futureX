@@ -50,6 +50,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
     private Unbinder mBind;
     private InviteHistoryAdapter mAdapter;
     private int mPage;
+    private boolean mIsPrepered;
 
     public static InviteHistoryFragment newInstance() {
         Bundle bundle = new Bundle();
@@ -63,6 +64,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_invite_hisotory, container, false);
         mBind = ButterKnife.bind(this, view);
+        mIsPrepered = true;
         return view;
     }
 
@@ -73,7 +75,6 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
         mRecyclerView.setEmptyView(mEmptyView);
         mAdapter = new InviteHistoryAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        findCommissionOfSubordinate();
     }
 
     @Override
@@ -105,7 +106,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
 
                     @Override
                     public void onFailure(ReqError reqError) {
-
+                        stopFreshOrLoadAnimation();
                     }
                 })
                 .fire();
@@ -120,6 +121,14 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
     public void onRefresh() {
         mPage = 0;
         findCommissionOfSubordinate();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mIsPrepered) {
+            findCommissionOfSubordinate();
+        }
     }
 
     @NonNull

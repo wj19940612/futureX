@@ -127,6 +127,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 mPaymentCodeText.setText(R.string.wechat_payment_code);
             }
         }
+        setPaymentCodeBtn();
     }
 
     private void setUnEditable(EditText editText) {
@@ -156,6 +157,8 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                             mName = bankCardBean.getRealName();
                             mRealName.setText(mName);
                             mAccountNum.setText(bankCardBean.getCardNumber());
+                            mImage = bankCardBean.getPayPic();
+                            setImage(mImage);
                             setPaymentCodeBtn();
                         }
                     }
@@ -273,7 +276,6 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 .with(this)
                 .load(data)
                 .into(mPaymentCode);
-        // TODO: 2018/7/31 新接口
     }
 
 }

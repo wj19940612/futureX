@@ -130,6 +130,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             public void onItemClick(int id) {
                 UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowDetailFragment.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mAccountType)
                         .execute();
             }
         });
@@ -137,7 +138,15 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
         getAccountByUser(mAccountBean.getCoinType());
-        getUserFinanceFlow(mGetUserFinanceFlowData);
+        getFlow();
+    }
+
+    private void getFlow() {
+        if (mAccountType==0) {
+            getUserFinanceFlow(mGetUserFinanceFlowData);
+        }else {
+            otcAccountDetail(mGetUserFinanceFlowData);
+        }
     }
 
     private void setCoinAccountInfo(AccountBean accountBean) {
@@ -173,11 +182,26 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
                         mAdapter.setList(resp.getData());
+                        mAdapter.setAccount(mAccountType);
                         mAdapter.notifyDataSetChanged();
                         mRecyclerView.hideAll(false);
                     }
                 })
                 .fireFreely();
+    }
+
+    private void otcAccountDetail(GetUserFinanceFlowData getUserFinanceFlowData) {
+        Apic.otcAccountDetail(getUserFinanceFlowData, 0, 5).tag(TAG)
+                .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                        mAdapter.setList(resp.getData());
+                        mAdapter.setAccount(mAccountType);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.hideAll(false);
+                    }
+                })
+                .fire();
     }
 
     @Override
@@ -186,7 +210,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         if (data != null) {
             boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
             if (shouldRefresh) {
-                getUserFinanceFlow(mGetUserFinanceFlowData);
+                getFlow();
                 getAccountByUser(mAccountBean.getCoinType());
                 setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
             }
