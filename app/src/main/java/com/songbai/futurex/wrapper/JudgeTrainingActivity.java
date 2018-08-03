@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.wrapres.ExtraKeys;
@@ -37,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sbai.com.glide.GlideApp;
 
-public class JudgeTrainingActivity extends BaseActivity {
+public class JudgeTrainingActivity extends WrapBaseActivity {
 
     @BindView(R.id.topArea)
     LinearLayout mTopArea;

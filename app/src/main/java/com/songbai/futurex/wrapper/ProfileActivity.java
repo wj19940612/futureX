@@ -10,13 +10,12 @@ import android.widget.RelativeLayout;
 
 import com.google.gson.JsonObject;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
-import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.wrapper.fragment.ChooseSexDialogFragment;
+import com.songbai.futurex.wrapper.fragment.UploadUserImageDialogFragment;
 import com.songbai.wrapres.IconTextRow;
 import com.songbai.wrapres.autofit.AutofitTextView;
 import com.songbai.wrapres.model.UserDetailInfo;
@@ -30,10 +29,10 @@ import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.widget.WheelView;
 import sbai.com.glide.GlideApp;
 
-import static com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment.REQ_CLIP_HEAD_IMAGE_PAGE;
+import static com.songbai.futurex.wrapper.fragment.UploadUserImageDialogFragment.REQ_CLIP_HEAD_IMAGE_PAGE;
 
 
-public class ProfileActivity extends BaseActivity implements ChooseSexDialogFragment.OnUserSexListener {
+public class ProfileActivity extends WrapBaseActivity implements ChooseSexDialogFragment.OnUserSexListener {
 
     private static final int REQ_CODE_USER_NAME = 165;
 

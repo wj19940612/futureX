@@ -2,13 +2,11 @@ package com.songbai.futurex.wrapper;
 
 import android.text.TextUtils;
 
-import com.songbai.futurex.activity.BaseActivity;
-
 /**
  * 微信
  */
 
-public abstract class WeChatActivity extends BaseActivity {
+public abstract class WeChatActivity extends WrapBaseActivity {
     private String mWeChatOpenid;
     private String mWeChatName;
     private String mWeChatIconUrl;

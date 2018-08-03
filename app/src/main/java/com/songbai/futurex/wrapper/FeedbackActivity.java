@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
@@ -50,7 +49,7 @@ import sbai.com.glide.GlideApp;
  * 意见反馈`
  */
 
-public class FeedbackActivity extends BaseActivity
+public class FeedbackActivity extends WrapBaseActivity
         implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener {
 
     @BindView(R.id.titleBar)

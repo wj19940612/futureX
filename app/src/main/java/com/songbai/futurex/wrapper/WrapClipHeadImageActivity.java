@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.image.ImageUtils;
@@ -19,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WrapClipHeadImageActivity extends BaseActivity {
+public class WrapClipHeadImageActivity extends WrapBaseActivity {
 
     public static final String KEY_CLIP_USER_IMAGE = "CLIP_USER_IMAGE";
     @BindView(R.id.clipImageLayout)

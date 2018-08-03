@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.wrapres.IconTextRow;
 
 import java.lang.reflect.Type;
@@ -31,7 +30,7 @@ import cn.qqtheme.framework.picker.AddressPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
-public class Location2Activity extends BaseActivity {
+public class Location2Activity extends WrapBaseActivity {
     public static final int GPS_REQUEST_CODE = 250;
 
     @BindView(R.id.location)

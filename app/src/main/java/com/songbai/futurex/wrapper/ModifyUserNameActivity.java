@@ -12,7 +12,6 @@ import android.widget.EditText;
 
 import com.google.gson.JsonObject;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.KeyBoardUtils;
@@ -24,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ModifyUserNameActivity extends BaseActivity {
+public class ModifyUserNameActivity extends WrapBaseActivity {
 
     @BindView(R.id.userNameInput)
     EditText mUserName;

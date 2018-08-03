@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.wrapres.ExtraKeys;
@@ -31,7 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MarketDetailActivity extends BaseActivity {
+public class MarketDetailActivity extends WrapBaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;

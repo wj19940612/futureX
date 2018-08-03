@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
@@ -36,7 +35,7 @@ import butterknife.OnClick;
 /**
  * 训练结果页面
  */
-public class TrainingResultActivity extends BaseActivity {
+public class TrainingResultActivity extends WrapBaseActivity {
 
     private static final long ANIM_DURATION = 500;
     private static final long ENTER_OFFSET = (long) (0.4f * ANIM_DURATION);

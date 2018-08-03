@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import com.sbai.httplib.BuildConfig;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.Launcher;
@@ -39,7 +38,7 @@ import pl.droidsonroids.gif.GifImageView;
 /**
  * 训练倒计时页面
  */
-public class TrainingCountDownActivity extends BaseActivity {
+public class TrainingCountDownActivity extends WrapBaseActivity {
 
     @BindView(R.id.gif)
     GifImageView mGif;

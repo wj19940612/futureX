@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
@@ -35,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class TrainingDetailActivity extends BaseActivity {
+public class TrainingDetailActivity extends WrapBaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;

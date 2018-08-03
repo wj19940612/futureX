@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.wrapper.fragment.WrapGameFragment;
 import com.songbai.futurex.wrapper.fragment.WrapHomeFragment;
 import com.songbai.futurex.wrapper.fragment.WrapMineFragment;
@@ -26,7 +25,7 @@ import butterknife.ButterKnife;
  * <p>
  * APIs:
  */
-public class WrapMainActivity extends BaseActivity {
+public class WrapMainActivity extends WrapBaseActivity {
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
