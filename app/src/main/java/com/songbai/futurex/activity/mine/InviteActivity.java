@@ -5,7 +5,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,9 +22,8 @@ import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
-import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
-import com.songbai.futurex.view.dialog.ShareFriendsController;
+import com.songbai.futurex.view.dialog.ShareFriendsDialogFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +46,7 @@ public class InviteActivity extends BaseActivity {
     @BindView(R.id.eventPic)
     ImageView mEventPic;
     private String mPromotionGroup;
+    private String mCode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,7 +69,8 @@ public class InviteActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<PromoterInfo> resp) {
                         PromoterInfo promoterInfo = resp.getData();
                         if (promoterInfo != null) {
-                            mInviteCode.setText(promoterInfo.getCode());
+                            mCode = promoterInfo.getCode();
+                            mInviteCode.setText(mCode);
                         }
                     }
                 })
@@ -126,14 +126,8 @@ public class InviteActivity extends BaseActivity {
     }
 
     private void showShareDialog(boolean hasPoster) {
-        ShareFriendsController shareFriendsController = new ShareFriendsController(this);
-        shareFriendsController.setHavePoster(hasPoster);
-        SmartDialog.solo(getActivity())
-                .setCustomViewController(shareFriendsController)
-                .setWindowGravity(Gravity.BOTTOM)
-                .setWidthScale(1)
-                .setHeightScale(1)
-                .show();
+        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster,mCode);
+        shareFriendsDialogFragment.show(getSupportFragmentManager());
     }
 
     private void expand(final View view) {
