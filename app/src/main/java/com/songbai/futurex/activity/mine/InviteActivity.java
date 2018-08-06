@@ -60,6 +60,10 @@ public class InviteActivity extends BaseActivity {
                 UniqueActivity.launcher(InviteActivity.this, MyInviteFragment.class).execute();
             }
         });
+        requestData();
+    }
+
+    private void requestData() {
         Apic.getCurrentPromoterMsg().tag(TAG)
                 .callback(new Callback<Resp<PromoterInfo>>() {
                     @Override
@@ -77,12 +81,14 @@ public class InviteActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<PromotionInfos> resp) {
                         PromotionInfos promotionInfos = resp.getData();
-                        GlideApp
-                                .with(InviteActivity.this)
-                                .load("")
-                                .into(mEventPic);
-                        mRules.setText(promotionInfos.getPromotionRule());
-                        mPromotionGroup = promotionInfos.getPromotionGroup();
+                        if (promotionInfos != null) {
+                            GlideApp
+                                    .with(InviteActivity.this)
+                                    .load(promotionInfos.getPromotionPic())
+                                    .into(mEventPic);
+                            mRules.setText(promotionInfos.getPromotionRule());
+                            mPromotionGroup = promotionInfos.getPromotionGroup();
+                        }
                     }
                 }).fireFreely();
     }
@@ -110,17 +116,18 @@ public class InviteActivity extends BaseActivity {
                 ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.inviteBuddies:
-                showShareDialog();
+                showShareDialog(false);
                 break;
             case R.id.createPoster:
-                showShareDialog();
+                showShareDialog(true);
                 break;
             default:
         }
     }
 
-    private void showShareDialog() {
+    private void showShareDialog(boolean hasPoster) {
         ShareFriendsController shareFriendsController = new ShareFriendsController(this);
+        shareFriendsController.setHavePoster(hasPoster);
         SmartDialog.solo(getActivity())
                 .setCustomViewController(shareFriendsController)
                 .setWindowGravity(Gravity.BOTTOM)

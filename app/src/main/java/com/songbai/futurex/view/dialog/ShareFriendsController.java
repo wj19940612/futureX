@@ -42,6 +42,7 @@ public class ShareFriendsController extends SmartDialog.CustomViewController {
             R.string.weichat, R.string.weichat,
             R.string.weichat, R.string.weichat,
             R.string.weichat};
+    private boolean mHasPoster;
 
     public ShareFriendsController(Context context) {
         mContext = context;
@@ -64,7 +65,14 @@ public class ShareFriendsController extends SmartDialog.CustomViewController {
         });
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
         mRecyclerView.setAdapter(new ShareItemAdapter());
-        mViewPager.setAdapter(new ImageAdapter());
+        mViewPager.setVisibility(mHasPoster ? View.VISIBLE : View.INVISIBLE);
+        if (mHasPoster) {
+            mViewPager.setAdapter(new ImageAdapter());
+        }
+    }
+
+    public void setHavePoster(boolean hasPoster) {
+        mHasPoster = hasPoster;
     }
 
     class ShareItemAdapter extends RecyclerView.Adapter {
