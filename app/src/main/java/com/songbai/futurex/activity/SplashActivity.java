@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.utils.Launcher;
+import com.umeng.message.PushAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +30,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         translucentStatusBar();
-
+        Apic.addBindToken(PushAgent.getInstance(getApplicationContext()).getRegistrationId()).fire();
         mLogo.postDelayed(new Runnable() {
             @Override
             public void run() {

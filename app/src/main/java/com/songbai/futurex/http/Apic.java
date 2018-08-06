@@ -1358,4 +1358,15 @@ public class Apic {
                         .put("entrustId", orderId));
     }
 
+    /**
+     * /api/user/userDeviced/addBindToken.do
+     * POST
+     * 友盟token绑定新增
+     */
+    public static Api addBindToken(String umengToken) {
+        return Api.post("/api/user/userDeviced/addBindToken.do",
+                new ReqParams()
+                        .put("platform", 1).put("umengToken", umengToken));
+    }
+
 }
