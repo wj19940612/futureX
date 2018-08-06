@@ -124,8 +124,6 @@
             android:name=".activity.WebActivity"
             android:screenOrientation="portrait"/>
 
-        <service android:name=".service.NotificationService"/>
-        <service android:name=".service.MyPushIntentService"/>
         <service android:name=".service.UmengNotificationService"/>
         <service android:name=".service.MyNotificationService"/>
 

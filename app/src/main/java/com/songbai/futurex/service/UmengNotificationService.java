@@ -8,7 +8,7 @@ import com.umeng.message.UmengMessageService;
 import org.android.agoo.common.AgooConstants;
 
 /**
- * Created by mitic_xue on 16/10/26.
+ * Created by Zhang on 16/10/26.
  */
 public class UmengNotificationService extends UmengMessageService {
     @Override
