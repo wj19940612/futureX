@@ -196,5 +196,4 @@
             android:name=".wrapper.MarketDetailActivity"
             android:screenOrientation="portrait"/>
     </application>
-
 </manifest>
