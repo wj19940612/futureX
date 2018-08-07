@@ -15,6 +15,7 @@ import com.songbai.futurex.model.Host;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.wrapper.Apic;
 import com.songbai.futurex.wrapper.WrapMainActivity;
+import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,15 +49,13 @@ public class SplashActivity extends StatusBarActivity {
         ButterKnife.bind(this);
 
         translucentStatusBar();
-
+        com.songbai.futurex.http.Apic
+                .addBindToken(PushAgent.getInstance(getApplicationContext()).getRegistrationId()).fire();
         mLogo.postDelayed(new Runnable() {
             @Override
             public void run() {
-                //Launcher.with(getActivity(), MainActivity.class).execute();
-                //Launcher.with(getActivity(), WrapMainActivity.class).execute();
-                //finish();
-                //requestHost();
-                openApp(new Host());
+                requestHost();
+                //openApp(new Host());
             }
         }, 1500);
     }
@@ -98,11 +97,9 @@ public class SplashActivity extends StatusBarActivity {
 
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
-                        Log.d("Temp", "onRespSuccess: mFinalHost: " + mFinalHost + ", isVest: " + resp.getData()); // todo remove later
                         if (mFinalHost != null) {
                             return;
                         }
-                        Log.d("Temp", "onRespSuccess: opening app"); // todo remove later
 
                         mFinalHost = host;
                         if (!TextUtils.isEmpty(resp.getData()) && resp.getData().equals("1")) {

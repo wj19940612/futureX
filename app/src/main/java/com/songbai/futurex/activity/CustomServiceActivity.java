@@ -444,7 +444,7 @@ public class CustomServiceActivity extends BaseActivity {
     }
 
     private void sendPicToCustomer() {
-        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY,
+        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.REQ_CODE_TAKE_PHONE_FROM_PHONES,
                 "", -1, getString(R.string.please_select_image))
                 .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
