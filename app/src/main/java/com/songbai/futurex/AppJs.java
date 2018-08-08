@@ -10,6 +10,7 @@ import android.webkit.JavascriptInterface;
 
 import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
+import com.songbai.futurex.utils.JumpIntentUtil;
 import com.songbai.futurex.utils.Launcher;
 
 
@@ -53,6 +54,17 @@ public class AppJs {
         openShareDialog(title, description, shareUrl, shareThumbnailUrl, ONLY_WE_CHAT_SHARE);
     }
 
+    /**
+     * 跳转协议
+     */
+    @JavascriptInterface
+    public void jumpAction(String action, String value) {
+        Intent intent = JumpIntentUtil.getJumpIntent(mContext, action, value);
+        if (intent != null) {
+            mContext.startActivity(intent);
+        }
+    }
+
 
     /**
      * @param title
@@ -65,7 +77,6 @@ public class AppJs {
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel) {
 //        openShareDialog(title, description, shareUrl, shareThumbnailUrl, shareChannel, "");
     }
-
 
 
     /**

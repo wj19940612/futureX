@@ -13,81 +13,83 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.MainActivity;
-import com.songbai.futurex.activity.OtcOrderCompletedActivity;
-import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.activity.auth.LoginActivity;
-import com.songbai.futurex.activity.auth.RegisterActivity;
-import com.songbai.futurex.fragment.DealDetailFragment;
-import com.songbai.futurex.fragment.HomeFragment;
-import com.songbai.futurex.fragment.MarketDetailFragment;
-import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragment;
-import com.songbai.futurex.model.CurrencyPair;
-import com.songbai.futurex.model.LegalCurrencyOrder;
-import com.songbai.futurex.model.order.Order;
-import com.songbai.futurex.model.status.OTCOrderStatus;
+import com.songbai.futurex.model.JumpContent;
 import com.songbai.futurex.utils.JumpIntentUtil;
-import com.songbai.futurex.utils.Launcher;
-import com.umeng.message.UTrack;
+import com.songbai.futurex.websocket.DataParser;
+import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
+import com.songbai.futurex.websocket.Response;
+import com.songbai.futurex.websocket.notification.NotificationProcessor;
 import com.umeng.message.entity.UMessage;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+public class SocketPushService extends Service {
 
-import java.lang.reflect.Type;
-import java.util.Random;
-
-/**
- * Modified by Zhang on 18/8/6.
- */
-public class MyNotificationService extends Service {
-    private static final String TAG = MyNotificationService.class.getName();
+    private NotificationProcessor mNotificationProcessor;
     private static final String PHONE_BRAND_SAMSUNG = "samsung";
+
 
     @Override
     public void onCreate() {
         super.onCreate();
+        initPushListener();
+        mNotificationProcessor.registerMsg();
+        mNotificationProcessor.resume();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
-            return super.onStartCommand(intent, flags, startId);
-        }
-        String message = intent.getStringExtra("UmengMsg");
-        try {
-            UMessage msg = new UMessage(new JSONObject(message));
-            showNotification(msg);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return super.onStartCommand(intent, flags, startId);
+    public void onDestroy() {
+        super.onDestroy();
+        mNotificationProcessor.unRegisterMsg();
+        mNotificationProcessor.pause();
     }
 
-    private void showNotification(UMessage msg) {
-        PendingIntent intent = getClickPendingIntent(this, msg);
-        if (intent == null) {
-            return;
-        }
+    private void initPushListener() {
+        mNotificationProcessor = new NotificationProcessor(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(String data, int code, String dest) {
+                if (PushDestUtils.isNotification(dest)) {
+                    Log.e("zzz", "msg:" + data);
+                    notifyMsg(data);
+                }
+            }
+        });
+    }
+
+    private void notifyMsg(String message) {
+        new DataParser<Response<JumpContent>>(message) {
+            @Override
+            public void onSuccess(Response<JumpContent> jumpContentResponse) {
+                Intent intent = JumpIntentUtil.getJumpIntent(SocketPushService.this, jumpContentResponse.getContent());
+                if (intent != null) {
+                    notifyToUI(intent, jumpContentResponse.getContent());
+                }
+            }
+        }.parse();
+
+    }
+
+    private void notifyToUI(Intent intent, JumpContent jumpContent) {
+        if (jumpContent == null) return;
+
+        PendingIntent pendingIntent = getClickPendingIntent(this, intent);
+
         String channelId = getString(R.string.app_name);
-        boolean b = !TextUtils.isEmpty(msg.title);
+        boolean b = !TextUtils.isEmpty(jumpContent.getTitle());
         String notificationTitle;
         if (b) {
-            notificationTitle = msg.title;
+            notificationTitle = jumpContent.getTitle();
         } else {
             notificationTitle = channelId;
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
         builder.setContentTitle(notificationTitle);
-        builder.setContentText(msg.text);
+        builder.setContentText(jumpContent.getText());
         builder.setAutoCancel(true);
         builder.setWhen(System.currentTimeMillis());
         String brand = Build.BRAND;
@@ -97,7 +99,7 @@ public class MyNotificationService extends Service {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
             builder.setLargeIcon(bitmap);
         }
-        builder.setContentIntent(intent);
+        builder.setContentIntent(pendingIntent);
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //        notificationManager.notify(R.string.app_name, builder.build());
@@ -125,8 +127,7 @@ public class MyNotificationService extends Service {
         return notificationChannel;
     }
 
-    public PendingIntent getClickPendingIntent(Context context, UMessage msg) {
-        Intent clickIntent = JumpIntentUtil.getJumpIntent(context, msg);
+    public PendingIntent getClickPendingIntent(Context context, Intent clickIntent) {
         if (clickIntent == null) {
             return null;
         }
@@ -137,20 +138,7 @@ public class MyNotificationService extends Service {
         return clickPendingIntent;
     }
 
-//    public PendingIntent getClickPendingIntent(Context context, UMessage msg) {
-//        Intent clickIntent = new Intent();
-//        clickIntent.setClass(context, NotificationBroadcast.class);
-//        clickIntent.putExtra(NotificationBroadcast.EXTRA_KEY_MSG,
-//                msg.getRaw().toString());
-//        clickIntent.putExtra(NotificationBroadcast.EXTRA_KEY_ACTION,
-//                NotificationBroadcast.ACTION_CLICK);
-//        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,
-//                (int) (System.currentTimeMillis()),
-//                clickIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        return clickPendingIntent;
-//    }
-
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;

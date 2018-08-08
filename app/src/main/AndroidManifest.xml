@@ -126,6 +126,7 @@
 
         <service android:name=".service.UmengNotificationService"/>
         <service android:name=".service.MyNotificationService"/>
+        <service android:name=".service.SocketPushService"/>
 
         <receiver android:name=".service.NotificationBroadcast"/>
 

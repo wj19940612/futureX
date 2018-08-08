@@ -83,7 +83,10 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
+        int mainPageIndex = intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1);
+        if (mainPageIndex > -1) {
+            onNavigation(mainPageIndex, intent);
+        }
     }
 
     @Override
