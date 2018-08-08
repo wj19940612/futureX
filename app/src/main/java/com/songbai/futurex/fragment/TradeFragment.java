@@ -33,6 +33,7 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
+import com.songbai.futurex.fragment.mine.ReChargeCoinFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -895,7 +896,13 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 break;
             case R.id.recharge:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), MyPropertyActivity.class).execute();
+                    if (mCurrencyPair != null) {
+                        UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
+                                .putExtra(ExtraKeys.COIN_TYPE, mCurrencyPair.getSuffixSymbol())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), MyPropertyActivity.class).execute();
+                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
