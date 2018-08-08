@@ -32,6 +32,7 @@ import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.CountDownView;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
@@ -399,9 +400,15 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                         .execute();
                 break;
             case R.id.cancelOrder:
+                umengEventCount(UmengCountEventId.TRADE0001);
                 showCancelConfirmView();
                 break;
             case R.id.appeal:
+                if (mIsBuyer) {
+                    umengEventCount(UmengCountEventId.TRADE0003);
+                } else {
+                    umengEventCount(UmengCountEventId.TRADE0005);
+                }
                 Launcher.with(getActivity(), CustomServiceActivity.class).execute();
                 break;
             case R.id.confirm:
@@ -430,6 +437,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private void showTransferConfirm() {
         WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
                 new WithDrawPsdViewController.OnClickListener() {
+                    @Override
+                    public void onForgetClick() {
+                        umengEventCount(UmengCountEventId.TRADE0004);
+                    }
+
                     @Override
                     public void onConfirmClick(String cashPwd, String googleAuth) {
                         otcOrderConfirm(mStatus, md5Encrypt(cashPwd), mNeedGoogle ? googleAuth : "");

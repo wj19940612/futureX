@@ -22,6 +22,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.utils.OnNavigationListener;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
 import com.songbai.futurex.websocket.model.TradeDir;
@@ -76,6 +77,24 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
             public void onTabClick(int position) {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
+                switch (position) {
+                    case PAGE_HOME:
+                        umengEventCount(UmengCountEventId.HOME0005);
+                        break;
+                    case PAGE_MARKET:
+                        umengEventCount(UmengCountEventId.HOME0006);
+                        break;
+                    case PAGE_LEGAL_CURRENCY:
+                        umengEventCount(UmengCountEventId.HOME0007);
+                        break;
+                    case PAGE_TRADE:
+                        umengEventCount(UmengCountEventId.HOME0008);
+                        break;
+                    case PAGE_MINE:
+                        umengEventCount(UmengCountEventId.HOME0009);
+                        break;
+                    default:
+                }
             }
         });
     }

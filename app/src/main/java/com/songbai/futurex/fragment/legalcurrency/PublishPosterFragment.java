@@ -42,6 +42,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.StrFormatter;
 import com.songbai.futurex.utils.StrUtil;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.inputfilter.MoneyValueFilter;
 import com.songbai.futurex.view.SmartDialog;
@@ -502,6 +503,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.waresPair:
+                umengEventCount(UmengCountEventId.PUBLISH0001);
                 if (mLegalCoins != null && mCountryCurrencies != null) {
                     showWaresPairFilter();
                 } else {
@@ -532,9 +534,11 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
                 getBindListData();
                 break;
             case R.id.remark:
+                umengEventCount(UmengCountEventId.PUBLISH0002);
                 showRemarkInput();
                 break;
             case R.id.buyerLimit:
+                umengEventCount(UmengCountEventId.PUBLISH0003);
                 showBuyLimitSelector();
                 break;
             case R.id.primaryCertification:
@@ -792,6 +796,22 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             public void onConfirmClick(String payInfo, String id) {
                 setPayInfo(payInfo);
                 mWaresModel.setPayIds(id);
+            }
+
+            @Override
+            public void onPayItemClick(String payType) {
+                switch (payType) {
+                    case PayType.WXPAY:
+                        umengEventCount(UmengCountEventId.PUBLISH0004);
+                        break;
+                    case PayType.ALIPAY:
+                        umengEventCount(UmengCountEventId.PUBLISH0005);
+                        break;
+                    case PayType.BANK_PAY:
+                        umengEventCount(UmengCountEventId.PUBLISH0006);
+                        break;
+                    default:
+                }
             }
         });
         String payInfo = mWaresModel.getPayInfo();

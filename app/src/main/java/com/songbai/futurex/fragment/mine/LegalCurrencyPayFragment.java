@@ -25,6 +25,7 @@ import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
@@ -87,6 +88,15 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
                                 .putExtra(ExtraKeys.IS_ALIPAY, payType == BankCardBean.PAYTYPE_ALIPAY)
                                 .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
                                 .execute(LegalCurrencyPayFragment.this, REQUEST_ADD_PAY);
+                        switch (payType) {
+                            case BankCardBean.PAYTYPE_WX:
+                                umengEventCount(UmengCountEventId.LEGALPAY0001);
+                                break;
+                            case BankCardBean.PAYTYPE_ALIPAY:
+                                umengEventCount(UmengCountEventId.LEGALPAY0002);
+                                break;
+                            default:
+                        }
                     }
                 }
             }

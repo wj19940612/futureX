@@ -42,6 +42,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 
@@ -334,6 +335,7 @@ public class MyPropertyActivity extends BaseActivity {
                             }
                             break;
                         case 1:
+                            umengEventCount(UmengCountEventId.LEGALACT0001);
                             openTransfer((ArrayList<? extends Parcelable>) accountBeans, context, position);
                             break;
                         case 2:

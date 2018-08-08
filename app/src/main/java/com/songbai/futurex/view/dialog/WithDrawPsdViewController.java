@@ -35,6 +35,7 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
     private boolean showGoogleAuth = false;
 
     public interface OnClickListener {
+        void onForgetClick();
         void onConfirmClick(String cashPwd, String googleAuth);
     }
 
@@ -66,6 +67,9 @@ public class WithDrawPsdViewController extends SmartDialog.CustomViewController 
         forgetCashPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mOnClickListener != null) {
+                    mOnClickListener.onForgetClick();
+                }
                 UniqueActivity.launcher(mContext, CashPwdFragment.class)
                         .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, true).execute();
             }

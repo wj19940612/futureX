@@ -22,6 +22,7 @@ import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.ShareFriendsDialogFragment;
 
@@ -110,15 +111,18 @@ public class InviteActivity extends BaseActivity {
                         .execute();
                 break;
             case R.id.copy:
+                umengEventCount(UmengCountEventId.PROMOTE0003);
                 ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
                 cm.setPrimaryClip(ClipData.newPlainText(null, mInviteCode.getText()));
                 ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.inviteBuddies:
+                umengEventCount(UmengCountEventId.PROMOTE0004);
                 showShareDialog(false);
                 break;
             case R.id.createPoster:
+                umengEventCount(UmengCountEventId.PROMOTE0005);
                 showShareDialog(true);
                 break;
             default:

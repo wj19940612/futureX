@@ -36,6 +36,7 @@ import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.utils.OnRVItemClickListener;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.TitleBar;
@@ -140,6 +141,7 @@ public class MarketFragment extends BaseFragment {
             public void onTabSelected(int position, String content) {
                 List<CurrencyPair> pairList = mListMap.get(content);
                 if (mRadioHeader.getTabCount() - 1 == position) { // 自选
+                    umengEventCount(UmengCountEventId.MARKET0005);
                     mEditToggle.setVisibility(View.VISIBLE);
                     showOptionalPairList(true);
                     if (pairList != null) {
@@ -153,6 +155,18 @@ public class MarketFragment extends BaseFragment {
                         mCurrencyPairAdapter.setGroupableList(pairList);
                     }
                     requestCurrencyPairList(content);
+                    switch (position) {
+                        case 0:
+                            umengEventCount(UmengCountEventId.MARKET0002);
+                            break;
+                        case 1:
+                            umengEventCount(UmengCountEventId.MARKET0003);
+                            break;
+                        case 2:
+                            umengEventCount(UmengCountEventId.MARKET0004);
+                            break;
+                        default:
+                    }
                 }
             }
         });
@@ -216,6 +230,7 @@ public class MarketFragment extends BaseFragment {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        umengEventCount(UmengCountEventId.MARKET0001);
                         openSearchPage();
                     }
                 });
@@ -278,6 +293,7 @@ public class MarketFragment extends BaseFragment {
         mOptionalAdapter = new OptionalAdapter(getActivity(), new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
+                umengEventCount(UmengCountEventId.MARKET0006);
                 if (obj instanceof CurrencyPair) {
                     openMarketDetailPage((CurrencyPair) obj);
                 }

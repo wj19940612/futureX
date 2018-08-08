@@ -33,6 +33,7 @@ import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.StrUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -233,6 +234,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType()).execute();
                 break;
             case R.id.transfer:
+                umengEventCount(UmengCountEventId.COINACT0001);
                 if (mAccountBean.getLegal() == AccountBean.IS_LEGAL) {
                     ArrayList<AccountBean> accountBeans = new ArrayList<>();
                     accountBeans.add(mAccountBean);
@@ -243,6 +245,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.recharge:
+                umengEventCount(UmengCountEventId.COINACT0002);
                 if (mAccountBean.getRecharge() == AccountBean.CAN_RECHARGE) {
                     UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
                             .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType())
@@ -250,6 +253,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.withDraw:
+                umengEventCount(UmengCountEventId.COINACT0003);
                 if (mAccountBean.getIsCanDraw() == AccountBean.CAN_DRAW) {
                     if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
                         showAlertMsgHint();

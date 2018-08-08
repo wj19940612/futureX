@@ -24,6 +24,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.SupportLang;
 import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.UmengCountEventId;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -63,6 +64,15 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
         mLanguageAdapter.setOnLanguageClickListener(new SupportLanguageAdapter.OnLanguageClickListener() {
             @Override
             public void onLanguageClick(SupportLang supportLang) {
+                if ("en".equals(supportLang.getLocale())) {
+                    umengEventCount(UmengCountEventId.SETTINGS0003);
+                }
+                if ("zh_CN".equals(supportLang.getLocale())) {
+                    umengEventCount(UmengCountEventId.SETTINGS0001);
+                }
+                if ("zh_TW".equals(supportLang.getLocale())) {
+                    umengEventCount(UmengCountEventId.SETTINGS0002);
+                }
                 changeLanguage(supportLang);
             }
         });

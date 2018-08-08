@@ -53,6 +53,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.OnNavigationListener;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.HomeBanner;
 import com.songbai.futurex.view.autofit.AutofitTextView;
 import com.songbai.futurex.websocket.DataParser;
@@ -342,6 +343,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 mNotice.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        umengEventCount(UmengCountEventId.HOME0002);
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
                                 .putExtra(WebActivity.EX_HTML, homeNews.getContent())
@@ -355,6 +357,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
     @Override
     public void onBannerClick(Banner banner) {
+        umengEventCount(UmengCountEventId.HOME0001);
         if (banner.getJumpType() == 1) {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
@@ -371,6 +374,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onEntrustPairItemClick(EntrustPair.LatelyBean latelyBean) {
+            umengEventCount(UmengCountEventId.HOME0003);
             CurrencyPair currencyPair = new CurrencyPair();
             currencyPair.setPairs(latelyBean.getPairs());
             currencyPair.setPrefixSymbol(latelyBean.getPrefixSymbol());
@@ -390,6 +394,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
         @Override
         public void onIncreaseRankItemClick(PairRiseListBean pairRiseListBean) {
+            umengEventCount(UmengCountEventId.HOME0004);
             CurrencyPair currencyPair = new CurrencyPair();
             currencyPair.setPairs(pairRiseListBean.getPairs());
             currencyPair.setPrefixSymbol(pairRiseListBean.getPrefixSymbol());
