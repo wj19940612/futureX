@@ -819,7 +819,7 @@ public class PublishPosterFragment extends UniqueActivity.UniFragment {
             sb.append("、");
         }
         if (payInfo.contains(PayType.WXPAY)) {
-            sb.append(getString(R.string.weichat));
+            sb.append(getString(R.string.wechat));
             sb.append("、");
         }
         if (payInfo.contains(PayType.BANK_PAY)) {

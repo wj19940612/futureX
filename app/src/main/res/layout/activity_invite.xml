@@ -33,9 +33,9 @@
 
             <ImageView
                 android:id="@+id/eventPic"
-                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"/>
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/rules"
@@ -44,10 +44,10 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:paddingTop="34dp"
-                android:text="@string/invite_activity_rules"
                 android:textColor="@color/text99"
                 android:textSize="12sp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="@string/invite_activity_rules"/>
 
             <TextView
                 android:id="@+id/checkDetail"

@@ -142,7 +142,7 @@
     <string name="bank_card">銀行卡</string>
     <string name="alipay">支付寶</string>
     <string name="wechatpay">微信支付</string>
-    <string name="weichat">微信</string>
+    <string name="wechat">微信</string>
     <string name="edit">編輯</string>
     <string name="please_set">請設置</string>
     <string name="not_set">未設置</string>
@@ -707,4 +707,15 @@
     <string name="register_time">註冊時間</string>
     <string name="deal_count">交易筆數</string>
     <string name="total_contribution">累計貢獻</string>
+    <string name="share_link">分享鏈接</string>
+    <string name="share_exclusive_poster">分享專屬海報</string>
+    <string name="wechat_friends">微信好友</string>
+    <string name="wechat_moments">朋友圈</string>
+    <string name="twitter">Twitter</string>
+    <string name="facebook">Facebook</string>
+    <string name="telegram">Telegram</string>
+    <string name="app_not_installed">應用未安裝</string>
+    <string name="select_a_poster">選擇一張海報</string>
+    <string name="confirmation_volume">確&#8194;認&#8194;數</string>
+    <string name="status_three_space">狀&#8194;&#8195;&#8194;態</string>
 </resources>

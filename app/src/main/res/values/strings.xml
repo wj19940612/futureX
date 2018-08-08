@@ -143,7 +143,7 @@
     <string name="bank_card">银行卡</string>
     <string name="alipay">支付宝</string>
     <string name="wechatpay">微信支付</string>
-    <string name="weichat">微信</string>
+    <string name="wechat">微信</string>
     <string name="edit">编辑</string>
     <string name="please_set">请设置</string>
     <string name="not_set">未设置</string>
@@ -710,6 +710,15 @@
     <string name="total_contribution">累计贡献</string>
     <string name="share_link">分享链接</string>
     <string name="share_exclusive_poster">分享专属海报</string>
+    <string name="invite_title">BITFUTURE邀请返佣</string>
+    <string name="invite_desc">邀请你加入BITFUTURE,长按识别二维码</string>
+    <string name="wechat_friends">微信好友</string>
+    <string name="wechat_moments">朋友圈</string>
+    <string name="twitter">Twitter</string>
+    <string name="facebook">Facebook</string>
+    <string name="telegram">Telegram</string>
+    <string name="app_not_installed">应用未安装</string>
+    <string name="select_a_poster">选择一张海报</string>
     <string name="confirmation_volume">确&#8194;认&#8194;数</string>
     <string name="status_three_space">状&#8194;&#8195;&#8194;态</string>
 </resources>

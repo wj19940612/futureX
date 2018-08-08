@@ -27,6 +27,11 @@ android {
                 UMENG_APP_KEY: "",
                 UMENG_CHANNEL: "android"
         ]
+
+        ndk {
+            abiFilters 'armeabi',"x86" //'armeabi-v7a',  'arm64-v8a'
+            moduleName "app"
+        }
     }
 
     signingConfigs {
@@ -43,6 +48,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ["jniLibs"]
         }
     }
 
