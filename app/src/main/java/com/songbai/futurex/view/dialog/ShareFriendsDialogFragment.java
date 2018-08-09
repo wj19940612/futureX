@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,11 +37,14 @@ import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.BottomDialogFragment;
 import com.songbai.futurex.fragment.mine.SharePosterFragment;
+import com.songbai.futurex.service.AccessibilityUtils;
+import com.songbai.futurex.service.AssistantService;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ZXingUtils;
 import com.songbai.futurex.utils.image.ImageUtils;
+import com.songbai.futurex.view.SmartDialog;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -64,6 +68,8 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private static final String QC_CODE = "qc_code";
     private static final String POSTER_LIST = "poster_list";
     private static final int SHARE = 12312;
+    private static final int OPEN_ACCESSIBILITY = 12313;
+    public static CharSequence textString;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     @BindView(R.id.viewPagerContainer)
@@ -109,6 +115,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             Log.e("wtf", "onCancel");
         }
     };
+    private File mTemp;
 
     public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionPicList) {
         Bundle args = new Bundle();
@@ -138,7 +145,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             String images = arguments.getString(POSTER_LIST);
             String[] posters = images.split(",");
             for (int i = 0; i < posters.length; i++) {
-                list.add(SharePosterFragment.newInstance(mQcCode, i,posters[i], this));
+                list.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
             }
         }
         mCancel.setOnClickListener(new View.OnClickListener() {
@@ -194,23 +201,45 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         });
     }
 
-    private void shareWithPackageName(String packageName, String className) {
+    private void shareWithPackageName(final String packageName, final String className) {
         if (isAPPInstalled(getContext(), packageName)) {
-            String title = "";
-            String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
+            final String title = "";
+            final String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
+            textString = content;
             if (mHasPoster) {
                 if (mSelectedPosition < 0) {
                     ToastUtil.show(R.string.select_a_poster);
                     return;
                 }
                 Bitmap shareBitmap = list.get(mSelectedPosition).getShareBitmap();
-                File temp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
-                shareStream(packageName, className, title, content, temp);
+                mTemp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
+                shareStream(packageName, className, title, content, mTemp);
             } else {
                 if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
-                    Bitmap shareBitmap = ZXingUtils.createQRImage(mQcCode, 100, 100);
-                    File temp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
-                    shareStream(packageName, className, title, content, temp);
+                    if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
+                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
+                            @Override
+                            public void onConfirmClick() {
+                                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                                startActivityForResult(intent, OPEN_ACCESSIBILITY);
+                            }
+                        });
+                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+                        smartDialog.setCustomViewController(msgHintController)
+                                .show();
+                        msgHintController.setConfirmText(R.string.go_to_set);
+                        msgHintController.setCloseText(R.string.share);
+                        msgHintController.setOnColseClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                shareWechat();
+                            }
+                        });
+                        msgHintController.setMsg(R.string.can_open_accessibility_service);
+                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
+                    } else {
+                        shareWechat();
+                    }
                 } else {
                     shareText(packageName, className, mQcCode, content);
                 }
@@ -218,6 +247,12 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         } else {
             ToastUtil.show(R.string.app_not_installed);
         }
+    }
+
+    private void shareWechat() {
+        Bitmap shareBitmap = ZXingUtils.createQRImage(mQcCode, 100, 100);
+        File temp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
+        shareStream("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI", "", textString.toString(), temp);
     }
 
     private void share(SHARE_MEDIA platform) {
@@ -418,6 +453,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHARE) {
             dismiss();
+            if (mTemp != null) {
+                mTemp.delete();
+            }
+        } else if (requestCode == OPEN_ACCESSIBILITY) {
+            shareWechat();
         }
     }
 
