@@ -45,7 +45,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_white"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/headLayout"
         app:leftIcon="@drawable/ic_mine_contribute"
         app:rightIcon="@drawable/ic_common_right_arrow"

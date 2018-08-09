@@ -15,7 +15,6 @@ import com.songbai.futurex.model.Host;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.wrapper.Apic;
 import com.songbai.futurex.wrapper.WrapMainActivity;
-import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +48,6 @@ public class SplashActivity extends StatusBarActivity {
         ButterKnife.bind(this);
 
         translucentStatusBar();
-        com.songbai.futurex.http.Apic
-                .addBindToken(PushAgent.getInstance(getApplicationContext()).getRegistrationId()).fire();
         mLogo.postDelayed(new Runnable() {
             @Override
             public void run() {

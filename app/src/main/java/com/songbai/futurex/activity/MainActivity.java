@@ -25,6 +25,7 @@ import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
 import com.songbai.futurex.websocket.model.TradeDir;
+import com.umeng.message.PushAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +50,9 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         translucentStatusBar();
+
+        Apic.addBindToken(PushAgent.getInstance(getApplicationContext()).getRegistrationId()).fireFreely();
+
         checkVersion();
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
