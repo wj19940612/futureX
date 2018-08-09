@@ -82,7 +82,7 @@ public class JumpIntentUtil {
         if (msg.extra.isEmpty()) return null;
 
         String uuid = msg.extra.get(UUID);
-        Log.e("zzz", "extra:" + msg.extra.get(SEND_VALUE));
+//        Log.e("zzz", "extra:" + msg.extra.get(SEND_VALUE));
         if (TextUtils.isEmpty(uuid) || sUUidCache.contains(uuid)) {
             return null;
         }

@@ -58,7 +58,7 @@ public class SocketPushService extends Service {
             @Override
             public void onDataReceive(String data, int code, String dest) {
                 if (PushDestUtils.isNotification(dest)) {
-                    Log.e("zzz", "msg:" + data);
+//                    Log.e("zzz", "msg:" + data);
                     notifyMsg(data);
                 }
             }
