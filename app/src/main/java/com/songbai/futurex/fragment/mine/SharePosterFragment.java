@@ -31,6 +31,7 @@ import sbai.com.glide.GlideApp;
 public class SharePosterFragment extends BaseFragment {
     private static final String QC_CODE = "qc_code";
     private static final String POSITION = "position";
+    private static final String POSTER = "poster";
     @BindView(R.id.shareTitle)
     TextView mShareTitle;
     @BindView(R.id.shareDesc)
@@ -50,11 +51,13 @@ public class SharePosterFragment extends BaseFragment {
     private int mPosition;
     private int mSelectedPosition = -1;
     private boolean mPrepared;
+    private String mPosterUrl;
 
-    public static SharePosterFragment newInstance(String code, int position, OnSelectListener onSelectListener) {
+    public static SharePosterFragment newInstance(String code, int position, String poster, OnSelectListener onSelectListener) {
         Bundle args = new Bundle();
         args.putString(QC_CODE, code);
         args.putInt(POSITION, position);
+        args.putString(POSTER, poster);
         SharePosterFragment fragment = new SharePosterFragment();
         fragment.setOnSelectListener(onSelectListener);
         fragment.setArguments(args);
@@ -81,6 +84,7 @@ public class SharePosterFragment extends BaseFragment {
         if (arguments != null) {
             mCode = arguments.getString(QC_CODE);
             mPosition = arguments.getInt(POSITION);
+            mPosterUrl = arguments.getString(POSTER);
         }
         mShareMsg.setVisibility(View.GONE);
         mRootView.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +104,7 @@ public class SharePosterFragment extends BaseFragment {
             }
         });
         GlideApp.with(getContext())
-                .load("http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg")
+                .load(mPosterUrl)
                 .into(mPoster);
         mRootView.post(new Runnable() {
             @Override

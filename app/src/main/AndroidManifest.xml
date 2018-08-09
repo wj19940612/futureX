@@ -33,7 +33,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/AppTheme.Splash">

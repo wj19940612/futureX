@@ -1,21 +1,28 @@
 package com.songbai.futurex.view.dialog;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,12 +32,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.BottomDialogFragment;
 import com.songbai.futurex.fragment.mine.SharePosterFragment;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.ZXingUtils;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -53,7 +62,8 @@ import butterknife.Unbinder;
 public class ShareFriendsDialogFragment extends BottomDialogFragment implements SharePosterFragment.OnSelectListener {
     private static final String HAS_POSTER = "has_poster";
     private static final String QC_CODE = "qc_code";
-    private static final int SHARE_TELEGRAM = 12312;
+    private static final String POSTER_LIST = "poster_list";
+    private static final int SHARE = 12312;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     @BindView(R.id.viewPagerContainer)
@@ -100,10 +110,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         }
     };
 
-    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code) {
+    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionPicList) {
         Bundle args = new Bundle();
         args.putBoolean(HAS_POSTER, hasPoster);
         args.putString(QC_CODE, code);
+        args.putString(POSTER_LIST, promotionPicList);
         ShareFriendsDialogFragment fragment = new ShareFriendsDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -124,6 +135,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         if (arguments != null) {
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
+            String images = arguments.getString(POSTER_LIST);
+            String[] posters = images.split(",");
+            for (int i = 0; i < posters.length; i++) {
+                list.add(SharePosterFragment.newInstance(mQcCode, i,posters[i], this));
+            }
         }
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,8 +148,6 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             }
         });
         mSelectHint.setText(mHasPoster ? R.string.share_exclusive_poster : R.string.share_link);
-        list.add(SharePosterFragment.newInstance(mQcCode, 0, this));
-        list.add(SharePosterFragment.newInstance(mQcCode, 1, this));
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         ShareItemAdapter adapter = new ShareItemAdapter();
         adapter.setOnRVItemClickListener(new OnRVItemClickListener() {
@@ -141,19 +155,19 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             public void onItemClick(View view, int position, Object obj) {
                 switch (((int) obj)) {
                     case R.string.wechat_friends:
-                        share(SHARE_MEDIA.WEIXIN);
+                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
                         break;
                     case R.string.wechat_moments:
-                        share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
                         break;
                     case R.string.twitter:
-                        share(SHARE_MEDIA.TWITTER);
+                        shareWithPackageName("com.twitter.android", "");
                         break;
                     case R.string.facebook:
-                        share(SHARE_MEDIA.FACEBOOK);
+                        shareWithPackageName("com.facebook.katana", "");
                         break;
                     case R.string.telegram:
-                        shareTelegram();
+                        shareWithPackageName("org.telegram.messenger", "");
                         break;
                     default:
                 }
@@ -180,18 +194,26 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         });
     }
 
-    private void shareTelegram() {
-        if (isAPPInstalled(getContext(), "org.telegram.messenger")) {
+    private void shareWithPackageName(String packageName, String className) {
+        if (isAPPInstalled(getContext(), packageName)) {
+            String title = "";
+            String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
             if (mHasPoster) {
                 if (mSelectedPosition < 0) {
                     ToastUtil.show(R.string.select_a_poster);
                     return;
                 }
                 Bitmap shareBitmap = list.get(mSelectedPosition).getShareBitmap();
-                File temp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp");
-                telegramShareImage(temp);
+                File temp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
+                shareStream(packageName, className, title, content, temp);
             } else {
-                telegramShare("", mQcCode);
+                if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
+                    Bitmap shareBitmap = ZXingUtils.createQRImage(mQcCode, 100, 100);
+                    File temp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
+                    shareStream(packageName, className, title, content, temp);
+                } else {
+                    shareText(packageName, className, mQcCode, content);
+                }
             }
         } else {
             ToastUtil.show(R.string.app_not_installed);
@@ -213,7 +235,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private void shareWithText(SHARE_MEDIA platform) {
         new ShareAction(getActivity())
                 .setPlatform(platform)
-                .withText(mQcCode)//分享内容
+                .withText(mQcCode)
                 .setCallback(mUmShareListener)
                 .share();
     }
@@ -226,34 +248,157 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         Bitmap shareBitmap = list.get(mSelectedPosition).getShareBitmap();
         new ShareAction(getActivity())
                 .setPlatform(platform)
-                .withText("hello")//分享内容
+                .withText("hello")
                 .withMedia(new UMImage(getContext(), shareBitmap))
                 .setCallback(mUmShareListener)
                 .share();
     }
 
-    public void telegramShare(String title, String content) {
+    public void shareText(String packageName, String className, String title, String content) {
         try {
             Intent vIt = new Intent("android.intent.action.SEND");
-            vIt.setPackage("org.telegram.messenger");
             vIt.setType("text/plain");
-            vIt.putExtra(Intent.EXTRA_TITLE, title);
+            vIt.setPackage(packageName);
+            if (!TextUtils.isEmpty(className)) {
+                vIt.setClassName(packageName, className);
+            }
+            vIt.putExtra(Intent.EXTRA_SUBJECT, title);
             vIt.putExtra(Intent.EXTRA_TEXT, content);
-            startActivityForResult(vIt, SHARE_TELEGRAM);
+            vIt.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            startActivityForResult(vIt, SHARE);
         } catch (Exception ex) {
-            Log.e(TAG, "telegramShare:" + ex);
+            Log.e(TAG, "shareText:" + ex);
         }
     }
 
-    public void telegramShareImage(File file) {
+    public void shareStream(String packageName, String className, String title, String content, File file) {
         try {
             Intent vIt = new Intent("android.intent.action.SEND");
-            vIt.setPackage("org.telegram.messenger");
             vIt.setType("image/*");
-            vIt.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-            startActivityForResult(vIt, SHARE_TELEGRAM);
+            vIt.setPackage(packageName);
+            if (!TextUtils.isEmpty(className)) {
+                vIt.setClassName(packageName, className);
+            }
+            vIt.putExtra(Intent.EXTRA_SUBJECT, title);
+            vIt.putExtra(Intent.EXTRA_TEXT, content);
+            // 授予目录临时共享权限
+            vIt.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            vIt.putExtra(Intent.EXTRA_STREAM, getImageContentUri(getContext(), file));
+            startActivityForResult(vIt, SHARE);
         } catch (Exception ex) {
-            Log.e(TAG, "telegramShare:" + ex);
+            Log.e(TAG, "shareStream:" + ex);
+        }
+    }
+
+    public static Uri getFileUri(Context context, File file) {
+        Uri uri;
+        // 低版本直接用 Uri.fromFile
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            uri = Uri.fromFile(file);
+        } else {
+            //  使用 FileProvider 会在某些 app 下不支持（在使用FileProvider 方式情况下QQ不能支持图片、视频分享，微信不支持视频分享）
+            // TODO: 2018/8/9 FileProvider 还未完成
+            uri = FileProvider.getUriForFile(context,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file);
+            ContentResolver cR = context.getContentResolver();
+            if (uri != null && !TextUtils.isEmpty(uri.toString())) {
+                String fileType = cR.getType(uri);
+                // 使用 MediaStore 的 content:// 而不是自己 FileProvider 提供的uri，不然有些app无法适配
+                if (!TextUtils.isEmpty(fileType)) {
+                    if (fileType.contains("video/")) {
+                        uri = getVideoContentUri(context, file);
+                    } else if (fileType.contains("image/")) {
+                        uri = getImageContentUri(context, file);
+                    } else if (fileType.contains("audio/")) {
+                        uri = getAudioContentUri(context, file);
+                    }
+                }
+            }
+        }
+        return uri;
+    }
+
+    /**
+     * Gets the content:// URI from the given corresponding path to a file
+     *
+     * @param context
+     * @param imageFile
+     * @return content Uri
+     */
+    public static Uri getImageContentUri(Context context, File imageFile) {
+        String filePath = imageFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media._ID}, MediaStore.Images.Media.DATA + "=? ",
+                new String[]{filePath}, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            Uri baseUri = Uri.parse("content://media/external/images/media");
+            return Uri.withAppendedPath(baseUri, "" + id);
+        } else {
+            if (imageFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, filePath);
+                return context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Gets the content:// URI from the given corresponding path to a file
+     *
+     * @param context
+     * @param videoFile
+     * @return content Uri
+     */
+    public static Uri getVideoContentUri(Context context, File videoFile) {
+        String filePath = videoFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Video.Media._ID}, MediaStore.Video.Media.DATA + "=? ",
+                new String[]{filePath}, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            Uri baseUri = Uri.parse("content://media/external/video/media");
+            return Uri.withAppendedPath(baseUri, "" + id);
+        } else {
+            if (videoFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Video.Media.DATA, filePath);
+                return context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Gets the content:// URI from the given corresponding path to a file
+     *
+     * @param context
+     * @param audioFile
+     * @return content Uri
+     */
+    public static Uri getAudioContentUri(Context context, File audioFile) {
+        String filePath = audioFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Media._ID}, MediaStore.Audio.Media.DATA + "=? ",
+                new String[]{filePath}, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            Uri baseUri = Uri.parse("content://media/external/audio/media");
+            return Uri.withAppendedPath(baseUri, "" + id);
+        } else {
+            if (audioFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Audio.Media.DATA, filePath);
+                return context.getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
         }
     }
 
@@ -271,7 +416,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SHARE_TELEGRAM) {
+        if (requestCode == SHARE) {
             dismiss();
         }
     }

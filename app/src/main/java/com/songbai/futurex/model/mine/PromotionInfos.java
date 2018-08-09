@@ -15,6 +15,7 @@ public class PromotionInfos {
     private String promotionRule;
     private String promotionGroup;
     private String promotionPic;
+    private String promotionPicList;
 
     public String getPromotionRule() {
         return promotionRule;
@@ -38,5 +39,13 @@ public class PromotionInfos {
 
     public void setPromotionPic(String promotionPic) {
         this.promotionPic = promotionPic;
+    }
+
+    public String getPromotionPicList() {
+        return promotionPicList;
+    }
+
+    public void setPromotionPicList(String promotionPicList) {
+        this.promotionPicList = promotionPicList;
     }
 }
