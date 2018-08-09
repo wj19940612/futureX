@@ -36,6 +36,8 @@ public class SharePosterFragment extends BaseFragment {
     TextView mShareTitle;
     @BindView(R.id.shareDesc)
     TextView mShareDesc;
+    @BindView(R.id.cover)
+    FrameLayout mCover;
     private OnSelectListener mOnSelectListener;
 
     @BindView(R.id.poster)
@@ -43,7 +45,7 @@ public class SharePosterFragment extends BaseFragment {
     @BindView(R.id.qcCode)
     ImageView mQcCode;
     @BindView(R.id.shareMsg)
-    FrameLayout mShareMsg;
+    ConstraintLayout mShareMsg;
     Unbinder unbinder;
     @BindView(R.id.rootView)
     FrameLayout mRootView;
@@ -95,11 +97,13 @@ public class SharePosterFragment extends BaseFragment {
                     if (mOnSelectListener != null) {
                         mOnSelectListener.onSelect(mPosition);
                     }
+                    mCover.setVisibility(View.VISIBLE);
                 } else {
                     mShareMsg.setVisibility(View.GONE);
                     if (mOnSelectListener != null) {
                         mOnSelectListener.onSelect(-1);
                     }
+                    mCover.setVisibility(View.GONE);
                 }
             }
         });
@@ -139,6 +143,7 @@ public class SharePosterFragment extends BaseFragment {
         if (mPrepared) {
             if (mShareMsg != null) {
                 mShareMsg.setVisibility(mSelectedPosition == mPosition ? View.VISIBLE : View.GONE);
+                mCover.setVisibility(mSelectedPosition == mPosition ? View.VISIBLE : View.GONE);
             }
         }
     }
