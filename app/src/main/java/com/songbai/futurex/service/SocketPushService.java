@@ -28,6 +28,10 @@ import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.notification.NotificationProcessor;
 import com.umeng.message.entity.UMessage;
 
+/**
+ * Created by Zhang on 18/8/6.
+ */
+
 public class SocketPushService extends Service {
 
     private NotificationProcessor mNotificationProcessor;
