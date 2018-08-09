@@ -1,8 +1,8 @@
 package com.songbai.futurex.model;
 
-public class JumpContent {
+public class JumpContent<T> {
     private String sendAction;
-    private String sendValue;
+    private T sendValue;
 
     private int userId;
 
@@ -22,11 +22,11 @@ public class JumpContent {
         this.sendAction = sendAction;
     }
 
-    public String getSendValue() {
+    public T getSendValue() {
         return sendValue;
     }
 
-    public void setSendValue(String sendValue) {
+    public void setSendValue(T sendValue) {
         this.sendValue = sendValue;
     }
 

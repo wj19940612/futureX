@@ -65,8 +65,9 @@ public class JumpIntentUtil {
             return null;
         }
 
-        return getJumpIntent(context, jumpContent.getSendAction(), jumpContent.getSendValue());
+        return getJumpIntent(context, jumpContent.getSendAction(), sGson.toJson(jumpContent.getSendValue()));
     }
+
 
     public static Intent getJumpIntent(Context context, JumpContent jumpContent) {
         if (jumpContent == null || TextUtils.isEmpty(jumpContent.getUuid()) || sUUidCache.contains(jumpContent.getUuid())) {
@@ -74,10 +75,12 @@ public class JumpIntentUtil {
         }
 
         sUUidCache.add(jumpContent.getUuid());
-        return getJumpIntent(context, jumpContent.getSendAction(), jumpContent.getSendValue());
+        return getJumpIntent(context, jumpContent.getSendAction(), sGson.toJson(jumpContent.getSendValue()));
     }
 
     public static Intent getJumpIntent(Context context, UMessage msg) {
+        if (msg.extra.isEmpty()) return null;
+
         String uuid = msg.extra.get(UUID);
         Log.e("zzz", "extra:" + msg.extra.get(SEND_VALUE));
         if (TextUtils.isEmpty(uuid) || sUUidCache.contains(uuid)) {
@@ -127,7 +130,7 @@ public class JumpIntentUtil {
             clickIntent.setClass(context, MessageCenterActivity.class);
         } else if (contentType.equals("Customer service")) {
             clickIntent.setClass(context, CustomServiceActivity.class);
-        } else if (contentType.equals("Share") || contentType.equals("MobileShare")) {
+        } else if (contentType.equals("webview")) {
             putExtraH5(context, clickIntent, modelJsonStr);
         } else if (contentType.equals("Promote")) {
             clickIntent.setClass(context, InviteActivity.class);
@@ -143,6 +146,9 @@ public class JumpIntentUtil {
         return clickIntent;
     }
 
+    /*
+    新的交易对详情
+     */
     private static Intent putExtraExchange(Context context, Intent clickIntent, String modelJsonStr) {
         if (TextUtils.isEmpty(modelJsonStr)) {
             return null;
@@ -154,10 +160,14 @@ public class JumpIntentUtil {
         }.getType();
         CurrencyPair currencyPair = sGson.fromJson(modelJsonStr, type);
         if (currencyPair == null) return null;
+
         clickIntent.putExtra(ExtraKeys.CURRENCY_PAIR, currencyPair);
         return clickIntent;
     }
 
+    /*
+    Orders 币币委托
+     */
     private static Intent putExtraOrder(Context context, Intent clickIntent, String modelJsonStr) {
         if (TextUtils.isEmpty(modelJsonStr)) {
             return null;
@@ -173,6 +183,9 @@ public class JumpIntentUtil {
         return clickIntent;
     }
 
+    /*
+   Details 法币交易详情 下单-待付款-成交-申诉
+    */
     private static Intent putExtraDetail(Context context, Intent clickIntent, String modelJsonStr) {
         if (TextUtils.isEmpty(modelJsonStr)) {
             return null;
@@ -194,6 +207,9 @@ public class JumpIntentUtil {
         return clickIntent;
     }
 
+    /*
+    法币聊天界面
+     */
     private static Intent putExtraChat(Context context, Intent clickIntent, String modelJsonStr) {
         if (TextUtils.isEmpty(modelJsonStr)) {
             return null;

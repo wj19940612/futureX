@@ -341,6 +341,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     .execute();
         } else if (banner.getJumpType() == 3) {
             Intent intent = JumpIntentUtil.getJumpIntent(getContext(), banner);
+            if (intent == null) return;
+
             startActivity(intent);
         }
     }
