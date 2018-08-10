@@ -685,7 +685,7 @@
     <string name="volume">数量</string>
 
     <string name="trading_mining">交易挖矿</string>
-    <string name="mining_rules">挖矿规则</string>
+    <string name="about_bfb">关于BFB</string>
     <string name="mining_output_yesterday">昨日挖矿产出</string>
     <string name="mining_output_today">今日待分配收入累计折合</string>
     <string name="bfb_total_amount">BFB流通总量</string>

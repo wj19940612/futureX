@@ -3,6 +3,8 @@ package com.songbai.futurex.activity.mine;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
-import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.fragment.mine.MyInviteFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -20,7 +21,6 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.PromoterInfo;
 import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AnimatorUtil;
-import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.TitleBar;
@@ -48,7 +48,6 @@ public class InviteActivity extends BaseActivity {
     ImageView mEventPic;
     private String mPromotionGroup;
     private String mCode;
-    private String mPromotionPicList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,7 +87,6 @@ public class InviteActivity extends BaseActivity {
                                     .with(InviteActivity.this)
                                     .load(promotionInfos.getPromotionPic())
                                     .into(mEventPic);
-                            mPromotionPicList = promotionInfos.getPromotionPicList();
                             mRules.setText(promotionInfos.getPromotionRule());
                             mPromotionGroup = promotionInfos.getPromotionGroup();
                         }
@@ -108,9 +106,10 @@ public class InviteActivity extends BaseActivity {
                 }
                 break;
             case R.id.joinNow:
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, "t.me/" + mPromotionGroup)
-                        .execute();
+                Intent intent = new Intent();
+                intent.setData(Uri.parse("https://t.me/" + mPromotionGroup));
+                intent.setAction(Intent.ACTION_VIEW);
+                startActivity(intent);
                 break;
             case R.id.copy:
                 umengEventCount(UmengCountEventId.PROMOTE0003);
@@ -132,7 +131,7 @@ public class InviteActivity extends BaseActivity {
     }
 
     private void showShareDialog(boolean hasPoster) {
-        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster,mCode,mPromotionPicList);
+        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode);
         shareFriendsDialogFragment.show(getSupportFragmentManager());
     }
 

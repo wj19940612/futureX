@@ -159,6 +159,9 @@ public class WebActivity extends BaseActivity {
         webSettings.setEnableSmoothTransition(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setUseWideViewPort(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
 
         mWebView.clearHistory();
         mWebView.clearCache(true);
@@ -171,14 +174,13 @@ public class WebActivity extends BaseActivity {
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                if (newProgress == 100) {
+                if (newProgress >= 99) {
                     mProgress.setVisibility(View.GONE);
                 } else {
                     if (mProgress.getVisibility() == View.GONE) {

@@ -53,13 +53,13 @@ public class SharePosterFragment extends BaseFragment {
     private int mPosition;
     private int mSelectedPosition = -1;
     private boolean mPrepared;
-    private String mPosterUrl;
+    private int mPosterRes;
 
-    public static SharePosterFragment newInstance(String code, int position, String poster, OnSelectListener onSelectListener) {
+    public static SharePosterFragment newInstance(String code, int position, int poster, OnSelectListener onSelectListener) {
         Bundle args = new Bundle();
         args.putString(QC_CODE, code);
         args.putInt(POSITION, position);
-        args.putString(POSTER, poster);
+        args.putInt(POSTER, poster);
         SharePosterFragment fragment = new SharePosterFragment();
         fragment.setOnSelectListener(onSelectListener);
         fragment.setArguments(args);
@@ -86,7 +86,7 @@ public class SharePosterFragment extends BaseFragment {
         if (arguments != null) {
             mCode = arguments.getString(QC_CODE);
             mPosition = arguments.getInt(POSITION);
-            mPosterUrl = arguments.getString(POSTER);
+            mPosterRes = arguments.getInt(POSTER);
         }
         mShareMsg.setVisibility(View.GONE);
         mRootView.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +108,7 @@ public class SharePosterFragment extends BaseFragment {
             }
         });
         GlideApp.with(getContext())
-                .load(mPosterUrl)
+                .load(mPosterRes)
                 .into(mPoster);
         mRootView.post(new Runnable() {
             @Override

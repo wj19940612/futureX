@@ -437,6 +437,10 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
     @OnClick(R.id.miningRules)
     public void onViewClicked() {
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_URL, "https://bitfutu.re/BFB/")
+                .putExtra(WebActivity.EX_TITLE, getString(R.string.about_bfb))
+                .execute();
     }
 
     private interface OnItemClickListener {

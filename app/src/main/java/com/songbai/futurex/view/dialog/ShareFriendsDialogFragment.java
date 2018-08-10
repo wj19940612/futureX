@@ -92,36 +92,35 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private boolean mHasPoster;
     private Unbinder mBind;
     private String mQcCode;
-    private ArrayList<SharePosterFragment> list = new ArrayList<>();
+    private ArrayList<SharePosterFragment> mList = new ArrayList<>();
     private int mSelectedPosition = -1;
     private UMShareListener mUmShareListener = new UMShareListener() {
         @Override
-        public void onStart(SHARE_MEDIA share_media) {
+        public void onStart(SHARE_MEDIA shareMedia) {
             Log.e("wtf", "onStart");
         }
 
         @Override
-        public void onResult(SHARE_MEDIA share_media) {
+        public void onResult(SHARE_MEDIA shareMedia) {
             dismiss();
         }
 
         @Override
-        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+        public void onError(SHARE_MEDIA shareMedia, Throwable throwable) {
             Log.e("wtf", throwable.toString());
         }
 
         @Override
-        public void onCancel(SHARE_MEDIA share_media) {
+        public void onCancel(SHARE_MEDIA shareMedia) {
             Log.e("wtf", "onCancel");
         }
     };
     private File mTemp;
 
-    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionPicList) {
+    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code) {
         Bundle args = new Bundle();
         args.putBoolean(HAS_POSTER, hasPoster);
         args.putString(QC_CODE, code);
-        args.putString(POSTER_LIST, promotionPicList);
         ShareFriendsDialogFragment fragment = new ShareFriendsDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -142,10 +141,9 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         if (arguments != null) {
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
-            String images = arguments.getString(POSTER_LIST);
-            String[] posters = images.split(",");
+            int[] posters =new int[]{R.drawable.ic_poster1,R.drawable.ic_poster2} ;
             for (int i = 0; i < posters.length; i++) {
-                list.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
+                mList.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
             }
         }
         mCancel.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +192,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
                 layoutParams.width = (int) (mViewPagerContainer.getMeasuredHeight() * 0.53);
                 mViewPager.setLayoutParams(layoutParams);
-                mViewPager.setAdapter(new ImageAdapter(getChildFragmentManager(), list));
+                mViewPager.setAdapter(new ImageAdapter(getChildFragmentManager(), mList));
                 mViewPager.setOffscreenPageLimit(3);
                 mViewPager.setPageMargin((int) Display.dp2Px(10, getResources()));
             }
@@ -211,7 +209,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                     ToastUtil.show(R.string.select_a_poster);
                     return;
                 }
-                Bitmap shareBitmap = list.get(mSelectedPosition).getShareBitmap();
+                Bitmap shareBitmap = mList.get(mSelectedPosition).getShareBitmap();
                 mTemp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
                 shareStream(packageName, className, title, content, mTemp);
             } else {
@@ -280,7 +278,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             ToastUtil.show(R.string.select_a_poster);
             return;
         }
-        Bitmap shareBitmap = list.get(mSelectedPosition).getShareBitmap();
+        Bitmap shareBitmap = mList.get(mSelectedPosition).getShareBitmap();
         new ShareAction(getActivity())
                 .setPlatform(platform)
                 .withText("hello")
@@ -469,7 +467,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
 
     @Override
     public void onSelect(int position) {
-        for (SharePosterFragment sharePosterFragment : list) {
+        for (SharePosterFragment sharePosterFragment : mList) {
             sharePosterFragment.setSelectedPosition(position);
         }
         mSelectedPosition = position;
