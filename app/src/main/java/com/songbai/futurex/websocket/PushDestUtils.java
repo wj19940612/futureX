@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.songbai.futurex.websocket.im.IMParam;
 import com.songbai.futurex.websocket.msg.MsgParam;
+import com.songbai.futurex.websocket.notification.NotificationParam;
+import com.songbai.futurex.websocket.notification.NotificationProcessor;
 import com.songbai.futurex.websocket.otc.OtcParam;
 
 /**
@@ -45,5 +47,9 @@ public class PushDestUtils {
 
     public static boolean isServiceOffline(String dest) {
         return IMParam.CUSOOFFLINE.equals(dest);
+    }
+
+    public static boolean isNotification(String dest){
+        return NotificationParam.NOTIFICATION.equals(dest);
     }
 }

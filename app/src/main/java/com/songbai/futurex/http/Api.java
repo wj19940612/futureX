@@ -39,6 +39,7 @@ import java.util.Set;
 public class Api extends RequestManager {
 
     private static Set<String> sCurrentUrls = new HashSet<>();
+    private static String FIXED_HOST;
 
     private int mMethod;
     private String mId;
@@ -47,6 +48,7 @@ public class Api extends RequestManager {
     private String mJsonBody;
     private ReqCallback<?> mCallback;
     private ReqParams mReqParams;
+    private ReqHeaders mReqHeaders;
     private ReqIndeterminate mIndeterminate;
     private int mTimeout;
     private String mHost;
@@ -58,6 +60,7 @@ public class Api extends RequestManager {
 
     private Api() {
         mMethod = GET;
+        mReqHeaders = new ReqHeaders();
     }
 
     public static Api get(String api) {
@@ -137,6 +140,11 @@ public class Api extends RequestManager {
         return this;
     }
 
+    public Api header(String key, Object value) {
+        mReqHeaders.put(key, value);
+        return this;
+    }
+
     public Api bitmapCfg(BitmapCfg bitmapCfg) {
         mBitmapCfg = bitmapCfg;
         return this;
@@ -162,8 +170,7 @@ public class Api extends RequestManager {
     }
 
     private void createReqThenEnqueue(String url) {
-        ReqHeaders headers = new ReqHeaders();
-        setupHeaders(headers);
+        setupHeaders(mReqHeaders);
 
         // setup Callback
         if (mCallback != null) {
@@ -190,12 +197,12 @@ public class Api extends RequestManager {
         Request request;
         Type type = mCallback.getGenericType();
         if (mFile != null && !TextUtils.isEmpty(mFileName)) {
-            request = new MultipartRequest(mMethod, url, headers, mFileName, mFile, mReqParams, type, mCallback);
+            request = new MultipartRequest(mMethod, url, mReqHeaders, mFileName, mFile, mReqParams, type, mCallback);
         } else if (mBitmapCfg != null && isBitmapType(type)) {
             request = new BitmapRequest(url, mBitmapCfg.getMaxWidth(), mBitmapCfg.getMaxHeight(),
                     mBitmapCfg.getScaleType(), mBitmapCfg.getConfig(), (ReqCallback<Bitmap>) mCallback);
         } else {
-            request = new GsonRequest(mMethod, url, headers, mReqParams, mJsonBody, type, mCallback);
+            request = new GsonRequest(mMethod, url, mReqHeaders, mReqParams, mJsonBody, type, mCallback);
         }
         request.setTag(mTag);
 
@@ -213,17 +220,28 @@ public class Api extends RequestManager {
     }
 
     private void setupHeaders(ReqHeaders headers) {
-        String cookies = LocalUser.getUser().getToken();
-        String imageSign = CookieManger.getInstance().getNameValuePair("img_sign");
+        String cookies = headers.get("Cookie");
 
-        if (!TextUtils.isEmpty(imageSign)) {
-            cookies = imageSign + (TextUtils.isEmpty(cookies) ? "" : "; " + cookies);
+        String userToken = LocalUser.getUser().getToken();
+        if (TextUtils.isEmpty(cookies)) {
+            cookies = userToken;
+        } else {
+            cookies += "; " + userToken;
         }
+
+        String imageSign = CookieManger.getInstance().getNameValuePair("img_sign");
+        if (TextUtils.isEmpty(cookies)) {
+            cookies = imageSign;
+        } else {
+            cookies += "; " + imageSign;
+        }
+
         Locale userLocale = LanguageUtils.getUserLocale(App.getAppContext());
         StringBuilder language = new StringBuilder();
         language.append(userLocale.getLanguage());
         String country = userLocale.getCountry();
         String languageStr = "language=" + language + (TextUtils.isEmpty(country) ? "" : "_" + country);
+
         if (TextUtils.isEmpty(cookies)) {
             cookies = languageStr;
         } else {
@@ -263,7 +281,15 @@ public class Api extends RequestManager {
         return url;
     }
 
+    public static void setFixedHost(String fixedHost) {
+        FIXED_HOST = fixedHost;
+    }
+
     public static String getFixedHost() {
+        if (!TextUtils.isEmpty(FIXED_HOST)) {
+            return FIXED_HOST;
+        }
+
         if (!BuildConfig.IS_PROD) {
             return "http://" + BuildConfig.HOST;
         }
@@ -284,18 +310,5 @@ public class Api extends RequestManager {
                 }
             }
         }
-    }
-
-    /**
-     * 因为h5和原生的域名不同 需要将原生域名替换为h5的域名
-     *
-     * @param nativeUrl
-     * @return
-     */
-    public static String getH5Url(String nativeUrl) {
-        if (nativeUrl.contains("ex")) {
-            return nativeUrl.replace("ex", "exm");
-        }
-        return nativeUrl;
     }
 }

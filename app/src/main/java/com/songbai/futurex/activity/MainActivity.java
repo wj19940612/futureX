@@ -26,6 +26,7 @@ import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
 import com.songbai.futurex.websocket.model.TradeDir;
+import com.umeng.message.PushAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +51,9 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         translucentStatusBar();
+
+        Apic.addBindToken(PushAgent.getInstance(getApplicationContext()).getRegistrationId()).fireFreely();
+
         checkVersion();
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
@@ -102,7 +106,10 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
+        int mainPageIndex = intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1);
+        if (mainPageIndex > -1) {
+            onNavigation(mainPageIndex, intent);
+        }
     }
 
     @Override

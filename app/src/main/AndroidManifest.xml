@@ -10,6 +10,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
+    <!--Wrap-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -142,15 +146,72 @@
             android:name=".activity.WebActivity"
             android:screenOrientation="portrait"/>
 
-        <service android:name=".service.NotificationService"/>
-        <service android:name=".service.MyPushIntentService"/>
         <service android:name=".service.UmengNotificationService"/>
         <service android:name=".service.MyNotificationService"/>
+        <service android:name=".service.SocketPushService"/>
 
         <receiver android:name=".service.NotificationBroadcast"/>
 
         <service android:name=".service.DownloadService"/>
 
+        <!--Wrap-->
+        <activity
+            android:name=".wrapper.WrapMainActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.TrainingDetailActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.JudgeTrainingActivity"
+            android:screenOrientation="landscape"/>
+
+        <activity
+            android:name=".wrapper.TrainingCountDownActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.TrainingResultActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.WrapLoginActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.FeedbackActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.ProfileActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.ModifyUserNameActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.WrapClipHeadImageActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.Location2Activity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.ImageAuthCodeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseDialog"/>
+
+        <activity
+            android:name=".wrapper.SettingActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".wrapper.MarketDetailActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

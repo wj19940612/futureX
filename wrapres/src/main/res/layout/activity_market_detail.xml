@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <com.songbai.wrapres.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/marketBgBlack"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:customView="@layout/tb_market_detail"
+        app:rightTextRightImage="@drawable/ic_share_white"
+        app:rightVisible="false"/>
+
+    <RelativeLayout
+        android:id="@+id/screenShotArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleBar"
+        android:background="@color/marketBgBlack">
+
+        <LinearLayout
+            android:id="@+id/priceArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.songbai.wrapres.autofit.AutofitTextView
+                android:id="@+id/lastPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/redPrimary"
+                android:textSize="34sp"
+                tools:text="10210.09"/>
+
+            <TextView
+                android:id="@+id/priceChange"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:textColor="@color/redPrimary"
+                android:textSize="15sp"
+                tools:text="¥55537.70\n-1328.69   -13.24%"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/marketDataArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/priceArea"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/MarketData.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/volume"/>
+
+                <TextView
+                    style="@style/MarketData.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/highest"/>
+
+                <TextView
+                    style="@style/MarketData.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/ask_price_1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.songbai.wrapres.autofit.AutofitTextView
+                    android:id="@+id/volume"
+                    style="@style/MarketData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1215.77"/>
+
+                <com.songbai.wrapres.autofit.AutofitTextView
+                    android:id="@+id/highest"
+                    style="@style/MarketData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:text="$1215.77  ¥63986.11"/>
+
+                <com.songbai.wrapres.autofit.AutofitTextView
+                    android:id="@+id/bidPrice1"
+                    style="@style/MarketData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:text="$8799.54  ¥55217.11"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/MarketData.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/market_value"/>
+
+                <TextView
+                    style="@style/MarketData.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/lowest"/>
+
+                <TextView
+                    style="@style/MarketData.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/bid_price_1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.songbai.wrapres.autofit.AutofitTextView
+                    android:id="@+id/marketValue"
+                    style="@style/MarketData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1,482,081,753,357"/>
+
+                <com.songbai.wrapres.autofit.AutofitTextView
+                    android:id="@+id/lowestPrice"
+                    style="@style/MarketData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:text="$8799.54  ¥55217.11"/>
+
+                <com.songbai.wrapres.autofit.AutofitTextView
+                    android:id="@+id/askPrice1"
+                    style="@style/MarketData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:text="$8799.54  ¥55217.11"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marketDataArea"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_market"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <com.songbai.wrapres.tabLayout.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/assistText"
+                app:tabIndicatorHeight="2dp"
+                app:tabMinWidth="0dp"
+                app:tabMode="fixed"
+                app:tabPaddingEnd="0dp"
+                app:tabPaddingStart="0dp"
+                app:tabSelectedTextColor="@color/assistText"
+                app:tabTextAppearance="@style/TabLayoutText"/>
+
+            <com.songbai.wrapres.KlineDataPlane
+                android:id="@+id/klinePlane"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_below="@id/tabLayout">
+
+                <com.songbai.wrapres.chart.KlineChart
+                    android:id="@+id/klineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <com.songbai.wrapres.chart.InfiniteTrendChart
+                    android:id="@+id/trendChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </FrameLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

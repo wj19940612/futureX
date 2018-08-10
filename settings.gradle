@@ -1,4 +1,4 @@
-include ':app'
+include ':app', ':wrapres'
 include ":httplib"
 include ":glide"
 include ":swipeloadlayout"

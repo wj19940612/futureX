@@ -50,6 +50,7 @@ import com.songbai.futurex.model.home.HomeNews;
 import com.songbai.futurex.model.home.PairRiseListBean;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.JumpIntentUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.OnNavigationListener;
@@ -368,6 +369,11 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     .putExtra(WebActivity.EX_HTML, banner.getJumpContent())
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
                     .execute();
+        } else if (banner.getJumpType() == 3) {
+            Intent intent = JumpIntentUtil.getJumpIntent(getContext(), banner);
+            if (intent == null) return;
+
+            startActivity(intent);
         }
     }
 
