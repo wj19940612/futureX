@@ -63,6 +63,11 @@ public class MyNotificationService extends Service {
             return super.onStartCommand(intent, flags, startId);
         }
         String message = intent.getStringExtra("UmengMsg");
+
+        if (message == null) {
+            return super.onStartCommand(intent, flags, startId);
+        }
+
         try {
             UMessage msg = new UMessage(new JSONObject(message));
             showNotification(msg);
@@ -74,13 +79,13 @@ public class MyNotificationService extends Service {
 
     private void showNotification(UMessage msg) {
         PendingIntent intent = getClickPendingIntent(this, msg);
-        if (intent == null) {
+        if (intent == null || msg == null) {
             return;
         }
         String channelId = getString(R.string.app_name);
-        boolean b = !TextUtils.isEmpty(msg.title);
+        boolean showTitle = !TextUtils.isEmpty(msg.title);
         String notificationTitle;
-        if (b) {
+        if (showTitle) {
             notificationTitle = msg.title;
         } else {
             notificationTitle = channelId;

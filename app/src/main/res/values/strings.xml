@@ -726,4 +726,5 @@
     <string name="can_open_accessibility_service">可以打开分享助手，帮助分享文字内容</string>
     <string name="confirmation_volume">确&#8194;认&#8194;数</string>
     <string name="status_three_space">状&#8194;&#8195;&#8194;态</string>
+    <string name="reminding_transaction">成交提醒</string>
 </resources>

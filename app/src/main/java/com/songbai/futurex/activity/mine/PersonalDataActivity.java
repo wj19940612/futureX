@@ -61,6 +61,8 @@ public class PersonalDataActivity extends BaseActivity {
     IconTextRow mPrimaryCertification;
     @BindView(R.id.seniorCertification)
     IconTextRow mSeniorCertification;
+    @BindView(R.id.pushBtn)
+    ImageView mPushBtn;
     private Unbinder mBind;
     private boolean mHasPhone;
     private boolean mHasEmail;
@@ -134,6 +136,10 @@ public class PersonalDataActivity extends BaseActivity {
                     break;
                 default:
             }
+            mPushBtn.setVisibility(View.VISIBLE);
+            mPushBtn.setSelected(userInfo.getEntrustPush() == 1 ? true : false);
+        } else {
+            mPushBtn.setVisibility(View.GONE);
         }
     }
 
@@ -155,7 +161,7 @@ public class PersonalDataActivity extends BaseActivity {
 
     @OnClick({R.id.headImageLayout, R.id.nickName, R.id.realName, R.id.phoneCertification,
             R.id.mailCertification, R.id.primaryCertification, R.id.seniorCertification,
-            R.id.legalCurrencyPayManagement, R.id.addressManagement})
+            R.id.legalCurrencyPayManagement, R.id.addressManagement, R.id.pushBtn})
     public void onViewClicked(View view) {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
@@ -209,8 +215,27 @@ public class PersonalDataActivity extends BaseActivity {
                 UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class)
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
+            case R.id.pushBtn:
+                clickPushBtn();
+                break;
             default:
         }
+    }
+
+    private void clickPushBtn() {
+        mPushBtn.setEnabled(false);
+        Apic.turnRemindingPush(mPushBtn.isSelected() ? 0 : 1).callback(new Callback<Resp>() {
+            @Override
+            protected void onRespSuccess(Resp resp) {
+                mPushBtn.setSelected(!mPushBtn.isSelected());
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                mPushBtn.setEnabled(true);
+            }
+        }).fire();
     }
 
     @Override

@@ -1417,4 +1417,12 @@ public class Apic {
                         .put("platform", 1).put("umengToken", umengToken));
     }
 
+    /**
+     * 成交提醒
+     * @param turnStatus 0关闭 1打开
+     */
+    public static Api turnRemindingPush(int turnStatus){
+        return Api.post("/api/user/user/updateEntrustPush.do",new ReqParams().put("entrustPush",turnStatus));
+    }
+
 }
