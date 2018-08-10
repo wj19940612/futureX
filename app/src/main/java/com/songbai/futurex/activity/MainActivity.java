@@ -85,6 +85,15 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int mainPageIndex = intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1);
+        if (mainPageIndex > -1) {
+            onNavigation(mainPageIndex, intent);
+        }
+    }
+
+    @Override
     public void onNavigation(int mainPageIndex, Intent exUserDefineData) {
         Fragment fragment = mMainFragmentsAdapter.getFragment(mainPageIndex);
         if (fragment instanceof TradeFragment) {

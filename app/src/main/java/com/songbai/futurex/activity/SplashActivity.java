@@ -1,5 +1,6 @@
 package com.songbai.futurex.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.Host;
+import com.songbai.futurex.service.SocketPushService;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.wrapper.Apic;
 import com.songbai.futurex.wrapper.WrapMainActivity;
@@ -46,7 +48,7 @@ public class SplashActivity extends StatusBarActivity {
 
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-
+        startSocketPushService();
         translucentStatusBar();
         mLogo.postDelayed(new Runnable() {
             @Override
@@ -60,7 +62,6 @@ public class SplashActivity extends StatusBarActivity {
         }, 1500);
     }
 
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         Api.cancel(TAG);
@@ -127,5 +128,10 @@ public class SplashActivity extends StatusBarActivity {
         Launcher.with(SplashActivity.this, WrapMainActivity.class).execute();
         supportFinishAfterTransition();
         finish();
+    }
+
+    private void startSocketPushService() {
+        Intent intent = new Intent(this, SocketPushService.class);
+        startService(intent);
     }
 }
