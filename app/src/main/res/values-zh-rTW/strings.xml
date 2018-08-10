@@ -718,4 +718,12 @@
     <string name="select_a_poster">選擇一張海報</string>
     <string name="confirmation_volume">確&#8194;認&#8194;數</string>
     <string name="status_three_space">狀&#8194;&#8195;&#8194;態</string>
+    <string name="clear">清除</string>
+    <string name="share">分享</string>
+    <string name="telegram_group">【Telegram】未來交易所用戶群</string>
+    <string name="telegram_group_desc">想和達人交流拉新技巧，馬上入群</string>
+    <string name="invite_title">BITFUTURE邀請返佣</string>
+    <string name="invite_desc">邀請你加入BITFUTURE,長按識別二維碼</string>
+    <string name="can_open_accessibility_service">可以打開分享助手，幫助分享文字內容</string>
+    <string name="accessibility_service_name">分享助手</string>
 </resources>

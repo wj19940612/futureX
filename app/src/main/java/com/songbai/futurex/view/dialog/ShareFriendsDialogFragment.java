@@ -160,10 +160,12 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             public void onItemClick(View view, int position, Object obj) {
                 switch (((int) obj)) {
                     case R.string.wechat_friends:
-                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
+//                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
+                        share(SHARE_MEDIA.WEIXIN);
                         break;
                     case R.string.wechat_moments:
-                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
+//                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");/**/
+                        share(SHARE_MEDIA.WEIXIN_CIRCLE);
                         break;
                     case R.string.twitter:
                         shareWithPackageName("com.twitter.android", "");
@@ -266,14 +268,16 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     }
 
     private void shareWithText(SHARE_MEDIA platform) {
+        final String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
         new ShareAction(getActivity())
                 .setPlatform(platform)
-                .withText(mQcCode)
+                .withText(content)
                 .setCallback(mUmShareListener)
                 .share();
     }
 
     private void shareWithImage(SHARE_MEDIA platform) {
+        final String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
         if (mSelectedPosition < 0) {
             ToastUtil.show(R.string.select_a_poster);
             return;
@@ -281,7 +285,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         Bitmap shareBitmap = mList.get(mSelectedPosition).getShareBitmap();
         new ShareAction(getActivity())
                 .setPlatform(platform)
-                .withText("hello")
+                .withText(content)
                 .withMedia(new UMImage(getContext(), shareBitmap))
                 .setCallback(mUmShareListener)
                 .share();

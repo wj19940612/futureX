@@ -345,10 +345,17 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     @Override
                     public void onClick(View v) {
                         umengEventCount(UmengCountEventId.HOME0002);
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
-                                .putExtra(WebActivity.EX_HTML, homeNews.getContent())
-                                .execute();
+                        if (homeNews.getFormat() == 1) {
+                            Launcher.with(getActivity(), WebActivity.class)
+                                    .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
+                                    .putExtra(WebActivity.EX_HTML, homeNews.getContent())
+                                    .execute();
+                        }else if (homeNews.getFormat() == 2) {
+                            Launcher.with(getActivity(), WebActivity.class)
+                                    .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
+                                    .putExtra(WebActivity.EX_URL, homeNews.getContent())
+                                    .execute();
+                        }
                     }
                 });
                 mNotice.setTag(++index);

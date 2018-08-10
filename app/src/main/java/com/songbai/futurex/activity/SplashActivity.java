@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.sbai.httplib.ReqError;
-import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Callback;
@@ -53,15 +52,16 @@ public class SplashActivity extends StatusBarActivity {
         mLogo.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (BuildConfig.IS_PROD) {
-                    requestHost();
-                } else {
-                    openApp(new Host());
-                }
+//                if (BuildConfig.IS_PROD) {
+//                    requestHost();
+//                } else {
+                openApp(new Host());
+//                }
             }
         }, 1500);
     }
 
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         Api.cancel(TAG);

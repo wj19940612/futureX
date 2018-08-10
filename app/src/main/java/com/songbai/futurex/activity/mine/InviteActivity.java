@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -87,7 +88,7 @@ public class InviteActivity extends BaseActivity {
                                     .with(InviteActivity.this)
                                     .load(promotionInfos.getPromotionPic())
                                     .into(mEventPic);
-                            mRules.setText(promotionInfos.getPromotionRule());
+                            mRules.setText(Html.fromHtml(promotionInfos.getPromotionRule()));
                             mPromotionGroup = promotionInfos.getPromotionGroup();
                         }
                     }

@@ -15,6 +15,7 @@ import com.songbai.futurex.utils.LanguageUtils;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
+import com.umeng.socialize.PlatformConfig;
 
 import java.util.Locale;
 
@@ -64,6 +65,7 @@ public class App extends Application {
                 Log.e("wtf", "onSuccess: " + s + "======" + s1);
             }
         });
+        PlatformConfig.setWeixin("wx67b9d8f3d487db59", "ee2af090c92bb425e1bc9867780babfb");
         processCaughtException();
     }
 

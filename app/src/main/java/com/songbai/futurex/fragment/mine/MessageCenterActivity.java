@@ -114,10 +114,17 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                 SysMessage sysMessage = (SysMessage) obj;
                 if (mPageType == PAGE_TYPE_NOTICE) {
                     String url = String.format(Apic.url.NOTICE_DETAIL_PAGE, sysMessage.getId());
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_HTML, sysMessage.getContent())
-                            .putExtra(WebActivity.EX_TITLE, sysMessage.getTitle())
-                            .execute();
+                    if (sysMessage.getFormat() == 1) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, sysMessage.getTitle())
+                                .putExtra(WebActivity.EX_HTML, sysMessage.getContent())
+                                .execute();
+                    } else if (sysMessage.getFormat() == 2) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, sysMessage.getTitle())
+                                .putExtra(WebActivity.EX_URL, sysMessage.getContent())
+                                .execute();
+                    }
                 } else {
                     int direct = 0;
                     String msg = sysMessage.getMsg();
@@ -227,7 +234,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
     }
 
     private void requestNotice() {
-        Apic.findNewsList(PAGE_TYPE_NOTICE,mOffset, Apic.DEFAULT_PAGE_SIZE).tag(TAG)
+        Apic.findNewsList(PAGE_TYPE_NOTICE, mOffset, Apic.DEFAULT_PAGE_SIZE).tag(TAG)
                 .callback(new Callback<Resp<List<SysMessage>>>() {
                     @Override
                     protected void onRespSuccess(Resp<List<SysMessage>> resp) {

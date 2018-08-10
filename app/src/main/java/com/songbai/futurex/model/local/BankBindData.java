@@ -19,7 +19,7 @@ public class BankBindData {
     private String bankBranch;//支行名称
     private String bankCode;//银行代码
     private String realName;//账户名
-    private String image;//账户名
+    private String payPic;//账户名
     private String withDrawPass;//资金密码 必填
 
     public static final class Builder {
@@ -30,7 +30,7 @@ public class BankBindData {
         private String bankBranch;
         private String bankCode;
         private String realName;
-        private String image;
+        private String payPic;
         private String withDrawPass;
 
         public static Builder aBankBindData() {
@@ -72,8 +72,8 @@ public class BankBindData {
             return this;
         }
 
-        public Builder image(String image) {
-            this.image = image;
+        public Builder image(String payPic) {
+            this.payPic = payPic;
             return this;
         }
 
@@ -91,7 +91,7 @@ public class BankBindData {
             bankBindData.bankBranch = this.bankBranch;
             bankBindData.bankCode = this.bankCode;
             bankBindData.realName = this.realName;
-            bankBindData.image = this.image;
+            bankBindData.payPic = this.payPic;
             bankBindData.withDrawPass = this.withDrawPass;
             return bankBindData;
         }

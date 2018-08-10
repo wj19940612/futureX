@@ -24,7 +24,7 @@ android {
         buildConfigField('String', 'PUSH_SECRET', '\"a1eddf08c530b6109ffed1b516e3934e\"')
 
         manifestPlaceholders = [
-                UMENG_APP_KEY: "",
+                UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
                 UMENG_CHANNEL: "android"
         ]
 
