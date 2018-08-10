@@ -46,6 +46,7 @@ public class UserInfo {
     private String userEmail;
     private String userPortrait; // 用户头像
     private List<Log> listLog;
+    private int entrustPush;
 
     public static class Log {
         private String browserAgent;
@@ -203,5 +204,13 @@ public class UserInfo {
 
     public void setUserPortrait(String userPortrait) {
         this.userPortrait = userPortrait;
+    }
+
+    public int getEntrustPush() {
+        return entrustPush;
+    }
+
+    public void setEntrustPush(int entrustPush) {
+        this.entrustPush = entrustPush;
     }
 }
