@@ -78,14 +78,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="27dp"
-                    android:text="【Telegram】未来交易所用户群"
+                    android:text="@string/telegram_group"
                     android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="想和达人交流拉新技巧，马上入群"
+                    android:text="@string/telegram_group_desc"
                     android:textColor="@color/text99"
                     android:textSize="14sp"/>
 
@@ -104,8 +104,6 @@
                     android:textColor="@color/white"
                     android:textSize="15sp"/>
             </LinearLayout>
-
-
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
