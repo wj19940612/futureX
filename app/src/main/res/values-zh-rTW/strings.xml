@@ -726,4 +726,5 @@
     <string name="invite_desc">邀請你加入BITFUTURE,長按識別二維碼</string>
     <string name="can_open_accessibility_service">可以打開分享助手，幫助分享文字內容</string>
     <string name="accessibility_service_name">分享助手</string>
+    <string name="reminding_transaction">成交提醒</string>
 </resources>

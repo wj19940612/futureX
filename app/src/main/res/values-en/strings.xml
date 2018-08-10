@@ -722,4 +722,5 @@
     <string name="status_three_space">Status</string>
     <string name="accessibility_service_name">Share assistant</string>
     <string name="no_enough_balance">Insufficient balance</string>
+    <string name="reminding_transaction">Notice of deals</string>
 </resources>
