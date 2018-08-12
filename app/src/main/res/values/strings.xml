@@ -684,4 +684,12 @@
     <string name="complete">完成</string>
     <string name="volume">数量</string>
 
+    <!--Permission-->
+    <string name="x_app_need_permissions_below">%1$s 需要下列权限\n才能正常使用</string>
+    <string name="phone_permission">手机/电话权限</string>
+    <string name="phone_permission_to_protect_account"><![CDATA[校验IMEI&IMSI，保护账户安全]]></string>
+    <string name="storage_permission">存储权限</string>
+    <string name="storage_permission_to_save_bandwidth">缓存图片，降低流量消耗</string>
+    <string name="permission_open">开启</string>
+    <string name="permission_close">关闭</string>
 </resources>

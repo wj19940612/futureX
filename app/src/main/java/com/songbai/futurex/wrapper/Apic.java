@@ -357,7 +357,7 @@ public class Apic {
     public static Api requestAppType() {
         return Api.get("/api/user/appVersion/vest.do",
                 new ReqParams()
-                        .put("identify", "cn")
+                        .put("identify", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
                         .put("version", AppInfo.getVersionName(App.getAppContext()))
                         .put("platform", 1));
     }

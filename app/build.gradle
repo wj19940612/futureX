@@ -15,8 +15,8 @@ android {
         applicationId "com.songbai.futurex"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 19
-        versionName "1.3.0"
+        versionCode 22
+        versionName "1.3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"m.bitfutu.re\"')
@@ -55,9 +55,9 @@ android {
 
     productFlavors {
         dev {
-//            applicationIdSuffix '.dev'
+            applicationIdSuffix '.dev'
             versionName "1.0"
-            minSdkVersion 21
+            //minSdkVersion 21
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
             buildConfigField('String', 'PUSH_SECRET', '\"bf708983112c150a7e548b95bef83075\"')
@@ -77,10 +77,22 @@ android {
                     UMENG_CHANNEL: "android"
             ]
         }
-        pro {
-
-        }
-
+        tencent {}
+        m360 {}
+        baidu {}
+        sogou {}
+        xiaomi {}
+        huawei {}
+        oppo {}
+        vivo {}
+        meizu {}
+        samsung {}
+        smart {}
+        anzhi {}
+        mumayi {}
+        play {}
+        ali {}
+        lenovo {}
     }
 
     android.applicationVariants.all { variant ->

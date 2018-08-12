@@ -1,5 +1,6 @@
 package com.songbai.futurex.activity;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -13,9 +14,10 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.Host;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.view.SmartDialog;
+import com.songbai.futurex.view.dialog.PermissionViewController;
 import com.songbai.futurex.wrapper.Apic;
 import com.songbai.futurex.wrapper.WrapMainActivity;
-import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,8 @@ import butterknife.ButterKnife;
  */
 public class SplashActivity extends StatusBarActivity {
 
+    private static final int REQ_CODE_PERMISSION = 10000;
+
     protected String TAG;
 
     @BindView(R.id.logo)
@@ -39,6 +43,7 @@ public class SplashActivity extends StatusBarActivity {
 
     private List<Host> mHostList;
     private Host mFinalHost;
+    private PermissionViewController mPermissionViewController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,8 +54,52 @@ public class SplashActivity extends StatusBarActivity {
         ButterKnife.bind(this);
 
         translucentStatusBar();
-        com.songbai.futurex.http.Apic
-                .addBindToken(PushAgent.getInstance(getApplicationContext()).getRegistrationId()).fire();
+
+        if (hasSelfPermissions(this, new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE})) {
+            startRunningApp();
+        } else {
+            mPermissionViewController = new PermissionViewController(this, new PermissionViewController.OnClickListener() {
+                @Override
+                public void onOpenClick(SmartDialog dialog) {
+                    dialog.dismiss();
+                    requestNecessaryPermissions();
+                }
+
+                @Override
+                public void onCloseClick(SmartDialog dialog) {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            SmartDialog.solo(this)
+                    .setCustomViewController(mPermissionViewController)
+                    .setCancelableOnTouchOutside(false)
+                    .setWidthScale(0.7f)
+                    .show();
+        }
+    }
+
+    private void requestNecessaryPermissions() {
+        requestPermission(this, REQ_CODE_PERMISSION,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE},
+                new PermissionCallback() {
+                    @Override
+                    public void onPermissionGranted(int requestCode) {
+                        if (requestCode == REQ_CODE_PERMISSION) {
+                            startRunningApp();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(int requestCode) {
+                        finish();
+                    }
+                });
+    }
+
+    private void startRunningApp() {
         mLogo.postDelayed(new Runnable() {
             @Override
             public void run() {

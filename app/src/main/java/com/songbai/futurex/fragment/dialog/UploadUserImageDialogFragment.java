@@ -49,8 +49,6 @@ import butterknife.Unbinder;
  */
 
 public class UploadUserImageDialogFragment extends BottomDialogFragment {
-    private static final String TAG = "UploadUserImageDialogFr";
-
 
     private static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
     private static final String KEY_TYPE = "type";
@@ -68,7 +66,6 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     //打开自定义画廊
     public static final int IMAGE_TYPE_OPEN_CUSTOM_GALLERY = 4750;
 
-
     /**
      * 打开相机的请求码
      */
@@ -81,9 +78,13 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
      * 打开自定义裁剪页面的请求码
      */
     public static final int REQ_CLIP_HEAD_IMAGE_PAGE = 144;
-    //打开区域拍照页面的请求吗
+    /**
+     * 打开区域拍照页面的请求吗
+     */
     private static final int REQ_CODE_AREA_TAKE_PHONE = 46605;
-    //打开自定义画廊页面请求码
+    /**
+     * 打开自定义画廊页面请求码
+     */
     private static final int REQ_CODE_TAKE_PHONE_FROM_GALLERY = 46606;
 
     @BindView(R.id.selectImageHint)

@@ -685,4 +685,13 @@
     <string name="advanced_certification_simply">Advanced</string>
     <string name="tel_with_symbol">Tel:</string>
     <string name="volume">Volume</string>
+
+    <!--Permission-->
+    <string name="x_app_need_permissions_below">%1$s need these permissions\nto work properly.</string>
+    <string name="phone_permission">Phone state permission</string>
+    <string name="phone_permission_to_protect_account"><![CDATA[Check IMEI&IMSI to protect account security]]></string>
+    <string name="storage_permission">Storage permission</string>
+    <string name="storage_permission_to_save_bandwidth">Cache images to reduce consumption of network</string>
+    <string name="permission_open">Open</string>
+    <string name="permission_close">Close</string>
 </resources>

@@ -3,7 +3,6 @@ package com.songbai.futurex.activity;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -29,7 +28,7 @@ import java.lang.reflect.Method;
  * >=android 6.0 api 23, statusbar 使用白底黑色字
  * < android 6.0 api 23, statusbar 使用黑底系统自带字
  */
-public class StatusBarActivity extends AppCompatActivity {
+public class StatusBarActivity extends PermissionActivity {
 
     public void translucentStatusBar() {
         //make full transparent statusBar
