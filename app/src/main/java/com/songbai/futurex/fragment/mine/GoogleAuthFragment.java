@@ -70,7 +70,9 @@ public class GoogleAuthFragment extends UniqueActivity.UniFragment {
             case R.id.resetGoogleAuthenticator:
                 if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
                     UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
+                    return;
                 }
+                ToastUtil.show(R.string.please_set_google_authenticator_first);
                 break;
             case R.id.googleAuthenticatorSettings:
                 if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
