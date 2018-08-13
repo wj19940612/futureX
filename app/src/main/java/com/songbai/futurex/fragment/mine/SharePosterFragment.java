@@ -127,7 +127,7 @@ public class SharePosterFragment extends BaseFragment {
                 mShareTitle.setLayoutParams(layoutTextParams);
                 mShareTitle.setTextSize(20f * measuredWidth / Display.dp2Px(375, getResources()));
                 mShareDesc.setTextSize(12f * measuredWidth / Display.dp2Px(375, getResources()));
-                Bitmap bitmap = ZXingUtils.createQRImage(mCode, mQcCodeWidth, mQcCodeWidth);
+                Bitmap bitmap = ZXingUtils.createQRImage("https://bitfutu.re/pro/" + mCode, mQcCodeWidth, mQcCodeWidth);
                 mQcCode.setImageBitmap(bitmap);
             }
         });

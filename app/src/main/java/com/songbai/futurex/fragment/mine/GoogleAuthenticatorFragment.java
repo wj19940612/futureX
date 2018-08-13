@@ -130,8 +130,29 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
                 .fire();
     }
 
-    private void bindGoogleKey(String googleCode, String drawPass, String googleKey, String msgCode) {
-        Apic.bindGoogleKey(googleCode, drawPass, googleKey, msgCode).tag(TAG)
+    private void bindGoogleKey(String googleCode, String drawPass, String googleKey) {
+        Apic.bindGoogleKey(googleCode, drawPass, googleKey).tag(TAG)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(R.string.bind_google_authenticator_success);
+                        LocalUser user = LocalUser.getUser();
+                        if (user.isLogin()) {
+                            UserInfo userInfo = user.getUserInfo();
+                            if (userInfo.getGoogleAuth() == 0) {
+                                userInfo.setGoogleAuth(1);
+                                LocalUser.getUser().setUserInfo(userInfo);
+                            }
+                        }
+                        finish();
+                        UniqueActivity.launcher(getContext(), GoogleAuthenticatorSettingsFragment.class).execute();
+                    }
+                })
+                .fire();
+    }
+
+    private void resetGoogleKey(String googleCode, String drawPass, String googleKey, String msgCode) {
+        Apic.resetGoogleKey(googleCode, drawPass, googleKey, msgCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -181,7 +202,11 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
                 ToastUtil.show(R.string.copy_success);
                 break;
             case R.id.confirm:
-                bindGoogleKey(mGoogleAuthCode.getText().toString(), "", mSecretKey.getText().toString(), mReset ? mAuthCode.getText().toString().trim() : "");
+                if (mReset) {
+                    bindGoogleKey(mGoogleAuthCode.getText().toString(), "", mSecretKey.getText().toString());
+                } else {
+                    resetGoogleKey(mGoogleAuthCode.getText().toString(), "", mSecretKey.getText().toString(), mAuthCode.getText().toString().trim());
+                }
                 break;
             default:
         }
@@ -280,7 +305,7 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
             authCodeCounter--;
             if (authCodeCounter <= 0) {
                 mGetAuthCode.setEnabled(true);
-                mGetAuthCode.setText(R.string.regain);
+                mGetAuthCode.setText(R.string.get);
                 mGetAuthCode.setTag(null);
                 mFreezeGetAuthCode = false;
                 stopScheduleJob();

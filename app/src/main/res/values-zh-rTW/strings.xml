@@ -268,7 +268,7 @@
     <string name="recharge_history">歷史充值</string>
     <string name="recharge_amount_coin_x">充值%1$d&#160;%2$s</string>
     <string name="long_press_to_save_qr_code">長按保存二維碼</string>
-    <string name="secret_key">秘鑰</string>
+    <string name="secret_key">密鑰</string>
     <string name="copy_success">複製成功</string>
     <string name="save_qr_code">保存二維碼</string>
     <string name="save_success">保存成功</string>
@@ -714,6 +714,7 @@
     <string name="twitter">Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="telegram">Telegram</string>
+    <string name="copy_link">複製鏈接</string>
     <string name="app_not_installed">應用未安裝</string>
     <string name="select_a_poster">選擇一張海報</string>
     <string name="confirmation_volume">確&#8194;認&#8194;數</string>
@@ -727,4 +728,5 @@
     <string name="can_open_accessibility_service">可以打開分享助手，幫助分享文字內容</string>
     <string name="accessibility_service_name">分享助手</string>
     <string name="reminding_transaction">成交提醒</string>
+    <string name="get">獲取</string>
 </resources>

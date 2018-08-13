@@ -1,6 +1,8 @@
 package com.songbai.futurex.view.dialog;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -83,12 +85,12 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private int[] shareIcons = new int[]{
             R.drawable.ic_share_wechat, R.drawable.ic_share_moment,
             R.drawable.ic_share_twitter, R.drawable.ic_share_facebook,
-            R.drawable.ic_share_telegram};
+            R.drawable.ic_share_telegram, R.drawable.ic_invitation_link};
 
     private int[] shareTexts = new int[]{
             R.string.wechat_friends, R.string.wechat_moments,
             R.string.twitter, R.string.facebook,
-            R.string.telegram};
+            R.string.telegram, R.string.copy_link};
     private boolean mHasPoster;
     private Unbinder mBind;
     private String mQcCode;
@@ -141,7 +143,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         if (arguments != null) {
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
-            int[] posters =new int[]{R.drawable.ic_poster1,R.drawable.ic_poster2} ;
+            int[] posters = new int[]{R.drawable.ic_poster1, R.drawable.ic_poster2};
             for (int i = 0; i < posters.length; i++) {
                 mList.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
             }
@@ -175,6 +177,12 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                         break;
                     case R.string.telegram:
                         shareWithPackageName("org.telegram.messenger", "");
+                        break;
+                    case R.string.copy_link:
+                        ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        // 将文本内容放到系统剪贴板里。
+                        cm.setPrimaryClip(ClipData.newPlainText(null, "https://bitfutu.re/pro/" + mQcCode));
+                        ToastUtil.show(R.string.copy_success);
                         break;
                     default:
                 }

@@ -26,11 +26,13 @@
             android:background="#99000000"
             android:visibility="gone">
 
-            <TextView
+            <com.songbai.futurex.view.autofit.AutofitTextView
                 android:id="@+id/shareTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_marginRight="5dp"
+                android:singleLine="true"
                 android:text="@string/invite_title"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -39,11 +41,13 @@
                 app:layout_constraintRight_toLeftOf="@id/qcCode"
                 app:layout_constraintTop_toTopOf="@id/qcCode"/>
 
-            <TextView
+            <com.songbai.futurex.view.autofit.AutofitTextView
                 android:id="@+id/shareDesc"
                 android:layout_width="0dp"
+                android:layout_marginRight="5dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:singleLine="true"
                 android:text="@string/invite_desc"
                 android:textColor="@color/white"
                 android:textSize="12sp"

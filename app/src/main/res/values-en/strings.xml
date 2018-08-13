@@ -714,6 +714,7 @@
     <string name="twitter">Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="telegram">Telegram</string>
+    <string name="copy_link">Copy link</string>
     <string name="app_not_installed">App not installed</string>
     <string name="select_a_poster">Select a poster</string>
     <string name="share">Share</string>
@@ -723,4 +724,5 @@
     <string name="accessibility_service_name">Share assistant</string>
     <string name="no_enough_balance">Insufficient balance</string>
     <string name="reminding_transaction">Notice of deals</string>
+    <string name="get">Get</string>
 </resources>

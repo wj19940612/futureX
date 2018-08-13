@@ -549,8 +549,21 @@ public class Apic {
      * POST
      * 绑定谷歌验证--薛松
      */
-    public static Api bindGoogleKey(String googleCode, String drawPass, String googleKey, String msgCode) {
+    public static Api bindGoogleKey(String googleCode, String drawPass, String googleKey) {
         return Api.post("/api/user/userSafe/bindGoogleKey.do",
+                new ReqParams()
+                        .put("googleCode", googleCode)
+                        .put("drawPass", drawPass)
+                        .put("googleKey", googleKey));
+    }
+
+    /**
+     * /api/user/userSafe/bindGoogleKey.do
+     * POST
+     * 绑定谷歌验证--薛松
+     */
+    public static Api resetGoogleKey(String googleCode, String drawPass, String googleKey, String msgCode) {
+        return Api.post("/api/user/userSafe/resetGoogleKey.do",
                 new ReqParams()
                         .put("googleCode", googleCode)
                         .put("drawPass", drawPass)
@@ -1419,10 +1432,11 @@ public class Apic {
 
     /**
      * 成交提醒
+     *
      * @param turnStatus 0关闭 1打开
      */
-    public static Api turnRemindingPush(int turnStatus){
-        return Api.post("/api/user/user/updateEntrustPush.do",new ReqParams().put("entrustPush",turnStatus));
+    public static Api turnRemindingPush(int turnStatus) {
+        return Api.post("/api/user/user/updateEntrustPush.do", new ReqParams().put("entrustPush", turnStatus));
     }
 
 }
