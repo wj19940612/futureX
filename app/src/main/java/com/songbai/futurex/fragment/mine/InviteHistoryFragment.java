@@ -93,14 +93,12 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
                         mAdapter.setList(inviteSubordinate);
                         mAdapter.notifyDataSetChanged();
                         stopFreshOrLoadAnimation();
+                        mRecyclerView.hideAll(false);
                         if (inviteSubordinate.getTotal() - 1 > mPage) {
                             mPage++;
                             mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
-                        }
-                        if (inviteSubordinate.getStart() == 0) {
-                            mRecyclerView.hideAll(false);
                         }
                     }
 

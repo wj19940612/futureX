@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.songbai.futurex.model.mine.AuthenticationName;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.utils.Display;
+import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.TitleBar;
@@ -124,11 +126,26 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                 }
                 mAccountNum.setText(cardNumber);
                 otcBankAccount(mBindBankList.getWechat().getId());
-                mPaymentCodeText.setText(R.string.wechat_payment_code);
             }
+            mPaymentCodeText.setText(R.string.wechat_payment_code);
         }
         setPaymentCodeBtn();
+        mAccountNum.addTextChangedListener(mWatcher);
+        mWithDrawPass.getEditText().addTextChangedListener(mWatcher);
     }
+
+    private ValidationWatcher mWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            String accountNum = mAccountNum.getText().toString().trim();
+            String mWithDrawPassPassword = mWithDrawPass.getPassword();
+            if (TextUtils.isEmpty(accountNum) || TextUtils.isEmpty(mWithDrawPassPassword)) {
+                mConfirmAdd.setEnabled(false);
+            } else {
+                mConfirmAdd.setEnabled(true);
+            }
+        }
+    };
 
     private void setUnEditable(EditText editText) {
         editText.setFocusable(false);
@@ -205,7 +222,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.confirm_add, R.id.uploadPaymentCode, R.id.deleteImage})
+    @OnClick({R.id.confirm_add, R.id.paymentCode, R.id.uploadPaymentCode, R.id.deleteImage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.confirm_add:
@@ -228,6 +245,9 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
                             .build();
                     bankBand(bankBindData);
                 }
+                break;
+            case R.id.paymentCode:
+                selectImage();
                 break;
             case R.id.uploadPaymentCode:
                 selectImage();
@@ -274,8 +294,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     private void setImage(String data) {
         GlideApp
                 .with(this)
-                .load(data)
+                .load(TextUtils.isEmpty(data) ? R.drawable.ic_payment_qc_code : data)
                 .into(mPaymentCode);
     }
-
 }

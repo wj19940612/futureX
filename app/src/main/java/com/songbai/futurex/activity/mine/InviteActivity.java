@@ -15,13 +15,16 @@ import android.widget.TextView;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.mine.MyInviteFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.PromoterInfo;
 import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AnimatorUtil;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.TitleBar;
@@ -58,7 +61,11 @@ public class InviteActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UniqueActivity.launcher(InviteActivity.this, MyInviteFragment.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    UniqueActivity.launcher(InviteActivity.this, MyInviteFragment.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         requestData();
