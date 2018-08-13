@@ -214,7 +214,11 @@ public class CustomServiceActivity extends BaseActivity {
 
                         @Override
                         public void onSuccess(Response<CustomServiceChat> customServiceChatResponse) {
-                            mCustomServiceChats.add(customServiceChatResponse.getContent());
+                            CustomServiceChat content = customServiceChatResponse.getContent();
+                            if (content.getDirection() == 1) {
+                                return;
+                            }
+                            mCustomServiceChats.add(content);
                             mChatAdapter.notifyDataSetChanged();
                             updateRecyclerViewPosition(true);
                         }
@@ -399,7 +403,7 @@ public class CustomServiceActivity extends BaseActivity {
         Apic.sendTextChat(text).tag(TAG).callback(new Callback<Resp>() {
             @Override
             protected void onRespSuccess(Resp resp) {
-//                updateSendMsgUI(text, CustomServiceChat.SEND_SUCCESS);
+                updateSendMsgUI(text, CustomServiceChat.SEND_SUCCESS);
             }
 
             @Override
@@ -417,7 +421,7 @@ public class CustomServiceActivity extends BaseActivity {
         Apic.sendPhotoChat(photoAddress).tag(TAG).callback(new Callback<Resp>() {
             @Override
             protected void onRespSuccess(Resp resp) {
-//                updateSendPhotoUI(photoAddress, CustomServiceChat.SEND_SUCCESS);
+                updateSendPhotoUI(photoAddress, CustomServiceChat.SEND_SUCCESS);
             }
 
             @Override
@@ -433,12 +437,24 @@ public class CustomServiceActivity extends BaseActivity {
 
     private void updateSendMsgUI(String text, int status) {
         CustomServiceChat customServiceChat = new CustomServiceChat(text, status);
+        customServiceChat.setDirection(1);
+        if (LocalUser.getUser().isLogin()) {
+            customServiceChat.setUsernick(LocalUser.getUser().getUserInfo().getUserName());
+        } else {
+            customServiceChat.setUsernick("临时用户");
+        }
         loadChatData(customServiceChat);
         updateRecyclerViewPosition(true);
     }
 
     private void updateSendPhotoUI(String photoAddress, int status) {
         CustomServiceChat customServiceChat = new CustomServiceChat(photoAddress, status, true);
+        customServiceChat.setDirection(1);
+        if (LocalUser.getUser().isLogin()) {
+            customServiceChat.setUsernick(LocalUser.getUser().getUserInfo().getUserName());
+        } else {
+            customServiceChat.setUsernick("临时用户");
+        }
         loadChatData(customServiceChat);
         updateRecyclerViewPosition(true);
     }
