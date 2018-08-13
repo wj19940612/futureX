@@ -79,7 +79,7 @@ public class JumpIntentUtil {
     }
 
     public static Intent getJumpIntent(Context context, UMessage msg) {
-        if (msg.extra.isEmpty()) return null;
+        if (msg.extra == null || msg.extra.isEmpty()) return null;
 
         String uuid = msg.extra.get(UUID);
 //        Log.e("zzz", "extra:" + msg.extra.get(SEND_VALUE));
