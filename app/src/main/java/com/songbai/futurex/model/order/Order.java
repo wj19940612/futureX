@@ -148,6 +148,30 @@ public class Order implements OrderStatus, Parcelable {
         return updateTime;
     }
 
+    public void setPairs(String pairs) {
+        this.pairs = pairs;
+    }
+
+    public void setDealCount(String dealCount) {
+        this.dealCount = dealCount;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setDealPrice(String dealPrice) {
+        this.dealPrice = dealPrice;
+    }
+
+    public void setPoundage(String poundage) {
+        this.poundage = poundage;
+    }
+
     public String getPrefix() {
         if (pairs.indexOf('_') > -1) {
             return pairs.substring(0, pairs.indexOf('_'));
