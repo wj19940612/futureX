@@ -100,6 +100,7 @@ public class PersonalDataActivity extends BaseActivity {
             mHasPhone = !TextUtils.isEmpty(userPhone);
             if (mHasPhone) {
                 mPhoneCertification.setSubText(userPhone);
+                setIconTextRowSubDrawable(mPhoneCertification, 0);
             } else {
                 setIconTextRowSubDrawable(mPhoneCertification, R.drawable.ic_common_unautherized);
             }
@@ -107,6 +108,7 @@ public class PersonalDataActivity extends BaseActivity {
             mHasEmail = !TextUtils.isEmpty(userEmail);
             if (mHasEmail) {
                 mMailCertification.setSubText(userEmail);
+                setIconTextRowSubDrawable(mMailCertification, 0);
             } else {
                 setIconTextRowSubDrawable(mMailCertification, R.drawable.ic_common_unautherized);
             }
@@ -249,17 +251,6 @@ public class PersonalDataActivity extends BaseActivity {
         } else if (requestCode == MODIFY_PERSONAL_DATA) {
             requestUserInfo();
         }
-    }
-
-    private void uploadImage(String image) {
-        Apic.uploadImage(image).tag(TAG)
-                .callback(new Callback<Resp<String>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<String> resp) {
-                        submitPortraitPath(resp.getData());
-                    }
-                })
-                .fire();
     }
 
     private void submitPortraitPath(String image) {

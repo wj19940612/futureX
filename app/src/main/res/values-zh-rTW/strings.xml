@@ -334,7 +334,7 @@
     <string name="poster_off_shelf_return">廣告下架返還</string>
     <string name="sys_withdraw">系統撤單</string>
     <string name="freeze_return">凍結返還</string>
-    <string name="periodic_release">周期解鎖</string>
+    <string name="periodic_release">週期解鎖</string>
     <string name="special_trade">特殊交易</string>
     <string name="cashback">手續費返還</string>
     <string name="invt_reward">邀請獎勵</string>
@@ -343,6 +343,8 @@
     <string name="miners_rewar">挖礦獎勵</string>
     <string name="shared_fee">手續費分成</string>
     <string name="subscription">認購交易</string>
+    <string name="event_grant">活動發放</string>
+    <string name="event_award">活動獎勵</string>
 
     <string name="detail">詳情</string>
     <string name="address_two_space">地&#8195;&#8195;址</string>
@@ -692,8 +694,8 @@
     <string name="google_authentication">Google身份驗證</string>
     <string name="reset_google_auth">重置Google驗證</string>
     <string name="upload_payment_code">上傳收款碼</string>
-    <string name="wechat_payment_code">微信付款碼</string>
-    <string name="alipay_payment_code">支付寶付款碼</string>
+    <string name="wechat_payment_code">微信收款碼（選填）</string>
+    <string name="alipay_payment_code">支付寶收款碼（選填）</string>
     <string name="my_invite">我的邀請</string>
     <string name="my_invite_num">共邀請用戶</string>
     <string name="gained_bfb_award">獲得獎勵(BFB)</string>
@@ -729,4 +731,13 @@
     <string name="accessibility_service_name">分享助手</string>
     <string name="reminding_transaction">成交提醒</string>
     <string name="get">獲取</string>
+
+    <!--Permission-->
+    <string name="x_app_need_permissions_below">%1$s 需要下列權限\n才能正常使用</string>
+    <string name="phone_permission">手機/電話權限</string>
+    <string name="phone_permission_to_protect_account"><![CDATA[校驗IMEI&IMSI，保護賬戶安全]]></string>
+    <string name="storage_permission">存儲權限</string>
+    <string name="storage_permission_to_save_bandwidth">緩存圖片，降低流量消耗</string>
+    <string name="permission_open">開啓</string>
+    <string name="permission_close">關閉</string>
 </resources>

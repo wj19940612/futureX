@@ -197,6 +197,12 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
             case CurrencyFlowType.SUBSCRIPTION:
                 mFlowType.setText(R.string.subscription);
                 break;
+            case CurrencyFlowType.EVENT_GRANT:
+                mFlowType.setText(R.string.event_grant);
+                break;
+            case CurrencyFlowType.EVENT_AWARD:
+                mFlowType.setText(R.string.event_award);
+                break;
             default:
                 mFlowType.setText(R.string.others);
                 break;

@@ -324,6 +324,8 @@
     <string name="miners_rewar">Miner\'s rewar</string>
     <string name="shared_fee">Shared fee</string>
     <string name="subscription">Subscription</string>
+    <string name="event_grant">Event grant</string>
+    <string name="event_award">Event award</string>
 
     <string name="detail">Details</string>
     <string name="address_two_space">Address</string>
@@ -683,6 +685,7 @@
     <string name="advanced_certification_simply">Advanced</string>
     <string name="tel_with_symbol">Tel:</string>
     <string name="volume">Volume</string>
+
     <string name="trading_mining">Mining</string>
     <string name="about_bfb">About BFB</string>
     <string name="mining_output_yesterday">Output of the previous day</string>
@@ -691,8 +694,8 @@
     <string name="google_authentication">Google Auth</string>
     <string name="reset_google_auth">Reset</string>
     <string name="upload_payment_code">Upload</string>
-    <string name="alipay_payment_code">Alipay Receipt code</string>
-    <string name="wechat_payment_code">Wechat Receipt code</string>
+    <string name="alipay_payment_code">Alipay Receipt code(Optional)</string>
+    <string name="wechat_payment_code">Wechat Receipt code(Optional)</string>
     <string name="clear">Clear</string>
     <string name="my_invite">My INVT</string>
     <string name="my_invite_num">Total</string>
@@ -725,4 +728,13 @@
     <string name="no_enough_balance">Insufficient balance</string>
     <string name="reminding_transaction">Notice of deals</string>
     <string name="get">Get</string>
+
+    <!--Permission-->
+    <string name="x_app_need_permissions_below">%1$s need these permissions\nto work properly.</string>
+    <string name="phone_permission">Phone state permission</string>
+    <string name="phone_permission_to_protect_account"><![CDATA[Check IMEI&IMSI to protect account security]]></string>
+    <string name="storage_permission">Storage permission</string>
+    <string name="storage_permission_to_save_bandwidth">Cache images to reduce consumption of network</string>
+    <string name="permission_open">Open</string>
+    <string name="permission_close">Close</string>
 </resources>

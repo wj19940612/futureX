@@ -3,7 +3,6 @@ package com.songbai.futurex.fragment.dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
@@ -15,6 +14,7 @@ import android.view.WindowManager;
 import com.sbai.httplib.ReqIndeterminate;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
+import com.songbai.futurex.fragment.PermissionFragment;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.utils.TimerHandler;
 
@@ -24,7 +24,7 @@ import com.songbai.futurex.utils.TimerHandler;
  * Description:
  * </p>
  */
-public class BaseDialogFragment extends DialogFragment implements ReqIndeterminate, TimerHandler.TimerCallback {
+public class BaseDialogFragment extends PermissionFragment implements ReqIndeterminate, TimerHandler.TimerCallback {
 
     protected String TAG;
     private TimerHandler mTimerHandler;

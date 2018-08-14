@@ -52,7 +52,6 @@ public class PermissionUtil {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             if (targetSdkVersion >= Build.VERSION_CODES.M) {
                 result = context.checkSelfPermission(permission)
                         == PackageManager.PERMISSION_GRANTED;
@@ -97,10 +96,10 @@ public class PermissionUtil {
     public static boolean checkPermissions(Context context, String... permission) {
         boolean result = false;
         int targetSdkVersion = -1;
+
         PackageInfo info = null;
         try {
-            info = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0);
+            info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -124,6 +123,7 @@ public class PermissionUtil {
                 break;
             }
         }
+
         return result;
     }
 
