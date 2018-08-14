@@ -693,7 +693,7 @@
     <string name="reset_google_auth">重置Google验证</string>
     <string name="upload_payment_code">上传收款码</string>
     <string name="wechat_payment_code">微信付款码</string>
-    <string name="alipay_payment_code">支付宝付款码(选填)</string>
+    <string name="alipay_payment_code">支付宝付款码</string>
     <string name="clear">清除</string>
     <string name="my_invite">我的邀请</string>
     <string name="my_invite_num">共邀请用户</string>

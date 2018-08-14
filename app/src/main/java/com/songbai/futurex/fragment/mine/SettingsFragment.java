@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,18 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.local.SupportLang;
+import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.view.IconTextRow;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +59,41 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mLogout.setVisibility(LocalUser.getUser().isLogin() ? View.VISIBLE : View.GONE);
-        mLanguage.setSubText(Preference.get().getCurrentLangageStr());
+        String currentLangageStr = Preference.get().getCurrentLangageStr();
+        if (!TextUtils.isEmpty(currentLangageStr)) {
+            mLanguage.setSubText(currentLangageStr);
+        } else {
+            getSupportLocal();
+        }
+    }
+
+    private void setOriginLanguageText(ArrayList<SupportLang> data) {
+        if (data != null) {
+            Locale userLocale = LanguageUtils.getUserLocale(getContext());
+            for (SupportLang supportLang : data) {
+                boolean match;
+                String country = supportLang.getCountry();
+                if (TextUtils.isEmpty(country)) {
+                    match = userLocale.getLanguage().equals(supportLang.getLang());
+                } else {
+                    match = userLocale.getLanguage().equals(supportLang.getLang()) && userLocale.getCountry().equals(country);
+                }
+                if (match) {
+                    mLanguage.setSubText(supportLang.getName());
+                    Preference.get().setCurrentLangageStr(supportLang.getName());
+                }
+            }
+        }
+    }
+
+    private void getSupportLocal() {
+        Apic.getSupportLang().tag(TAG)
+                .callback(new Callback<Resp<ArrayList<SupportLang>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<ArrayList<SupportLang>> resp) {
+                        setOriginLanguageText(resp.getData());
+                    }
+                }).fireFreely();
     }
 
     @Override

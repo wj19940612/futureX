@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -83,15 +84,19 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
                     protected void onRespSuccess(Resp<PagingWrap<InviteAwardHistory>> resp) {
                         mAdapter.setList(resp.getData());
                         mAdapter.notifyDataSetChanged();
+                        stopFreshOrLoadAnimation();
+                        mRecyclerView.hideAll(false);
                         if (resp.getData().getTotal() - 1 > mPage) {
                             mPage++;
                             mSwipeToLoadLayout.setLoadMoreEnabled(true);
                         } else {
                             mSwipeToLoadLayout.setLoadMoreEnabled(false);
                         }
-                        if (resp.getData().getStart() == 0) {
-                            mRecyclerView.hideAll(false);
-                        }
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        stopFreshOrLoadAnimation();
                     }
                 }).fireFreely();
     }

@@ -68,7 +68,6 @@ import butterknife.Unbinder;
 public class ShareFriendsDialogFragment extends BottomDialogFragment implements SharePosterFragment.OnSelectListener {
     private static final String HAS_POSTER = "has_poster";
     private static final String QC_CODE = "qc_code";
-    private static final String POSTER_LIST = "poster_list";
     private static final int SHARE = 12312;
     private static final int OPEN_ACCESSIBILITY = 12313;
     public static CharSequence textString;
