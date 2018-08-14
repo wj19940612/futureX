@@ -34,6 +34,17 @@
         app:layout_constraintLeft_toRightOf="@id/payTypeIcon"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <ImageView
+        android:id="@+id/qcCode"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_payment_qc_code"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/bankName"
         android:layout_width="wrap_content"
@@ -56,27 +67,27 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:text="张三年"
         android:textColor="@color/text22"
         android:textSize="15sp"
         app:layout_constraintBaseline_toBaselineOf="@id/cardNum"
         app:layout_constraintLeft_toRightOf="@id/bankName"
         app:layout_constraintRight_toLeftOf="@id/cardNum"
-        app:layout_goneMarginLeft="0dp"/>
+        app:layout_goneMarginLeft="0dp"
+        tools:text="张三年"/>
 
     <TextView
         android:id="@+id/cardNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="*******9938"
         android:textColor="@color/text22"
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@id/bankBranch"
         app:layout_constraintLeft_toRightOf="@id/name"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/qcCode"
         app:layout_constraintTop_toBottomOf="@id/accountType"
-        app:layout_goneMarginBottom="12dp"/>
+        app:layout_goneMarginBottom="12dp"
+        tools:text="*******9938"/>
 
     <TextView
         android:id="@+id/bankBranch"
@@ -84,11 +95,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="8dp"
-        android:text="张三年"
         android:textColor="@color/text22"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/accountType"
-        app:layout_constraintTop_toBottomOf="@id/cardNum"/>
+        app:layout_constraintTop_toBottomOf="@id/cardNum"
+        tools:text="张三年"/>
 
 </android.support.constraint.ConstraintLayout>
