@@ -583,8 +583,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (isVisibleToUser) {
             subscribeMarket();
             requestPairDescription();
-            updateTradeDirectionView();
-            mVolumeInput.reset();
+            mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
         } else {
             unsubscribeMarket();
         }
@@ -598,7 +597,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (getUserVisibleHint()) {
             subscribeMarket();
             requestPairDescription();
-            updateTradeDirectionView();
+            mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
         }
     }
 
