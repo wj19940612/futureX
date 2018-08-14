@@ -88,18 +88,15 @@ public class SharePosterFragment extends BaseFragment {
             mPosition = arguments.getInt(POSITION);
             mPosterRes = arguments.getInt(POSTER);
         }
-        mShareMsg.setVisibility(View.GONE);
         mRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mShareMsg.getVisibility() == View.GONE) {
-                    mShareMsg.setVisibility(View.VISIBLE);
+                if (mCover.getVisibility() == View.GONE) {
                     if (mOnSelectListener != null) {
                         mOnSelectListener.onSelect(mPosition);
                     }
                     mCover.setVisibility(View.VISIBLE);
                 } else {
-                    mShareMsg.setVisibility(View.GONE);
                     if (mOnSelectListener != null) {
                         mOnSelectListener.onSelect(-1);
                     }
@@ -141,8 +138,7 @@ public class SharePosterFragment extends BaseFragment {
 
     private void setSelection() {
         if (mPrepared) {
-            if (mShareMsg != null) {
-                mShareMsg.setVisibility(mSelectedPosition == mPosition ? View.VISIBLE : View.GONE);
+            if (mCover != null) {
                 mCover.setVisibility(mSelectedPosition == mPosition ? View.VISIBLE : View.GONE);
             }
         }
@@ -166,14 +162,25 @@ public class SharePosterFragment extends BaseFragment {
          * 若果 cache没有建立，系统会自动调用buildDrawingCache方法生成cache。
          * 若果要更新cache, 必须要调用destoryDrawingCache方法把旧的cache销毁，才能建立新的。
          */
-        mRootView.setDrawingCacheEnabled(true);
-        mRootView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        mPoster.setDrawingCacheEnabled(true);
+        mPoster.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         //设置绘制缓存背景颜色
-        mRootView.setDrawingCacheBackgroundColor(Color.WHITE);
+        mPoster.setDrawingCacheBackgroundColor(Color.WHITE);
 
         // 把一个View转换成图片
-        Bitmap cachebmp = loadBitmapFromView(mRootView);
-        return cachebmp;
+        Bitmap poster = loadBitmapFromView(mPoster);
+        mShareMsg.setDrawingCacheEnabled(true);
+        mShareMsg.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        //设置绘制缓存背景颜色
+        mShareMsg.setDrawingCacheBackgroundColor(Color.WHITE);
+        Bitmap shareMsg = loadBitmapFromView(mShareMsg);
+        Bitmap newbmp = Bitmap.createBitmap(poster.getWidth(), poster.getHeight() + shareMsg.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newbmp);
+        canvas.drawBitmap(poster, 0, 0, null);
+        canvas.drawBitmap(shareMsg, 0, poster.getHeight(), null);
+        canvas.save();
+        canvas.restore();
+        return newbmp;
     }
 
     private static Bitmap loadBitmapFromView(View v) {
