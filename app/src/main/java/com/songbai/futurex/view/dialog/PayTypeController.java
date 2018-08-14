@@ -79,7 +79,7 @@ public class PayTypeController extends SmartDialog.CustomViewController {
                         if (String.valueOf(id).equals(mBankId)) {
                             mPayInfos.remove(payType);
                             mBankId = "";
-                        }else {
+                        } else {
                             mBankId = String.valueOf(id);
                         }
                     } else {
@@ -87,6 +87,9 @@ public class PayTypeController extends SmartDialog.CustomViewController {
                     }
                 } else {
                     mPayInfos.add(payType);
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onPayItemClick(payType);
+                    }
                     if (PayType.BANK_PAY.equals(payType)) {
                         mBankId = String.valueOf(id);
                     }
@@ -118,6 +121,8 @@ public class PayTypeController extends SmartDialog.CustomViewController {
 
     public interface OnItemClickListener {
         void onConfirmClick(String payInfo, String id);
+
+        void onPayItemClick(String payType);
     }
 
     public PayTypeController setOnItemClickListener(OnItemClickListener onItemClickListener) {

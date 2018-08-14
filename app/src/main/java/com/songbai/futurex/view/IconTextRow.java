@@ -145,9 +145,9 @@ public class IconTextRow extends LinearLayout {
         }
 
         if (mText == null) mText = "";
-        if(mSubTextSingleLine){
+        if (mSubTextSingleLine) {
             params = new LayoutParams(0, LayoutParams.WRAP_CONTENT);
-        }else{
+        } else {
             params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         }
         params.weight = 1;
@@ -174,7 +174,6 @@ public class IconTextRow extends LinearLayout {
         }
 
 
-
         mSubTextView = new TextView(getContext());
         mSubTextView.setText(mSubText);
         mSubTextView.setGravity(Gravity.CENTER);
@@ -185,10 +184,10 @@ public class IconTextRow extends LinearLayout {
             params = new LayoutParams(0, LayoutParams.WRAP_CONTENT);
             params.setMargins(mSubTextLeftMargin, 0, mSubTextRightMargin, 0);
             params.weight = 2f;
-            mSubTextView.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
+            mSubTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
             mSubTextView.setSingleLine(mSubTextSingleLine);
             mSubTextView.setEllipsize(TextUtils.TruncateAt.END);
-        }else{
+        } else {
             params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.setMargins(mSubTextLeftMargin, 0, mSubTextRightMargin, 0);
         }
@@ -218,6 +217,12 @@ public class IconTextRow extends LinearLayout {
 
     public void setSubTextViewBg(int resId) {
         mSubTextView.setBackgroundResource(resId);
+    }
+
+    public void setRightIconSelected(boolean isSelected) {
+        if (mRightImage != null) {
+            mRightImage.setSelected(isSelected);
+        }
     }
 
     public void setText(String text) {

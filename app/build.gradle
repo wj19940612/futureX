@@ -24,9 +24,14 @@ android {
         buildConfigField('String', 'PUSH_SECRET', '\"a1eddf08c530b6109ffed1b516e3934e\"')
 
         manifestPlaceholders = [
-                UMENG_APP_KEY: "",
+                UMENG_APP_KEY: "5b16535cb27b0a5f1e000017",
                 UMENG_CHANNEL: "android"
         ]
+
+        ndk {
+            abiFilters 'armeabi',"x86" //'armeabi-v7a',  'arm64-v8a'
+            moduleName "app"
+        }
     }
 
     signingConfigs {
@@ -45,6 +50,11 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ["jniLibs"]
+        }
+    }
 
     lintOptions {
         abortOnError false
@@ -57,7 +67,6 @@ android {
         dev {
             applicationIdSuffix '.dev'
             versionName "1.0"
-            //minSdkVersion 21
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
             buildConfigField('String', 'PUSH_SECRET', '\"bf708983112c150a7e548b95bef83075\"')

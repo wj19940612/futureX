@@ -43,16 +43,20 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.model.home.BFBInfo;
 import com.songbai.futurex.model.home.Banner;
 import com.songbai.futurex.model.home.EntrustPair;
 import com.songbai.futurex.model.home.HomeNews;
 import com.songbai.futurex.model.home.PairRiseListBean;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.JumpIntentUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.OnNavigationListener;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.HomeBanner;
+import com.songbai.futurex.view.autofit.AutofitTextView;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
@@ -66,6 +70,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -87,6 +92,12 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     RecyclerView mIncreaseRank;
     @BindView(R.id.nestedScrollView)
     NestedScrollView mNestedScrollView;
+    @BindView(R.id.yesterdayAmount)
+    AutofitTextView mYesterdayAmount;
+    @BindView(R.id.todayAmount)
+    AutofitTextView mTodayAmount;
+    @BindView(R.id.bfbTotal)
+    AutofitTextView mBfbTotal;
 
     private Unbinder mBind;
     private EntrustPairAdapter mAdapter;
@@ -175,7 +186,10 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
             }
         });
         Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+        initMarketPush();
+    }
 
+    private void initMarketPush() {
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(final String data, final int code, String dest) {
@@ -220,6 +234,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         findBannerList();
         findNewsList(1);
         entrustPairsList();
+        bfbInfo();
         indexRiseList();
     }
 
@@ -289,6 +304,20 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 .fire();
     }
 
+    private void bfbInfo() {
+        Apic.bfbInfo().tag(TAG)
+                .callback(new Callback<Resp<BFBInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<BFBInfo> resp) {
+                        BFBInfo bfbInfo = resp.getData();
+                        mYesterdayAmount.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getFrontProduce())));
+                        mTodayAmount.setText(getString(R.string.x_btc, String.valueOf(bfbInfo.getNowProduce())));
+                        mBfbTotal.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getVolume())));
+                    }
+                })
+                .fire();
+    }
+
     private void indexRiseList() {
         Apic.indexRiseList().tag(TAG)
                 .callback(new Callback<Resp<ArrayList<PairRiseListBean>>>() {
@@ -315,10 +344,18 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 mNotice.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
-                                .putExtra(WebActivity.EX_HTML, homeNews.getContent())
-                                .execute();
+                        umengEventCount(UmengCountEventId.HOME0002);
+                        if (homeNews.getFormat() == 1) {
+                            Launcher.with(getActivity(), WebActivity.class)
+                                    .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
+                                    .putExtra(WebActivity.EX_HTML, homeNews.getContent())
+                                    .execute();
+                        }else if (homeNews.getFormat() == 2) {
+                            Launcher.with(getActivity(), WebActivity.class)
+                                    .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
+                                    .putExtra(WebActivity.EX_URL, homeNews.getContent())
+                                    .execute();
+                        }
                     }
                 });
                 mNotice.setTag(++index);
@@ -328,6 +365,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
     @Override
     public void onBannerClick(Banner banner) {
+        umengEventCount(UmengCountEventId.HOME0001);
         if (banner.getJumpType() == 1) {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
@@ -338,12 +376,18 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     .putExtra(WebActivity.EX_HTML, banner.getJumpContent())
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
                     .execute();
+        } else if (banner.getJumpType() == 3) {
+            Intent intent = JumpIntentUtil.getJumpIntent(getContext(), banner);
+            if (intent == null) return;
+
+            startActivity(intent);
         }
     }
 
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onEntrustPairItemClick(EntrustPair.LatelyBean latelyBean) {
+            umengEventCount(UmengCountEventId.HOME0003);
             CurrencyPair currencyPair = new CurrencyPair();
             currencyPair.setPairs(latelyBean.getPairs());
             currencyPair.setPrefixSymbol(latelyBean.getPrefixSymbol());
@@ -363,6 +407,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
 
         @Override
         public void onIncreaseRankItemClick(PairRiseListBean pairRiseListBean) {
+            umengEventCount(UmengCountEventId.HOME0004);
             CurrencyPair currencyPair = new CurrencyPair();
             currencyPair.setPairs(pairRiseListBean.getPairs());
             currencyPair.setPrefixSymbol(pairRiseListBean.getPrefixSymbol());
@@ -401,6 +446,14 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         super.onDestroyView();
         mBind.unbind();
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+    }
+
+    @OnClick(R.id.miningRules)
+    public void onViewClicked() {
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_URL, "https://bitfutu.re/BFB/")
+                .putExtra(WebActivity.EX_TITLE, getString(R.string.about_bfb))
+                .execute();
     }
 
     private interface OnItemClickListener {

@@ -26,6 +26,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.RealNameAuthData;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.ItemSelectController;
@@ -143,18 +144,21 @@ public class PrimaryCertificationFragment extends UniqueActivity.UniFragment {
                 mType.setText(id);
                 switch (id) {
                     case R.string.mainland_id_card:
+                        umengEventCount(UmengCountEventId.AUTH0001);
                         mCertificationType = 0;
                         mPassportSample.setVisibility(View.GONE);
                         mCertificationNumHint.setText(R.string.certification_number);
                         mCertificationNumber.setHint(R.string.please_input_certification_number);
                         break;
                     case R.string.tw_id_card:
+                        umengEventCount(UmengCountEventId.AUTH0002);
                         mCertificationType = 1;
                         mPassportSample.setVisibility(View.GONE);
                         mCertificationNumHint.setText(R.string.certification_number);
                         mCertificationNumber.setHint(R.string.please_input_certification_number);
                         break;
                     case R.string.passport:
+                        umengEventCount(UmengCountEventId.AUTH0003);
                         mCertificationType = 2;
                         mPassportSample.setVisibility(View.VISIBLE);
                         mCertificationNumHint.setText(R.string.passport_code);

@@ -39,7 +39,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
                 case ACTION_CLICK:
                     Log.d(TAG, "click notification");
                     UTrack.getInstance(context).setClearPrevMessage(true);
-                    MyNotificationService.oldMessage = null;
                     UTrack.getInstance(context).trackMsgClick(msg);
                     break;
             }

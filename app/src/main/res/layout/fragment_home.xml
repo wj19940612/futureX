@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
@@ -70,11 +71,143 @@
                 android:clipToPadding="false"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                app:layout_constraintBottom_toTopOf="@+id/text"
+                app:layout_constraintBottom_toTopOf="@+id/tradingMiningText"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/noticeWrapper"
                 app:layout_constraintVertical_chainStyle="packed"/>
+
+            <TextView
+                android:id="@+id/tradingMiningText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/trading_mining"
+                android:textColor="@color/text49"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/bfbInfoCard"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/entrustPairs"
+                app:layout_constraintVertical_chainStyle="packed"/>
+
+            <TextView
+                android:id="@+id/miningRules"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="27dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/about_bfb"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/tradingMiningText"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/bfbInfoCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="11dp"
+                android:background="@drawable/bg_white_r10"
+                app:layout_constraintBottom_toTopOf="@+id/text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tradingMiningText"
+                app:layout_constraintVertical_chainStyle="packed">
+
+                <TextView
+                    android:id="@+id/yesterday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="21dp"
+                    android:text="@string/mining_output_yesterday"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toTopOf="@id/today"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <com.songbai.futurex.view.autofit.AutofitTextView
+                    android:id="@+id/yesterdayAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="end"
+                    android:singleLine="true"
+                    android:textColor="@color/text22"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@id/yesterday"
+                    app:layout_constraintLeft_toRightOf="@id/yesterday"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/yesterday"
+                    tools:text="200047382749.9933"/>
+
+                <TextView
+                    android:id="@+id/today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="17dp"
+                    android:text="@string/mining_output_today"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toTopOf="@id/bfbTotalText"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/yesterday"/>
+
+                <com.songbai.futurex.view.autofit.AutofitTextView
+                    android:id="@+id/todayAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="end"
+                    android:singleLine="true"
+                    android:textColor="@color/text22"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@id/today"
+                    app:layout_constraintLeft_toRightOf="@id/today"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/today"
+                    tools:text="200047382749.9933"/>
+
+                <TextView
+                    android:id="@+id/bfbTotalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="17dp"
+                    android:text="@string/bfb_total_amount"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/today"/>
+
+                <com.songbai.futurex.view.autofit.AutofitTextView
+                    android:id="@+id/bfbTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="end"
+                    android:singleLine="true"
+                    android:textColor="@color/text22"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@id/bfbTotalText"
+                    app:layout_constraintLeft_toRightOf="@id/bfbTotalText"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/bfbTotalText"
+                    tools:text="200047382749.9933"/>
+
+            </android.support.constraint.ConstraintLayout>
 
             <TextView
                 android:id="@+id/text"
@@ -85,10 +218,11 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/increasing_ranks"
                 android:textColor="@color/text49"
-                android:textSize="20sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/increaseRank"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/entrustPairs"
+                app:layout_constraintTop_toBottomOf="@+id/bfbInfoCard"
                 app:layout_constraintVertical_chainStyle="packed"/>
 
             <android.support.v7.widget.RecyclerView

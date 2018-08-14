@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgF5"
+    android:orientation="vertical">
+
+    <com.songbai.futurex.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/google_authentication"/>
+
+    <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/googleAuthenticator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_white_pressed_f5"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/google_authenticator"
+        app:rowTextColor="@color/text22"
+        app:rowTextSize="16sp"/>
+
+    <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/resetGoogleAuthenticator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_pressed_f5"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/reset_google_auth"
+        app:rowTextColor="@color/text22"
+        app:rowTextSize="16sp"/>
+
+    <com.songbai.futurex.view.IconTextRow
+        android:id="@+id/googleAuthenticatorSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_pressed_f5"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_common_right_arrow"
+        app:rowText="@string/google_authenticator_settings"
+        app:rowTextColor="@color/text22"
+        app:rowTextSize="16sp"
+        app:subTextColor="@color/text99"
+        app:subTextSize="14sp"/>
+
+</LinearLayout>

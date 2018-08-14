@@ -38,6 +38,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_pressed_f5"
         app:rightIcon="@drawable/ic_common_right_arrow"
-        app:rowText="@string/weichat"/>
+        app:rowText="@string/wechat"/>
 
 </LinearLayout>

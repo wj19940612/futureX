@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_with_under_line"
+    android:paddingBottom="16dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="16dp">
+
+    <com.songbai.futurex.view.autofit.AutofitTextView
+        android:id="@+id/invitees"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        tools:text="被邀请人"/>
+
+    <com.songbai.futurex.view.autofit.AutofitTextView
+        android:id="@+id/registerTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end|center_vertical"
+        android:paddingRight="10dp"
+        android:singleLine="true"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        tools:text="2018/4/5"/>
+
+    <com.songbai.futurex.view.autofit.AutofitTextView
+        android:id="@+id/dealCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end|center_vertical"
+        android:singleLine="true"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        tools:text="42"/>
+
+    <com.songbai.futurex.view.autofit.AutofitTextView
+        android:id="@+id/totalContribution"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end|center_vertical"
+        android:singleLine="true"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        tools:text="9678"/>
+
+</LinearLayout>

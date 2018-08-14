@@ -15,6 +15,7 @@ import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.BindBankList;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -93,6 +94,7 @@ public class SelectPayTypeFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bankCard:
+                umengEventCount(UmengCountEventId.LEGALPAY0003);
                 UniqueActivity.launcher(this, AddBankingCardFragment.class)
                         .execute(this, REQUEST_ADD_PAY);
                 break;

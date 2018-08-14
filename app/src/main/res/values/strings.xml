@@ -109,8 +109,8 @@
     <string name="add_gathering_account">添加收款方式</string>
     <string name="add_ali_pay">添加支付宝</string>
     <string name="ali_pay_account">支付宝账号</string>
-    <string name="add_wei_chat_pay">添加微信支付</string>
-    <string name="wei_chat_account">微信账号</string>
+    <string name="add_wechat_pay">添加微信支付</string>
+    <string name="wechat_account">微信账号</string>
     <string name="name">姓名</string>
     <string name="please_input_name">请填写姓名</string>
     <string name="add_banking_card">添加银行卡</string>
@@ -118,7 +118,7 @@
     <string name="with_draw_pass">资金密码</string>
     <string name="please_input_with_draw_pass">请输入资金密码</string>
     <string name="please_input_ali_pay_account">请填写支付宝账号</string>
-    <string name="please_input_wei_chat_account">请填写微信号</string>
+    <string name="please_input_wechat_account">请填写微信号</string>
     <string name="confirm_add">确认添加</string>
     <string name="own_bank_name">所属银行</string>
     <string name="account_sub_bank_name">开户支行</string>
@@ -143,7 +143,7 @@
     <string name="bank_card">银行卡</string>
     <string name="alipay">支付宝</string>
     <string name="wechatpay">微信支付</string>
-    <string name="weichat">微信</string>
+    <string name="wechat">微信</string>
     <string name="edit">编辑</string>
     <string name="please_set">请设置</string>
     <string name="not_set">未设置</string>
@@ -271,7 +271,7 @@
     <string name="long_press_to_save_qr_code">长按保存二维码</string>
     <string name="copy_success">复制成功</string>
     <string name="save_qr_code">保存二维码</string>
-    <string name="secret_key">秘钥</string>
+    <string name="secret_key">密钥</string>
     <string name="save_success">保存成功</string>
     <string name="copy_address">复制地址</string>
     <string name="recharge_coin_rules">请勿向上述地址充值任何非%1$s资产，否则资产将不可找回。\n您充值至上述地址后，需要整个网络节点的确认，%2$d次网络确认后到账。\n最小充值金额：%3$s ，小于最小金额的充值将不会上账。\n您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。\n请务必确认电脑及浏览器安全，防止信息被篡改或泄露。</string>
@@ -488,7 +488,7 @@
     <string name="buyer_have_paid">买家已付款</string>
     <string name="seller_info">卖家信息</string>
     <string name="buyer_info">买家信息</string>
-    <string name="register_time">注册时间：%1$s</string>
+    <string name="register_time_x">注册时间：%1$s</string>
     <string name="click_to_ask_contract_info">点击咨询支付方式</string>
     <string name="contact_each_other">联系对方</string>
     <string name="cancel_trade">取消交易</string>
@@ -683,6 +683,52 @@
     <string name="no_enough_balance">余额不足</string>
     <string name="complete">完成</string>
     <string name="volume">数量</string>
+
+    <string name="trading_mining">交易挖矿</string>
+    <string name="about_bfb">关于BFB</string>
+    <string name="mining_output_yesterday">昨日挖矿产出</string>
+    <string name="mining_output_today">今日待分配收入累计折合</string>
+    <string name="bfb_total_amount">BFB流通总量</string>
+    <string name="google_authentication">Google身份验证</string>
+    <string name="reset_google_auth">重置Google验证</string>
+    <string name="upload_payment_code">上传收款码</string>
+    <string name="wechat_payment_code">微信收款码（选填）</string>
+    <string name="alipay_payment_code">支付宝收款码（选填）</string>
+    <string name="clear">清除</string>
+    <string name="my_invite">我的邀请</string>
+    <string name="my_invite_num">共邀请用户</string>
+    <string name="gained_bfb_award">获得奖励(BFB)</string>
+    <string name="x_bfb">%1$s&#160;BFB</string>
+    <string name="x_btc">%1$s&#160;BTC</string>
+    <string-array name="invite_header">
+        <item>邀请记录</item>
+        <item>奖励记录</item>
+    </string-array>
+    <string name="invitees">被邀请人</string>
+    <string name="register_time">注册时间</string>
+    <string name="deal_count">交易笔数</string>
+    <string name="total_contribution">累计贡献</string>
+    <string name="telegram_group">【Telegram】未来交易所用户群</string>
+    <string name="telegram_group_desc">想和达人交流拉新技巧，马上入群</string>
+    <string name="share_link">分享链接</string>
+    <string name="share_exclusive_poster">分享专属海报</string>
+    <string name="invite_title">BITFUTURE邀请返佣</string>
+    <string name="invite_desc">邀请你加入BITFUTURE,长按识别二维码</string>
+    <string name="wechat_friends">微信好友</string>
+    <string name="wechat_moments">朋友圈</string>
+    <string name="twitter">Twitter</string>
+    <string name="facebook">Facebook</string>
+    <string name="telegram">Telegram</string>
+    <string name="copy_link">复制链接</string>
+    <string name="app_not_installed">应用未安装</string>
+    <string name="select_a_poster">选择一张海报</string>
+    <string name="accessibility_service_name">分享助手</string>
+    <string name="share">分享</string>
+    <string name="can_open_accessibility_service">可以打开分享助手，帮助分享文字内容</string>
+    <string name="confirmation_volume">确&#8194;认&#8194;数</string>
+    <string name="status_three_space">状&#8194;&#8195;&#8194;态</string>
+    <string name="reminding_transaction">成交提醒</string>
+    <string name="get">获取</string>
 
     <!--Permission-->
     <string name="x_app_need_permissions_below">%1$s 需要下列权限\n才能正常使用</string>

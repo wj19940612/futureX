@@ -17,6 +17,8 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.fragment.mine.PropertyFlowDetailFragment;
 import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
@@ -137,9 +139,10 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
             public void onItemClick(int id) {
-//                UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowDetailFragment.class)
-//                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
-//                        .execute();
+                UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowDetailFragment.class)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mAccountType)
+                        .execute();
             }
         });
         mSwipeTarget.setAdapter(mAdapter);

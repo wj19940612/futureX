@@ -252,6 +252,12 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                             }
                         }
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopFreshOrLoadAnimation();
+                    }
                 }).fireFreely();
     }
 

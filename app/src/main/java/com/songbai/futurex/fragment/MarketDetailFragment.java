@@ -30,6 +30,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.ChartsRadio;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.RealtimeDealView;
@@ -136,6 +137,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mTitleBar.setTitle(mCurrencyPair.getUpperCasePairName());
+        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
+            @Override
+            public void onClick() {
+                umengEventCount(UmengCountEventId.MARKET00011);
+            }
+        });
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mTradeDealView.setCurrencyPair(mCurrencyPair);
 
@@ -216,6 +223,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
         switch (view.getId()) {
             case R.id.buyIn:
+                umengEventCount(UmengCountEventId.MARKET0012);
                 Intent intent = new Intent()
                         .putExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_BUY_IN)
                         .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair);
@@ -223,6 +231,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 finish();
                 break;
             case R.id.sellOut:
+                umengEventCount(UmengCountEventId.MARKET0013);
                 Intent intent1 = new Intent()
                         .putExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_SELL_OUT)
                         .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair);
@@ -237,6 +246,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     private void toggleOptionalStatus() {
         if (mOptional.isSelected()) { // 已经添加自选
+            umengEventCount(UmengCountEventId.MARKET0015);
             Apic.cancelOptional(mCurrencyPair.getPairs()).tag(TAG)
                     .callback(new Callback<Resp>() {
                         @Override
@@ -247,6 +257,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         }
                     }).fire();
         } else {
+            umengEventCount(UmengCountEventId.MARKET0014);
             Apic.addOptional(mCurrencyPair.getPairs()).tag(TAG)
                     .callback(new Callback<Resp>() {
                         @Override

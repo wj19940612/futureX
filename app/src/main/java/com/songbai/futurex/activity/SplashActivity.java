@@ -1,18 +1,19 @@
 package com.songbai.futurex.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.sbai.httplib.ReqError;
-import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.Host;
+import com.songbai.futurex.service.SocketPushService;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.PermissionViewController;
@@ -52,7 +53,7 @@ public class SplashActivity extends StatusBarActivity {
 
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-
+        startSocketPushService();
         translucentStatusBar();
 
         if (hasSelfPermissions(this, new String[]{
@@ -103,11 +104,11 @@ public class SplashActivity extends StatusBarActivity {
         mLogo.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (BuildConfig.IS_PROD) {
-                    requestHost();
-                } else {
-                    openApp(new Host());
-                }
+//                if (BuildConfig.IS_PROD) {
+//                    requestHost();
+//                } else {
+                openApp(new Host());
+//                }
             }
         }, 1500);
     }
@@ -179,5 +180,10 @@ public class SplashActivity extends StatusBarActivity {
         Launcher.with(SplashActivity.this, WrapMainActivity.class).execute();
         supportFinishAfterTransition();
         finish();
+    }
+
+    private void startSocketPushService() {
+        Intent intent = new Intent(this, SocketPushService.class);
+        startService(intent);
     }
 }

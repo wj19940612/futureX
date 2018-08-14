@@ -29,6 +29,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.EditTypeController;
@@ -110,9 +111,11 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
             public void onShelfClick(OtcWarePoster otcWarePoster) {
                 switch (otcWarePoster.getStatus()) {
                     case OtcWarePoster.OFF_SHELF:
+                        umengEventCount(UmengCountEventId.AD0003);
                         updateStatus(otcWarePoster, OtcWarePoster.ON_SHELF);
                         break;
                     case OtcWarePoster.ON_SHELF:
+                        umengEventCount(UmengCountEventId.AD0004);
                         showOffShelfView(otcWarePoster);
                         break;
                     default:
@@ -142,6 +145,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
         editTypeController.setOnItemClickListener(new EditTypeController.OnItemClickListener() {
             @Override
             public void onEditClick() {
+                umengEventCount(UmengCountEventId.AD0001);
                 UniqueActivity.launcher(MyPosterFragment.this, PublishPosterFragment.class)
                         .putExtra(ExtraKeys.OTC_WARE_POSTER_ID, otcWarePoster.getId())
                         .putExtra(ExtraKeys.SELECTED_LEGAL_COIN_SYMBOL, otcWarePoster.getCoinSymbol())
@@ -151,6 +155,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
 
             @Override
             public void onDeleteClick(final SmartDialog dialog) {
+                umengEventCount(UmengCountEventId.AD0002);
                 dialog.dismiss();
                 showDeleteView(otcWarePoster);
             }

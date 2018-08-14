@@ -34,11 +34,29 @@
             android:value="a1eddf08c530b6109ffed1b516e3934e"/>
 
         <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <service
+            android:name=".service.AssistantService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/accessibility_service_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter >
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter >
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/assistant_service_config" />
+        </service >
+        <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -129,10 +147,9 @@
             android:name=".activity.WebActivity"
             android:screenOrientation="portrait"/>
 
-        <service android:name=".service.NotificationService"/>
-        <service android:name=".service.MyPushIntentService"/>
         <service android:name=".service.UmengNotificationService"/>
         <service android:name=".service.MyNotificationService"/>
+        <service android:name=".service.SocketPushService"/>
 
         <receiver android:name=".service.NotificationBroadcast"/>
 

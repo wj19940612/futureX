@@ -223,12 +223,13 @@ public class Apic {
      * POST
      * 修改微信/支付宝账户
      */
-    public static Api updateBankAccount(String type, String account, String name, String withDrawPass) {
+    public static Api updateBankAccount(String type, String account, String name, String payPic, String withDrawPass) {
         return Api.post("/api/otc/bank/updateBankAccount",
                 new ReqParams()
                         .put("type", type)
                         .put("account", account)
                         .put("name", name)
+                        .put("payPic", payPic)
                         .put("withDrawPass", withDrawPass));
     }
 
@@ -306,8 +307,11 @@ public class Apic {
      * GET
      * 最近/全部 邀请用户
      */
-    public static Api findCommissionOfSubordinate() {
-        return Api.get("/api/user/user/findCommissionOfSubordinate");
+    public static Api findCommissionOfSubordinate(int page, int pageSize) {
+        return Api.get("/api/user/user/findCommissionOfSubordinate",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 
     /**
@@ -419,6 +423,17 @@ public class Apic {
      */
     public static Api getUserFinanceFlowDetail(int id) {
         return Api.get("/api/user/wallet/getUserFinanceFlowDetail.do",
+                new ReqParams()
+                        .put("id", id));
+    }
+
+    /**
+     * /api/user/wallet/getUserOtcFinanceFlow.do
+     * GET
+     * 获取otc流水的详细信息
+     */
+    public static Api getUserOtcFinanceFlow(int id) {
+        return Api.get("/api/user/wallet/getUserOtcFinanceFlow.do",
                 new ReqParams()
                         .put("id", id));
     }
@@ -543,6 +558,20 @@ public class Apic {
     }
 
     /**
+     * /api/user/userSafe/bindGoogleKey.do
+     * POST
+     * 绑定谷歌验证--薛松
+     */
+    public static Api resetGoogleKey(String googleCode, String drawPass, String googleKey, String msgCode) {
+        return Api.post("/api/user/userSafe/resetGoogleKey.do",
+                new ReqParams()
+                        .put("googleCode", googleCode)
+                        .put("drawPass", drawPass)
+                        .put("googleKey", googleKey)
+                        .put("msgCode", msgCode));
+    }
+
+    /**
      * /api/user/userSafe/setAuthVerify.do
      * POST
      * 设置google验证码使用场景--薛松(新增谷歌验证码一定要输入(邵文星))
@@ -570,6 +599,27 @@ public class Apic {
      */
     public static Api getCurrentPromoterMsg() {
         return Api.get("/api/user/user/getCurrentPromoterMsg.do");
+    }
+
+    /**
+     * http://ex.esongbai.abc/api/user/user/promotionRule.do
+     * GET
+     * 推广返佣活动相关内容
+     */
+    public static Api promotionRule() {
+        return Api.get("/api/user/user/promotionRule.do");
+    }
+
+    /**
+     * /api/user/user/inviteAward
+     * GET
+     * 奖励记录
+     */
+    public static Api inviteAward(int page, int pageSize) {
+        return Api.get("/api/user/user/inviteAward",
+                new ReqParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 
     /**
@@ -699,6 +749,15 @@ public class Apic {
                         .put("page", page)
                         .put("pageSize", pageSize)
                         .put("suffixSymbol", suffixSymbol));
+    }
+
+    /**
+     * http://ex.esongbai.abc/api/quota/quota/bfbInfo.do
+     * GET
+     * 获取bfb的挖矿交易数和分红数量
+     */
+    public static Api bfbInfo() {
+        return Api.get("/api/quota/quota/bfbInfo.do");
     }
 
     /**
@@ -1369,6 +1428,15 @@ public class Apic {
         return Api.post("/api/user/userDeviced/addBindToken.do",
                 new ReqParams()
                         .put("platform", 1).put("umengToken", umengToken));
+    }
+
+    /**
+     * 成交提醒
+     *
+     * @param turnStatus 0关闭 1打开
+     */
+    public static Api turnRemindingPush(int turnStatus) {
+        return Api.post("/api/user/user/updateEntrustPush.do", new ReqParams().put("entrustPush", turnStatus));
     }
 
 }

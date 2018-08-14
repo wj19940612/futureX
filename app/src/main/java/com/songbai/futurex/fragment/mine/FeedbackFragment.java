@@ -88,7 +88,6 @@ public class FeedbackFragment extends UniqueActivity.UniFragment {
         mEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_TEXT_SIZE)});
         mTextSize.setText(getString(R.string.x_faction_x, 0, MAX_TEXT_SIZE));
         mImageNum.setText(getString(R.string.x_faction_x, mImages.size(), MAX_IMAGE_SIZE));
-
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {

@@ -146,7 +146,7 @@ public class PosterPreviewController extends SmartDialog.CustomViewController {
                         payInfo.append(" ");
                         break;
                     case BankCardBean.PAYTYPE_WX:
-                        payInfo.append(mContext.getString(R.string.weichat));
+                        payInfo.append(mContext.getString(R.string.wechat));
                         payInfo.append(" ");
                         break;
                     case BankCardBean.PAYTYPE_BANK:

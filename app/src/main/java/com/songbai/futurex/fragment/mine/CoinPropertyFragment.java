@@ -33,6 +33,7 @@ import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.StrUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -128,16 +129,25 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
             public void onItemClick(int id) {
-//                UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowDetailFragment.class)
-//                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
-//                        .execute();
+                UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowDetailFragment.class)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
+                        .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mAccountType)
+                        .execute();
             }
         });
         mRecyclerView.setAdapter(mAdapter);
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
         getAccountByUser(mAccountBean.getCoinType());
-        getUserFinanceFlow(mGetUserFinanceFlowData);
+        getFlow();
+    }
+
+    private void getFlow() {
+        if (mAccountType==0) {
+            getUserFinanceFlow(mGetUserFinanceFlowData);
+        }else {
+            otcAccountDetail(mGetUserFinanceFlowData);
+        }
     }
 
     private void setCoinAccountInfo(AccountBean accountBean) {
@@ -173,11 +183,26 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
                         mAdapter.setList(resp.getData());
+                        mAdapter.setAccount(mAccountType);
                         mAdapter.notifyDataSetChanged();
                         mRecyclerView.hideAll(false);
                     }
                 })
                 .fireFreely();
+    }
+
+    private void otcAccountDetail(GetUserFinanceFlowData getUserFinanceFlowData) {
+        Apic.otcAccountDetail(getUserFinanceFlowData, 0, 5).tag(TAG)
+                .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
+                        mAdapter.setList(resp.getData());
+                        mAdapter.setAccount(mAccountType);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.hideAll(false);
+                    }
+                })
+                .fire();
     }
 
     @Override
@@ -186,7 +211,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         if (data != null) {
             boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
             if (shouldRefresh) {
-                getUserFinanceFlow(mGetUserFinanceFlowData);
+                getFlow();
                 getAccountByUser(mAccountBean.getCoinType());
                 setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
             }
@@ -209,6 +234,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType()).execute();
                 break;
             case R.id.transfer:
+                umengEventCount(UmengCountEventId.COINACT0001);
                 if (mAccountBean.getLegal() == AccountBean.IS_LEGAL) {
                     ArrayList<AccountBean> accountBeans = new ArrayList<>();
                     accountBeans.add(mAccountBean);
@@ -219,6 +245,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.recharge:
+                umengEventCount(UmengCountEventId.COINACT0002);
                 if (mAccountBean.getRecharge() == AccountBean.CAN_RECHARGE) {
                     UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
                             .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType())
@@ -226,6 +253,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.withDraw:
+                umengEventCount(UmengCountEventId.COINACT0003);
                 if (mAccountBean.getIsCanDraw() == AccountBean.CAN_DRAW) {
                     if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
                         showAlertMsgHint();

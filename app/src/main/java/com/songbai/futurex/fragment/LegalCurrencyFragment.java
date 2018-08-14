@@ -35,6 +35,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
@@ -130,6 +131,18 @@ public class LegalCurrencyFragment extends BaseFragment {
             @Override
             public void onTabSelected(int position, String content) {
                 mViewPager.setCurrentItem(position, false);
+                switch (position) {
+                    case 0:
+                        umengEventCount(UmengCountEventId.LEGAL0003);
+                        break;
+                    case 1:
+                        umengEventCount(UmengCountEventId.LEGAL0004);
+                        break;
+                    case 2:
+                        umengEventCount(UmengCountEventId.LEGAL0005);
+                        break;
+                    default:
+                }
             }
         });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -221,6 +234,7 @@ public class LegalCurrencyFragment extends BaseFragment {
         LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
             case R.id.title:
+                umengEventCount(UmengCountEventId.LEGAL0001);
                 if (mLegalCoins != null && mCountryCurrencies != null) {
                     showWaresPairFilter();
                 } else {
@@ -228,6 +242,7 @@ public class LegalCurrencyFragment extends BaseFragment {
                 }
                 break;
             case R.id.order:
+                umengEventCount(UmengCountEventId.LEGAL0002);
                 if (user.isLogin()) {
                     Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
                 } else {
@@ -235,6 +250,7 @@ public class LegalCurrencyFragment extends BaseFragment {
                 }
                 break;
             case R.id.publishPoster:
+                umengEventCount(UmengCountEventId.LEGAL0006);
                 if (user.isLogin()) {
                     if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
                         showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
@@ -346,11 +362,12 @@ public class LegalCurrencyFragment extends BaseFragment {
     }
 
     private class LegalCurrencyPager extends FragmentPagerAdapter {
-        private ArrayList<BaseFragment> mList;
+        private ArrayList<BaseFragment> mList = new ArrayList<>();
 
         LegalCurrencyPager(FragmentManager fm, ArrayList<BaseFragment> fragments) {
             super(fm);
-            mList = fragments;
+            mList.clear();
+            mList.addAll(fragments);
         }
 
         @Override

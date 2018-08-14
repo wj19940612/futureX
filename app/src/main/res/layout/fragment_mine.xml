@@ -140,7 +140,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/bg_white_pressed_f5"
-            android:visibility="gone"
             app:leftIcon="@drawable/ic_mine_gift"
             app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/invite"

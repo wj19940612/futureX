@@ -38,6 +38,7 @@ import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.RegularExpUtils;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.SmartDialog;
@@ -186,16 +187,20 @@ public class LoginActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.closePage:
                 finish();
+                umengEventCount(UmengCountEventId.LOGIN0004);
                 break;
             case R.id.login:
                 if (mLoading.getVisibility() != View.VISIBLE) {
+                    umengEventCount(UmengCountEventId.LOGIN0001);
                     showImageAuthCodeDialog();
                 }
                 break;
             case R.id.forgetPassword:
+                umengEventCount(UmengCountEventId.LOGIN0002);
                 UniqueActivity.launcher(getActivity(), FindPsdFragment.class).execute();
                 break;
             case R.id.goRegister:
+                umengEventCount(UmengCountEventId.LOGIN0003);
                 openRegisterPage();
                 break;
             case R.id.phoneNumberClear:

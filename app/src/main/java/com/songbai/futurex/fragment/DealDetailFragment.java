@@ -66,7 +66,7 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mDealDetailAdapter = new DealDetailAdapter(mOrder);
+        mDealDetailAdapter = new DealDetailAdapter();
         mRecyclerView.setAdapter(mDealDetailAdapter);
 
         Apic.getOrderDealDetail(mOrder.getId()).tag(TAG)
@@ -85,14 +85,29 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
         private Order mOrder;
         private Context mContext;
 
-        public DealDetailAdapter(Order order) {
-            mOrder = order;
+        public DealDetailAdapter() {
             mDealDetailList = new ArrayList<>();
         }
 
         public void setDealDetailList(List<DealDetail> dealDetailList) {
             mDealDetailList = dealDetailList;
+            createOrder(dealDetailList);
             notifyDataSetChanged();
+        }
+
+        private void createOrder(List<DealDetail> dealDetailList) {
+            if (dealDetailList == null || dealDetailList.size() == 0) {
+                return;
+            }
+
+            DealDetail dealDetail = dealDetailList.get(0);
+            mOrder = new Order();
+            mOrder.setPairs(dealDetail.getPairs());
+            mOrder.setDirection(dealDetail.getDirection());
+            mOrder.setStatus(dealDetail.getStatus());
+            mOrder.setDealPrice(dealDetail.getDealPrice());
+            mOrder.setDealCount(dealDetail.getDealCount());
+            mOrder.setPoundage(dealDetail.getPoundage());
         }
 
         static class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -163,11 +178,11 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
             public void bind(Order order, DealDetail dealDetail, Context context) {
                 mTime.setText(context.getString(R.string.time_x, DateUtil.format(dealDetail.getDealTime(), "HH:mm MM/dd")));
                 mDealPrice.setText(dealDetail.getDealPrice() + " " + order.getSuffix().toUpperCase());
-                mDealVolume.setText(dealDetail.getDealCount() + " " +  order.getPrefix().toUpperCase());
+                mDealVolume.setText(dealDetail.getDealCount() + " " + order.getPrefix().toUpperCase());
                 if (order.getDirection() == Order.DIR_SELL) {
-                    mDealFee.setText(dealDetail.getPoundage() + " " +  order.getSuffix().toUpperCase());
+                    mDealFee.setText(dealDetail.getPoundage() + " " + order.getSuffix().toUpperCase());
                 } else {
-                    mDealFee.setText(dealDetail.getPoundage() + " " +  order.getPrefix().toUpperCase());
+                    mDealFee.setText(dealDetail.getPoundage() + " " + order.getPrefix().toUpperCase());
                 }
             }
         }

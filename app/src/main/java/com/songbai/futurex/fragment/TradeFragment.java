@@ -53,6 +53,7 @@ import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
 import com.songbai.futurex.view.ChangePriceView;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -430,6 +431,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mPairName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventId.COIN0003);
                 if (mCurrencyPair == null) return;
 
                 if (mPairsPopup != null && mPairsPopup.isShowing()) {
@@ -449,6 +451,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             @Override
             public void onClick(View v) {
                 if (mCurrencyPair != null) {
+                    umengEventCount(UmengCountEventId.COIN0002);
                     openMarketDetailPage(mCurrencyPair);
                 }
             }
@@ -851,6 +854,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (mCurrencyPair == null) return;
 
         if (mOptionalStatus.isSelected()) { // 已经添加自选
+            umengEventCount(UmengCountEventId.COIN0006);
             Apic.cancelOptional(mCurrencyPair.getPairs()).tag(TAG)
                     .callback(new Callback<Resp>() {
                         @Override
@@ -861,6 +865,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         }
                     }).fire();
         } else {
+            umengEventCount(UmengCountEventId.COIN0001);
             Apic.addOptional(mCurrencyPair.getPairs()).tag(TAG)
                     .callback(new Callback<Resp>() {
                         @Override
@@ -889,12 +894,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.decimalScale:
+                umengEventCount(UmengCountEventId.COIN0004);
                 showDecimalScaleSelector();
                 break;
             case R.id.tradeType:
                 showTradeTypeSelector();
                 break;
             case R.id.recharge:
+                umengEventCount(UmengCountEventId.COIN0005);
                 if (LocalUser.getUser().isLogin()) {
                     if (mCurrencyPair != null) {
                         UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)

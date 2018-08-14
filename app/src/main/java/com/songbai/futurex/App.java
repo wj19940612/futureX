@@ -10,10 +10,12 @@ import com.sbai.httplib.ReqLogger;
 import com.songbai.futurex.activity.CrashInfoActivity;
 import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.http.Api;
+import com.songbai.futurex.service.UmengNotificationService;
 import com.songbai.futurex.utils.LanguageUtils;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
+import com.umeng.socialize.PlatformConfig;
 
 import java.util.Locale;
 
@@ -49,6 +51,7 @@ public class App extends Application {
         UMConfigure.setLogEnabled(true);
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, BuildConfig.PUSH_SECRET);
         PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.setPushIntentServiceClass(UmengNotificationService.class);
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
@@ -62,6 +65,7 @@ public class App extends Application {
                 Log.e("wtf", "onSuccess: " + s + "======" + s1);
             }
         });
+        PlatformConfig.setWeixin("wx67b9d8f3d487db59", "ee2af090c92bb425e1bc9867780babfb");
         processCaughtException();
     }
 

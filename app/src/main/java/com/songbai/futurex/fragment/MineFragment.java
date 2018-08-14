@@ -40,6 +40,7 @@ import com.songbai.futurex.model.mine.UnreadMessageCount;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnNavigationListener;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.IconTextRow;
 
 import butterknife.BindView;
@@ -264,6 +265,7 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.property:
+                umengEventCount(UmengCountEventId.PERSONAL0001);
                 if (user.isLogin()) {
                     Launcher.with(this, MyPropertyActivity.class).execute();
                 } else {
@@ -285,6 +287,7 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.invite:
+                umengEventCount(UmengCountEventId.PERSONAL0002);
                 if (user.isLogin()) {
                     if (user.getUserInfo().getPromoter() != 1) {
                         toBePromoter();
@@ -301,6 +304,7 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.safetyCenter:
+                umengEventCount(UmengCountEventId.PERSONAL0003);
                 if (user.isLogin()) {
                     UniqueActivity.launcher(getActivity(), SafetyCenterFragment.class).execute();
                 } else {
@@ -313,6 +317,7 @@ public class MineFragment extends BaseFragment {
                         .execute();
                 break;
             case R.id.customService:
+                umengEventCount(UmengCountEventId.PERSONAL0004);
                 Launcher.with(getActivity(), CustomServiceActivity.class).execute();
                 break;
             case R.id.settings:

@@ -56,4 +56,6 @@ public interface ExtraKeys {
     String ORDER_ID = "order_id";
     String ORDER = "order";
     String SERACH_FOR_TRADE = "search_for_trade";
+
+    String PAGE_INDEX = "page_index";
 }
