@@ -3,7 +3,6 @@ package com.songbai.futurex.wrapper.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
@@ -13,12 +12,13 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.songbai.futurex.R;
+import com.songbai.futurex.fragment.PermissionFragment;
 
 
 /**
  * 底部弹窗基础类
  */
-public class BottomDialogFragment extends DialogFragment {
+public class BottomDialogFragment extends PermissionFragment {
 
     protected String TAG;
 

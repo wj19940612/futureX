@@ -1,5 +1,6 @@
 package com.songbai.futurex.fragment.dialog;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,8 @@ import butterknife.Unbinder;
 
 public class UploadUserImageDialogFragment extends BottomDialogFragment {
 
+    private static final int REQ_CODE_PERMISSION = 10000;
+
     private static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
     private static final String KEY_TYPE = "type";
     private static final String KEY_IMAGE_URL_INDEX = "key_image_url_index";
@@ -57,35 +60,43 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private static final String KEY_SELECT_IMAGE_HINT = "key_select_image_hint";
     private static final String KEY_SELECT_IMAGE_MAX_AMOUNT = "key_select_image_max_amount";
 
-    //不做任何处理，只返回图片地址
+    /**
+     * 不做任何处理，只返回图片地址
+     */
     public static final int IMAGE_TYPE_NOT_DEAL = 1750;
-    //上传头像类似裁剪 图片可移动，缩放
+    /**
+     * 上传头像类似裁剪 图片可移动，缩放
+     */
     public static final int IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE = 3750;
-    // 实名认证 型裁剪  拍照后，获取固定区域的图片
+    /**
+     * 实名认证 型裁剪  拍照后，获取固定区域的图片，未使用
+     */
     public static final int IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA = 2750;
-    //打开自定义画廊
+    /**
+     * 打开自定义画廊，未使用
+     */
     public static final int IMAGE_TYPE_OPEN_CUSTOM_GALLERY = 4750;
 
     /**
      * 打开相机的请求码
      */
-    private static final int REQ_CODE_TAKE_PHONE_FROM_CAMERA = 379;
+    private static final int REQ_CODE_TAKE_PICTURE_FROM_CAMERA = 379;
     /**
      * 打开图册的请求码
      */
-    public static final int REQ_CODE_TAKE_PHONE_FROM_PHONES = 600;
+    public static final int REQ_CODE_TAKE_PICTURE_FROM_GALLERY = 600;
     /**
      * 打开自定义裁剪页面的请求码
      */
     public static final int REQ_CLIP_HEAD_IMAGE_PAGE = 144;
     /**
-     * 打开区域拍照页面的请求吗
+     * 打开区域拍照页面的请求码，未用到
      */
     private static final int REQ_CODE_AREA_TAKE_PHONE = 46605;
     /**
-     * 打开自定义画廊页面请求码
+     * 打开自定义画廊页面请求码，未用到
      */
-    private static final int REQ_CODE_TAKE_PHONE_FROM_GALLERY = 46606;
+    private static final int REQ_CODE_TAKE_PICTURE_FROM_CUSTOM_GALLERY = 46606;
 
     @BindView(R.id.selectImageHint)
     AppCompatTextView mSelectImageHint;
@@ -265,16 +276,15 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && PermissionUtil.cameraIsCanUse()) {
-                    if (mImageDealType == IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA) {
-                        openAreaTakePage();
-                    } else {
+                if (hasSelfPermissions(getActivity(), new String[]{Manifest.permission.CAMERA})) {
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                         openSystemCameraPage();
+                    } else {
+                        ToastUtil.show(getString(R.string.sd_is_not_useful));
                     }
                 } else {
-                    ToastUtil.show(getString(R.string.please_open_camera_permission));
+                    requestPermission(getActivity(), REQ_CODE_PERMISSION, new String[]{Manifest.permission.CAMERA});
                 }
-
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
@@ -306,30 +316,30 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         if (mImageDealType == IMAGE_TYPE_OPEN_CUSTOM_GALLERY) {
             Intent openGalleryIntent = new Intent(getContext(), ImageSelectActivity.class);
             openGalleryIntent.putExtra(ExtraKeys.IMAGE, mImageMaxSelectAmount);
-            startActivityForResult(openGalleryIntent, REQ_CODE_TAKE_PHONE_FROM_GALLERY);
+            startActivityForResult(openGalleryIntent, REQ_CODE_TAKE_PICTURE_FROM_CUSTOM_GALLERY);
         } else {
-            Intent openAlbumIntent = new Intent(
-                    Intent.ACTION_PICK);
+            Intent openAlbumIntent = new Intent(Intent.ACTION_PICK);
             openAlbumIntent.setType("image/*");
             if (openAlbumIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivityForResult(openAlbumIntent, REQ_CODE_TAKE_PHONE_FROM_PHONES);
+                startActivityForResult(openAlbumIntent, REQ_CODE_TAKE_PICTURE_FROM_GALLERY);
             }
         }
     }
 
     private void openSystemCameraPage() {
-        Intent openCameraIntent = new Intent(
-                MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mFile = FileUtils.createFile(getString(R.string.app_name) + System.currentTimeMillis() + "image.jpg");
         // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
         Uri mMBitmapUri = Uri.fromFile(mFile);
         openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
-        startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
+        if (openCameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PICTURE_FROM_CAMERA);
+        }
     }
 
     private void openAreaTakePage() {
         if (PermissionUtil.cameraIsCanUse()) {
-//            startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
+            //startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
         } else {
             ToastUtil.show(getString(R.string.please_open_camera_permission));
         }
@@ -341,7 +351,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == FragmentActivity.RESULT_OK) {
             switch (requestCode) {
-                case REQ_CODE_TAKE_PHONE_FROM_CAMERA:
+                case REQ_CODE_TAKE_PICTURE_FROM_CAMERA:
                     if (mFile != null) {
                         Uri mMBitmapUri = Uri.fromFile(mFile);
                         if (mMBitmapUri != null) {
@@ -351,7 +361,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
                         }
                     }
                     break;
-                case REQ_CODE_TAKE_PHONE_FROM_PHONES:
+                case REQ_CODE_TAKE_PICTURE_FROM_GALLERY:
                     String galleryBitmapPath = getGalleryBitmapPath(data);
                     if (!TextUtils.isEmpty(galleryBitmapPath)) {
                         dealImagePath(galleryBitmapPath);
@@ -363,7 +373,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
 //                        dealImagePath(imageUrl);
 //                    }
                     break;
-                case REQ_CODE_TAKE_PHONE_FROM_GALLERY:
+                case REQ_CODE_TAKE_PICTURE_FROM_CUSTOM_GALLERY:
                     String imagePath = data.getStringExtra(ExtraKeys.IMAGE_PATH);
                     if (!TextUtils.isEmpty(imagePath)) {
                         dealImagePath(imagePath);

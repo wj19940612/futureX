@@ -1,5 +1,6 @@
 package com.songbai.futurex.wrapper.fragment;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +22,6 @@ import com.songbai.futurex.activity.ImageSelectActivity;
 import com.songbai.futurex.activity.LookBigPictureActivity;
 import com.songbai.futurex.utils.FileUtils;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.PermissionUtil;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.wrapper.WrapClipHeadImageActivity;
 import com.songbai.wrapres.ExtraKeys;
@@ -38,9 +38,9 @@ import butterknife.Unbinder;
  * 上传用户头像
  */
 
-public class UploadUserImageDialogFragment extends BottomDialogFragment {
-    private static final String TAG = "UploadUserImageDialogFr";
+public class WrapUploadUserImageDialogFragment extends BottomDialogFragment {
 
+    private static final int REQ_CODE_PERMISSION = 10000;
 
     private static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
     private static final String KEY_TYPE = "type";
@@ -54,7 +54,6 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     public static final int IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA = 2750;
     //打开自定义画廊
     public static final int IMAGE_TYPE_OPEN_CUSTOM_GALLERY = 4750;
-
 
     /**
      * 打开相机的请求码
@@ -95,33 +94,33 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         void onImagePath(int index, String imagePath);
     }
 
-    public UploadUserImageDialogFragment() {
+    public WrapUploadUserImageDialogFragment() {
 
     }
 
-    public static UploadUserImageDialogFragment newInstance(int type) {
+    public static WrapUploadUserImageDialogFragment newInstance(int type) {
         return newInstance(type, "");
     }
 
-    public static UploadUserImageDialogFragment newInstance(int type, String url) {
+    public static WrapUploadUserImageDialogFragment newInstance(int type, String url) {
         return newInstance(type, url, -1);
     }
 
-    public static UploadUserImageDialogFragment newInstance(int type, int imageIndex) {
+    public static WrapUploadUserImageDialogFragment newInstance(int type, int imageIndex) {
         return newInstance(type, "", imageIndex);
     }
 
-    public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex) {
+    public static WrapUploadUserImageDialogFragment newInstance(int type, String url, int imageIndex) {
         Bundle args = new Bundle();
         args.putInt(KEY_TYPE, type);
         args.putString(KEY_IMAGE_URL, url);
         args.putInt(KEY_IMAGE_URL_INDEX, imageIndex);
-        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
+        WrapUploadUserImageDialogFragment fragment = new WrapUploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public UploadUserImageDialogFragment setOnImagePathListener(OnImagePathListener onImagePathListener) {
+    public WrapUploadUserImageDialogFragment setOnImagePathListener(OnImagePathListener onImagePathListener) {
         mOnImagePathListener = onImagePathListener;
         return this;
     }
@@ -173,16 +172,15 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && PermissionUtil.cameraIsCanUse()) {
-                    if (mImageDealType == IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA) {
-                        //openAreaTakePage();
-                    } else {
+                if (hasSelfPermissions(getActivity(), new String[]{Manifest.permission.CAMERA})) {
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                         openSystemCameraPage();
+                    } else {
+                        ToastUtil.show(getString(R.string.sd_is_not_useful));
                     }
                 } else {
-                    ToastUtil.show(getString(R.string.please_open_camera_permission));
+                    requestPermission(getActivity(), REQ_CODE_PERMISSION, new String[]{Manifest.permission.CAMERA});
                 }
-
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {

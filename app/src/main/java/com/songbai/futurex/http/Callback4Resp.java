@@ -31,15 +31,25 @@ public abstract class Callback4Resp<T, D> extends Callback<T> {
 
         if (data instanceof String) {
             data = onInterceptData((String) data);
-            try {
-                Object o = new Gson().fromJson((String) data, getDataType());
-                onRespData((D) o);
-            } catch (JsonSyntaxException e) {
-                ToastUtil.show(R.string.data_parse_error);
+            Type type = getDataType();
+
+            if (isStringType(type)) {
+                onRespData((D) data);
+            } else {
+                try {
+                    Object o = new Gson().fromJson((String) data, getDataType());
+                    onRespData((D) o);
+                } catch (JsonSyntaxException e) {
+                    ToastUtil.show(R.string.data_parse_error);
+                }
             }
         } else {
             onRespData((D) data);
         }
+    }
+
+    private boolean isStringType(Type type) {
+        return type instanceof Class && ((Class) type).getSimpleName().equals(String.class.getSimpleName());
     }
 
     /**

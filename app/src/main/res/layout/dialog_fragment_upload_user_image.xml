@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/example"
             android:textColor="@color/white"
+            android:visibility="invisible"
             android:textSize="17sp"/>
 
         <ImageView
@@ -26,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="invisible"
             android:src="@drawable/ic_authentication_idcard_front"/>
     </LinearLayout>
 

@@ -24,13 +24,13 @@ import android.widget.TextView;
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
-import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.utils.ThumbTransform;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.image.ImageUtils;
 import com.songbai.futurex.wrapper.fragment.PreviewDialogFragment;
+import com.songbai.futurex.wrapper.fragment.WrapUploadUserImageDialogFragment;
 import com.songbai.wrapres.TitleBar;
 import com.songbai.wrapres.model.Feedback;
 import com.songbai.wrapres.model.FeedbackResp;
@@ -243,8 +243,8 @@ public class FeedbackActivity extends WrapBaseActivity
     }
 
     private void sendPicToCustomer() {
-        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY)
-                .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
+        WrapUploadUserImageDialogFragment.newInstance(WrapUploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY)
+                .setOnImagePathListener(new WrapUploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
                     public void onImagePath(int index, String imagePath) {
                         sendFeedbackImage(imagePath);
