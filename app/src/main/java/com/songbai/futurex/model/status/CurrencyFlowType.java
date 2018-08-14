@@ -90,4 +90,12 @@ public interface CurrencyFlowType {
      * 认购交易
      */
     int SUBSCRIPTION = 21;
+    /**
+     * 活动发放
+     */
+    int EVENT_GRANT= 22;
+    /**
+     * 活动奖励
+     */
+    int EVENT_AWARD = 23;
 }

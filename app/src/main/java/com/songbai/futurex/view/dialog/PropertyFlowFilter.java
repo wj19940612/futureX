@@ -71,6 +71,7 @@ public class PropertyFlowFilter {
             CurrencyFlowType.PERIODIC_RELEASE, CurrencyFlowType.SPECIAL_TRADE, CurrencyFlowType.CASHBACK,
             CurrencyFlowType.INVT_REWARD, CurrencyFlowType.DISTRIBUTED_REV, CurrencyFlowType.RELEASED_BFB,
             CurrencyFlowType.MINERS_REWAR, CurrencyFlowType.SHARED_FEE, CurrencyFlowType.SUBSCRIPTION
+            , CurrencyFlowType.EVENT_GRANT, CurrencyFlowType.EVENT_AWARD
     };
     private final int[] currencyFlowTypeStrRes = new int[]{
             R.string.all_type, R.string.withdraw_cash, R.string.recharge_coin,
@@ -80,6 +81,7 @@ public class PropertyFlowFilter {
             R.string.periodic_release, R.string.special_trade, R.string.cashback,
             R.string.invt_reward, R.string.distributed_rev, R.string.release_bfb,
             R.string.miners_rewar, R.string.shared_fee, R.string.subscription,
+            R.string.event_grant,R.string.event_award
     };
 
     private final int[] otcFlowType = new int[]{ALL,

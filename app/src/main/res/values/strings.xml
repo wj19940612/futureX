@@ -344,6 +344,8 @@
     <string name="miners_rewar">挖矿奖励</string>
     <string name="shared_fee">手续费分成</string>
     <string name="subscription">认购交易</string>
+    <string name="event_grant">活动发放</string>
+    <string name="event_award">活动奖励</string>
 
     <string name="detail">详情</string>
     <string name="address_two_space">地&#8195;&#8195;址</string>

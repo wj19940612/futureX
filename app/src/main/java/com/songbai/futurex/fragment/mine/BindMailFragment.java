@@ -256,9 +256,9 @@ public class BindMailFragment extends UniqueActivity.UniFragment {
 
     private void bindMail(String email, String emailMsgCode, String phoneMsgCode) {
         Apic.bindEmail(email, emailMsgCode, phoneMsgCode).tag(TAG)
-                .callback(new Callback<Object>() {
+                .callback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespSuccess(Object resp) {
+                    protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(R.string.bind_success);
                         finish();
                     }
