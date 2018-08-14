@@ -1,8 +1,10 @@
 package com.songbai.futurex.model;
 
-public class JumpContent<T> {
+import com.google.gson.JsonObject;
+
+public class JumpContent {
     private String sendAction;
-    private T sendValue;
+    private JsonObject sendValue;
 
     private int userId;
 
@@ -22,11 +24,11 @@ public class JumpContent<T> {
         this.sendAction = sendAction;
     }
 
-    public T getSendValue() {
+    public JsonObject getSendValue() {
         return sendValue;
     }
 
-    public void setSendValue(T sendValue) {
+    public void setSendValue(JsonObject sendValue) {
         this.sendValue = sendValue;
     }
 
