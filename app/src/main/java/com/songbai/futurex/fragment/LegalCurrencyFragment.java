@@ -362,11 +362,12 @@ public class LegalCurrencyFragment extends BaseFragment {
     }
 
     private class LegalCurrencyPager extends FragmentPagerAdapter {
-        private ArrayList<BaseFragment> mList;
+        private ArrayList<BaseFragment> mList = new ArrayList<>();
 
         LegalCurrencyPager(FragmentManager fm, ArrayList<BaseFragment> fragments) {
             super(fm);
-            mList = fragments;
+            mList.clear();
+            mList.addAll(fragments);
         }
 
         @Override

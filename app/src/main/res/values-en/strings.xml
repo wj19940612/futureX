@@ -691,8 +691,8 @@
     <string name="google_authentication">Google Auth</string>
     <string name="reset_google_auth">Reset</string>
     <string name="upload_payment_code">Upload</string>
-    <string name="alipay_payment_code">Alipay Receipt code</string>
-    <string name="wechat_payment_code">Wechat Receipt code</string>
+    <string name="alipay_payment_code">Alipay Receipt code(Optional)</string>
+    <string name="wechat_payment_code">Wechat Receipt code(Optional)</string>
     <string name="clear">Clear</string>
     <string name="my_invite">My INVT</string>
     <string name="my_invite_num">Total</string>

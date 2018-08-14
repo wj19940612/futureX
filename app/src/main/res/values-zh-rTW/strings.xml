@@ -692,8 +692,8 @@
     <string name="google_authentication">Google身份驗證</string>
     <string name="reset_google_auth">重置Google驗證</string>
     <string name="upload_payment_code">上傳收款碼</string>
-    <string name="wechat_payment_code">微信付款碼</string>
-    <string name="alipay_payment_code">支付寶付款碼</string>
+    <string name="wechat_payment_code">微信收款碼（選填）</string>
+    <string name="alipay_payment_code">支付寶收款碼（選填）</string>
     <string name="my_invite">我的邀請</string>
     <string name="my_invite_num">共邀請用戶</string>
     <string name="gained_bfb_award">獲得獎勵(BFB)</string>
