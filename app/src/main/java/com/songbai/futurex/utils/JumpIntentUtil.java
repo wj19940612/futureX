@@ -138,6 +138,8 @@ public class JumpIntentUtil {
             clickIntent.setClass(context, PersonalDataActivity.class);
         } else if (contentType.equals("AssetsDetails")) {
             clickIntent.setClass(context, PropertyFlowActivity.class);
+        }else if(contentType.equals("Bills")){
+            clickIntent.setClass(context, PropertyFlowActivity.class);
         }
 
         if (clickIntent != null) {
