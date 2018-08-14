@@ -211,6 +211,9 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
 
         @Override
         public int getItemCount() {
+            if (mOrder == null) {
+                return 0;
+            }
             return mDealDetailList.size() + 1;
         }
 
