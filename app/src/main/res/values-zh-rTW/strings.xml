@@ -343,6 +343,8 @@
     <string name="miners_rewar">挖礦獎勵</string>
     <string name="shared_fee">手續費分成</string>
     <string name="subscription">認購交易</string>
+    <string name="event_grant">活動發放</string>
+    <string name="event_award">活動獎勵</string>
 
     <string name="detail">詳情</string>
     <string name="address_two_space">地&#8195;&#8195;址</string>

@@ -91,8 +91,10 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<PromoterInfo> resp) {
                         PromoterInfo promoterInfo = resp.getData();
-                        mInviteNum.setText(String.valueOf(promoterInfo.getMyUsersCount()));
-                        mAwardAmount.setText(getString(R.string.x_bfb, String.valueOf(promoterInfo.getTotalCom())));
+                        if (promoterInfo != null) {
+                            mInviteNum.setText(String.valueOf(promoterInfo.getMyUsersCount()));
+                            mAwardAmount.setText(getString(R.string.x_bfb, String.valueOf(promoterInfo.getTotalCom())));
+                        }
                     }
                 })
                 .fire();

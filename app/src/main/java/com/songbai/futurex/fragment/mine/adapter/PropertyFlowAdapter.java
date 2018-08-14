@@ -215,6 +215,12 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                 case CurrencyFlowType.SUBSCRIPTION:
                     mType.setText(R.string.subscription);
                     break;
+                case CurrencyFlowType.EVENT_GRANT:
+                    mType.setText(R.string.event_grant);
+                    break;
+                case CurrencyFlowType.EVENT_AWARD:
+                    mType.setText(R.string.event_award);
+                    break;
                 default:
                     mType.setText(R.string.others);
                     break;

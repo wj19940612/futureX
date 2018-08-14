@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="#99000000"
-            android:visibility="gone">
+            android:visibility="invisible">
 
             <com.songbai.futurex.view.autofit.AutofitTextView
                 android:id="@+id/shareTitle"
@@ -44,8 +44,8 @@
             <com.songbai.futurex.view.autofit.AutofitTextView
                 android:id="@+id/shareDesc"
                 android:layout_width="0dp"
-                android:layout_marginRight="5dp"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:layout_marginTop="6dp"
                 android:singleLine="true"
                 android:text="@string/invite_desc"
@@ -78,6 +78,7 @@
         android:id="@+id/cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#99228CD7"
         android:visibility="gone">
 
         <ImageView
