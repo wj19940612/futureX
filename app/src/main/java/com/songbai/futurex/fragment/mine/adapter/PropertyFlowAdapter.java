@@ -258,6 +258,12 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
             mCoinType.setText(coinPropertyFlow.getCoinType().toUpperCase());
             int flowType = coinPropertyFlow.getFlowType();
             switch (flowType) {
+                case OTCFlowType.TRADE_COMMISSION:
+                    mType.setText(R.string.trade_commission);
+                    break;
+                case OTCFlowType.TRANSFER_TO_USER_FREEZE:
+                    mType.setText(R.string.transfer_to_user_freeze);
+                    break;
                 case OTCFlowType.COIN_ACCOUNT_IN:
                     mType.setText(R.string.coin_account_in);
                     break;

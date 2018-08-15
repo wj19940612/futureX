@@ -324,6 +324,15 @@ public class Apic {
     }
 
     /**
+     * /api/otc/account/list
+     * GET
+     * 法币账户 对应币种
+     */
+    public static Api otcAccountList(String coinType) {
+        return Api.get("/api/otc/account/list", new ReqParams().put("coinType", coinType));
+    }
+
+    /**
      * /api/user/user/account
      * GET
      * 推广员账户

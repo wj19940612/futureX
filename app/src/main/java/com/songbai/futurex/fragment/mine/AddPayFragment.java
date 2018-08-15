@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.songbai.futurex.model.mine.BindBankList;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.image.ImageUtils;
+import com.songbai.futurex.utils.inputfilter.EmojiFilter;
 import com.songbai.futurex.view.PasswordEditText;
 import com.songbai.futurex.view.TitleBar;
 
@@ -92,6 +94,7 @@ public class AddPayFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         authenticationName();
+        mAccountNum.setFilters(new InputFilter[]{new EmojiFilter()});
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
             String realName = user.getUserInfo().getRealName();

@@ -302,9 +302,11 @@
     <string name="withdraw_fee">Withdrawal fee</string>
     <string name="deal_fee">Trade fee</string>
     <string name="promoter_account_transfer_into">PROM→Exchange </string>
-    <string name="otc_trade_in">OTC buy</string>
+    <string name="otc_trade_in">Transfer-in</string>
     <string name="agency_to">Agency→Exchange</string>
     <string name="legal_account_in">OTC→Exchange</string>
+    <string name="trade_commission">Invt reward</string>
+    <string name="transfer_to_user_freeze">->Personal acc</string>
     <string name="coin_account_in">Exchange→OTC</string>
     <string name="coin_account_out">Exchange→OTC</string>
 
@@ -677,7 +679,7 @@
     <string name="others">others</string>
     <string name="trade_rebate">cashback</string>
     <string name="type">Type</string>
-    <string name="otc_trade_out">OTC sell</string>
+    <string name="otc_trade_out">Transfer-out</string>
     <string name="legal_account_out">OTC→Exchange</string>
     <string name="please_set_google_authenticator_first">Please bind Google Authenticator</string>
     <string name="complete">Complete</string>
@@ -689,7 +691,7 @@
     <string name="trading_mining">Mining</string>
     <string name="about_bfb">About BFB</string>
     <string name="mining_output_yesterday">Output of the previous day</string>
-    <string name="mining_output_today">Cumulative revenue to be distributed in today</string>
+    <string name="mining_output_today">Revenue to be distributed in today</string>
     <string name="bfb_total_amount">Total BFB in circulation</string>
     <string name="google_authentication">Google Auth</string>
     <string name="reset_google_auth">Reset</string>
