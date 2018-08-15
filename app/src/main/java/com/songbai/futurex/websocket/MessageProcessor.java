@@ -148,6 +148,18 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
         send(request);
     }
 
+    public void unRegister(){
+        String tokens = LocalUser.getUser().getToken();
+        RegisterInfo registerInfo = new RegisterInfo(tokens);
+        registerInfo.setDevice(AppInfo.getDeviceHardwareId(App.getAppContext()));
+        registerInfo.setChannel(AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));
+        Request<RegisterInfo> request = Utils.getRequest(Request.UNREGISTER, registerInfo);
+
+        Log.d(TAG, "unRegister: " + registerInfo);
+
+        send(request);
+    }
+
     @Override
     public void onDisconnected() {
     }

@@ -23,6 +23,8 @@ import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.view.IconTextRow;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
+import com.songbai.futurex.websocket.MessageProcessor;
+import com.songbai.futurex.websocket.notification.NotificationProcessor;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -125,6 +127,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
         MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
             @Override
             public void onConfirmClick() {
+                MessageProcessor.get().unRegister();
                 logout();
             }
         });

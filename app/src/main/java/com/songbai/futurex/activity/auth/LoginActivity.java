@@ -34,6 +34,7 @@ import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.LoginData;
 import com.songbai.futurex.model.local.RegisterData;
+import com.songbai.futurex.service.SocketPushService;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.RegularExpUtils;
@@ -293,6 +294,7 @@ public class LoginActivity extends BaseActivity {
                     protected void onRespData(UserInfo data) {
                         LocalUser.getUser().setUserInfo(data, mLoginData.getPhone(), mLoginData.getEmail());
                         MessageProcessor.get().register();
+                        putNewUserToService();
                         Preference.get().setOptionalListRefresh(true);
                         Preference.get().setPosterListRefresh(true);
                         getActivity().setResult(Activity.RESULT_OK);
@@ -324,6 +326,12 @@ public class LoginActivity extends BaseActivity {
         } else {
             Launcher.with(getActivity(), RegisterActivity.class).execute(REQ_CODE_REGISTER);
         }
+    }
+
+    private void putNewUserToService() {
+        Intent intent = new Intent(LoginActivity.this, SocketPushService.class);
+        intent.putExtra(SocketPushService.NEWUSER, true);
+        startService(intent);
     }
 
     @Override

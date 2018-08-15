@@ -1,5 +1,8 @@
 package com.songbai.futurex.websocket.notification;
 
+import android.util.Log;
+import android.widget.LinearLayout;
+
 import com.songbai.futurex.websocket.MessageProcessor;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.Request;
