@@ -74,6 +74,7 @@ public class SettingLanguageFragment extends UniqueActivity.UniFragment {
                     umengEventCount(UmengCountEventId.SETTINGS0002);
                 }
                 changeLanguage(supportLang);
+                LanguageUtils.setApplicationLanguage(getContext());
             }
         });
         getSupportLocal();
