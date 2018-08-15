@@ -94,6 +94,10 @@ public class CurrencyUtils {
      * @return
      */
     public static double getDouble(String number) {
+        if (TextUtils.isEmpty(number)) {
+            return 0;
+        }
+
         try {
             return Double.parseDouble(number);
         } catch (NumberFormatException e) {

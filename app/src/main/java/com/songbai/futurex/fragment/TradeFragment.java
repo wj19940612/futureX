@@ -341,6 +341,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         });
 
         mOrderList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mOrderList.setNestedScrollingEnabled(false);
         mOrderAdapter = new OrderAdapter(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
