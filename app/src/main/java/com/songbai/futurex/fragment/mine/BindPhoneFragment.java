@@ -27,6 +27,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AreaCode;
 import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
+import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.StrFormatter;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
@@ -315,7 +316,8 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
                 }
                 break;
             case R.id.confirmBind:
-                updatePhone(mPhoneNum, mSmsAuth, mMailAuth, "");
+                String userPhone = LocalUser.getUser().getUserInfo().getUserPhone();
+                updatePhone(mPhoneNum, mSmsAuth, mMailAuth, TextUtils.isEmpty(userPhone) ? "1" : "0");
                 break;
             default:
         }

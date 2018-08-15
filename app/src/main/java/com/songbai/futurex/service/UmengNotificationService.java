@@ -28,7 +28,7 @@ public class UmengNotificationService extends UmengMessageService {
 
     private void startNotificationService(){
         Intent intent = new Intent(UmengNotificationService.this,SocketPushService.class);
-        startActivity(intent);
+        startService(intent);
     }
 
     @Override
