@@ -23,6 +23,8 @@ import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.view.IconTextRow;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
+import com.songbai.futurex.websocket.MessageProcessor;
+import com.songbai.futurex.websocket.notification.NotificationProcessor;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -140,6 +142,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
+                        MessageProcessor.get().unRegister();
                         LocalUser.getUser().logout();
                         Preference.get().setOptionalListRefresh(true);
                         Preference.get().setPosterListRefresh(true);

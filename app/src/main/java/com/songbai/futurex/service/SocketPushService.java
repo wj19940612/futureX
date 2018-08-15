@@ -37,6 +37,8 @@ public class SocketPushService extends Service {
     private NotificationProcessor mNotificationProcessor;
     private static final String PHONE_BRAND_SAMSUNG = "samsung";
 
+    public static final String NEWUSER = "newuser";
+
 
     @Override
     public void onCreate() {
@@ -44,6 +46,15 @@ public class SocketPushService extends Service {
         initPushListener();
         mNotificationProcessor.registerMsg();
         mNotificationProcessor.resume();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        boolean isNewUser = intent.getBooleanExtra(NEWUSER, false);
+        if (isNewUser && mNotificationProcessor != null) {
+            mNotificationProcessor.registerMsg();
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -58,7 +69,6 @@ public class SocketPushService extends Service {
             @Override
             public void onDataReceive(String data, int code, String dest) {
                 if (PushDestUtils.isNotification(dest)) {
-//                    Log.e("zzz", "msg:" + data);
                     notifyMsg(data);
                 }
             }
