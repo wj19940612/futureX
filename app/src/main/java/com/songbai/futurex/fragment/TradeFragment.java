@@ -63,6 +63,7 @@ import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.TradeVolumeView;
 import com.songbai.futurex.view.VolumeInputView;
 import com.songbai.futurex.view.dialog.ItemSelectController;
+import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
@@ -915,7 +916,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 break;
             case R.id.tradeButton:
                 if (LocalUser.getUser().isLogin()) {
-                    requestMakeOrder();
+                    makeOrder();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -923,9 +924,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         }
     }
 
-    private void requestMakeOrder() {
+    private void makeOrder() {
         if (mCurrencyPair == null) return;
-        MakeOrder makeOrder = new MakeOrder();
+        final MakeOrder makeOrder = new MakeOrder();
         int direction = mTradeDir == TradeDir.DIR_BUY_IN ? Order.DIR_BUY : Order.DIR_SELL;
         makeOrder.setDirection(direction);
         makeOrder.setEntrustCount(mVolumeInput.getVolume());
@@ -933,6 +934,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         makeOrder.setEntrustType(mTradeTypeValue);
         makeOrder.setEntrustPrice(getTradePrice());
 
+        requestMakeOrder(makeOrder);
+    }
+
+    private void requestMakeOrder(final MakeOrder makeOrder) {
         Apic.makeOrder(makeOrder).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override
@@ -941,7 +946,37 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         requestOrderList();
                         ToastUtil.show(R.string.entrust_success);
                     }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.Code.NEEDS_FUND_PASSWORD) {
+                            showFundPasswordDialog(makeOrder);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
+                    }
                 }).fire();
+    }
+
+    private void showFundPasswordDialog(final MakeOrder makeOrder) {
+        WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
+                new WithDrawPsdViewController.OnClickListener() {
+                    @Override
+                    public void onForgetClick() {
+                        umengEventCount(UmengCountEventId.TRADE0004);
+                    }
+
+                    @Override
+                    public void onConfirmClick(String cashPwd, String googleAuth) {
+                        makeOrder.setDrawPass(md5Encrypt(cashPwd));
+                        requestMakeOrder(makeOrder);
+                    }
+                });
+        withDrawPsdViewController.setShowGoogleAuth(false);
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setTitle(R.string.fund_password_verification);
     }
 
     private void requestOrderList() {
