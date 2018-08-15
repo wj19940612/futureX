@@ -127,7 +127,6 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
         MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
             @Override
             public void onConfirmClick() {
-                MessageProcessor.get().unRegister();
                 logout();
             }
         });
@@ -143,6 +142,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 .callback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
+                        MessageProcessor.get().unRegister();
                         LocalUser.getUser().logout();
                         Preference.get().setOptionalListRefresh(true);
                         Preference.get().setPosterListRefresh(true);

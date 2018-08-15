@@ -52,8 +52,6 @@ public class SocketPushService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean isNewUser = intent.getBooleanExtra(NEWUSER, false);
         if (isNewUser && mNotificationProcessor != null) {
-            Log.e("zzz","register user");
-            mNotificationProcessor.unRegisterMsg();
             mNotificationProcessor.registerMsg();
         }
         return super.onStartCommand(intent, flags, startId);
@@ -71,7 +69,6 @@ public class SocketPushService extends Service {
             @Override
             public void onDataReceive(String data, int code, String dest) {
                 if (PushDestUtils.isNotification(dest)) {
-                    Log.e("zzz", "msg:" + data);
                     notifyMsg(data);
                 }
             }
