@@ -138,14 +138,22 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mRecyclerView.setAdapter(mAdapter);
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
-        getAccountByUser(mAccountBean.getCoinType());
+        getCoinBalance();
         getFlow();
     }
 
+    private void getCoinBalance() {
+        if (mAccountType == 0) {
+            getAccountByUser(mAccountBean.getCoinType());
+        } else {
+            otcAccountList(mAccountBean.getCoinType());
+        }
+    }
+
     private void getFlow() {
-        if (mAccountType==0) {
+        if (mAccountType == 0) {
             getUserFinanceFlow(mGetUserFinanceFlowData);
-        }else {
+        } else {
             otcAccountDetail(mGetUserFinanceFlowData);
         }
     }
@@ -163,6 +171,22 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
 
     private void getAccountByUser(String coinType) {
         Apic.getAccountByUser(coinType).tag(TAG)
+                .callback(new Callback<Resp<CoinAccountBalance>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<CoinAccountBalance> resp) {
+                        CoinAccountBalance data = resp.getData();
+                        List<AccountBean> account = data.getAccount();
+                        if (account.size() > 0) {
+                            AccountBean coinAbleAmount = account.get(0);
+                            setCoinAccountInfo(coinAbleAmount);
+                        }
+                    }
+                })
+                .fireFreely();
+    }
+
+    private void otcAccountList(String coinType) {
+        Apic.otcAccountList(coinType).tag(TAG)
                 .callback(new Callback<Resp<CoinAccountBalance>>() {
                     @Override
                     protected void onRespSuccess(Resp<CoinAccountBalance> resp) {
@@ -212,7 +236,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             boolean shouldRefresh = data.getBooleanExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, false);
             if (shouldRefresh) {
                 getFlow();
-                getAccountByUser(mAccountBean.getCoinType());
+                getCoinBalance();
                 setResult(COIN_PROPERTY_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
             }
         }

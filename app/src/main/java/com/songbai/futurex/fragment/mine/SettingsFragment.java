@@ -23,6 +23,8 @@ import com.songbai.futurex.utils.LanguageUtils;
 import com.songbai.futurex.view.IconTextRow;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
+import com.songbai.futurex.websocket.MessageProcessor;
+import com.songbai.futurex.websocket.notification.NotificationProcessor;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -136,10 +138,17 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     }
 
     private void logout() {
-        LocalUser.getUser().logout();
-        Preference.get().setOptionalListRefresh(true);
-        Preference.get().setPosterListRefresh(true);
-        setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-        finish();
+        Apic.logout().tag(TAG).indeterminate(this)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        MessageProcessor.get().unRegister();
+                        LocalUser.getUser().logout();
+                        Preference.get().setOptionalListRefresh(true);
+                        Preference.get().setPosterListRefresh(true);
+                        setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        finish();
+                    }
+                }).fire();
     }
 }

@@ -318,6 +318,8 @@
     <string name="agency_to">代理账户转入</string>
     <string name="legal_account_in">法币账户转入</string>
     <string name="legal_account_out">法币账户转出</string>
+    <string name="trade_commission">交易返佣</string>
+    <string name="transfer_to_user_freeze">转至个人账户</string>
     <string name="coin_account_in">币币账户转入</string>
     <string name="coin_account_out">币币账户转出</string>
     <string name="type">类型</string>
@@ -732,7 +734,7 @@
     <string name="reminding_transaction">成交提醒</string>
     <string name="get">获取</string>
     <string name="fund_password_verification">资金密码验证</string>
-    <string name="pay_qc_code">支付二维码</string>
+    <string name="pay_qr_code">支付二维码</string>
 
     <!--Permission-->
     <string name="x_app_need_permissions_below">%1$s 需要下列权限\n才能正常使用</string>

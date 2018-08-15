@@ -239,6 +239,12 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
     private void setOtcTypeAndStatus(PropertyFlowDetail data) {
         int flowType = data.getFlowType();
         switch (flowType) {
+            case OTCFlowType.TRADE_COMMISSION:
+                mFlowType.setText(R.string.trade_commission);
+                break;
+            case OTCFlowType.TRANSFER_TO_USER_FREEZE:
+                mFlowType.setText(R.string.transfer_to_user_freeze);
+                break;
             case OTCFlowType.COIN_ACCOUNT_IN:
                 mFlowType.setText(R.string.coin_account_in);
                 break;

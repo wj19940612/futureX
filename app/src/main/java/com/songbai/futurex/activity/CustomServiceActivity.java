@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
@@ -30,6 +31,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.CustomServiceInfo;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.ThumbTransform;
 import com.songbai.futurex.utils.ToastUtil;
@@ -678,7 +680,7 @@ public class CustomServiceActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(final OnRetryClickListener onRetryClickListener, CustomerService customerService, Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
+            public void bindingData(final OnRetryClickListener onRetryClickListener, CustomerService customerService, final Context context, CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
                 if (customerService != null) {
                     GlideApp.with(context).load(customerService.getUserPortrait())
                             .placeholder(R.drawable.ic_default_head_portrait)
@@ -693,10 +695,19 @@ public class CustomServiceActivity extends BaseActivity {
                 mTime.setText(DateUtil.getFormatTime(customServiceChat.getCreateTime()));
 
                 if (customServiceChat.isPhoto()) {
-                    GlideApp.with(context).load(customServiceChat.getContent())
+                    final String url = customServiceChat.getContent();
+                    GlideApp.with(context).load(url)
                             .centerCrop()
                             .transform(new ThumbTransform(context))
                             .into(mPhoto);
+                    mPhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Launcher.with(context, LookBigPictureActivity.class)
+                                    .putExtra(ExtraKeys.IMAGE_PATH, url)
+                                    .execute();
+                        }
+                    });
                 }
             }
         }
@@ -768,7 +779,7 @@ public class CustomServiceActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
+            public void bindingData(final OnRetryClickListener onRetryClickListener, final Context context, final CustomServiceChat customServiceChat, CustomServiceChat lastChat, int position, int itemCount) {
                 if (LocalUser.getUser().getUserInfo() != null) {
                     GlideApp.with(context).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                             .placeholder(R.drawable.ic_default_head_portrait)
@@ -784,10 +795,19 @@ public class CustomServiceActivity extends BaseActivity {
                 mTime.setText(DateUtil.getFormatTime(customServiceChat.getCreateTime()));
 
                 if (customServiceChat.isPhoto()) {
-                    GlideApp.with(context).load(customServiceChat.getContent())
+                    final String url = customServiceChat.getContent();
+                    GlideApp.with(context).load(url)
                             .centerCrop()
                             .transform(new ThumbTransform(context))
                             .into(mPhoto);
+                    mPhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Launcher.with(context, LookBigPictureActivity.class)
+                                    .putExtra(ExtraKeys.IMAGE_PATH, url)
+                                    .execute();
+                        }
+                    });
                 }
 
                 mRetry.setVisibility(customServiceChat.isSuccess() ? View.GONE : View.VISIBLE);
