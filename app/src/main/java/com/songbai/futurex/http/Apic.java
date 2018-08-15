@@ -1111,6 +1111,17 @@ public class Apic {
     }
 
     /**
+     * 登录
+     * <p>
+     * /api/user/user/logout
+     *
+     * @return
+     */
+    public static Api logout() {
+        return Api.get("/api/user/user/logout");
+    }
+
+    /**
      * 验证码验证正确性
      * <p>
      * /api/user/user/checkMsgCode.do

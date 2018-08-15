@@ -294,6 +294,8 @@ public class MineFragment extends BaseFragment {
                         return;
                     }
                     Launcher.with(this, InviteActivity.class).execute();
+                }else{
+                    login();
                 }
                 break;
             case R.id.msgCenter:

@@ -198,12 +198,12 @@
     <string name="feedback_hint">Please describe the problem you found. Upload a screenshot if possible.</string>
     <string name="confirm_submit">Submit</string>
     <string name="invite_activity_rules">1. Minimum withdrawal amount: XX \n2.Be sure that the address is correct before you apply for withdrawal. Once sent to the block chain network, the transaction is irrevocable.\n3. Confirmation of all network nodes is needed after withdrawal. You can get your token after x times confirmation. \n4. Please do not take your token directly to ICO crowdfunding address, which may prevent you from receiving crowdfunding digital assets. \n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
-    <string name="check_activity_rules">Check Rules</string>
+    <string name="check_activity_rules">Event rules</string>
     <string name="join_now">Join the group</string>
     <string name="invite_code">INVT Code</string>
     <string name="copy">Copy</string>
     <string name="invite_buddies">Invite friends</string>
-    <string name="create_customization_poster">Create your poster</string>
+    <string name="create_customization_poster">Generate your poster</string>
 
     <string name="change_cash_pwd">Change fund password</string>
     <string name="set_cash_pwd">Set fund password</string>

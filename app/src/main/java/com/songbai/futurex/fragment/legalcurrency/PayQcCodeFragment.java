@@ -82,7 +82,12 @@ public class PayQcCodeFragment extends UniqueActivity.UniFragment {
         Canvas c = new Canvas(bmp);
         //如果不设置canvas画布为白色，则生成透明
 //        c.drawColor(Color.WHITE);
-        v.layout(0, 0, w, h);
+        v.measure(View.MeasureSpec.makeMeasureSpec(v.getWidth(),
+                View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(
+                v.getHeight(), View.MeasureSpec.EXACTLY));
+        v.layout((int) v.getX(), (int) v.getY(),
+                (int) v.getX() + v.getMeasuredWidth(),
+                (int) v.getY() + v.getMeasuredHeight());
         v.draw(c);
         return bmp;
     }
