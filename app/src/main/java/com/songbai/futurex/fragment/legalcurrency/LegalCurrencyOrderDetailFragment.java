@@ -32,6 +32,7 @@ import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.CountDownView;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -368,6 +369,16 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private void setBankList(List<BankCardBean> bankList) {
         mPayInfo.setLayoutManager(new LinearLayoutManager(getContext()));
         BankListAdapter adapter = new BankListAdapter();
+        adapter.setOnRVItemClickListener(new OnRVItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, Object obj) {
+                if (obj instanceof BankCardBean) {
+                    String payPic = ((BankCardBean) obj).getPayPic();
+                    UniqueActivity.launcher(LegalCurrencyOrderDetailFragment.this, PayQcCodeFragment.class)
+                            .putExtra(ExtraKeys.IMAGE_PATH, payPic).execute();
+                }
+            }
+        });
         adapter.setList(bankList);
         mPayInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -510,7 +521,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     class BankListAdapter extends RecyclerView.Adapter {
-
+        private OnRVItemClickListener mOnRVItemClickListener;
         private List<BankCardBean> mList = new ArrayList<>();
 
         @NonNull
@@ -523,7 +534,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof BankListHolder) {
-                ((BankListHolder) holder).bindData(mList.get(position));
+                ((BankListHolder) holder).bindData(position, mList.get(position));
             }
         }
 
@@ -537,11 +548,17 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
             mList.addAll(list);
         }
 
+        public void setOnRVItemClickListener(OnRVItemClickListener onRVItemClickListener) {
+            mOnRVItemClickListener = onRVItemClickListener;
+        }
+
         class BankListHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.payTypeIcon)
             ImageView mPayTypeIcon;
             @BindView(R.id.accountType)
             TextView mAccountType;
+            @BindView(R.id.qcCode)
+            ImageView mQcCode;
             @BindView(R.id.bankName)
             TextView mBankName;
             @BindView(R.id.name)
@@ -556,7 +573,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 ButterKnife.bind(this, view);
             }
 
-            public void bindData(BankCardBean bankCardBean) {
+            public void bindData(final int position, final BankCardBean bankCardBean) {
                 switch (bankCardBean.getPayType()) {
                     case BankCardBean.PAYTYPE_ALIPAY:
                         mPayTypeIcon.setImageResource(R.drawable.ic_pay_alipay_s);
@@ -572,6 +589,20 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                         break;
                     default:
                 }
+                final String payPic = bankCardBean.getPayPic();
+                if (TextUtils.isEmpty(payPic)) {
+                    mQcCode.setVisibility(View.GONE);
+                } else {
+                    mQcCode.setVisibility(View.VISIBLE);
+                }
+                mQcCode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnRVItemClickListener != null) {
+                            mOnRVItemClickListener.onItemClick(mQcCode, position, bankCardBean);
+                        }
+                    }
+                });
                 String bankName = bankCardBean.getBankName();
                 if (!TextUtils.isEmpty(bankName)) {
                     mBankName.setText(bankName);
