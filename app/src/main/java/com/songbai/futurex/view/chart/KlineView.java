@@ -99,10 +99,6 @@ public class KlineView extends RelativeLayout {
         mKline.setOnSidesReachedListener(onSidesReachedListener);
     }
 
-    public void reset() {
-        mKline.reset();
-    }
-
     public void setLastPrice(double lastPrice) {
         mKline.setLastPrice((float) lastPrice);
     }
