@@ -78,7 +78,7 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     }
 
     private void getAwardHistory() {
-        Apic.inviteAward(mPage, mPageSize)
+        Apic.inviteAward(mPage, mPageSize).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<InviteAwardHistory>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<InviteAwardHistory>> resp) {
@@ -98,9 +98,11 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
 
                     @Override
                     public void onFailure(ReqError reqError) {
-                        stopFreshOrLoadAnimation();
+                        if (mSwipeToLoadLayout != null) {
+                            stopFreshOrLoadAnimation();
+                        }
                     }
-                }).fire();
+                }).fireFreely();
     }
 
     @Override

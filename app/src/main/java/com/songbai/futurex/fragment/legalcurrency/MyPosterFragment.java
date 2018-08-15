@@ -301,7 +301,9 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                     @Override
                     public void onFailure(ReqError reqError) {
                         super.onFailure(reqError);
-                        stopFreshOrLoadAnimation();
+                        if (mSwipeToLoadLayout != null) {
+                            stopFreshOrLoadAnimation();
+                        }
                         if (mPage == 0) {
                             mRecyclerView.hideAll(false);
                         }
@@ -482,7 +484,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         break;
                     default:
                 }
-                mTreadAmount.setText(FinanceUtil.trimTrailingZero(otcWarePoster.getTradeCount()));
+                mTreadAmount.setText(otcWarePoster.getLeftCount());
                 mUpdateTime.setText(DateUtil.format(otcWarePoster.getUpdateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
                 mEdit.setOnClickListener(new View.OnClickListener() {
                     @Override

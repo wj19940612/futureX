@@ -104,10 +104,12 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
 
                     @Override
                     public void onFailure(ReqError reqError) {
-                        stopFreshOrLoadAnimation();
+                        if (mSwipeToLoadLayout != null) {
+                            stopFreshOrLoadAnimation();
+                        }
                     }
                 })
-                .fire();
+                .fireFreely();
     }
 
     @Override
