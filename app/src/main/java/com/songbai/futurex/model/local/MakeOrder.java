@@ -17,6 +17,7 @@ public class MakeOrder {
     private int entrustType;
     private double entrustPrice;
     private int source;
+    private String drawPass;
 
     public MakeOrder() {
         this.signId = String.valueOf(SysTime.getSysTime().getSystemTimestamp());
@@ -41,5 +42,9 @@ public class MakeOrder {
 
     public void setEntrustPrice(double entrustPrice) {
         this.entrustPrice = entrustPrice;
+    }
+
+    public void setDrawPass(String drawPass) {
+        this.drawPass = drawPass;
     }
 }
