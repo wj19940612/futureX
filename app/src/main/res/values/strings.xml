@@ -734,7 +734,7 @@
     <string name="reminding_transaction">成交提醒</string>
     <string name="get">获取</string>
     <string name="fund_password_verification">资金密码验证</string>
-    <string name="pay_qc_code">支付二维码</string>
+    <string name="pay_qr_code">支付二维码</string>
 
     <!--Permission-->
     <string name="x_app_need_permissions_below">%1$s 需要下列权限\n才能正常使用</string>

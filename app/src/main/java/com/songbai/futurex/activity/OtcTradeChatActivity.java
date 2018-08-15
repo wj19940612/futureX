@@ -714,7 +714,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            void bindingData(Context context, OtcChatMessage otcChatMessage) {
+            void bindingData(final Context context, OtcChatMessage otcChatMessage) {
                 if (mLeftOtcChatUserInfo != null) {
                     mName.setText(mLeftOtcChatUserInfo.getUserName());
                     GlideApp.with(context)
@@ -725,10 +725,19 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
 
                 if (otcChatMessage.getMsgType() == OtcChatMessage.MSG_PHOTO) {
-                    GlideApp.with(context).load(otcChatMessage.getMessage())
+                    final String url = otcChatMessage.getMessage();
+                    GlideApp.with(context).load(url)
                             .centerCrop()
                             .transform(new ThumbTransform(context))
                             .into(mPhoto);
+                    mPhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Launcher.with(context, LookBigPictureActivity.class)
+                                    .putExtra(ExtraKeys.IMAGE_PATH, url)
+                                    .execute();
+                        }
+                    });
                 }
             }
         }
@@ -791,7 +800,7 @@ public class OtcTradeChatActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            void bindingData(final OnRetryClickListener onRetryClickListener, Context context, final OtcChatMessage otcChatMessage) {
+            void bindingData(final OnRetryClickListener onRetryClickListener, final Context context, final OtcChatMessage otcChatMessage) {
                 if (mRightOtcChatUserInfo != null) {
                     mName.setText(mRightOtcChatUserInfo.getUserName());
                     GlideApp.with(context)
@@ -802,10 +811,19 @@ public class OtcTradeChatActivity extends BaseActivity {
                 mTime.setText(DateUtil.getFormatTime(otcChatMessage.getCreateTime()));
 
                 if (otcChatMessage.getMsgType() == OtcChatMessage.MSG_PHOTO) {
-                    GlideApp.with(context).load(otcChatMessage.getMessage())
+                    final String url = otcChatMessage.getMessage();
+                    GlideApp.with(context).load(url)
                             .centerCrop()
                             .transform(new ThumbTransform(context))
                             .into(mPhoto);
+                    mPhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Launcher.with(context, LookBigPictureActivity.class)
+                                    .putExtra(ExtraKeys.IMAGE_PATH, url)
+                                    .execute();
+                        }
+                    });
                 }
 
                 mRetry.setVisibility(otcChatMessage.isSuccess() ? View.GONE : View.VISIBLE);
