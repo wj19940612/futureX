@@ -115,10 +115,10 @@ public class BindPhoneFragment extends UniqueActivity.UniFragment {
     }
 
     private void updatePhone(String phoneNum, String phoneMsgCode, String msgCode, String type) {
-        Apic.updatePhone(mAreaCode.getText().toString(), phoneNum, phoneMsgCode, msgCode, type).tag(TAG)
-                .callback(new Callback4Resp<Resp<List<AreaCode>>, List<AreaCode>>() {
+        Apic.updatePhone(mAreaCode.getText().toString(), phoneNum, phoneMsgCode, msgCode, type).indeterminate(this).tag(TAG)
+                .callback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespData(List<AreaCode> data) {
+                    protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(R.string.bind_success);
                         finish();
                     }

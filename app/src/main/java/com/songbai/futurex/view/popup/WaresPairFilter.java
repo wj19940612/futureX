@@ -1,6 +1,7 @@
 package com.songbai.futurex.view.popup;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -93,6 +94,7 @@ public class WaresPairFilter {
         } else {
             mPopupWindow = new PopupWindow(mView, ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
+            mPopupWindow.setBackgroundDrawable(new ColorDrawable());
             mPopupWindow.setFocusable(true);
             mPopupWindow.setOutsideTouchable(true);
             mPopupWindow.showAsDropDown(view);

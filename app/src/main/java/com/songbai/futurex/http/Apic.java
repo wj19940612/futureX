@@ -324,6 +324,15 @@ public class Apic {
     }
 
     /**
+     * /api/otc/account/list
+     * GET
+     * 法币账户 对应币种
+     */
+    public static Api otcAccountList(String coinType) {
+        return Api.get("/api/otc/account/list", new ReqParams().put("coinType", coinType));
+    }
+
+    /**
      * /api/user/user/account
      * GET
      * 推广员账户
@@ -1099,6 +1108,17 @@ public class Apic {
     public static Api login(LoginData loginData) {
         return Api.post("/api/user/user/login.do",
                 new ReqParams(LoginData.class, loginData));
+    }
+
+    /**
+     * 登录
+     * <p>
+     * /api/user/user/logout
+     *
+     * @return
+     */
+    public static Api logout() {
+        return Api.get("/api/user/user/logout");
     }
 
     /**

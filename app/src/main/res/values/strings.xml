@@ -318,6 +318,8 @@
     <string name="agency_to">代理账户转入</string>
     <string name="legal_account_in">法币账户转入</string>
     <string name="legal_account_out">法币账户转出</string>
+    <string name="trade_commission">交易返佣</string>
+    <string name="transfer_to_user_freeze">转至个人账户</string>
     <string name="coin_account_in">币币账户转入</string>
     <string name="coin_account_out">币币账户转出</string>
     <string name="type">类型</string>

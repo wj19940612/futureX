@@ -192,7 +192,9 @@ public class SharePosterFragment extends BaseFragment {
         /** 如果不设置canvas画布为白色，则生成透明 */
 //        c.drawColor(Color.WHITE);
 
-        v.layout(0, 0, w, h);
+        v.layout((int) v.getX(), (int) v.getY(),
+                (int) v.getX() + v.getMeasuredWidth(),
+                (int) v.getY() + v.getMeasuredHeight());
         v.draw(c);
 
         return bmp;

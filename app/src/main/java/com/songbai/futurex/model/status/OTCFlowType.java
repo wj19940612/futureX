@@ -6,6 +6,14 @@ package com.songbai.futurex.model.status;
  */
 public interface OTCFlowType {
     /**
+     * 交易返佣
+     */
+    int TRADE_COMMISSION = 1;
+    /**
+     * 转至个人账户
+     */
+    int TRANSFER_TO_USER_FREEZE = 2;
+    /**
      * 币币账户转入
      */
     int COIN_ACCOUNT_IN = 3;

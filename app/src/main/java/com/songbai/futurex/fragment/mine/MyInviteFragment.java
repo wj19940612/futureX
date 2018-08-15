@@ -96,6 +96,14 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                             mAwardAmount.setText(getString(R.string.x_bfb, String.valueOf(promoterInfo.getTotalCom())));
                         }
                     }
+
+                    @Override
+                    public void onResponse(Resp<PromoterInfo> promoterInfoResp) {
+                        if (promoterInfoResp.getCode() == 211 || promoterInfoResp.getCode() == 214) {
+                            finish();
+                        }
+                        super.onResponse(promoterInfoResp);
+                    }
                 })
                 .fire();
     }

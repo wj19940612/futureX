@@ -139,10 +139,16 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     }
 
     private void logout() {
-        LocalUser.getUser().logout();
-        Preference.get().setOptionalListRefresh(true);
-        Preference.get().setPosterListRefresh(true);
-        setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
-        finish();
+        Apic.logout().tag(TAG).indeterminate(this)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        LocalUser.getUser().logout();
+                        Preference.get().setOptionalListRefresh(true);
+                        Preference.get().setPosterListRefresh(true);
+                        setResult(SETTINGS_RESULT, new Intent().putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true));
+                        finish();
+                    }
+                }).fire();
     }
 }

@@ -93,10 +93,12 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     };
 
     private final int[] otcFlowType = new int[]{TYPE_ALL,
+            OTCFlowType.TRADE_COMMISSION, OTCFlowType.TRANSFER_TO_USER_FREEZE,
             OTCFlowType.COIN_ACCOUNT_IN, OTCFlowType.LEGAL_CURRENCY_ACCOUNT_OUT,
             OTCFlowType.OTC_TRADE_IN, OTCFlowType.OTC_TRADE_OUT
     };
     private final int[] otcFlowTypeStrRes = new int[]{R.string.all_type,
+            R.string.trade_commission, R.string.transfer_to_user_freeze,
             R.string.coin_account_in, R.string.legal_account_out,
             R.string.otc_trade_in, R.string.otc_trade_out};
     private OptionsPickerView<String> mPvOptions;
