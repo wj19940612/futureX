@@ -68,8 +68,8 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setEmptyView(mEmptyView);
         mAdapter = new InviteAwardHistoryAdapter();
@@ -82,15 +82,17 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
                 .callback(new Callback<Resp<PagingWrap<InviteAwardHistory>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<InviteAwardHistory>> resp) {
-                        mAdapter.setList(resp.getData());
-                        mAdapter.notifyDataSetChanged();
-                        stopFreshOrLoadAnimation();
-                        mRecyclerView.hideAll(false);
-                        if (resp.getData().getTotal() - 1 > mPage) {
-                            mPage++;
-                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
-                        } else {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                        if (mRecyclerView != null) {
+                            mAdapter.setList(resp.getData());
+                            mAdapter.notifyDataSetChanged();
+                            stopFreshOrLoadAnimation();
+                            mRecyclerView.hideAll(false);
+                            if (resp.getData().getTotal() - 1 > mPage) {
+                                mPage++;
+                                mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            } else {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            }
                         }
                     }
 
@@ -98,7 +100,7 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
                     public void onFailure(ReqError reqError) {
                         stopFreshOrLoadAnimation();
                     }
-                }).fireFreely();
+                }).fire();
     }
 
     @Override

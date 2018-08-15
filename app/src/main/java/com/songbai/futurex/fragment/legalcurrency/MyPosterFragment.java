@@ -279,20 +279,22 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 .callback(new Callback<Resp<PagingWrap<OtcWarePoster>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<OtcWarePoster>> resp) {
-                        if (mPairChanged) {
-                            mPairChanged = false;
-                        }
-                        mSwipeToLoadLayout.setLoadMoreEnabled(true);
-                        mAdapter.setList(resp.getData().getData());
-                        mAdapter.notifyDataSetChanged();
-                        stopFreshOrLoadAnimation();
-                        if (mPage == 0) {
-                            mRecyclerView.hideAll(false);
-                        }
-                        if (mPage < resp.getData().getTotal() - 1) {
-                            mPage++;
-                        } else {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                        if (mSwipeToLoadLayout != null) {
+                            if (mPairChanged) {
+                                mPairChanged = false;
+                            }
+                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            mAdapter.setList(resp.getData().getData());
+                            mAdapter.notifyDataSetChanged();
+                            stopFreshOrLoadAnimation();
+                            if (mPage == 0) {
+                                mRecyclerView.hideAll(false);
+                            }
+                            if (mPage < resp.getData().getTotal() - 1) {
+                                mPage++;
+                            } else {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            }
                         }
                     }
 
