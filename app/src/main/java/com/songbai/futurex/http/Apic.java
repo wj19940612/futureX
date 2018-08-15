@@ -1282,7 +1282,7 @@ public class Apic {
      * @return
      */
     public static Api makeOrder(MakeOrder makeOrder) {
-        return Api.post("/api/entrust/entrust/order",
+        return Api.post("/api/entrust/entrust/v1/order",
                 new ReqParams(MakeOrder.class, makeOrder));
     }
 

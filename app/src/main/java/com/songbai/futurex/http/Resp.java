@@ -11,6 +11,7 @@ public class Resp<T> {
         int NEEDS_PRIMARY_CERTIFICATION = 3660;  // 需要初级认证
         int NEEDS_SENIOR_CERTIFICATION = 3661;  // 需要高级认证
         int NEEDS_MORE_DEAL_COUNT = 3662;  // 您的历史交易笔数未达到对方要求
+        int NEEDS_FUND_PASSWORD = 3018; // 需要资金密码
     }
 
     private int code;

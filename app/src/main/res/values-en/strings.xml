@@ -728,6 +728,7 @@
     <string name="no_enough_balance">Insufficient balance</string>
     <string name="reminding_transaction">Notice of deals</string>
     <string name="get">Get</string>
+    <string name="fund_password_verification">Fund password</string>
 
     <!--Permission-->
     <string name="x_app_need_permissions_below">%1$s need these permissions\nto work properly.</string>
