@@ -60,6 +60,8 @@ import butterknife.ButterKnife;
  * APIs:
  */
 public class TradeOrdersActivity extends RVSwipeLoadActivity {
+    public static final int TAB_HISTORY = 1;
+    public static final int TAB_ENTRUST = 0;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -88,12 +90,15 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     private KeyBoardHelper mKeyBoardHelper;
     private boolean mKeyboardVisible;
 
+    private int mIndexTab;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade_orders);
         ButterKnife.bind(this);
 
+        initData();
         mKeyBoardHelper = new KeyBoardHelper(getActivity());
         mKeyBoardHelper.onCreate();
         mKeyBoardHelper.setOnKeyBoardStatusChangeListener(new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
@@ -140,6 +145,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             }
         });
 
+        mRadioHeader.selectTab(mIndexTab);
         requestOrderList();
     }
 
@@ -159,6 +165,10 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     protected void onPause() {
         super.onPause();
         mMarketSubscriber.pause();
+    }
+
+    private void initData(){
+        mIndexTab = getIntent().getIntExtra(ExtraKeys.ENTER_TAB,TAB_ENTRUST);
     }
 
     private void initTitleBar() {
