@@ -81,16 +81,16 @@ public class PropertyFlowFilter {
             R.string.periodic_release, R.string.special_trade, R.string.cashback,
             R.string.invt_reward, R.string.distributed_rev, R.string.release_bfb,
             R.string.miners_rewar, R.string.shared_fee, R.string.subscription,
-            R.string.event_grant,R.string.event_award
+            R.string.event_grant, R.string.event_award
     };
 
     private final int[] otcFlowType = new int[]{ALL,
-            OTCFlowType.TRADE_COMMISSION, OTCFlowType.TRANSFER_TO_USER_FREEZE,
+            OTCFlowType.TRADE_COMMISSION,
             OTCFlowType.COIN_ACCOUNT_IN, OTCFlowType.LEGAL_CURRENCY_ACCOUNT_OUT,
             OTCFlowType.OTC_TRADE_IN, OTCFlowType.OTC_TRADE_OUT
     };
     private final int[] otcFlowTypeStrRes = new int[]{R.string.all_type,
-            R.string.trade_commission, R.string.transfer_to_user_freeze,
+            R.string.trade_commission,
             R.string.coin_account_in, R.string.legal_account_out,
             R.string.otc_trade_in, R.string.otc_trade_out};
 

@@ -2,7 +2,7 @@
 <resources>
     <paths>
         <external-path
-            name="images"
+            name="camera_photos"
             path="" />
     </paths>
 </resources>

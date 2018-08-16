@@ -744,4 +744,10 @@
     <string name="storage_permission_to_save_bandwidth">缓存图片，降低流量消耗</string>
     <string name="permission_open">开启</string>
     <string name="permission_close">关闭</string>
+
+    <string name="auditing">审核中</string>
+    <string name="rejected">审核失败</string>
+    <string name="confirming">确认中</string>
+    <string name="succeeded">成功</string>
+    <string name="failed">失败</string>
 </resources>

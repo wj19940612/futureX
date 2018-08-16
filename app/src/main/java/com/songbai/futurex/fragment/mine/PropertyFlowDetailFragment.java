@@ -19,6 +19,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.PropertyFlowDetail;
 import com.songbai.futurex.model.status.CurrencyFlowStatus;
 import com.songbai.futurex.model.status.CurrencyFlowType;
+import com.songbai.futurex.model.status.IoStatus;
 import com.songbai.futurex.model.status.OTCFlowStatus;
 import com.songbai.futurex.model.status.OTCFlowType;
 import com.songbai.futurex.utils.DateUtil;
@@ -122,7 +123,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
         String fee = data.getFee();
         switch (flowType) {
             case CurrencyFlowType.DRAW:
-                mFlowType.setText(R.string.withdraw_cash);
+                setIoStatus(data.getIoStatus());
                 mAddress.setText(data.getToAddr());
                 mFee.setText(getString(R.string.x_space_x, fee, data.getCoinType().toUpperCase()));
                 mConfirmAmount.setText(data.getConfirm_num());
@@ -132,7 +133,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
                 break;
             case CurrencyFlowType.DEPOSITE:
                 mAddress.setText(data.getToAddr());
-                mFlowType.setText(R.string.recharge_coin);
+                setIoStatus(data.getIoStatus());
                 mAddress.setText(data.getToAddr());
                 mFee.setText(getString(R.string.x_space_x, fee, data.getCoinType().toUpperCase()));
                 mConfirmAmount.setText(data.getConfirm_num());
@@ -232,6 +233,29 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
                 break;
             default:
                 mStatus.setText(R.string.others);
+                break;
+        }
+    }
+
+    private void setIoStatus(int ioStatus) {
+        switch (ioStatus) {
+            case IoStatus.AUDITING:
+                mFlowType.setText(R.string.auditing);
+                break;
+            case IoStatus.REJECTED:
+                mFlowType.setText(R.string.rejected);
+                break;
+            case IoStatus.CONFIRMING:
+                mFlowType.setText(R.string.confirming);
+                break;
+            case IoStatus.SUCCEEDED:
+                mFlowType.setText(R.string.succeeded);
+                break;
+            case IoStatus.FAILED:
+                mFlowType.setText(R.string.failed);
+                break;
+            default:
+                mFlowType.setText(R.string.others);
                 break;
         }
     }

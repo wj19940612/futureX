@@ -745,4 +745,10 @@
     <string name="storage_permission_to_save_bandwidth">Cache images to reduce consumption of network</string>
     <string name="permission_open">Open</string>
     <string name="permission_close">Close</string>
+
+    <string name="auditing">Auditing</string>
+    <string name="rejected">Rejected</string>
+    <string name="confirming">Confirming</string>
+    <string name="succeeded">Succeeded</string>
+    <string name="failed">Failed</string>
 </resources>
