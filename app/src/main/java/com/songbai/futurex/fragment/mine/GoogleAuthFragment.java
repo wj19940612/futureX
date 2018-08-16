@@ -72,14 +72,14 @@ public class GoogleAuthFragment extends UniqueActivity.UniFragment {
                     UniqueActivity.launcher(this, GoogleAuthenticatorFragment.class).execute();
                     return;
                 }
-                ToastUtil.show(R.string.please_set_google_authenticator_first);
+                ToastUtil.show(getString(R.string.please_set_google_authenticator_first));
                 break;
             case R.id.googleAuthenticatorSettings:
                 if (LocalUser.getUser().getUserInfo().getGoogleAuth() == AUTH) {
                     UniqueActivity.launcher(this, GoogleAuthenticatorSettingsFragment.class).execute();
                     return;
                 }
-                ToastUtil.show(R.string.please_set_google_authenticator_first);
+                ToastUtil.show(getString(R.string.please_set_google_authenticator_first));
                 break;
             default:
         }

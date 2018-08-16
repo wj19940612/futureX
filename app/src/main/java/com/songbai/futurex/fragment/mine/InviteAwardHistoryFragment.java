@@ -68,8 +68,8 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setEmptyView(mEmptyView);
         mAdapter = new InviteAwardHistoryAdapter();
@@ -78,25 +78,29 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     }
 
     private void getAwardHistory() {
-        Apic.inviteAward(mPage, mPageSize)
+        Apic.inviteAward(mPage, mPageSize).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<InviteAwardHistory>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<InviteAwardHistory>> resp) {
-                        mAdapter.setList(resp.getData());
-                        mAdapter.notifyDataSetChanged();
-                        stopFreshOrLoadAnimation();
-                        mRecyclerView.hideAll(false);
-                        if (resp.getData().getTotal() - 1 > mPage) {
-                            mPage++;
-                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
-                        } else {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                        if (mRecyclerView != null) {
+                            mAdapter.setList(resp.getData());
+                            mAdapter.notifyDataSetChanged();
+                            stopFreshOrLoadAnimation();
+                            mRecyclerView.hideAll(false);
+                            if (resp.getData().getTotal() - 1 > mPage) {
+                                mPage++;
+                                mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            } else {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(ReqError reqError) {
-                        stopFreshOrLoadAnimation();
+                        if (mSwipeToLoadLayout != null) {
+                            stopFreshOrLoadAnimation();
+                        }
                     }
                 }).fireFreely();
     }

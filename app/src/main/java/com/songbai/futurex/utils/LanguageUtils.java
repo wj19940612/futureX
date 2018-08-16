@@ -137,4 +137,19 @@ public class LanguageUtils {
     public static boolean needUpdateLocale(Context context, Locale newUserLocale) {
         return newUserLocale != null && !getCurrentLocale(context).equals(newUserLocale);
     }
+
+    /**
+     * 设置语言类型
+     */
+    public static void setApplicationLanguage(Context context) {
+        Resources resources = context.getResources();
+        Configuration configuration = resources.getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Locale locale = LanguageUtils.getUserLocale(context);
+            configuration.setLocale(locale);
+            configuration.setLocales(new LocaleList(locale));
+            context.getApplicationContext().createConfigurationContext(configuration);
+        }
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+    }
 }

@@ -113,6 +113,15 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
     @OnClick({R.id.drawCoinSwitch, R.id.resetCashPwdSwitch, R.id.confirmOtcTradSSwitch})
     public void onViewClicked(View view) {
         boolean isSelected = view.isSelected();
+        if (isSelected) {
+            showGoogleAuthDialog(view,isSelected);
+        } else {
+            setState(view, isSelected);
+            setAuthVerify(new Gson().toJson(mGoogleAuthVerify), "");
+        }
+    }
+
+    private void setState(View view, boolean isSelected) {
         switch (view.getId()) {
             case R.id.drawCoinSwitch:
                 mGoogleAuthVerify.setDRAW(isSelected ? CLOSED : OPEN);
@@ -125,21 +134,16 @@ public class GoogleAuthenticatorSettingsFragment extends UniqueActivity.UniFragm
                 break;
             default:
         }
-        if (isSelected) {
-            showGoogleAuthDialog();
-        } else {
-            setAuthVerify(new Gson().toJson(mGoogleAuthVerify), "");
-        }
     }
 
-    private void showGoogleAuthDialog() {
+    private void showGoogleAuthDialog(final View view, final boolean isSelected) {
         mGoogleAuthCodeViewController = new GoogleAuthCodeViewController(getActivity(), new GoogleAuthCodeViewController.OnClickListener() {
             @Override
             public void onConfirmClick(String authCode) {
+                setState(view, isSelected);
                 setAuthVerify(new Gson().toJson(mGoogleAuthVerify), authCode);
             }
         });
-
         SmartDialog.solo(getActivity())
                 .setCustomViewController(mGoogleAuthCodeViewController)
                 .show();

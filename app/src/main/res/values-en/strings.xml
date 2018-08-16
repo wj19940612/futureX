@@ -704,6 +704,10 @@
     <string name="gained_bfb_award">Rewards(BFB)</string>
     <string name="x_bfb">%1$s BFB</string>
     <string name="x_btc">%1$s BTC</string>
+    <string-array name="invite_header">
+        <item>Invitations</item>
+        <item>Rewards</item>
+    </string-array>
     <string name="invitees">Invitee</string>
     <string name="register_time">Registration</string>
     <string name="deal_count">Trades</string>
@@ -730,6 +734,7 @@
     <string name="no_enough_balance">Insufficient balance</string>
     <string name="reminding_transaction">Notice of deals</string>
     <string name="get">Get</string>
+    <string name="pay_qr_code">Pay QR code</string>
     <string name="fund_password_verification">Fund password</string>
 
     <!--Permission-->

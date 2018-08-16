@@ -744,6 +744,7 @@ public class Kline extends BaseChart {
     }
 
     public void flush() {
+        reset();
         mVisibleList.clear();
         mDataList.clear();
         mDataList.addAll(mBufferDataList);

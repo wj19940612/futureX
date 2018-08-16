@@ -85,8 +85,6 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     EmptyRecyclerView mPayInfo;
     @BindView(R.id.countDealRate)
     TextView mCountDealRate;
-    @BindView(R.id.bankEmptyView)
-    TextView mBankEmptyView;
     @BindView(R.id.appeal)
     TextView mAppeal;
     @BindView(R.id.cancelOrder)
@@ -119,7 +117,6 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mPayInfo.setEmptyView(mBankEmptyView);
         needGoogle();
         otcOrderDetail();
         otcWaresMine();
@@ -392,7 +389,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mMsgProcessor.unregisterMsg();
     }
 
-    @OnClick({R.id.sellerInfo, R.id.bankEmptyView, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
+    @OnClick({R.id.sellerInfo, R.id.askPayInfo, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.sellerInfo:
@@ -402,7 +399,11 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                                 OTCOrderStatus.ORDER_DIRECT_SELL : OTCOrderStatus.ORDER_DIRECT_BUY)
                         .execute();
                 break;
-            case R.id.bankEmptyView:
+            case R.id.askPayInfo:
+                Launcher.with(this, OtcTradeChatActivity.class)
+                        .putExtra(ExtraKeys.ORDER_ID, mOrderId)
+                        .putExtra(ExtraKeys.TRADE_DIRECTION, mTradeDirection)
+                        .execute();
                 break;
             case R.id.contractEachOther:
                 Launcher.with(this, OtcTradeChatActivity.class)

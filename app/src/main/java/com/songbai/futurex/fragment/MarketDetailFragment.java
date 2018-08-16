@@ -154,7 +154,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     requestTrendData();
                 } else {
                     showKlineView();
-                    requestKlineData();
+                    requestKlineData(true);
                 }
             }
         });
@@ -400,7 +400,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         if (mChartRadio.getSelectedPosition() == 0) {
             requestTrendData();
         } else {
-            requestKlineData();
+            requestKlineData(false);
         }
     }
 
@@ -442,11 +442,15 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 }).fire();
     }
 
-    private void requestKlineData() {
-        requestKlineData(null);
+    private void requestKlineData(String endTime) {
+        requestKlineData(endTime, false);
     }
 
-    private void requestKlineData(final String endTime) {
+    private void requestKlineData(boolean flush) {
+        requestKlineData(null, flush);
+    }
+
+    private void requestKlineData(final String endTime, final boolean flush) {
         String klineType = KlineUtils.getKlineType(mChartRadio.getSelectedPosition());
         String code = mCurrencyPair.getPairs();
         Apic.getKlineData(code, klineType, endTime).tag(TAG)
@@ -458,6 +462,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                             mKline.setDataList(data);
                             mKline.setDateFormatStr(KlineUtils.getDateFormat(mChartRadio.getSelectedPosition()));
                             mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
+                            if (flush) mKline.flush();
 
                             int refreshInterval = KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition());
                             if (refreshInterval > 0) {

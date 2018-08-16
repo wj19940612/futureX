@@ -173,30 +173,36 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
                 .callback(new Callback<Resp<PagingWrap<LegalCurrencyTrade>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<LegalCurrencyTrade>> resp) {
-                        if (mPairChanged) {
-                            mPairChanged = false;
-                        }
-                        mSwipeToLoadLayout.setLoadMoreEnabled(true);
-                        mAdapter.setList(resp.getData().getData());
-                        mAdapter.notifyDataSetChanged();
-                        stopFreshOrLoadAnimation();
-                        if (mPage == 0) {
-                            mRecyclerView.hideAll(false);
-                        }
-                        if (mPage < resp.getData().getTotal() - 1) {
-                            mPage++;
-                            mGetOtcWaresHome.setPage(mPage);
-                        } else {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                        if (mSwipeToLoadLayout != null) {
+                            if (mPairChanged) {
+                                mPairChanged = false;
+                            }
+                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            mAdapter.setList(resp.getData().getData());
+                            mAdapter.notifyDataSetChanged();
+                            stopFreshOrLoadAnimation();
+                            if (mPage == 0) {
+                                mRecyclerView.hideAll(false);
+                            }
+                            if (mPage < resp.getData().getTotal() - 1) {
+                                mPage++;
+                                mGetOtcWaresHome.setPage(mPage);
+                            } else {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(ReqError reqError) {
                         super.onFailure(reqError);
-                        stopFreshOrLoadAnimation();
+                        if (mSwipeToLoadLayout != null) {
+                            stopFreshOrLoadAnimation();
+                        }
                         if (mPage == 0) {
-                            mRecyclerView.hideAll(false);
+                            if (mRecyclerView != null) {
+                                mRecyclerView.hideAll(false);
+                            }
                         }
                     }
                 }).fire();

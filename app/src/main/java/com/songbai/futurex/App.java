@@ -31,7 +31,7 @@ public class App extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         if (sContext != null) {
-            sContext=this;
+            sContext = this;
         }
         super.attachBaseContext(LanguageUtils.attachBaseContext(base, LanguageUtils.getUserLocale(base)));
     }

@@ -68,6 +68,7 @@ public class OtcWarePoster {
     private int status;
     private double totalCount;
     private double tradeCount;
+    private String leftCount;
     private long updateTime;
     private List<BankCardBean> bankList;
 
@@ -245,6 +246,14 @@ public class OtcWarePoster {
 
     public void setTradeCount(double tradeCount) {
         this.tradeCount = tradeCount;
+    }
+
+    public String getLeftCount() {
+        return leftCount;
+    }
+
+    public void setLeftCount(String leftCount) {
+        this.leftCount = leftCount;
     }
 
     public long getUpdateTime() {

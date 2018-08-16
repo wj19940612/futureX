@@ -1,6 +1,5 @@
 package com.songbai.futurex.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -43,6 +42,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        translucentStatusBar();
         setContentView(R.layout.activity_look_big_picture);
         ButterKnife.bind(this);
         initData(getIntent());
@@ -130,7 +130,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 
 
     private void initData(Intent intent) {
-        mPortrait = intent.getStringExtra(ExtraKeys.PORTRAIT);
+        mPortrait = intent.getStringExtra(ExtraKeys.IMAGE_PATH);
         if (mPortrait == null) {
             // TODO: 2018/5/29  
 //            mPortrait = Preference.get().getBigImage();
