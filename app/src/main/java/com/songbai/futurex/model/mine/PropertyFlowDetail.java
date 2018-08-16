@@ -17,7 +17,8 @@ public class PropertyFlowDetail {
     private String valueStr;
     private String toAddr;
     private String fee;
-    private String confirm_num;
+    private String confirmNum;
+    private String confirm;
     private int ioStatus;
 
     public int getId() {
@@ -84,12 +85,20 @@ public class PropertyFlowDetail {
         this.fee = fee;
     }
 
-    public String getConfirm_num() {
-        return confirm_num;
+    public String getConfirmNum() {
+        return confirmNum;
     }
 
-    public void setConfirm_num(String confirm_num) {
-        this.confirm_num = confirm_num;
+    public void setConfirmNum(String confirm_num) {
+        this.confirmNum = confirm_num;
+    }
+
+    public String getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(String confirm) {
+        this.confirm = confirm;
     }
 
     public int getIoStatus() {

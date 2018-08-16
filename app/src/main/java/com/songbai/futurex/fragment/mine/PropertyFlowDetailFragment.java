@@ -121,25 +121,26 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
     private void setFlowTypeAndStatus(PropertyFlowDetail data) {
         int flowType = data.getFlowType();
         String fee = data.getFee();
+        String confirmText = data.getConfirm() + "/" + data.getConfirmNum();
+        String toAddr = data.getToAddr();
         switch (flowType) {
             case CurrencyFlowType.DRAW:
                 setIoStatus(data.getIoStatus());
-                mAddress.setText(data.getToAddr());
+                mAddress.setText(toAddr);
                 mFee.setText(getString(R.string.x_space_x, fee, data.getCoinType().toUpperCase()));
-                mConfirmAmount.setText(data.getConfirm_num());
-                mAddressGroup.setVisibility(View.VISIBLE);
+                mConfirmAmount.setText(confirmText);
+                mAddressGroup.setVisibility(TextUtils.isEmpty(toAddr) ? View.GONE : View.VISIBLE);
                 mFeeGroup.setVisibility(TextUtils.isEmpty(fee) ? View.GONE : View.VISIBLE);
-                mVolumeGroup.setVisibility(View.VISIBLE);
+                mVolumeGroup.setVisibility(TextUtils.isEmpty(data.getConfirm()) || TextUtils.isEmpty(data.getConfirmNum()) ? View.GONE : View.VISIBLE);
                 break;
             case CurrencyFlowType.DEPOSITE:
-                mAddress.setText(data.getToAddr());
                 setIoStatus(data.getIoStatus());
-                mAddress.setText(data.getToAddr());
+                mAddress.setText(toAddr);
                 mFee.setText(getString(R.string.x_space_x, fee, data.getCoinType().toUpperCase()));
-                mConfirmAmount.setText(data.getConfirm_num());
-                mAddressGroup.setVisibility(View.VISIBLE);
+                mConfirmAmount.setText(confirmText);
+                mAddressGroup.setVisibility(TextUtils.isEmpty(toAddr) ? View.GONE : View.VISIBLE);
                 mFeeGroup.setVisibility(TextUtils.isEmpty(fee) ? View.GONE : View.VISIBLE);
-                mVolumeGroup.setVisibility(View.VISIBLE);
+                mVolumeGroup.setVisibility(TextUtils.isEmpty(data.getConfirm()) || TextUtils.isEmpty(data.getConfirmNum()) ? View.GONE : View.VISIBLE);
                 break;
             case CurrencyFlowType.ENTRUST_BUY:
                 mFlowType.setText(R.string.buy_order);
