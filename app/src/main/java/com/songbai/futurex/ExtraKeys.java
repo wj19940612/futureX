@@ -58,4 +58,5 @@ public interface ExtraKeys {
     String SERACH_FOR_TRADE = "search_for_trade";
 
     String PAGE_INDEX = "page_index";
+    String ENTER_TAB = "enter_tab";
 }

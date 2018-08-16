@@ -50,6 +50,9 @@ public class SocketPushService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            return super.onStartCommand(intent, flags, startId);
+        }
         boolean isNewUser = intent.getBooleanExtra(NEWUSER, false);
         if (isNewUser && mNotificationProcessor != null) {
             mNotificationProcessor.registerMsg();
@@ -76,6 +79,7 @@ public class SocketPushService extends Service {
     }
 
     private void notifyMsg(String message) {
+        Log.e("zzz", "message:" + message);
         new DataParser<Response<JumpContent>>(message) {
             @Override
             public void onSuccess(Response<JumpContent> jumpContentResponse) {
