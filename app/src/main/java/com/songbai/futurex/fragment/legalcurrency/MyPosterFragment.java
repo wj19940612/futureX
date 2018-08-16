@@ -279,27 +279,31 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                 .callback(new Callback<Resp<PagingWrap<OtcWarePoster>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<OtcWarePoster>> resp) {
-                        if (mPairChanged) {
-                            mPairChanged = false;
-                        }
-                        mSwipeToLoadLayout.setLoadMoreEnabled(true);
-                        mAdapter.setList(resp.getData().getData());
-                        mAdapter.notifyDataSetChanged();
-                        stopFreshOrLoadAnimation();
-                        if (mPage == 0) {
-                            mRecyclerView.hideAll(false);
-                        }
-                        if (mPage < resp.getData().getTotal() - 1) {
-                            mPage++;
-                        } else {
-                            mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                        if (mSwipeToLoadLayout != null) {
+                            if (mPairChanged) {
+                                mPairChanged = false;
+                            }
+                            mSwipeToLoadLayout.setLoadMoreEnabled(true);
+                            mAdapter.setList(resp.getData().getData());
+                            mAdapter.notifyDataSetChanged();
+                            stopFreshOrLoadAnimation();
+                            if (mPage == 0) {
+                                mRecyclerView.hideAll(false);
+                            }
+                            if (mPage < resp.getData().getTotal() - 1) {
+                                mPage++;
+                            } else {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(ReqError reqError) {
                         super.onFailure(reqError);
-                        stopFreshOrLoadAnimation();
+                        if (mSwipeToLoadLayout != null) {
+                            stopFreshOrLoadAnimation();
+                        }
                         if (mPage == 0) {
                             mRecyclerView.hideAll(false);
                         }
@@ -480,7 +484,7 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         break;
                     default:
                 }
-                mTreadAmount.setText(FinanceUtil.trimTrailingZero(otcWarePoster.getTradeCount()));
+                mTreadAmount.setText(otcWarePoster.getLeftCount());
                 mUpdateTime.setText(DateUtil.format(otcWarePoster.getUpdateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
                 mEdit.setOnClickListener(new View.OnClickListener() {
                     @Override

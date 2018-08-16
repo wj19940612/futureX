@@ -68,9 +68,10 @@ import butterknife.Unbinder;
 public class ShareFriendsDialogFragment extends BottomDialogFragment implements SharePosterFragment.OnSelectListener {
     private static final String HAS_POSTER = "has_poster";
     private static final String QC_CODE = "qc_code";
+    private static final String SHARE_CONTENT = "share_content";
     private static final int SHARE = 12312;
     private static final int OPEN_ACCESSIBILITY = 12313;
-    public static CharSequence textString;
+    public static String textString;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     @BindView(R.id.viewPagerContainer)
@@ -118,10 +119,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     };
     private File mTemp;
 
-    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code) {
+    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionShare) {
         Bundle args = new Bundle();
         args.putBoolean(HAS_POSTER, hasPoster);
         args.putString(QC_CODE, code);
+        args.putString(SHARE_CONTENT, promotionShare);
         ShareFriendsDialogFragment fragment = new ShareFriendsDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -142,6 +144,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         if (arguments != null) {
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
+            textString = arguments.getString(SHARE_CONTENT);
             int[] posters = new int[]{R.drawable.ic_poster1, R.drawable.ic_poster2};
             for (int i = 0; i < posters.length; i++) {
                 mList.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
@@ -211,8 +214,6 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private void shareWithPackageName(final String packageName, final String className) {
         if (isAPPInstalled(getContext(), packageName)) {
             final String title = "";
-            final String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
-            textString = content;
             if (mHasPoster) {
                 if (mSelectedPosition < 0) {
                     ToastUtil.show(R.string.select_a_poster);
@@ -220,7 +221,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 }
                 Bitmap shareBitmap = mList.get(mSelectedPosition).getShareBitmap();
                 mTemp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
-                shareStream(packageName, className, title, content, mTemp);
+                shareStream(packageName, className, title, textString, mTemp);
             } else {
                 if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
                     if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
@@ -248,7 +249,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                         shareWechat();
                     }
                 } else {
-                    shareText(packageName, className, mQcCode, content);
+                    shareText(packageName, className, mQcCode, textString);
                 }
             }
         } else {
@@ -275,16 +276,14 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     }
 
     private void shareWithText(SHARE_MEDIA platform) {
-        final String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
         new ShareAction(getActivity())
                 .setPlatform(platform)
-                .withText(content)
+                .withText(textString)
                 .setCallback(mUmShareListener)
                 .share();
     }
 
     private void shareWithImage(SHARE_MEDIA platform) {
-        final String content = "全球首家创世纪联盟交易所于9月1日正式开放注册， 零风险玩赚区块链。9月1日起百万平台币等你来拿，注册就送币（平台币只有20亿，前期流动只有1000万，永不增发） 1、持有平台币共享交易手续费分红。 2、注册送100枚平台币，直推好友注册可获得20枚平台币及好友10%交易手续费提成。 3、二级好友注册可获得10枚平台币及好友10%交易手续费提成。奖励链接： http://reg.51tg.vip/mobile/register.html?r=HVPsgA";
         if (mSelectedPosition < 0) {
             ToastUtil.show(R.string.select_a_poster);
             return;
@@ -292,7 +291,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         Bitmap shareBitmap = mList.get(mSelectedPosition).getShareBitmap();
         new ShareAction(getActivity())
                 .setPlatform(platform)
-                .withText(content)
+                .withText(textString)
                 .withMedia(new UMImage(getContext(), shareBitmap))
                 .setCallback(mUmShareListener)
                 .share();

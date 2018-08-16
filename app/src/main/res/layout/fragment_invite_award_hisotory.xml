@@ -47,12 +47,6 @@
         android:layout_height="match_parent"
         android:visibility="gone"/>
 
-    <com.songbai.futurex.view.EmptyRecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"/>
-
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipeToLoadLayout"
         android:layout_width="match_parent"

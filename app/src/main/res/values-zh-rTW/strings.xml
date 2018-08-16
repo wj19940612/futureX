@@ -491,7 +491,7 @@
     <string name="seller_info">賣家信息</string>
     <string name="buyer_info">買家信息</string>
     <string name="register_time_x">註冊時間：%1$s</string>
-    <string name="click_to_ask_contract_info">點擊咨詢支付方式</string>
+    <string name="click_to_ask_contract_info">咨詢支付方式</string>
     <string name="contact_each_other">聯繫對方</string>
     <string name="cancel_trade">取消交易</string>
     <string name="cancel_trade_hin_msg">如果您已經向賣家付款，請千萬不要取消交易。取消規則：買方當日累計5筆取消，將會限制當天的買入功能。</string>
@@ -689,7 +689,7 @@
     <string name="volume">數量</string>
 
     <string name="trading_mining">交易挖礦</string>
-    <string name="about_bfb">挖礦規則</string>
+    <string name="about_bfb">關於BFB</string>
     <string name="mining_output_yesterday">昨日挖礦產出</string>
     <string name="mining_output_today">今日待分配收入累計摺合</string>
     <string name="bfb_total_amount">BFB流通總量</string>

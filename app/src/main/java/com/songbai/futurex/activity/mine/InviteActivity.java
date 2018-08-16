@@ -52,6 +52,7 @@ public class InviteActivity extends BaseActivity {
     ImageView mEventPic;
     private String mPromotionGroup;
     private String mCode;
+    private String mPromotionShare;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class InviteActivity extends BaseActivity {
                                     .load(promotionInfos.getPromotionPic())
                                     .into(mEventPic);
                             mRules.setText(Html.fromHtml(promotionInfos.getPromotionRule()));
+                            mPromotionShare = promotionInfos.getPromotionShare();
                             mPromotionGroup = promotionInfos.getPromotionGroup();
                         }
                     }
@@ -139,7 +141,7 @@ public class InviteActivity extends BaseActivity {
     }
 
     private void showShareDialog(boolean hasPoster) {
-        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode);
+        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode,mPromotionShare);
         shareFriendsDialogFragment.show(getSupportFragmentManager());
     }
 

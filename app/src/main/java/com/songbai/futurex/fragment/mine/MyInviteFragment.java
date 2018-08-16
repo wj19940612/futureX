@@ -13,10 +13,12 @@ import android.view.ViewGroup;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.PromoterInfo;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.autofit.AutofitTextView;
 
@@ -59,11 +61,11 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
         ArrayList<Fragment> list = new ArrayList<>();
         list.add(InviteHistoryFragment.newInstance());
         list.add(InviteAwardHistoryFragment.newInstance());
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(new HistoryAdapter(getChildFragmentManager(), list));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -73,7 +75,6 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
         mRadioHeader.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
@@ -101,8 +102,10 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                     public void onResponse(Resp<PromoterInfo> promoterInfoResp) {
                         if (promoterInfoResp.getCode() == 211 || promoterInfoResp.getCode() == 214) {
                             finish();
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
+                        } else {
+                            super.onResponse(promoterInfoResp);
                         }
-                        super.onResponse(promoterInfoResp);
                     }
                 })
                 .fire();
