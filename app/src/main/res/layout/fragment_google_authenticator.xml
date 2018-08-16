@@ -120,6 +120,7 @@
                     android:layout_marginTop="23dp"
                     android:hint="@string/please_input_google_authenticator_code"
                     android:includeFontPadding="false"
+                    android:inputType="number"
                     android:paddingLeft="20dp"
                     app:layout_constraintBottom_toTopOf="@id/authCode"
                     app:layout_constraintLeft_toRightOf="@+id/authCodeText"

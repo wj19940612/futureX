@@ -245,6 +245,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/please_input_google_authenticator_code"
+                    android:inputType="number"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"/>
             </LinearLayout>

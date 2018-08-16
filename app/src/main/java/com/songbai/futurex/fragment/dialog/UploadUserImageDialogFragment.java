@@ -354,7 +354,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
             //因为我用的就是AppId.所以。这里就直接用BuildConfig.APPLICATION_ID了。
             //如果你的android:authorities="test.provider"。那这里第二个参数就应该是test.provider
             return FileProvider.getUriForFile(context.getApplicationContext(),
-                    BuildConfig.APPLICATION_ID + ".fileprovider", imageFile);
+                    BuildConfig.APPLICATION_ID + ".fileProvider", imageFile);
         } else {
             return Uri.fromFile(imageFile);
         }
