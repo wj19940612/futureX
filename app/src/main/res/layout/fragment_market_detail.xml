@@ -31,11 +31,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white">
 
-                <TextView
+                <com.songbai.wrapres.autofit.AutofitTextView
                     android:id="@+id/lastPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
+                    android:layout_toLeftOf="@id/highText"
+                    android:maxLines="1"
                     android:textColor="@color/green"
                     android:textSize="34sp"
                     tools:text="9230.00"/>
