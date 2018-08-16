@@ -1,5 +1,6 @@
 package com.songbai.futurex.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -125,6 +126,9 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
         if (requestCode == REQ_CODE_LOGIN && resultCode != RESULT_OK) {
             reopenMainPage();
         }
+        if (requestCode == REQ_CODE_LOGIN && resultCode == Activity.RESULT_OK) {
+            recreate();
+        }
     }
 
     @Override
@@ -152,6 +156,7 @@ public class BaseActivity extends StatusBarActivity implements ReqIndeterminate,
             ((ScrollView) view).smoothScrollTo(0, 0);
         }
     }
+
     protected void scrollToTop(View anchor, final View view) {
         anchor.setOnClickListener(new View.OnClickListener() {
             @Override

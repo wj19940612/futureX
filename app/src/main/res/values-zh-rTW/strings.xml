@@ -481,7 +481,7 @@
     <string name="pound_sign_x">#%1$s</string>
     <string name="trade_count_symbol_x">交易金額：%1$s&#160;%2$s</string>
     <string name="pay_info">支付信息</string>
-    <string name="trade_rules">支付信息</string>
+    <string name="trade_rules">交易說明</string>
     <string name="trade_rules_description">請務必向對方詢問交易方式，並且與平台所留方式進行對比，若不一致，請慎重付款\n\n1.轉帳時請備注「訂單編號後4位」以加快確認速度\n\n2.請勿在匯款備注內填寫比特幣、BTC、OTC等任何數字幣有關字眼，防止您的匯款被銀行攔截\n\n3.訂單有效期為15分鐘，請您在有效期內及時付款並點擊「已轉賬」按鈕，數字幣才可以釋放給您\n\n4.如果您無法在15分鐘內完成付款，該筆訂單將被取消\n\n5.開始交易後數字幣由系統鎖定托管，請安心下單</string>
     <string name="order_detail_price_x">價格：%1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">數量：%1$f&#160;%2$s</string>
