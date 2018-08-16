@@ -8,6 +8,8 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.List;
+
 public class AppInfo {
     /**
      * 获取版本名，例如 1.0.1
@@ -83,5 +85,16 @@ public class AppInfo {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean isAPPInstalled(Context context, String packageName) {
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> pinfo = pm.getInstalledPackages(0);
+        for (int i = 0; i < pinfo.size(); i++) {
+            if (pinfo.get(i).packageName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

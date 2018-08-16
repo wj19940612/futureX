@@ -7,8 +7,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -41,6 +39,7 @@ import com.songbai.futurex.fragment.dialog.BottomDialogFragment;
 import com.songbai.futurex.fragment.mine.SharePosterFragment;
 import com.songbai.futurex.service.AccessibilityUtils;
 import com.songbai.futurex.service.AssistantService;
+import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
@@ -55,7 +54,6 @@ import com.umeng.socialize.media.UMImage;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -213,7 +211,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     }
 
     private void shareWithPackageName(final String packageName, final String className) {
-        if (isAPPInstalled(getContext(), packageName)) {
+        if (AppInfo.isAPPInstalled(getContext(), packageName)) {
             final String title = "";
             if (mHasPoster) {
                 if (mSelectedPosition < 0) {
@@ -444,17 +442,6 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 return null;
             }
         }
-    }
-
-    public static boolean isAPPInstalled(Context context, String packageName) {
-        PackageManager pm = context.getPackageManager();
-        List<PackageInfo> pinfo = pm.getInstalledPackages(0);
-        for (int i = 0; i < pinfo.size(); i++) {
-            if (pinfo.get(i).packageName.equals(packageName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
