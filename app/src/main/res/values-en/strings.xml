@@ -691,7 +691,7 @@
     <string name="trading_mining">Mining</string>
     <string name="about_bfb">About BFB</string>
     <string name="mining_output_yesterday">Output of the previous day</string>
-    <string name="mining_output_today">Revenue to be distributed in today</string>
+    <string name="mining_output_today">Revenue to be distributed today</string>
     <string name="bfb_total_amount">Total BFB in circulation</string>
     <string name="google_authentication">Google Auth</string>
     <string name="reset_google_auth">Reset</string>

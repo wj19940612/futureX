@@ -144,7 +144,8 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         if (arguments != null) {
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
-            textString = arguments.getString(SHARE_CONTENT);
+            String shareText = arguments.getString(SHARE_CONTENT);
+            textString = (TextUtils.isEmpty(shareText) ? "" : shareText) + "https://bitfutu.re/pro/" + mQcCode;
             int[] posters = new int[]{R.drawable.ic_poster1, R.drawable.ic_poster2};
             for (int i = 0; i < posters.length; i++) {
                 mList.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
