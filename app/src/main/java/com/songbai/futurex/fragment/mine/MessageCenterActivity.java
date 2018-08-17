@@ -28,6 +28,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.SysMessage;
+import com.songbai.futurex.model.mine.UnreadMessageCount;
 import com.songbai.futurex.model.status.MessageType;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.DateUtil;
@@ -95,6 +96,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
             requestNotice();
         } else {
             getMessageList();
+            getMessageCount();
         }
     }
 
@@ -209,6 +211,25 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
         }
     }
 
+    private void getMessageCount() {
+        if (mPageType == PAGE_TYPE_MESSAGE) {
+            Apic.getMsgCount().tag(TAG)
+                    .callback(new Callback<Resp<UnreadMessageCount>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<UnreadMessageCount> resp) {
+                            if (mPageType == PAGE_TYPE_MESSAGE) {
+                                UnreadMessageCount data = resp.getData();
+                                if (data != null) {
+                                    int count = data.getCount();
+                                    mTitleBar.setRightVisible(count > 0);
+                                    mTitleBar.setRightViewEnable(count > 0);
+                                }
+                            }
+                        }
+                    }).fire();
+        }
+    }
+
     private void msgRead(final SysMessage sysMessage, final int position) {
         Apic.msgRead(sysMessage.getId()).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
@@ -216,6 +237,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         sysMessage.setStatus(SysMessage.READ);
                         mAdapter.notifyItemChanged(position, sysMessage);
+                        getMessageCount();
                     }
                 })
                 .fire();
@@ -228,6 +250,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         mAdapter.setAllIsRead(true);
+                        getMessageCount();
                     }
                 })
                 .fire();

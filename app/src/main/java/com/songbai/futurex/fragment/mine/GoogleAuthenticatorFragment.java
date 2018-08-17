@@ -68,6 +68,8 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
     TextView mGetAuthCode;
     @BindView(R.id.googleAuthCodeText)
     TextView mGoogleAuthCodeText;
+    @BindView(R.id.divider)
+    View mDivider;
     private Unbinder mBind;
     private AuthCodeViewController mAuthCodeViewController;
     private boolean mSendSms;
@@ -94,6 +96,7 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
         mAuthCodeText.setVisibility(mReset ? View.VISIBLE : View.GONE);
         mAuthCode.setVisibility(mReset ? View.VISIBLE : View.GONE);
         mGetAuthCode.setVisibility(mReset ? View.VISIBLE : View.GONE);
+        mDivider.setVisibility(mReset ? View.VISIBLE : View.GONE);
         if (!mReset) {
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mGoogleAuthCode.getLayoutParams();
             layoutParams.leftToRight = mGoogleAuthCodeText.getId();
