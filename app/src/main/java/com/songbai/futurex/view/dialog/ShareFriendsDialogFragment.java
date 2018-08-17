@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,15 +36,12 @@ import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.BottomDialogFragment;
 import com.songbai.futurex.fragment.mine.SharePosterFragment;
-import com.songbai.futurex.service.AccessibilityUtils;
-import com.songbai.futurex.service.AssistantService;
 import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ZXingUtils;
 import com.songbai.futurex.utils.image.ImageUtils;
-import com.songbai.futurex.view.SmartDialog;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -98,24 +94,29 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         @Override
         public void onStart(SHARE_MEDIA shareMedia) {
             Log.e("wtf", "onStart");
+            mSharing = true;
         }
 
         @Override
         public void onResult(SHARE_MEDIA shareMedia) {
+            mSharing = false;
             dismiss();
         }
 
         @Override
         public void onError(SHARE_MEDIA shareMedia, Throwable throwable) {
+            mSharing = false;
             Log.e("wtf", throwable.toString());
         }
 
         @Override
         public void onCancel(SHARE_MEDIA shareMedia) {
+            mSharing = false;
             Log.e("wtf", "onCancel");
         }
     };
     private File mTemp;
+    private boolean mSharing;
 
     public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionShare) {
         Bundle args = new Bundle();
@@ -164,11 +165,15 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 switch (((int) obj)) {
                     case R.string.wechat_friends:
 //                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
-                        share(SHARE_MEDIA.WEIXIN);
+                        if (!mSharing) {
+                            share(SHARE_MEDIA.WEIXIN);
+                        }
                         break;
                     case R.string.wechat_moments:
 //                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");/**/
-                        share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        if (!mSharing) {
+                            share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        }
                         break;
                     case R.string.twitter:
                         shareWithPackageName("com.twitter.android", "");
@@ -222,34 +227,34 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 mTemp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
                 shareStream(packageName, className, title, textString, mTemp);
             } else {
-                if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
-                    if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
-                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
-                            @Override
-                            public void onConfirmClick() {
-                                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                                startActivityForResult(intent, OPEN_ACCESSIBILITY);
-                            }
-                        });
-                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-                        smartDialog.setCustomViewController(msgHintController)
-                                .show();
-                        msgHintController.setConfirmText(R.string.go_to_set);
-                        msgHintController.setCloseText(R.string.share);
-                        msgHintController.setOnColseClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                shareWechat();
-                            }
-                        });
-                        msgHintController.setMsg(R.string.can_open_accessibility_service);
-                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
-                    } else {
-                        shareWechat();
-                    }
-                } else {
-                    shareText(packageName, className, mQcCode, textString);
-                }
+//                if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
+//                    if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
+//                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
+//                            @Override
+//                            public void onConfirmClick() {
+//                                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+//                                startActivityForResult(intent, OPEN_ACCESSIBILITY);
+//                            }
+//                        });
+//                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+//                        smartDialog.setCustomViewController(msgHintController)
+//                                .show();
+//                        msgHintController.setConfirmText(R.string.go_to_set);
+//                        msgHintController.setCloseText(R.string.share);
+//                        msgHintController.setOnColseClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                shareWechat();
+//                            }
+//                        });
+//                        msgHintController.setMsg(R.string.can_open_accessibility_service);
+//                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
+//                    } else {
+                shareWechat();
+//                    }
+//                } else {
+                shareText(packageName, className, mQcCode, textString);
+//                }
             }
         } else {
             ToastUtil.show(R.string.app_not_installed);
@@ -264,6 +269,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
 
     private void share(SHARE_MEDIA platform) {
         if (UMShareAPI.get(getContext()).isInstall(getActivity(), platform)) {
+            mSharing = true;
             if (mHasPoster) {
                 shareWithImage(platform);
             } else {

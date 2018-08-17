@@ -121,7 +121,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
     private void setFlowTypeAndStatus(PropertyFlowDetail data) {
         int flowType = data.getFlowType();
         String fee = data.getFee();
-        String confirmText = data.getConfirm() + "/" + data.getConfirmNum();
+        String confirmText = data.getConfirmNum() + "/" + data.getConfirm();
         String toAddr = data.getToAddr();
         switch (flowType) {
             case CurrencyFlowType.DRAW:
@@ -131,7 +131,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
                 mConfirmAmount.setText(confirmText);
                 mAddressGroup.setVisibility(TextUtils.isEmpty(toAddr) ? View.GONE : View.VISIBLE);
                 mFeeGroup.setVisibility(TextUtils.isEmpty(fee) ? View.GONE : View.VISIBLE);
-                mVolumeGroup.setVisibility(TextUtils.isEmpty(data.getConfirm()) || TextUtils.isEmpty(data.getConfirmNum()) ? View.GONE : View.VISIBLE);
+                mVolumeGroup.setVisibility(View.VISIBLE);
                 break;
             case CurrencyFlowType.DEPOSITE:
                 setIoStatus(data.getIoStatus());
@@ -140,7 +140,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
                 mConfirmAmount.setText(confirmText);
                 mAddressGroup.setVisibility(TextUtils.isEmpty(toAddr) ? View.GONE : View.VISIBLE);
                 mFeeGroup.setVisibility(TextUtils.isEmpty(fee) ? View.GONE : View.VISIBLE);
-                mVolumeGroup.setVisibility(TextUtils.isEmpty(data.getConfirm()) || TextUtils.isEmpty(data.getConfirmNum()) ? View.GONE : View.VISIBLE);
+                mVolumeGroup.setVisibility(View.VISIBLE);
                 break;
             case CurrencyFlowType.ENTRUST_BUY:
                 mFlowType.setText(R.string.buy_order);
