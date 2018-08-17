@@ -343,7 +343,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             //  使用 FileProvider 会在某些 app 下不支持（在使用FileProvider 方式情况下QQ不能支持图片、视频分享，微信不支持视频分享）
             // TODO: 2018/8/9 FileProvider 还未完成
             uri = FileProvider.getUriForFile(context,
-                    BuildConfig.APPLICATION_ID + ".provider",
+                    BuildConfig.APPLICATION_ID + ".fileProvider",
                     file);
             ContentResolver cR = context.getContentResolver();
             if (uri != null && !TextUtils.isEmpty(uri.toString())) {
