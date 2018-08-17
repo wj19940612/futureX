@@ -113,9 +113,9 @@ public class SharePosterFragment extends BaseFragment {
             public void run() {
                 int measuredWidth = mRootView.getMeasuredWidth();
                 mShareMsg.setPadding(
-                        (int) (Display.dp2Px(22, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
+                        (int) (Display.dp2Px(20, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
                         (int) (Display.dp2Px(13, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
-                        (int) (Display.dp2Px(25, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
+                        (int) (Display.dp2Px(20, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
                         (int) (Display.dp2Px(13, getResources()) * measuredWidth / Display.dp2Px(375, getResources())));
                 ConstraintLayout.MarginLayoutParams layoutParams = (ConstraintLayout.LayoutParams) mQcCode.getLayoutParams();
                 int mQcCodeWidth = (int) (Display.dp2Px(64, getResources()) / Display.dp2Px(375, getResources()) * measuredWidth);
@@ -125,7 +125,7 @@ public class SharePosterFragment extends BaseFragment {
                 ConstraintLayout.MarginLayoutParams layoutTextParams = (ConstraintLayout.LayoutParams) mShareTitle.getLayoutParams();
                 layoutTextParams.rightMargin= (int) (Display.dp2Px(5, getResources()) * measuredWidth / Display.dp2Px(375, getResources()));
                 mShareTitle.setLayoutParams(layoutTextParams);
-                mShareTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,20f * measuredWidth / Display.dp2Px(375, getResources()));
+                mShareTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,18f * measuredWidth / Display.dp2Px(375, getResources()));
                 mShareDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP,12f * measuredWidth / Display.dp2Px(375, getResources()));
                 Bitmap bitmap = ZXingUtils.createQRImage("https://bitfutu.re/pro/" + mCode, mQcCodeWidth, mQcCodeWidth);
                 mQcCode.setImageBitmap(bitmap);
