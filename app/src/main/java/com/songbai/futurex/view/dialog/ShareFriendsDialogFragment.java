@@ -100,7 +100,8 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         @Override
         public void onResult(SHARE_MEDIA shareMedia) {
             mSharing = false;
-            dismiss();
+            dismissAllowingStateLoss();
+            Log.e("wtf", "onResult");
         }
 
         @Override
@@ -153,7 +154,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                dismissAllowingStateLoss();
             }
         });
         mSelectHint.setText(mHasPoster ? R.string.share_exclusive_poster : R.string.share_link);
@@ -227,7 +228,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 mTemp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
                 shareStream(packageName, className, title, textString, mTemp);
             } else {
-//                if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
+                if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
 //                    if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
 //                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
 //                            @Override
@@ -250,11 +251,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
 //                        msgHintController.setMsg(R.string.can_open_accessibility_service);
 //                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
 //                    } else {
-                shareWechat();
+                        shareWechat();
 //                    }
-//                } else {
-                shareText(packageName, className, mQcCode, textString);
-//                }
+                } else {
+                    shareText(packageName, className, mQcCode, textString);
+                }
             }
         } else {
             ToastUtil.show(R.string.app_not_installed);
@@ -454,7 +455,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHARE) {
-            dismiss();
+            dismissAllowingStateLoss();
             if (mTemp != null) {
                 mTemp.delete();
             }

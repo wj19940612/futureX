@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,19 +112,21 @@ public class SharePosterFragment extends BaseFragment {
             @Override
             public void run() {
                 int measuredWidth = mRootView.getMeasuredWidth();
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mQcCode.getLayoutParams();
+                mShareMsg.setPadding(
+                        (int) (Display.dp2Px(22, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
+                        (int) (Display.dp2Px(13, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
+                        (int) (Display.dp2Px(25, getResources()) * measuredWidth / Display.dp2Px(375, getResources())),
+                        (int) (Display.dp2Px(13, getResources()) * measuredWidth / Display.dp2Px(375, getResources())));
+                ConstraintLayout.MarginLayoutParams layoutParams = (ConstraintLayout.LayoutParams) mQcCode.getLayoutParams();
                 int mQcCodeWidth = (int) (Display.dp2Px(64, getResources()) / Display.dp2Px(375, getResources()) * measuredWidth);
                 layoutParams.width = mQcCodeWidth;
                 layoutParams.height = mQcCodeWidth;
-                layoutParams.rightMargin = (int) (Display.dp2Px(25, getResources()) * measuredWidth / Display.dp2Px(375, getResources()));
-                layoutParams.topMargin = (int) (Display.dp2Px(13, getResources()) * measuredWidth / Display.dp2Px(375, getResources()));
-                layoutParams.bottomMargin = (int) (Display.dp2Px(13, getResources()) * measuredWidth / Display.dp2Px(375, getResources()));
                 mQcCode.setLayoutParams(layoutParams);
-                ConstraintLayout.LayoutParams layoutTextParams = (ConstraintLayout.LayoutParams) mShareTitle.getLayoutParams();
-                layoutTextParams.leftMargin = (int) (Display.dp2Px(22, getResources()) * measuredWidth / Display.dp2Px(375, getResources()));
+                ConstraintLayout.MarginLayoutParams layoutTextParams = (ConstraintLayout.LayoutParams) mShareTitle.getLayoutParams();
+                layoutTextParams.rightMargin= (int) (Display.dp2Px(5, getResources()) * measuredWidth / Display.dp2Px(375, getResources()));
                 mShareTitle.setLayoutParams(layoutTextParams);
-                mShareTitle.setTextSize(20f * measuredWidth / Display.dp2Px(375, getResources()));
-                mShareDesc.setTextSize(12f * measuredWidth / Display.dp2Px(375, getResources()));
+                mShareTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,20f * measuredWidth / Display.dp2Px(375, getResources()));
+                mShareDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP,12f * measuredWidth / Display.dp2Px(375, getResources()));
                 Bitmap bitmap = ZXingUtils.createQRImage("https://bitfutu.re/pro/" + mCode, mQcCodeWidth, mQcCodeWidth);
                 mQcCode.setImageBitmap(bitmap);
             }

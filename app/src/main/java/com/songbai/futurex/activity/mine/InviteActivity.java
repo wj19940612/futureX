@@ -151,7 +151,6 @@ public class InviteActivity extends BaseActivity {
                 break;
             default:
         }
-
     }
 
     private void showShareDialog(boolean hasPoster) {
