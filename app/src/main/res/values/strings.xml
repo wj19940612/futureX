@@ -31,7 +31,7 @@
     <string name="unknown_status">未知状态</string>
 
     <!--委托单-->
-    <string name="revoke_order">撤單</string>
+    <string name="revoke_order">撤单</string>
     <string name="entrust_price_x">委托价 (%1$s)</string>
     <string name="entrust_volume_x">委托量 (%1$s)</string>
     <string name="actual_deal_x">实际成交 (%1$s)</string>

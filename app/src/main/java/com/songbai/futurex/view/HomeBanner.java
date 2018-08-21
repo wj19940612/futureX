@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -36,10 +37,19 @@ public class HomeBanner extends FrameLayout {
         void onBannerClick(Banner information);
     }
 
+    public interface OnBannerTouchListener {
+        void onTouch(boolean touch);
+    }
+
     private OnBannerClickListener mOnBannerClickListener;
+    private OnBannerTouchListener mOnBannerTouchListener;
 
     public void setOnBannerClickListener(OnBannerClickListener onBannerClickListener) {
         mOnBannerClickListener = onBannerClickListener;
+    }
+
+    public void setOnBannerTouchListener(OnBannerTouchListener onBannerTouchListener) {
+        mOnBannerTouchListener = onBannerTouchListener;
     }
 
     public HomeBanner(Context context) {
@@ -112,6 +122,25 @@ public class HomeBanner extends FrameLayout {
                 mAdapter.setNewAdvertisements(informationList);
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (mOnBannerTouchListener != null) {
+                    mOnBannerTouchListener.onTouch(true);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_OUTSIDE:
+                if (mOnBannerTouchListener != null) {
+                    mOnBannerTouchListener.onTouch(false);
+                }
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private void filterEmptyInformation(List<Banner> informationList) {

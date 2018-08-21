@@ -56,6 +56,7 @@ import com.songbai.futurex.utils.Network;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.HomeBanner;
+import com.songbai.futurex.view.HomeNoticeLinearLayout;
 import com.songbai.futurex.view.autofit.AutofitTextView;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
@@ -85,7 +86,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     @BindView(R.id.notice)
     TextSwitcher mNotice;
     @BindView(R.id.noticeWrapper)
-    LinearLayout mNoticeWrapper;
+    HomeNoticeLinearLayout mNoticeWrapper;
     @BindView(R.id.entrustPairs)
     RecyclerView mEntrustPairs;
     @BindView(R.id.increaseRank)
@@ -119,6 +120,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     private MarketSubscriber mMarketSubscriber;
     private List<EntrustPair.LatelyBean> mLatelyBeans;
     private ArrayList<PairRiseListBean> mPairRiseListBeans;
+    private boolean mStopBanner;
+    private boolean mStopNotice;
 
     @Override
     public void onAttach(Context context) {
@@ -150,6 +153,18 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         mIncreaseRankAdapter.setOnItemClickListener(mOnItemClickListener);
         mIncreaseRank.setAdapter(mIncreaseRankAdapter);
         mHomeBanner.setOnBannerClickListener(this);
+        mHomeBanner.setOnBannerTouchListener(new HomeBanner.OnBannerTouchListener() {
+            @Override
+            public void onTouch(boolean touch) {
+                mStopBanner = touch;
+            }
+        });
+        mNoticeWrapper.setOnNoticeTouchListener(new HomeNoticeLinearLayout.OnNoticeTouchListener() {
+            @Override
+            public void onTouch(boolean touch) {
+                mStopNotice = touch;
+            }
+        });
         requestData();
         mNotice.setTag(0);
         mNotice.setFactory(new ViewSwitcher.ViewFactory() {
@@ -254,14 +269,14 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         }
         mMarketSubscriber.resume();
         mMarketSubscriber.subscribeAll();
-        startScheduleJobRightNow(1000);
+        startScheduleJobRightNow(3000);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && mPrepared) {
-            startScheduleJobRightNow(1000);
+            startScheduleJobRightNow(3000);
             requestData();
         } else {
             stopScheduleJob();
@@ -286,6 +301,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     protected void onRespSuccess(Resp<ArrayList<HomeNews>> resp) {
                         mNewsList = resp.getData();
                         mNoticeWrapper.setVisibility(View.VISIBLE);
+                        setNotice();
                     }
                 })
                 .fire();
@@ -334,32 +350,38 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        if (count % 3 == 0) {
+        if (!mStopBanner) {
             mHomeBanner.nextAdvertisement();
-            if (mNewsList != null && mNewsList.size() > 0) {
-                int index = (int) mNotice.getTag();
-                final int position = index % mNewsList.size();
-                final HomeNews homeNews = mNewsList.get(position);
-                mNotice.setText(homeNews.getTitle());
-                mNotice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        umengEventCount(UmengCountEventId.HOME0002);
-                        if (homeNews.getFormat() == 1) {
-                            Launcher.with(getActivity(), WebActivity.class)
-                                    .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
-                                    .putExtra(WebActivity.EX_HTML, homeNews.getContent())
-                                    .execute();
-                        }else if (homeNews.getFormat() == 2) {
-                            Launcher.with(getActivity(), WebActivity.class)
-                                    .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
-                                    .putExtra(WebActivity.EX_URL, homeNews.getContent())
-                                    .execute();
-                        }
+        }
+        if (!mStopNotice) {
+            setNotice();
+        }
+    }
+
+    private void setNotice() {
+        if (mNewsList != null && mNewsList.size() > 0) {
+            int index = (int) mNotice.getTag();
+            final int position = index % mNewsList.size();
+            final HomeNews homeNews = mNewsList.get(position);
+            mNotice.setText(homeNews.getTitle());
+            mNotice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    umengEventCount(UmengCountEventId.HOME0002);
+                    if (homeNews.getFormat() == 1) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
+                                .putExtra(WebActivity.EX_HTML, homeNews.getContent())
+                                .execute();
+                    } else if (homeNews.getFormat() == 2) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, homeNews.getTitle())
+                                .putExtra(WebActivity.EX_URL, homeNews.getContent())
+                                .execute();
                     }
-                });
-                mNotice.setTag(++index);
-            }
+                }
+            });
+            mNotice.setTag(++index);
         }
     }
 
