@@ -22,6 +22,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.utils.OnNavigationListener;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.BottomTabs;
 import com.songbai.futurex.view.ScrollableViewPager;
@@ -44,6 +45,7 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
     @BindView(R.id.bottomTabs)
     BottomTabs mBottomTabs;
     private MainFragmentsAdapter mMainFragmentsAdapter;
+    private long mFirstBackTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +155,18 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
                     }
                 })
                 .fire();
+    }
+
+    @Override
+    public void onBackPressed() {
+        long secondTime = System.currentTimeMillis();
+        if (secondTime - mFirstBackTime > 1500) {
+            // TODO: 2018/8/22 文案
+            ToastUtil.show(R.string.back_press_hint);
+            mFirstBackTime = secondTime;
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {

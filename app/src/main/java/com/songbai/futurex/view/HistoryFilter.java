@@ -120,10 +120,8 @@ public class HistoryFilter {
                 showCounterCurrencySelector();
                 break;
             case R.id.buyBtn:
-                setBuyOrSellBtn(true);
-                break;
             case R.id.sellBtn:
-                setBuyOrSellBtn(false);
+                setBuyOrSellBtn(view);
                 break;
             case R.id.reset:
                 resetAll();
@@ -131,12 +129,20 @@ public class HistoryFilter {
             case R.id.filterBtn:
                 filter();
                 break;
+            default:
         }
     }
 
-    private void setBuyOrSellBtn(boolean isBuy) {
-        mBuyBtn.setSelected(isBuy);
-        mSellBtn.setSelected(!isBuy);
+    private void setBuyOrSellBtn(View view) {
+        boolean selected = view.isSelected();
+        view.setSelected(!selected);
+        if (!selected) {
+            if (view.getId() == R.id.buyBtn) {
+                mSellBtn.setSelected(false);
+            } else if (view.getId() == R.id.sellBtn) {
+                mBuyBtn.setSelected(false);
+            }
+        }
     }
 
     private void resetAll() {

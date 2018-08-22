@@ -67,7 +67,7 @@
     <string name="message_center">消息中心</string>
     <string name="notice_center">公告中心</string>
     <string name="safety_center">安全中心</string>
-    <string name="custom_service">聊天客服</string>
+    <string name="custom_service">在线客服</string>
     <string name="settings">设置</string>
     <string name="personal_data">个人信息</string>
     <string name="head_portrait">头像</string>
@@ -750,4 +750,10 @@
     <string name="confirming">确认中</string>
     <string name="succeeded">成功</string>
     <string name="failed">失败</string>
+
+    <string name="back_press_hint">再按一次退出</string>
+    <string name="phone_exists">手机号码已存在</string>
+    <string name="mail_exists">邮箱已存在</string>
+    <string name="go_login">去登录</string>
+    <string name="re_enter">重新输入</string>
 </resources>

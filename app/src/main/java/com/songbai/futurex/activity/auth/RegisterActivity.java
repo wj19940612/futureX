@@ -40,6 +40,7 @@ import com.songbai.futurex.utils.StrFormatter;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
+import com.songbai.futurex.view.dialog.MsgHintController;
 import com.songbai.futurex.view.dialog.SelectAreaCodesViewController;
 import com.songbai.futurex.websocket.MessageProcessor;
 
@@ -118,11 +119,11 @@ public class RegisterActivity extends BaseActivity {
 
         mSelectAreaCodesViewController = new SelectAreaCodesViewController(this,
                 new SelectAreaCodesViewController.OnSelectListener() {
-            @Override
-            public void onSelect(AreaCode areaCode) {
-                mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode.getTeleCode()));
-            }
-        });
+                    @Override
+                    public void onSelect(AreaCode areaCode) {
+                        mAreaCode.setText(StrFormatter.getFormatAreaCode(areaCode.getTeleCode()));
+                    }
+                });
         mRootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -333,6 +334,8 @@ public class RegisterActivity extends BaseActivity {
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
                             showImageAuthCodeDialog();
+                        } else if (failedResp.getCode() == Resp.Code.MAIL_EXIST) {
+                            showAccountExistsDialog(failedResp.getCode());
                         } else {
                             super.onRespFailure(failedResp);
                         }
@@ -363,11 +366,28 @@ public class RegisterActivity extends BaseActivity {
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_TIMEOUT
                                 || failedResp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
                             showImageAuthCodeDialog();
+                        } else if (failedResp.getCode() == Resp.Code.PHONE_EXIST) {
+                            showAccountExistsDialog(failedResp.getCode());
                         } else {
                             super.onRespFailure(failedResp);
                         }
                     }
                 }).fire();
+    }
+
+    private void showAccountExistsDialog(int code) {
+        MsgHintController msgHintController = new MsgHintController(RegisterActivity.this, new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                finish();
+            }
+        });
+        SmartDialog.solo(RegisterActivity.this).setCustomViewController(msgHintController)
+                .show();
+        msgHintController.setConfirmText(R.string.go_login);
+        msgHintController.setCloseText(R.string.re_enter);
+        msgHintController.setMsg(code == Resp.Code.PHONE_EXIST ? R.string.phone_exists : R.string.mail_exists);
+        msgHintController.setImageRes(R.drawable.ic_popup_attention);
     }
 
     private void showImageAuthCodeDialog() {
@@ -506,5 +526,18 @@ public class RegisterActivity extends BaseActivity {
 
     private boolean isPhoneRegister() {
         return mPhoneLine.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
+                KeyBoardUtils.closeKeyboard(v);
+                v.clearFocus();
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
     }
 }
