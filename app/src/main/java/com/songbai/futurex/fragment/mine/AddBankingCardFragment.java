@@ -115,7 +115,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         option.add(getString(R.string.cn_mainland));
-        option.add(getString(R.string.cn_tw));
+//        option.add(getString(R.string.cn_tw));
         alignText();
         setViewByArea(isMainland);
         getBankList();
@@ -180,7 +180,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bankArea:
-                showAreaSelect();
+//                showAreaSelect();
                 break;
             case R.id.mainlandBankName:
                 showBankSelect(isMainland ? mMainland : mTw);
