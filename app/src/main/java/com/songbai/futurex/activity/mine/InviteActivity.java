@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.PromoterInfo;
 import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AnimatorUtil;
+import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
@@ -96,7 +98,13 @@ public class InviteActivity extends BaseActivity {
                                     .with(InviteActivity.this)
                                     .load(promotionInfos.getPromotionPic())
                                     .into(mEventPic);
-                            mRules.setText(Html.fromHtml(promotionInfos.getPromotionRule()));
+                            Spanned html;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                                html = Html.fromHtml(promotionInfos.getPromotionRule(), Html.FROM_HTML_MODE_COMPACT);
+                            } else {
+                                html = Html.fromHtml(promotionInfos.getPromotionRule());
+                            }
+                            mRules.setText(html);
                             mPromotionShare = promotionInfos.getPromotionShare();
                             mPromotionGroup = promotionInfos.getPromotionGroup();
                         }
@@ -116,10 +124,15 @@ public class InviteActivity extends BaseActivity {
                 }
                 break;
             case R.id.joinNow:
-                Intent intent = new Intent();
-                intent.setData(Uri.parse("https://t.me/" + mPromotionGroup));
-                intent.setAction(Intent.ACTION_VIEW);
-                startActivity(intent);
+                if (AppInfo.isAPPInstalled(this, "org.telegram.messenger")) {
+                    Intent intent = new Intent();
+                    intent.setPackage("org.telegram.messenger");
+                    intent.setData(Uri.parse("https://t.me/" + mPromotionGroup));
+                    intent.setAction(Intent.ACTION_VIEW);
+                    startActivity(intent);
+                } else {
+                    ToastUtil.show(R.string.app_not_installed);
+                }
                 break;
             case R.id.copy:
                 umengEventCount(UmengCountEventId.PROMOTE0003);
@@ -141,7 +154,7 @@ public class InviteActivity extends BaseActivity {
     }
 
     private void showShareDialog(boolean hasPoster) {
-        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode,mPromotionShare);
+        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode, mPromotionShare);
         shareFriendsDialogFragment.show(getSupportFragmentManager());
     }
 

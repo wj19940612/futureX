@@ -38,7 +38,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="end|center_vertical"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:singleLine="true"
         android:textColor="@color/text66"
         android:textSize="13sp"
@@ -53,6 +55,6 @@
         android:singleLine="true"
         android:textColor="@color/text66"
         android:textSize="13sp"
-        tools:text="9678"/>
+        tools:text="9667676"/>
 
 </LinearLayout>

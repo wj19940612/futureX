@@ -476,15 +476,16 @@ public class MyPosterFragment extends BaseSwipeLoadFragment {
                         mPosterType.setTextColor(ContextCompat.getColor(getContext(), R.color.text22));
                         mOperateArea.setText(R.string.on_shelf);
                         mStatus.setText(R.string.off_shelf);
+                        mTreadAmount.setText("0");
                         break;
                     case OtcWarePoster.ON_SHELF:
                         mEdit.setEnabled(false);
                         mOperateArea.setText(R.string.off_shelf);
                         mStatus.setText(R.string.on_shelf);
+                        mTreadAmount.setText(otcWarePoster.getLeftCount());
                         break;
                     default:
                 }
-                mTreadAmount.setText(otcWarePoster.getLeftCount());
                 mUpdateTime.setText(DateUtil.format(otcWarePoster.getUpdateTime(), DateUtil.FORMAT_HOUR_MINUTE_DATE));
                 mEdit.setOnClickListener(new View.OnClickListener() {
                     @Override

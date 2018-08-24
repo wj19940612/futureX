@@ -25,14 +25,14 @@ public class ImagePicker {
     /**
      * 打开相机的请求码
      */
-    public static final int REQ_CODE_TAKE_PHONE_FROM_CAMERA = 379;
+    public static final int FROM_CAMERA = 379;
     /**
      * 打开图册的请求码
      */
-    public static final int REQ_CODE_TAKE_PHONE_FROM_PHONES = 600;
+    public static final int FROM_SYS_ALBUM = 600;
 
     //打开自定义画廊
-    public static final int IMAGE_TYPE_OPEN_CUSTOM_GALLERY = 4750;
+    public static final int FROM_CUS_GALLERY = 4750;
 
     private Activity mActivity;
     private Fragment mFragment;
@@ -93,22 +93,21 @@ public class ImagePicker {
             if (customGallery) {
                 intent = createIntent(ImageSelectActivity.class);
                 intent.putExtra(ExtraKeys.IMAGE, mMaxNum);
-                open(intent, IMAGE_TYPE_OPEN_CUSTOM_GALLERY);
+                open(intent, FROM_CUS_GALLERY);
             } else {
                 intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-                    open(intent, REQ_CODE_TAKE_PHONE_FROM_PHONES);
+                    open(intent, FROM_SYS_ALBUM);
                 }
             }
         } else {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && PermissionUtil.cameraIsCanUse()) {
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 mFile = FileUtils.createFile(getContext().getString(R.string.app_name) + System.currentTimeMillis() + "image.jpg");
-                // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
                 Uri mMBitmapUri = Uri.fromFile(mFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
-                open(intent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
+                open(intent, FROM_CAMERA);
             } else {
                 ToastUtil.show(getContext().getString(R.string.please_open_camera_permission));
             }

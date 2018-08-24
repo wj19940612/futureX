@@ -61,7 +61,6 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
         ArrayList<Fragment> list = new ArrayList<>();
         list.add(InviteHistoryFragment.newInstance());
         list.add(InviteAwardHistoryFragment.newInstance());
-        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(new HistoryAdapter(getChildFragmentManager(), list));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -30,12 +30,10 @@ public class UniqueActivity extends BaseActivity {
         initData(getIntent());
 
         setContentView(R.layout.activity_unique);
-
         Fragment fragment = Fragment.instantiate(getActivity(), mFragmentName, mExtras);
-
         if (fragment instanceof UniFragment) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
+                    .replace(R.id.container, fragment)
                     .commitNow();
         } else {
             throw new ClassCastException(fragment.getClass().getSimpleName() + " should extends UniqueActivity.UniFragment");

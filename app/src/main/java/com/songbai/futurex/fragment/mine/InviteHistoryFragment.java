@@ -15,8 +15,9 @@ import com.sbai.httplib.ReqError;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
-import com.songbai.futurex.model.mine.InviteSubordinate;
+import com.songbai.futurex.model.mine.InvitePersonInfo;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -84,16 +85,16 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
 
     private void findCommissionOfSubordinate() {
         Apic.findCommissionOfSubordinate(mPage, 20).tag(TAG)
-                .callback(new Callback<Resp<InviteSubordinate>>() {
+                .callback(new Callback<Resp<PagingWrap<InvitePersonInfo>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<InviteSubordinate> resp) {
+                    protected void onRespSuccess(Resp<PagingWrap<InvitePersonInfo>> resp) {
                         if (mRecyclerView != null) {
-                            InviteSubordinate inviteSubordinate = resp.getData();
-                            mAdapter.setList(inviteSubordinate);
+                            PagingWrap<InvitePersonInfo> pagingWrap = resp.getData();
+                            mAdapter.setList(pagingWrap);
                             mAdapter.notifyDataSetChanged();
                             stopFreshOrLoadAnimation();
                             mRecyclerView.hideAll(false);
-                            if (inviteSubordinate.getTotal() - 1 > mPage) {
+                            if (pagingWrap.getTotal() - 1 > mPage) {
                                 mPage++;
                                 mSwipeToLoadLayout.setLoadMoreEnabled(true);
                             } else {
@@ -109,7 +110,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
                         }
                     }
                 })
-                .fireFreely();
+                .fire();
     }
 
     @Override
@@ -149,7 +150,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
 
     class InviteHistoryAdapter extends RecyclerView.Adapter {
 
-        private List<InviteSubordinate.DataBean> mList = new ArrayList<>();
+        private List<InvitePersonInfo> mList = new ArrayList<>();
 
         @NonNull
         @Override
@@ -171,7 +172,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
             return mList.size();
         }
 
-        public void setList(InviteSubordinate inviteSubordinate) {
+        public void setList(PagingWrap<InvitePersonInfo> inviteSubordinate) {
             if (inviteSubordinate.getStart() == 0) {
                 mList.clear();
             }
@@ -193,7 +194,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindData(InviteSubordinate.DataBean dataBean) {
+            public void bindData(InvitePersonInfo dataBean) {
                 mInvitees.setText(dataBean.getUsername());
                 mRegisterTime.setText(DateUtil.format(dataBean.getRegisterTime(), "yyyy/MM/dd"));
                 mDealCount.setText(String.valueOf(dataBean.getDealCount()));

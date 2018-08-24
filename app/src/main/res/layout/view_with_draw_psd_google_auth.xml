@@ -68,6 +68,7 @@
         android:background="@drawable/bg_f5_r4"
         android:hint="@string/please_input_google_authenticator_code"
         android:maxLines="1"
+        android:inputType="number"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:textColor="@color/text66"

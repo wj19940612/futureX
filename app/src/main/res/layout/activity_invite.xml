@@ -23,6 +23,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
         android:layout_weight="1">
 
         <LinearLayout
@@ -47,8 +48,7 @@
                 android:paddingTop="34dp"
                 android:textColor="@color/text99"
                 android:textSize="12sp"
-                android:visibility="gone"
-                tools:text="@string/invite_activity_rules"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/checkDetail"

@@ -73,9 +73,8 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private PropertyFlowAdapter mAdapter;
     private final int[] currencyFlowType = new int[]{TYPE_ALL,
             CurrencyFlowType.DRAW, CurrencyFlowType.DEPOSITE, CurrencyFlowType.ENTRUST_BUY,
-            CurrencyFlowType.ENTRUST_SELL, CurrencyFlowType.OTC_TRADE_OUT, CurrencyFlowType.DRAW_FEE,
-            CurrencyFlowType.TRADE_FEE, CurrencyFlowType.PROMOTER_TO, CurrencyFlowType.OTC_TRADE_IN,
-            CurrencyFlowType.AGENCY_TO, CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT,
+            CurrencyFlowType.ENTRUST_SELL,  CurrencyFlowType.DRAW_FEE,
+            CurrencyFlowType.TRADE_FEE,  CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT,
             CurrencyFlowType.PERIODIC_RELEASE, CurrencyFlowType.SPECIAL_TRADE, CurrencyFlowType.CASHBACK,
             CurrencyFlowType.INVT_REWARD, CurrencyFlowType.DISTRIBUTED_REV, CurrencyFlowType.RELEASED_BFB,
             CurrencyFlowType.MINERS_REWAR, CurrencyFlowType.SHARED_FEE, CurrencyFlowType.SUBSCRIPTION,
@@ -83,9 +82,9 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     };
     private final int[] currencyFlowTypeStrRes = new int[]{
             R.string.all_type, R.string.withdraw_cash, R.string.recharge_coin,
-            R.string.buy_order, R.string.sell_order, R.string.otc_transfer_out,
-            R.string.withdraw_fee, R.string.deal_fee, R.string.promoter_account_transfer_into,
-            R.string.otc_trade_in, R.string.agency_to, R.string.legal_account_in, R.string.coin_account_out,
+            R.string.buy_order, R.string.sell_order,
+            R.string.withdraw_fee, R.string.deal_fee,
+            R.string.legal_account_in, R.string.coin_account_out,
             R.string.periodic_release, R.string.special_trade, R.string.cashback,
             R.string.invt_reward, R.string.distributed_rev, R.string.release_bfb,
             R.string.miners_rewar, R.string.shared_fee, R.string.subscription,
@@ -93,12 +92,12 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     };
 
     private final int[] otcFlowType = new int[]{TYPE_ALL,
-            OTCFlowType.TRADE_COMMISSION, OTCFlowType.TRANSFER_TO_USER_FREEZE,
+            OTCFlowType.TRADE_COMMISSION,
             OTCFlowType.COIN_ACCOUNT_IN, OTCFlowType.LEGAL_CURRENCY_ACCOUNT_OUT,
             OTCFlowType.OTC_TRADE_IN, OTCFlowType.OTC_TRADE_OUT
     };
     private final int[] otcFlowTypeStrRes = new int[]{R.string.all_type,
-            R.string.trade_commission, R.string.transfer_to_user_freeze,
+            R.string.trade_commission,
             R.string.coin_account_in, R.string.legal_account_out,
             R.string.otc_trade_in, R.string.otc_trade_out};
     private OptionsPickerView<String> mPvOptions;

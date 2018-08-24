@@ -7,15 +7,12 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,14 +36,12 @@ import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.BottomDialogFragment;
 import com.songbai.futurex.fragment.mine.SharePosterFragment;
-import com.songbai.futurex.service.AccessibilityUtils;
-import com.songbai.futurex.service.AssistantService;
+import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ZXingUtils;
 import com.songbai.futurex.utils.image.ImageUtils;
-import com.songbai.futurex.view.SmartDialog;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -55,7 +50,6 @@ import com.umeng.socialize.media.UMImage;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,24 +94,30 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         @Override
         public void onStart(SHARE_MEDIA shareMedia) {
             Log.e("wtf", "onStart");
+            mSharing = true;
         }
 
         @Override
         public void onResult(SHARE_MEDIA shareMedia) {
-            dismiss();
+            mSharing = false;
+            dismissAllowingStateLoss();
+            Log.e("wtf", "onResult");
         }
 
         @Override
         public void onError(SHARE_MEDIA shareMedia, Throwable throwable) {
+            mSharing = false;
             Log.e("wtf", throwable.toString());
         }
 
         @Override
         public void onCancel(SHARE_MEDIA shareMedia) {
+            mSharing = false;
             Log.e("wtf", "onCancel");
         }
     };
     private File mTemp;
+    private boolean mSharing;
 
     public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionShare) {
         Bundle args = new Bundle();
@@ -144,7 +144,8 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         if (arguments != null) {
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
-            textString = arguments.getString(SHARE_CONTENT);
+            String shareText = arguments.getString(SHARE_CONTENT);
+            textString = (TextUtils.isEmpty(shareText) ? "" : shareText) + "https://bitfutu.re/pro/" + mQcCode;
             int[] posters = new int[]{R.drawable.ic_poster1, R.drawable.ic_poster2};
             for (int i = 0; i < posters.length; i++) {
                 mList.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
@@ -153,7 +154,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                dismissAllowingStateLoss();
             }
         });
         mSelectHint.setText(mHasPoster ? R.string.share_exclusive_poster : R.string.share_link);
@@ -165,11 +166,15 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 switch (((int) obj)) {
                     case R.string.wechat_friends:
 //                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
-                        share(SHARE_MEDIA.WEIXIN);
+                        if (!mSharing) {
+                            share(SHARE_MEDIA.WEIXIN);
+                        }
                         break;
                     case R.string.wechat_moments:
 //                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");/**/
-                        share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        if (!mSharing) {
+                            share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        }
                         break;
                     case R.string.twitter:
                         shareWithPackageName("com.twitter.android", "");
@@ -212,7 +217,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     }
 
     private void shareWithPackageName(final String packageName, final String className) {
-        if (isAPPInstalled(getContext(), packageName)) {
+        if (AppInfo.isAPPInstalled(getContext(), packageName)) {
             final String title = "";
             if (mHasPoster) {
                 if (mSelectedPosition < 0) {
@@ -224,30 +229,30 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 shareStream(packageName, className, title, textString, mTemp);
             } else {
                 if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
-                    if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
-                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
-                            @Override
-                            public void onConfirmClick() {
-                                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                                startActivityForResult(intent, OPEN_ACCESSIBILITY);
-                            }
-                        });
-                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-                        smartDialog.setCustomViewController(msgHintController)
-                                .show();
-                        msgHintController.setConfirmText(R.string.go_to_set);
-                        msgHintController.setCloseText(R.string.share);
-                        msgHintController.setOnColseClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                shareWechat();
-                            }
-                        });
-                        msgHintController.setMsg(R.string.can_open_accessibility_service);
-                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
-                    } else {
+//                    if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
+//                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
+//                            @Override
+//                            public void onConfirmClick() {
+//                                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+//                                startActivityForResult(intent, OPEN_ACCESSIBILITY);
+//                            }
+//                        });
+//                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+//                        smartDialog.setCustomViewController(msgHintController)
+//                                .show();
+//                        msgHintController.setConfirmText(R.string.go_to_set);
+//                        msgHintController.setCloseText(R.string.share);
+//                        msgHintController.setOnColseClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                shareWechat();
+//                            }
+//                        });
+//                        msgHintController.setMsg(R.string.can_open_accessibility_service);
+//                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
+//                    } else {
                         shareWechat();
-                    }
+//                    }
                 } else {
                     shareText(packageName, className, mQcCode, textString);
                 }
@@ -265,6 +270,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
 
     private void share(SHARE_MEDIA platform) {
         if (UMShareAPI.get(getContext()).isInstall(getActivity(), platform)) {
+            mSharing = true;
             if (mHasPoster) {
                 shareWithImage(platform);
             } else {
@@ -344,7 +350,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             //  使用 FileProvider 会在某些 app 下不支持（在使用FileProvider 方式情况下QQ不能支持图片、视频分享，微信不支持视频分享）
             // TODO: 2018/8/9 FileProvider 还未完成
             uri = FileProvider.getUriForFile(context,
-                    BuildConfig.APPLICATION_ID + ".provider",
+                    BuildConfig.APPLICATION_ID + ".fileProvider",
                     file);
             ContentResolver cR = context.getContentResolver();
             if (uri != null && !TextUtils.isEmpty(uri.toString())) {
@@ -445,22 +451,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         }
     }
 
-    public static boolean isAPPInstalled(Context context, String packageName) {
-        PackageManager pm = context.getPackageManager();
-        List<PackageInfo> pinfo = pm.getInstalledPackages(0);
-        for (int i = 0; i < pinfo.size(); i++) {
-            if (pinfo.get(i).packageName.equals(packageName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHARE) {
-            dismiss();
+            dismissAllowingStateLoss();
             if (mTemp != null) {
                 mTemp.delete();
             }

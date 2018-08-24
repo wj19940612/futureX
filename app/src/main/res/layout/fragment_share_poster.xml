@@ -26,34 +26,26 @@
             android:background="#99000000"
             android:visibility="invisible">
 
-            <com.songbai.futurex.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/shareTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="5dp"
                 android:singleLine="true"
                 android:text="@string/invite_title"
                 android:textColor="@color/white"
-                android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@id/shareDesc"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/qcCode"
-                app:layout_constraintTop_toTopOf="@id/qcCode"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
-            <com.songbai.futurex.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/shareDesc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="6dp"
                 android:singleLine="true"
                 android:text="@string/invite_desc"
                 android:textColor="@color/white"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@id/qcCode"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="@id/shareTitle"
                 app:layout_constraintRight_toLeftOf="@id/qcCode"
                 app:layout_constraintTop_toBottomOf="@id/shareTitle"/>
@@ -62,12 +54,9 @@
                 android:id="@+id/qcCode"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintLeft_toRightOf="@id/shareDesc"
+                app:layout_constraintLeft_toRightOf="@id/shareTitle"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 

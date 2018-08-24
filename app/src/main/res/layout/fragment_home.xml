@@ -30,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"/>
 
-            <LinearLayout
+            <com.songbai.futurex.view.HomeNoticeLinearLayout
                 android:id="@+id/noticeWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/homeBanner"/>
-            </LinearLayout>
+            </com.songbai.futurex.view.HomeNoticeLinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/entrustPairs"

@@ -691,13 +691,13 @@
     <string name="trading_mining">Mining</string>
     <string name="about_bfb">About BFB</string>
     <string name="mining_output_yesterday">Output of the previous day</string>
-    <string name="mining_output_today">Revenue to be distributed in today</string>
+    <string name="mining_output_today">Revenue to be distributed today</string>
     <string name="bfb_total_amount">Total BFB in circulation</string>
     <string name="google_authentication">Google Auth</string>
     <string name="reset_google_auth">Reset</string>
     <string name="upload_payment_code">Upload</string>
-    <string name="alipay_payment_code">Alipay Receipt code(Optional)</string>
-    <string name="wechat_payment_code">Wechat Receipt code(Optional)</string>
+    <string name="alipay_payment_code">Alipay receipt(Optional)</string>
+    <string name="wechat_payment_code">Wechat receipt(Optional)</string>
     <string name="clear">Clear</string>
     <string name="my_invite">My INVT</string>
     <string name="my_invite_num">Total</string>
@@ -712,7 +712,7 @@
     <string name="register_time">Registration</string>
     <string name="deal_count">Trades</string>
     <string name="total_contribution">Contribution</string>
-    <string name="telegram_group">Telegram】Group of BITFUTURE</string>
+    <string name="telegram_group">【Telegram】Group of BITFUTURE</string>
     <string name="telegram_group_desc">Join the group and get skills from masters!</string>
     <string name="share_link">Share links</string>
     <string name="share_exclusive_poster">Share your poster</string>
@@ -732,7 +732,7 @@
     <string name="status_three_space">Status</string>
     <string name="accessibility_service_name">Share assistant</string>
     <string name="no_enough_balance">Insufficient balance</string>
-    <string name="reminding_transaction">Notice of deals</string>
+    <string name="reminding_transaction">Deal notification</string>
     <string name="get">Get</string>
     <string name="pay_qr_code">Pay QR code</string>
     <string name="fund_password_verification">Fund password</string>
@@ -745,4 +745,10 @@
     <string name="storage_permission_to_save_bandwidth">Cache images to reduce consumption of network</string>
     <string name="permission_open">Open</string>
     <string name="permission_close">Close</string>
+
+    <string name="auditing">Auditing</string>
+    <string name="rejected">Rejected</string>
+    <string name="confirming">Confirming</string>
+    <string name="succeeded">Succeeded</string>
+    <string name="failed">Failed</string>
 </resources>

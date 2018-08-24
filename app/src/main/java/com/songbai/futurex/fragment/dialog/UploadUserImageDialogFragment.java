@@ -9,15 +9,18 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.ImageSelectActivity;
@@ -296,7 +300,6 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
             case R.id.takePhoneCancel:
                 this.dismissAllowingStateLoss();
                 break;
-
             case R.id.lookHDPicture:
                 Launcher.with(getActivity(), LookBigPictureActivity.class)
                         .putExtra(ExtraKeys.IMAGE_PATH, HDPictureUrl)
@@ -330,10 +333,30 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mFile = FileUtils.createFile(getString(R.string.app_name) + System.currentTimeMillis() + "image.jpg");
         // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
-        Uri mMBitmapUri = Uri.fromFile(mFile);
+        Uri mMBitmapUri = getImageContentUri(getContext(), mFile);
         openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            openCameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
+        openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         if (openCameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PICTURE_FROM_CAMERA);
+        }
+    }
+
+    public static Uri getImageContentUri(Context context, File imageFile) {
+        Log.e("wtf", "getImageContentUri: " + imageFile.getAbsolutePath());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //FileProvider.getUriForFile();第一个参数是context.
+            // 第二个值。比较关键、这个也就是我们在manifest里面的provider里面的
+            //android:authorities="com.example.zongm.testapplication.provider"
+            //因为我用的就是AppId.所以。这里就直接用BuildConfig.APPLICATION_ID了。
+            //如果你的android:authorities="test.provider"。那这里第二个参数就应该是test.provider
+            return FileProvider.getUriForFile(context.getApplicationContext(),
+                    BuildConfig.APPLICATION_ID + ".fileProvider", imageFile);
+        } else {
+            return Uri.fromFile(imageFile);
         }
     }
 
@@ -353,12 +376,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
             switch (requestCode) {
                 case REQ_CODE_TAKE_PICTURE_FROM_CAMERA:
                     if (mFile != null) {
-                        Uri mMBitmapUri = Uri.fromFile(mFile);
-                        if (mMBitmapUri != null) {
-                            if (!TextUtils.isEmpty(mMBitmapUri.getPath())) {
-                                dealImagePath(mMBitmapUri.getPath());
-                            }
-                        }
+                        dealImagePath(mFile.getPath());
                     }
                     break;
                 case REQ_CODE_TAKE_PICTURE_FROM_GALLERY:

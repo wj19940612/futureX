@@ -1,9 +1,7 @@
 package com.songbai.futurex.utils;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,7 +24,7 @@ public class AnimatorUtil {
         expandVertical(view, listener, 500);
     }
 
-    public static void expandVertical(final View view, int duration,int viewHeight) {
+    public static void expandVertical(final View view, int duration, int viewHeight) {
         final int measuredHeight = viewHeight;
         // Older versions of android (pre API 21) cancel animations for views with a height of 0 so use 1 instead.
         view.getLayoutParams().height = 1;
@@ -106,7 +104,9 @@ public class AnimatorUtil {
      * @param listener {@link AnimatorUtil.OnAnimatorFactionListener}
      */
     public static void expandVertical(final View view, @Nullable final OnAnimatorFactionListener listener, int duration) {
-        int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) view.getParent()).getWidth(), View.MeasureSpec.EXACTLY);
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        int width = ((View) view.getParent()).getWidth() - view.getPaddingLeft() - view.getPaddingRight() - layoutParams.leftMargin - layoutParams.rightMargin;
+        int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
         int wrapContentMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         view.measure(matchParentMeasureSpec, wrapContentMeasureSpec);
         final int measuredHeight = view.getMeasuredHeight();
