@@ -55,6 +55,7 @@ import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
+import com.songbai.futurex.view.BuySellSwitcher;
 import com.songbai.futurex.view.ChangePriceView;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.RadioHeader;
@@ -102,7 +103,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private static final int REQ_CODE_SEARCH = 99;
 
     @BindView(R.id.tradeDirRadio)
-    RadioHeader mTradeDirRadio;
+    BuySellSwitcher mTradeDirRadio;
     @BindView(R.id.orderListFloatRadio)
     RadioHeader mOrderListFloatRadio;
     @BindView(R.id.decimalScale)
@@ -243,7 +244,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         initTitleBar();
 
         mTradeTypeValue = LIMIT_TRADE;
-        mTradeDirRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
+        mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
                 if (position == 0) { // buy in
@@ -364,15 +365,15 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mSwipeTarget.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int tradeDirRadioHeight = mTradeDirRadio.getHeight();
-                if (scrollY >= mOrderListRadio.getTop() - tradeDirRadioHeight) {
-                    int diff = scrollY - (mOrderListRadio.getTop() - tradeDirRadioHeight);
-                    if (diff <= tradeDirRadioHeight) {
-                        mTradeDirRadio.setTranslationY(-diff);
-                    }
-                } else if (mTradeDirRadio.getTranslationY() != 0) {
-                    mTradeDirRadio.setTranslationY(0);
-                }
+//                int tradeDirRadioHeight = mTradeDirRadio.getHeight();
+//                if (scrollY >= mOrderListRadio.getTop() - tradeDirRadioHeight) {
+//                    int diff = scrollY - (mOrderListRadio.getTop() - tradeDirRadioHeight);
+//                    if (diff <= tradeDirRadioHeight) {
+//                        mTradeDirRadio.setTranslationY(-diff);
+//                    }
+//                } else if (mTradeDirRadio.getTranslationY() != 0) {
+//                    mTradeDirRadio.setTranslationY(0);
+//                }
 
                 if (scrollY >= mOrderListRadio.getTop()) {
                     mOrderListFloatRadio.setVisibility(View.VISIBLE);

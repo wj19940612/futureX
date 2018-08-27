@@ -79,7 +79,7 @@ public class SocketPushService extends Service {
     }
 
     private void notifyMsg(String message) {
-        Log.e("zzz", "message:" + message);
+//        Log.e("zzz", "message:" + message);
         new DataParser<Response<JumpContent>>(message) {
             @Override
             public void onSuccess(Response<JumpContent> jumpContentResponse) {
