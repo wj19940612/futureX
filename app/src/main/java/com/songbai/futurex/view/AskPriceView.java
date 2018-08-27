@@ -69,7 +69,7 @@ public class AskPriceView extends LinearLayout {
         params.setMargins(mMargin12, 0, 0, 0);
         addView(mPrice, params);
 
-        mVolume = getTextView(12, ContextCompat.getColor(getContext(), R.color.text66));
+        mVolume = getTextView(12, ContextCompat.getColor(getContext(), R.color.text99));
         mVolume.setGravity(Gravity.RIGHT);
         mVolume.setMaxLines(1);
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -13,6 +13,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,7 @@ import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.TradePercentSelectView;
 import com.songbai.futurex.view.TradeVolumeView;
 import com.songbai.futurex.view.VolumeInputView;
 import com.songbai.futurex.view.dialog.ItemSelectController;
@@ -132,14 +134,16 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     TextView mTradeButton;
     @BindView(R.id.marketPriceView)
     TextView mMarketPriceView;
-    @BindView(R.id.tradeCurrencyRange)
-    TextView mTradeCurrencyRange;
+    @BindView(R.id.percentSelectView)
+    TradePercentSelectView mPercentSelectView;
+    //    @BindView(R.id.tradeCurrencyRange)
+//    TextView mTradeCurrencyRange;
     @BindView(R.id.orderListRadio)
     RadioHeader mOrderListRadio;
     @BindView(R.id.volumeInput)
     VolumeInputView mVolumeInput;
-    @BindView(R.id.tradeVolumeSeekBar)
-    SeekBar mTradeVolumeSeekBar;
+//    @BindView(R.id.tradeVolumeSeekBar)
+//    SeekBar mTradeVolumeSeekBar;
 
     @BindView(R.id.swipe_refresh_header)
     RefreshHeaderView mSwipeRefreshHeader;
@@ -292,20 +296,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             }
         });
 
-        mTradeVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mPercentSelectView.setOnPercentSelectListener(new TradePercentSelectView.OnPercentSelectListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    updateVolumeInputView();
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onPercentSelect(int percent,int max) {
+                updateVolumeInputView(percent,max);
             }
         });
 
@@ -553,14 +547,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private void updateVolumeSeekBar() {
-        int max = mTradeVolumeSeekBar.getMax();
-        int progress = (int) (mVolumeInput.getVolume() / mTradeCurrencyVolume * max);
-        mTradeVolumeSeekBar.setProgress(progress);
+        int max = mPercentSelectView.getMax();
+        double progress = (mVolumeInput.getVolume() / mTradeCurrencyVolume * max);
+        mPercentSelectView.updatePercent(progress);
     }
 
-    private void updateVolumeInputView() {
-        int progress = mTradeVolumeSeekBar.getProgress();
-        int max = mTradeVolumeSeekBar.getMax();
+    private void updateVolumeInputView(int progress, int max) {
+//        int progress = mTradeVolumeSeekBar.getProgress();
+//        int max = mTradeVolumeSeekBar.getMax();
         double tradeVolume = mTradeCurrencyVolume * progress / max;
         mVolumeInput.setVolume(tradeVolume);
     }
@@ -622,8 +616,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mOrderAdapter.setOrderList(new ArrayList<Order>());
         mLastPrice.setText("--.--");
         mPriceChange.setText("--.--");
-        mTradeVolumeSeekBar.setProgress(0);
-        mTradeCurrencyRange.setText("");
+        mPercentSelectView.updatePercent(0);
+//        mTradeCurrencyRange.setText("");
     }
 
     private void updateMarketView(PairMarket pairMarket) {
@@ -691,8 +685,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     CurrencyUtils.getPrice(availableCurrencyVolume, availableCurrencyScale), availableCurrencySign.toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
                     CurrencyUtils.getPrice(obtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
-            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
-                    CurrencyUtils.getPrice(mTradeCurrencyVolume, tradeCurrencyScale), tradeCurrencySign.toUpperCase()));
+//            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
+//                    CurrencyUtils.getPrice(mTradeCurrencyVolume, tradeCurrencyScale), tradeCurrencySign.toUpperCase()));
         } else {
             String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
             String obtainableCurrencySign = mCurrencyPair.getPrefixSymbol();
@@ -706,8 +700,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     "--", availableCurrencySign.toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
                     "--", obtainableCurrencySign.toUpperCase()));
-            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
-                    "0", obtainableCurrencySign.toUpperCase()));
+//            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
+//                    "0", obtainableCurrencySign.toUpperCase()));
         }
     }
 
@@ -985,7 +979,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (!LocalUser.getUser().isLogin()) return;
         int type = mOrderListRadio.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime,null, null)
+        Apic.getEntrustOrderList(mPage, type, endTime, null, null)
                 .id(mOrderListRadio.getSelectTab())
                 .tag(TAG)
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {
