@@ -81,6 +81,13 @@ public class RealtimeDealView extends LinearLayout {
                 currencyPair.getPrefixSymbol().toUpperCase()));
     }
 
+    public void reset() {
+        if (mDealDataList != null) {
+            mDealDataList.clear();
+        }
+        updateView();
+    }
+
     public void addDealData(List<DealData> dealDataList) {
         if (dealDataList == null) return;
 

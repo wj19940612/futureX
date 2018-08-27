@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -45,6 +46,7 @@ import com.songbai.futurex.view.chart.KlineUtils;
 import com.songbai.futurex.view.chart.KlineView;
 import com.songbai.futurex.view.chart.TrendV;
 import com.songbai.futurex.view.chart.TrendView;
+import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
@@ -73,6 +75,8 @@ import butterknife.Unbinder;
  * APIs:
  */
 public class MarketDetailFragment extends UniqueActivity.UniFragment {
+
+    private static final int REQ_CODE_SEARCH = 99;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -113,10 +117,15 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     TextView mBuyIn;
     @BindView(R.id.sellOut)
     TextView mSellOut;
+    @BindView(R.id.dimView)
+    View mDimView;
 
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
     private PairDesc mPairDesc;
+    private CurrencyPairsPopup mPairsPopup;
+    TextView mPairName;
+    ImageView mPairArrow;
 
     private List<DeepData> mBuyDeepList;
     private List<DeepData> mSellDeepList;
@@ -136,13 +145,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mTitleBar.setTitle(mCurrencyPair.getUpperCasePairName());
-        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
-            @Override
-            public void onClick() {
-                umengEventCount(UmengCountEventId.MARKET00011);
-            }
-        });
+        initTitleBar();
+
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mTradeDealView.setCurrencyPair(mCurrencyPair);
 
@@ -180,7 +184,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     new DataParser<Response<PairMarket>>(data) {
                         @Override
                         public void onSuccess(Response<PairMarket> pairMarketResponse) {
-                            if (pairMarketResponse.getContent() == null || mPairDesc == null) return;
+                            if (pairMarketResponse.getContent() == null || mPairDesc == null)
+                                return;
 
                             updateMarketDataView(pairMarketResponse.getContent().getQuota());
                             updateDeepDataView(pairMarketResponse.getContent().getDeep());
@@ -192,6 +197,122 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         });
 
         requestPairDescription();
+    }
+
+    private void initTitleBar() {
+        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
+            @Override
+            public void onClick() {
+                umengEventCount(UmengCountEventId.MARKET00011);
+            }
+        });
+        View customView = mTitleBar.getCustomView();
+        mPairName = customView.findViewById(R.id.pairName);
+        mPairArrow = customView.findViewById(R.id.pairArrow);
+        mPairName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurrencyPair == null) return;
+                if (mPairsPopup != null && mPairsPopup.isShowing()) {
+                    mPairsPopup.dismiss();
+                } else {
+                    showCurrencyPairPopup();
+                }
+            }
+        });
+        mPairArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPairName.performClick();
+            }
+        });
+        mPairName.setText(mCurrencyPair.getUpperCasePairName());
+    }
+
+    private void showCurrencyPairPopup() {
+        if (mPairsPopup == null) {
+            mPairsPopup = new CurrencyPairsPopup(getActivity(), mCurrencyPair,
+                    new CurrencyPairsPopup.OnCurrencyChangeListener() {
+                        @Override
+                        public void onCounterCurrencyChange(String counterCurrency, List<CurrencyPair> newDisplayList) {
+                            requestCurrencyPairList(counterCurrency);
+                        }
+
+                        @Override
+                        public void onBaseCurrencyChange(String baseCurrency, CurrencyPair currencyPair) {
+                            switchNewCurrencyPair(currencyPair);
+                        }
+                    },
+                    new CurrencyPairsPopup.OnSearchBoxClickListener() {
+                        @Override
+                        public void onSearchBoxClick() {
+                            openSearchPage();
+                        }
+                    });
+            mPairsPopup.setDimView(mDimView);
+        }
+        mPairsPopup.show(mTitleBar);
+        mPairsPopup.selectCounterCurrency(mCurrencyPair.getSuffixSymbol());
+    }
+
+    private void switchNewCurrencyPair(CurrencyPair currencyPair) {
+        mMarketSubscriber.unSubscribe(mCurrencyPair.getPairs());
+        mCurrencyPair = currencyPair;
+        mMarketSubscriber.subscribe(mCurrencyPair.getPairs());
+        mPairDesc = null;
+
+        mLastPrice.setText("--");
+        mPriceChange.setText("--");
+        mHighestPrice.setText("--");
+        mLowestPrice.setText("--");
+        mTradeVolume.setText("--");
+
+        mTrend.setDataList(null);
+        mTrend.flush();
+        mKline.setDataList(null);
+        mKline.flush();
+        mDeepView.reset();
+        mTradeVolumeView.reset();
+        mTradeDealView.reset();
+
+        mPairsPopup.setCurCurrencyPair(mCurrencyPair);
+        mTradeVolumeView.setCurrencyPair(mCurrencyPair);
+        mTradeDealView.setCurrencyPair(mCurrencyPair);
+        mPairName.setText(mCurrencyPair.getUpperCasePairName());
+
+        requestPairDescription();
+    }
+
+    private void openSearchPage() {
+        UniqueActivity.launcher(getActivity(), SearchCurrencyFragment.class)
+                .putExtra(ExtraKeys.SERACH_FOR_TRADE, true)
+                .execute(this, REQ_CODE_SEARCH);
+    }
+
+    private void requestCurrencyPairList(final String counterCurrency) {
+        if (counterCurrency.equalsIgnoreCase(getString(R.string.optional_text))) {
+            Apic.getOptionalList().tag(TAG)
+                    .id(counterCurrency)
+                    .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
+                        @Override
+                        protected void onRespData(List<CurrencyPair> data) {
+                            if (getId().equalsIgnoreCase(mPairsPopup.getSelectCounterCurrency())) {
+                                mPairsPopup.showDisplayList(counterCurrency, data);
+                            }
+                        }
+                    }).fire();
+        } else {
+            Apic.getCurrencyPairList(counterCurrency).tag(TAG)
+                    .id(counterCurrency)
+                    .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
+                        @Override
+                        protected void onRespData(List<CurrencyPair> data) {
+                            if (getId().equalsIgnoreCase(mPairsPopup.getSelectCounterCurrency())) {
+                                mPairsPopup.showDisplayList(counterCurrency, data);
+                            }
+                        }
+                    }).fire();
+        }
     }
 
     private void updateTradeDealView(List<DealData> dealDataList) {
@@ -325,8 +446,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         initMarketViews();
                         requestDeepList();
                         requestDealList();
-                        requestTrendData();
                         updateOptionalStatus();
+                        mChartRadio.performChildClick(0);
+                        mTradeDetailRadio.selectTab(0);
                     }
                 }).fireFreely();
     }
@@ -378,10 +500,6 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), scale));
             mHighestPrice.setText(CurrencyUtils.getPrice(marketData.getHighestPrice(), scale));
             mLowestPrice.setText(CurrencyUtils.getPrice(marketData.getLowestPrice(), scale));
-        } else {
-            mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice()));
-            mHighestPrice.setText(CurrencyUtils.getPrice(marketData.getHighestPrice()));
-            mLowestPrice.setText(CurrencyUtils.getPrice(marketData.getLowestPrice()));
         }
         mDeepView.setLastPrice(marketData.getLastPrice());
         mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));

@@ -2,7 +2,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
@@ -13,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleTextColor="@color/text22"
-        tools:titleText="BTC/USDT"/>
+        app:customView="@layout/view_tb_market_detail"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -38,9 +36,9 @@
                     android:layout_marginLeft="20dp"
                     android:layout_toLeftOf="@id/highText"
                     android:maxLines="1"
+                    android:text="--"
                     android:textColor="@color/green"
-                    android:textSize="34sp"
-                    tools:text="9230.00"/>
+                    android:textSize="34sp"/>
 
                 <TextView
                     android:id="@+id/priceChange"
@@ -48,9 +46,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/lastPrice"
                     android:layout_below="@id/lastPrice"
+                    android:text="--"
                     android:textColor="@color/green"
-                    android:textSize="15sp"
-                    tools:text="+0.75%"/>
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/highestPrice"
@@ -241,4 +239,13 @@
             android:textColor="@color/text66"
             android:textSize="10sp"/>
     </LinearLayout>
+
+    <View
+        android:id="@+id/dimView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/titleBar"
+        android:background="#66000000"
+        android:clickable="true"
+        android:visibility="gone"/>
 </RelativeLayout>
