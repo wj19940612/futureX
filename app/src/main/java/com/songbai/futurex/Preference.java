@@ -17,6 +17,7 @@ public class Preference {
         String REFRESH_POSTER = "refresh_poster";
         String REFRESH_LANGUAGE = "refresh_language";
         String LANGUAGE_STR = "language_str";
+        String SYS_MODEL = "sys_model";
     }
 
     private static Preference sInstance;
@@ -137,5 +138,13 @@ public class Preference {
 
     public boolean getRefreshLanguage() {
         return mPrefs.getBoolean(Key.REFRESH_LANGUAGE, false);
+    }
+
+    public void setSysModel(String sysModel) {
+        apply(Key.SYS_MODEL, sysModel);
+    }
+
+    public String getSysModel() {
+        return mPrefs.getString(Key.SYS_MODEL, "");
     }
 }

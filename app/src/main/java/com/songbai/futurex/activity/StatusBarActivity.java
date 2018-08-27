@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.songbai.futurex.utils.NotchUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,6 +48,9 @@ public class StatusBarActivity extends PermissionActivity {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+        if (NotchUtil.hasNotchInScreen(this)) {
+            NotchUtil.setDisplayCutMode(this);
+        }
     }
 
     private void setWindowFlag(Activity activity, final int bits, boolean on) {
@@ -64,7 +69,15 @@ public class StatusBarActivity extends PermissionActivity {
      */
     public void addStatusBarHeightPaddingTop(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(),
+            int extraHeight = getStatusBarHeight();
+            if (NotchUtil.hasNotchInScreen(this)) {
+                int[] notchSize = NotchUtil.getNotchSize(this);
+                int height = notchSize[1];
+                if (height > extraHeight) {
+                    extraHeight = height;
+                }
+            }
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + extraHeight,
                     view.getPaddingRight(), view.getPaddingBottom());
         }
     }
