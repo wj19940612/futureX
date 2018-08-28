@@ -186,6 +186,18 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private OrderAdapter mOrderAdapter;
     private CurrencyPairsPopup mPairsPopup;
 
+    private boolean mNotMain;
+
+    public static TradeFragment newsInstance(CurrencyPair currencyPair, int direction, boolean notMain) {
+        TradeFragment tradeFragment = new TradeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ExtraKeys.CURRENCY_PAIR, currencyPair);
+        bundle.putInt(ExtraKeys.TRADE_DIRECTION, direction);
+        bundle.putBoolean(ExtraKeys.NOT_MAIN, notMain);
+        tradeFragment.setArguments(bundle);
+        return tradeFragment;
+    }
+
     @Override
     public void onLoadMore() {
         mPage++;
@@ -229,6 +241,16 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         super.onAttach(context);
         if (context instanceof OnOptionalClickListener) {
             mOnOptionalClickListener = (OnOptionalClickListener) context;
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mCurrencyPair = getArguments().getParcelable(ExtraKeys.CURRENCY_PAIR);
+            mTradeDir = getArguments().getInt(ExtraKeys.TRADE_DIRECTION);
+            mNotMain = getArguments().getBoolean(ExtraKeys.NOT_MAIN);
         }
     }
 
@@ -298,8 +320,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
         mPercentSelectView.setOnPercentSelectListener(new TradePercentSelectView.OnPercentSelectListener() {
             @Override
-            public void onPercentSelect(int percent,int max) {
-                updateVolumeInputView(percent,max);
+            public void onPercentSelect(int percent, int max) {
+                updateVolumeInputView(percent, max);
             }
         });
 
@@ -414,6 +436,25 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mPairArrow = customView.findViewById(R.id.pairArrow);
         mSwitchToMarketPage = customView.findViewById(R.id.switchToMarketPage);
 
+        if (mNotMain) {
+            mPairArrow.setVisibility(View.GONE);
+            mSwitchToMarketPage.setVisibility(View.INVISIBLE);
+        } else {
+            mPairName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    umengEventCount(UmengCountEventId.COIN0003);
+                    if (mCurrencyPair == null) return;
+
+                    if (mPairsPopup != null && mPairsPopup.isShowing()) {
+                        mPairsPopup.dismiss();
+                    } else {
+                        showCurrencyPairPopup();
+                    }
+                }
+            });
+        }
+
         mOptionalStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -425,19 +466,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             }
         });
 
-        mPairName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                umengEventCount(UmengCountEventId.COIN0003);
-                if (mCurrencyPair == null) return;
-
-                if (mPairsPopup != null && mPairsPopup.isShowing()) {
-                    mPairsPopup.dismiss();
-                } else {
-                    showCurrencyPairPopup();
-                }
-            }
-        });
         mPairArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

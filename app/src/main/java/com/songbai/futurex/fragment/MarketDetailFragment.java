@@ -18,12 +18,14 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.SingleTradeActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.CoinIntroduce;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
@@ -32,6 +34,7 @@ import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.ChartsRadio;
+import com.songbai.futurex.view.IntroduceView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.RealtimeDealView;
 import com.songbai.futurex.view.TitleBar;
@@ -113,6 +116,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     TextView mBuyIn;
     @BindView(R.id.sellOut)
     TextView mSellOut;
+    @BindView(R.id.introduceView)
+    IntroduceView mIntroduceView;
 
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
@@ -165,10 +170,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     mDeepView.setVisibility(View.VISIBLE);
                     mTradeVolumeView.setVisibility(View.VISIBLE);
                     mTradeDealView.setVisibility(View.GONE);
-                } else {
+                    mIntroduceView.setVisibility(View.GONE);
+                } else if (position == 1) {
                     mDeepView.setVisibility(View.GONE);
                     mTradeVolumeView.setVisibility(View.GONE);
                     mTradeDealView.setVisibility(View.VISIBLE);
+                    mIntroduceView.setVisibility(View.GONE);
+                }else{
+                    mDeepView.setVisibility(View.GONE);
+                    mTradeVolumeView.setVisibility(View.GONE);
+                    mTradeDealView.setVisibility(View.GONE);
+                    mIntroduceView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -180,7 +192,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     new DataParser<Response<PairMarket>>(data) {
                         @Override
                         public void onSuccess(Response<PairMarket> pairMarketResponse) {
-                            if (pairMarketResponse.getContent() == null || mPairDesc == null) return;
+                            if (pairMarketResponse.getContent() == null || mPairDesc == null)
+                                return;
 
                             updateMarketDataView(pairMarketResponse.getContent().getQuota());
                             updateDeepDataView(pairMarketResponse.getContent().getDeep());
@@ -224,24 +237,24 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         switch (view.getId()) {
             case R.id.buyIn:
                 umengEventCount(UmengCountEventId.MARKET0012);
-                Intent intent = new Intent()
-                        .putExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_BUY_IN)
-                        .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair);
-                setResult(Activity.RESULT_FIRST_USER, intent);
-                finish();
+                clickBuySell(TradeDir.DIR_BUY_IN);
                 break;
             case R.id.sellOut:
                 umengEventCount(UmengCountEventId.MARKET0013);
-                Intent intent1 = new Intent()
-                        .putExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_SELL_OUT)
-                        .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair);
-                setResult(Activity.RESULT_FIRST_USER, intent1);
-                finish();
+                clickBuySell(TradeDir.DIR_SELL_OUT);
                 break;
             case R.id.optional:
                 toggleOptionalStatus();
                 break;
         }
+    }
+
+    private void clickBuySell(int direction){
+        Launcher.with(MarketDetailFragment.this, SingleTradeActivity.class)
+                .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair)
+                .putExtra(ExtraKeys.TRADE_DIRECTION,direction)
+                .putExtra(ExtraKeys.NOT_MAIN,true)
+                .execute();
     }
 
     private void toggleOptionalStatus() {
@@ -326,6 +339,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         requestDeepList();
                         requestDealList();
                         requestTrendData();
+                        requestIntroduceData();
                         updateOptionalStatus();
                     }
                 }).fireFreely();
@@ -349,6 +363,22 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         updateTradeDealView(data);
                     }
                 }).fireFreely();
+    }
+
+    private void requestIntroduceData() {
+        Apic.requestIntroduce(mCurrencyPair.getPrefixSymbol()).tag(TAG)
+                .callback(new Callback4Resp<Resp<CoinIntroduce>, CoinIntroduce>() {
+                    @Override
+                    protected void onRespData(CoinIntroduce data) {
+                        updateIntroduce(data);
+                    }
+                }).fireFreely();
+    }
+
+    private void updateIntroduce(CoinIntroduce data) {
+        if (mIntroduceView != null) {
+            mIntroduceView.updateData(data);
+        }
     }
 
     private void updateOptionalStatus() {

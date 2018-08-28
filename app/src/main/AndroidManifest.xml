@@ -210,5 +210,9 @@
         <activity
             android:name=".wrapper.MarketDetailActivity"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.SingleTradeActivity"
+            android:screenOrientation="portrait"/>
     </application>
 </manifest>

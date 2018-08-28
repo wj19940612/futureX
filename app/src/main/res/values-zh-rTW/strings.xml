@@ -611,6 +611,7 @@
     <string-array name="trade_detail_radio">
         <item>深度</item>
         <item>成交</item>
+        <item>簡介</item>
     </string-array>
     <string name="open_price_x">開&#160;%1$s</string>
     <string name="highest_price_x">高&#160;%1$s</string>

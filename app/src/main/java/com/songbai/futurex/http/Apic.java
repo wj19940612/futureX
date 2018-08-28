@@ -1459,4 +1459,11 @@ public class Apic {
         return Api.post("/api/user/user/updateEntrustPush.do", new ReqParams().put("entrustPush", turnStatus));
     }
 
+    /**
+     * 简介
+     */
+    public static Api requestIntroduce(String symbol) {
+        return Api.get("/api/entrust/coin/detailBySymbol.do", new ReqParams().put("symbol", symbol));
+    }
+
 }
