@@ -32,6 +32,7 @@ public class AuthCodeViewController extends SmartDialog.CustomViewController {
     private TextView mLoadImageFailure;
 
     private Bitmap mAuthCodeBitmap;
+    private boolean mControlByOutSide;
 
     public interface OnClickListener {
         void onConfirmClick(String authCode);
@@ -74,9 +75,12 @@ public class AuthCodeViewController extends SmartDialog.CustomViewController {
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                if (!mControlByOutSide) {
+                    dialog.dismiss();
+                }
                 String authCode = mAuthCodeInput.getText().toString();
                 mOnClickListener.onConfirmClick(authCode);
+
             }
         });
 
@@ -93,6 +97,14 @@ public class AuthCodeViewController extends SmartDialog.CustomViewController {
                 mAuthCodeImage.performClick();
             }
         });
+    }
+
+    public void setControlByOutSide(boolean controlByOutSide) {
+        mControlByOutSide = controlByOutSide;
+    }
+
+    public void clearAuthCode(){
+        mAuthCodeInput.setText("");
     }
 
     private boolean checkConfirmButtonEnable() {

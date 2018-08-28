@@ -1459,4 +1459,26 @@ public class Apic {
         return Api.post("/api/user/user/updateEntrustPush.do", new ReqParams().put("entrustPush", turnStatus));
     }
 
+    /**
+     * /api/otc/newOtc/v1/getPrice.do
+     * GET
+     * 新版otc获取价格
+     */
+    public static Api newOtcGetPrice() {
+        return Api.get("/api/otc/newOtc/v1/getPrice.do");
+    }
+
+    /**
+     * /api/otc/newOtc/v1/destineOrder.do
+     * POST
+     * 用户购买usdt--v1.5
+     */
+    public static Api newOtcDestineOrder(String cost, String coinCount, String coinSymbol) {
+        return Api.post("/api/otc/newOtc/v1/destineOrder.do",
+                new ReqParams()
+                        .put("cost", cost)
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol));
+    }
+
 }

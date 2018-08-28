@@ -3,6 +3,7 @@ package com.songbai.futurex.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -112,10 +113,13 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         switch (order.getStatus()) {
             case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
+                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
                 mTitleBar.setTitle(R.string.canceled);
                 break;
             case OTCOrderStatus.ORDER_COMPLATED:
                 mOrderStatus.setText(R.string.completed);
+                mOrderStatus.setTextColor(ContextCompat.getColor(this, R.color.green));
+                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark,0,0,0);
                 mTitleBar.setTitle(R.string.completed);
                 break;
             default:
