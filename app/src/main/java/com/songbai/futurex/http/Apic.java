@@ -1460,6 +1460,15 @@ public class Apic {
     }
 
     /**
+     * /api/user/dictionary/findDictionaryByCode.do
+     * GET
+     * 获取google双重验证图片
+     */
+    public static Api getGoogleAuthPic() {
+        return Api.get("/api/user/dictionary/findDictionaryByCode.do",new ReqParams().put("type","googleAuth"));
+    }
+
+    /**
      * /api/otc/newOtc/v1/getPrice.do
      * GET
      * 新版otc获取价格
@@ -1490,7 +1499,16 @@ public class Apic {
         return Api.post("/api/otc/newOtc/v1/sell.do",
                 new ReqParams()
                         .put("coinCount", coinCount)
-                        .put("coinSymbol", coinSymbol)
+                       .put("coinSymbol", coinSymbol)
                         .put("drawPass", drawPass));
+    }
+
+    /**
+     * /api/otc/newOtc/v1/getYetOrder.do
+     * GET
+     * 用户是否有未完成的法币订单
+     */
+    public static Api newOtcGetYetOrder() {
+        return Api.get("/api/otc/newOtc/v1/getYetOrder.do");
     }
 }

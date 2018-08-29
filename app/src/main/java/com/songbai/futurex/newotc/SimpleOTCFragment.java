@@ -23,12 +23,16 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.NewOTCPrice;
+import com.songbai.futurex.model.NewOTCYetOrder;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,6 +103,7 @@ public class SimpleOTCFragment extends BaseFragment {
             return false;
         }
     };
+    private NewOTCYetOrder mNewOTCYetOrder;
 
     private void setAmountAndTurnover() {
         String turnover = mTurnover.getText().toString().trim();
@@ -173,6 +178,7 @@ public class SimpleOTCFragment extends BaseFragment {
         super.onResume();
         if (getUserVisibleHint()) {
             getPrice();
+            getYetOrder();
         }
     }
 
@@ -181,6 +187,7 @@ public class SimpleOTCFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && mPrepared) {
             getPrice();
+            getYetOrder();
         }
     }
 
@@ -191,6 +198,17 @@ public class SimpleOTCFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<NewOTCPrice> resp) {
                         mNewOTCPrice = resp.getData();
                         setPrice();
+                    }
+                }).fireFreely();
+    }
+
+    private void getYetOrder() {
+        Apic.newOtcGetYetOrder().tag(TAG)
+                .callback(new Callback<Resp<NewOTCYetOrder>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<NewOTCYetOrder> resp) {
+                        mNewOTCYetOrder = resp.getData();
+                        mRecentOrderHint.setVisibility(mNewOTCYetOrder.getCount() > 0 ? View.VISIBLE : View.GONE);
                     }
                 }).fireFreely();
     }
@@ -226,14 +244,16 @@ public class SimpleOTCFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recentOrderHint:
+                if (mNewOTCYetOrder != null) {
+                    if (mNewOTCYetOrder.getCount() > 1) {
+                        lunchOrder();
+                    } else {
 
+                    }
+                }
                 break;
             case R.id.order:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
+                lunchOrder();
                 break;
             case R.id.confirm:
                 if (LocalUser.getUser().isLogin()) {
@@ -246,16 +266,40 @@ public class SimpleOTCFragment extends BaseFragment {
         }
     }
 
+    private void lunchOrder() {
+        if (LocalUser.getUser().isLogin()) {
+            Launcher.with(this, LegalCurrencyOrderActivity.class).execute();
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
+    }
+
     private void trade() {
         if (mTradeType == 1) {
             buy(mTradeAmount.getText().toString(), mTurnover.getText().toString(), mSelectedLegalSymbol);
         } else {
-            sell(mTurnover.getText().toString(), mSelectedLegalSymbol);
+            WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
+                    new WithDrawPsdViewController.OnClickListener() {
+                        @Override
+                        public void onForgetClick() {
+                            umengEventCount(UmengCountEventId.TRADE0004);
+                        }
+
+                        @Override
+                        public void onConfirmClick(String cashPwd, String googleAuth) {
+                            sell(mTurnover.getText().toString(), mSelectedLegalSymbol, cashPwd);
+                        }
+                    });
+            withDrawPsdViewController.setShowGoogleAuth(false);
+            SmartDialog smartDialog = SmartDialog.solo(getActivity());
+            smartDialog.setCustomViewController(withDrawPsdViewController)
+                    .show();
+            withDrawPsdViewController.setTitle(R.string.fund_password_verification);
         }
     }
 
-    private void sell(String coinCount, String coinSymbol) {
-        Apic.newOtcSell(coinCount, coinSymbol,"").tag(TAG)
+    private void sell(String coinCount, String coinSymbol, String drawPwd) {
+        Apic.newOtcSell(coinCount, coinSymbol, md5Encrypt(drawPwd)).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
