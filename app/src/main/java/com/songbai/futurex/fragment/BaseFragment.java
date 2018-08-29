@@ -1,6 +1,7 @@
 package com.songbai.futurex.fragment;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.ScrollView;
 import com.sbai.httplib.ReqIndeterminate;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.http.Api;
+import com.songbai.futurex.utils.NotchUtil;
 import com.songbai.futurex.utils.SecurityUtil;
 import com.songbai.futurex.utils.TimerHandler;
 import com.umeng.analytics.MobclickAgent;
@@ -129,6 +131,24 @@ public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHan
     protected void addTopPaddingWithStatusBar(View view) {
         int paddingTop = getStatusBarHeight();
         view.setPadding(0, paddingTop, 0, 0);
+    }
+
+    /**
+     * 增加View的paddingTop,增加的值为状态栏高度
+     */
+    public void addStatusBarHeightPaddingTop(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int extraHeight = getStatusBarHeight();
+            if (NotchUtil.hasNotchInScreen(getActivity())) {
+                int[] notchSize = NotchUtil.getNotchSize(getActivity());
+                int height = notchSize[1];
+                if (height > extraHeight) {
+                    extraHeight = height;
+                }
+            }
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + extraHeight,
+                    view.getPaddingRight(), view.getPaddingBottom());
+        }
     }
 
     private int getStatusBarHeight() {

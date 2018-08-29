@@ -27,6 +27,7 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -189,6 +190,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     @Override
     public void onRefresh() {
+        requestUserAccount();
     }
 
     @NonNull
@@ -238,10 +240,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        addTopPaddingWithStatusBar(mTitleBar);
+        addStatusBarHeightPaddingTop(mTitleBar);
 
         initTitleBar();
-
+        mSwipeToLoadLayout.setOnRefreshListener(this);
+        mSwipeToLoadLayout.setOnLoadMoreListener(this);
         mTradeTypeValue = LIMIT_TRADE;
         mTradeDirRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
@@ -654,6 +657,13 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                             if (mAvailableCurrencyList.size() > 0) {
                                 updateTradeCurrencyView();
                             }
+                            stopFreshOrLoadAnimation();
+                        }
+
+                        @Override
+                        public void onFailure(ReqError reqError) {
+                            super.onFailure(reqError);
+                            stopFreshOrLoadAnimation();
                         }
                     }).fireFreely();
         } else {

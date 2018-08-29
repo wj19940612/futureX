@@ -13,11 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleBar"
+        app:layout_constraintTop_toBottomOf="@+id/orderListFloatRadio"
         app:load_more_enabled="false"
         app:load_more_final_drag_offset="@dimen/load_more_final_offset"
         app:load_more_trigger_offset="@dimen/load_more_trigger_offset"
-        app:refresh_enabled="false"
         app:refresh_final_drag_offset="@dimen/refresh_final_offset"
         app:refresh_trigger_offset="@dimen/refresh_trigger_offset"
         app:swipe_style="classic">
@@ -38,10 +37,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -343,7 +338,9 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         app:customView="@layout/view_tb_trade"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/swipeToLoadLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"/>
 
     <View
         android:id="@+id/dimView"

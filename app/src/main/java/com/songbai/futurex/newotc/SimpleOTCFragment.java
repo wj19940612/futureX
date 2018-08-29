@@ -250,12 +250,18 @@ public class SimpleOTCFragment extends BaseFragment {
         if (mTradeType == 1) {
             buy(mTradeAmount.getText().toString(), mTurnover.getText().toString(), mSelectedLegalSymbol);
         } else {
-            sell();
+            sell(mTurnover.getText().toString(), mSelectedLegalSymbol);
         }
     }
 
-    private void sell() {
-
+    private void sell(String coinCount, String coinSymbol) {
+        Apic.newOtcSell(coinCount, coinSymbol,"").tag(TAG)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        clearData();
+                    }
+                }).fire();
     }
 
     private void buy(String cost, String coinCount, String coinSymbol) {

@@ -1481,4 +1481,16 @@ public class Apic {
                         .put("coinSymbol", coinSymbol));
     }
 
+    /**
+     * /api/otc/newOtc/v1/sell.do
+     * POST
+     * 用户出售usdt
+     */
+    public static Api newOtcSell(String coinCount, String coinSymbol, String drawPass) {
+        return Api.post("/api/otc/newOtc/v1/sell.do",
+                new ReqParams()
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol)
+                        .put("drawPass", drawPass));
+    }
 }
