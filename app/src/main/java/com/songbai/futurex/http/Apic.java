@@ -1520,7 +1520,7 @@ public class Apic {
     public static Api otc365buy(String waresOrderId, String syncUrl) {
         return Api.post("/api/otc/otc365/v1/otc365buy.do",
                 new ReqParams()
-                        .put("coinCount", waresOrderId)
-                        .put("coinSymbol", syncUrl));
+                        .put("waresOrderId", waresOrderId)
+                        .put("syncUrl", syncUrl));
     }
 }

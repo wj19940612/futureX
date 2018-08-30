@@ -20,6 +20,7 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.LegalCurrencyOrderActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.BaseFragment;
 import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragment;
@@ -33,6 +34,8 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.NewOTCPrice;
 import com.songbai.futurex.model.NewOTCYetOrder;
+import com.songbai.futurex.model.NewOrderData;
+import com.songbai.futurex.model.ParamBean;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -393,7 +396,7 @@ public class SimpleOTCFragment extends BaseFragment {
             return;
         }
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
-            buy("", mTurnover.getText().toString(), mSelectedCoinSymbol);
+            buy("", mTradeAmount.getText().toString(), mSelectedCoinSymbol);
         } else {
             WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
                     new WithDrawPsdViewController.OnClickListener() {
@@ -404,7 +407,7 @@ public class SimpleOTCFragment extends BaseFragment {
 
                         @Override
                         public void onConfirmClick(String cashPwd, String googleAuth) {
-                            sell(mTurnover.getText().toString(), mSelectedCoinSymbol, cashPwd);
+                            sell(mTradeAmount.getText().toString(), mSelectedCoinSymbol, cashPwd);
                         }
                     });
             withDrawPsdViewController.setShowGoogleAuth(false);
@@ -485,10 +488,21 @@ public class SimpleOTCFragment extends BaseFragment {
 
     private void sell(String coinCount, String coinSymbol, String drawPwd) {
         Apic.newOtcSell(coinCount, coinSymbol, md5Encrypt(drawPwd)).tag(TAG)
-                .callback(new Callback<Resp<Object>>() {
+                .callback(new Callback<Resp<NewOrderData>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
+                    protected void onRespSuccess(Resp<NewOrderData> resp) {
                         clearData();
+                        NewOrderData data = resp.getData();
+                        String targetUrl = data.getTargetUrl();
+                        if (TextUtils.isEmpty(targetUrl)) {
+                            String id = String.valueOf(data.getId());
+                            UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, id)
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, mNewOTCYetOrder.getDirect())
+                                    .execute();
+                        } else {
+                            OpenOtc365(data);
+                        }
                     }
 
                     @Override
@@ -504,12 +518,47 @@ public class SimpleOTCFragment extends BaseFragment {
                 }).fire();
     }
 
+    private void OpenOtc365(NewOrderData data) {
+        ParamBean param = data.getParam();
+        StringBuilder builder = new StringBuilder();
+        //拼接post提交参数
+        builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
+                .append("sync_url=").append(param.getSync_url()).append("&")
+                .append("coin_sign=").append(param.getCoin_sign()).append("&")
+                .append("sign=").append(param.getSign()).append("&")
+                .append("order_time=").append(param.getOrder_time()).append("&")
+                .append("pay_card_num=").append(param.getPay_card_num()).append("&")
+                .append("async_url=").append(param.getAsync_url()).append("&")
+                .append("id_card_num=").append(param.getId_card_num()).append("&")
+                .append("kyc=").append(param.getKyc()).append("&")
+                .append("phone=").append(param.getPhone()).append("&")
+                .append("company_order_num=").append(param.getCompany_order_num()).append("&")
+                .append("appkey=").append(param.getAppkey()).append("&")
+                .append("id_card_type=").append(param.getId_card_type()).append("&")
+                .append("username=").append(param.getUsername()).append("&");
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_URL, data.getTargetUrl())
+                .putExtra(WebActivity.EX_POST_DATA, builder.toString())
+                .execute();
+    }
+
     private void buy(String cost, String coinCount, String coinSymbol) {
         Apic.newOtcDestineOrder(cost, coinCount, coinSymbol).tag(TAG)
-                .callback(new Callback<Resp<Object>>() {
+                .callback(new Callback<Resp<NewOrderData>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
+                    protected void onRespSuccess(Resp<NewOrderData> resp) {
                         clearData();
+                        NewOrderData data = resp.getData();
+                        String targetUrl = data.getTargetUrl();
+                        if (TextUtils.isEmpty(targetUrl)) {
+                            String id = String.valueOf(data.getId());
+                            UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
+                                    .putExtra(ExtraKeys.ORDER_ID, id)
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, mNewOTCYetOrder.getDirect())
+                                    .execute();
+                        } else {
+                            OpenOtc365(data);
+                        }
                     }
 
                     @Override

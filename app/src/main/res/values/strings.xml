@@ -775,5 +775,7 @@
     <string name="trade_desc">交易说明</string>
     <string name="legal_currency_rule">1.买卖USDT由平台统一担保，可放心兑换。\n\n\n2.请下单后15分钟内完成交易，否则该笔订单将被取消。\n\n\n3.禁止使用他人支付宝、微信代付、ATM及柜台转账等第三方转账，请使用本人绑定的银行卡通过手机银行或网银进行汇款，其他任何方式汇款都会造成延时处理。\n\n\n4.如果你的交易1小时内没有处理，请联系在线客服登记。会有专人24小时内与您联系，请保持手机畅通\n\n\n5.请切记备注【订单后4位】作为转账附言，否则将会出现延迟到账等情况。\n\n\n6. 单天最多只能发起10笔卖出订单。\n\n\n7.超过3笔取消订单将禁止当天法币交易\n\n\n8.有1个买单或者卖单未完成，暂停继续下单，完成交易后恢复</string>
     <string name="should_bind_phone">需要先绑定手机</string>
+    <string name="otc365_buy_hint">请在OTC365页面完成交易</string>
+    <string name="otc365_sell_hint">请确认收款后转币</string>
 
 </resources>
