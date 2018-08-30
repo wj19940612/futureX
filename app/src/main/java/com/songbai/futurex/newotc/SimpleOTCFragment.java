@@ -304,6 +304,9 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void getYetOrder() {
+        if (!LocalUser.getUser().isLogin()) {
+            return;
+        }
         Apic.newOtcGetYetOrder().tag(TAG)
                 .callback(new Callback<Resp<NewOTCYetOrder>>() {
                     @Override
