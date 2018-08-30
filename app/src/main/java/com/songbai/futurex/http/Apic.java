@@ -1517,7 +1517,10 @@ public class Apic {
      * POST
      * 跳转到otc365付款页面--v1.5
      */
-    public static Api otc365buy() {
-        return Api.get("/api/otc/otc365/v1/otc365buy.do");
+    public static Api otc365buy(String waresOrderId, String syncUrl) {
+        return Api.post("/api/otc/otc365/v1/otc365buy.do",
+                new ReqParams()
+                        .put("coinCount", waresOrderId)
+                        .put("coinSymbol", syncUrl));
     }
 }

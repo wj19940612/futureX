@@ -20,9 +20,11 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.CustomServiceActivity;
 import com.songbai.futurex.activity.OtcTradeChatActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OTC365Data;
 import com.songbai.futurex.model.OrderBean;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
@@ -465,12 +467,32 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 }
                 break;
             case R.id.goTo365:
-                // TODO: 2018/8/30
-                Apic.otc365buy().tag(TAG)
-                        .callback(new Callback<Resp<Object>>() {
+                Apic.otc365buy(mOrderId, "").tag(TAG)
+                        .callback(new Callback<Resp<OTC365Data>>() {
                             @Override
-                            protected void onRespSuccess(Resp<Object> resp) {
-
+                            protected void onRespSuccess(Resp<OTC365Data> resp) {
+                                OTC365Data data = resp.getData();
+                                OTC365Data.ParamBean param = data.getParam();
+                                StringBuilder builder = new StringBuilder();
+                                //拼接post提交参数
+                                builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
+                                        .append("sync_url=").append(param.getSync_url()).append("&")
+                                        .append("coin_sign=").append(param.getCoin_sign()).append("&")
+                                        .append("sign=").append(param.getSign()).append("&")
+                                        .append("order_time=").append(param.getOrder_time()).append("&")
+                                        .append("pay_card_num=").append(param.getPay_card_num()).append("&")
+                                        .append("async_url=").append(param.getAsync_url()).append("&")
+                                        .append("id_card_num=").append(param.getId_card_num()).append("&")
+                                        .append("kyc=").append(param.getKyc()).append("&")
+                                        .append("phone=").append(param.getPhone()).append("&")
+                                        .append("company_order_num=").append(param.getCompany_order_num()).append("&")
+                                        .append("appkey=").append(param.getAppkey()).append("&")
+                                        .append("id_card_type=").append(param.getId_card_type()).append("&")
+                                        .append("username=").append(param.getUsername()).append("&");
+                                Launcher.with(getActivity(), WebActivity.class)
+                                        .putExtra(WebActivity.EX_URL, data.getTargetUrl())
+                                        .putExtra(WebActivity.EX_POST_DATA, builder.toString())
+                                        .execute();
                             }
                         }).fire();
                 break;

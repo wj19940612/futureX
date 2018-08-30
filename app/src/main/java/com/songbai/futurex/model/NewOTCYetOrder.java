@@ -11,15 +11,15 @@ public class NewOTCYetOrder {
      * count : 2
      */
 
-    private OrderBean id;
+    private String id;
     private int count;
     private int direct;
 
-    public OrderBean getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(OrderBean id) {
+    public void setId(String id) {
         this.id = id;
     }
 
