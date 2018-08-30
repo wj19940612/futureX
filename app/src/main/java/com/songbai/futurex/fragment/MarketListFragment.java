@@ -20,6 +20,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.model.KTrend;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
@@ -122,6 +123,7 @@ public class MarketListFragment extends BaseFragment {
                         Collections.sort(data);
                         mCurrencyPairAdapter.setGroupableList(data);
 
+                        getKTrendData(data);
                         showEmptyView(data);
 
                         if (TextUtils.isEmpty(Preference.get().getDefaultTradePair())) {
@@ -142,11 +144,39 @@ public class MarketListFragment extends BaseFragment {
         }
     }
 
+    private void getKTrendData(List<CurrencyPair> data) {
+        if (data == null || data.size() == 0) return;
+
+        String paris = getParis(data);
+        Apic.requestKTrendPairs(paris).tag(TAG).callback(new Callback4Resp<Resp<HashMap<String, List<KTrend>>>, HashMap<String, List<KTrend>>>() {
+            @Override
+            protected void onRespData(HashMap<String, List<KTrend>> data) {
+                updateKTrendData(data);
+            }
+        }).fireFreely();
+    }
+
+    private void updateKTrendData(HashMap<String, List<KTrend>> data) {
+        if (mCurrencyPairAdapter != null) {
+            mCurrencyPairAdapter.setKTrendListMap(data);
+            mCurrencyPairAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private String getParis(List<CurrencyPair> data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (CurrencyPair currencyPair : data) {
+            stringBuilder.append(currencyPair.getPairs());
+        }
+        return stringBuilder.toString();
+    }
+
     static class CurrencyPairAdapter extends GroupAdapter<CurrencyPair> {
 
         private Map<String, MarketData> mMarketDataList;
         private Context mContext;
         private OnRVItemClickListener mOnRVItemClickListener;
+        private Map<String, List<KTrend>> mKTrendListMap;
 
         public CurrencyPairAdapter(Context context, OnRVItemClickListener onRVItemClickListener) {
             super();
@@ -158,6 +188,10 @@ public class MarketListFragment extends BaseFragment {
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
             mMarketDataList = marketDataList;
             notifyDataSetChanged();
+        }
+
+        public void setKTrendListMap(Map<String, List<KTrend>> kTrendListMap) {
+            mKTrendListMap = kTrendListMap;
         }
 
         @NonNull

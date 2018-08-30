@@ -1466,4 +1466,11 @@ public class Apic {
         return Api.get("/api/entrust/coin/detailBySymbol.do", new ReqParams().put("symbol", symbol));
     }
 
+    /**
+     * 获取多个交易对的趋势行情
+     */
+    public static Api requestKTrendPairs(String pairs) {
+        return Api.get("/api/quota/quota/list/kTrend", new ReqParams().put("pairs", pairs));
+    }
+
 }
