@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Modified by john on 2018/6/21
  * <p>
- * Description:
+ * Description: 深度图
  * <p>
  * APIs:
  */
@@ -109,5 +109,12 @@ public class DeepView extends LinearLayout {
 
     public void setPriceScale(int pricePoint) {
         mPriceScale = pricePoint;
+    }
+
+    public void reset() {
+        mMinPrice.setText("--");
+        mMaxPrice.setText("--");
+        mLastPrice.setText("--");
+        mDeepV.setDeepList(null, null);
     }
 }

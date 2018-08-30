@@ -64,6 +64,12 @@ public class ChartsRadio extends LinearLayout {
         select(0);
     }
 
+    public void performChildClick(int childIndex) {
+        if (childIndex >= 0 && childIndex < mChartsRadioMain.getChildCount()) {
+            mChartsRadioMain.getChildAt(childIndex).performClick();
+        }
+    }
+
     public void setOnTabSelectedListener(OnTabSelectedListener onTabSelectedListener) {
         mOnTabSelectedListener = onTabSelectedListener;
     }

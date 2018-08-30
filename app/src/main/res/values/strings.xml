@@ -232,7 +232,7 @@
     <string name="please_set_google_authenticator_first">请先绑定Google验证</string>
     <string name="google_authenticator_code">谷歌验证码</string>
     <string name="please_input_google_authenticator_code">请输入谷歌验证码</string>
-    <string name="google_authenticator_hint">1.安装在“Google Authenticator”应用程序中，点击右上角“+”号，然后选择“手动输入验证码”或“扫描条形码”。\n2.扫描下方二维码或手动输入下述密钥添加验证令牌。\n3.密钥用于手机更换或遗失时找回谷歌验证器，绑定前请务必将下述密钥备份保存。</string>
+    <string name="google_authenticator_hint">1.安装在“Google Authenticator”应用程序中，点击右上角“+”号，然后选择“手动输入验证码”或“扫描条形码”。\n\n\n2.扫描下方二维码或手动输入下述密钥添加验证令牌。\n\n\n3.密钥用于手机更换或遗失时找回谷歌验证器，绑定前请务必将下述密钥备份保存。</string>
     <string name="use_google_authenticator_by">将Google验证应用于：</string>
     <string name="reset_draw_cash_pwd">重置资金密码</string>
     <string name="confirm_otc_tread">法币交易确认</string>
@@ -766,5 +766,8 @@
     <string name="white_paper">白皮书</string>
     <string name="official_network">官网</string>
     <string name="block_query">区块查询</string>
-
+    <string name="instructions">操作说明</string>
+    <string name="option_one">方案一</string>
+    <string name="option_two">方案二</string>
+    <string name="option_two_desc">微信小程序搜索“双重验证”</string>
 </resources>

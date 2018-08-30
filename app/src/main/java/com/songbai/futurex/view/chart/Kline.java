@@ -16,7 +16,6 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -154,7 +153,7 @@ public class Kline extends BaseChart {
     protected void init() {
         super.init();
         mDataList = new ArrayList<>();
-        mBufferDataList = new LinkedList<>();
+        mBufferDataList = new ArrayList<>();
         mVisibleList = new SparseArray<>();
         mMas = new int[]{5, 10, 30};
         mChartColor = new ChartColor();
@@ -737,7 +736,9 @@ public class Kline extends BaseChart {
 
     public void setDataList(List<Data> dataList) {
         mBufferDataList.clear();
-        mBufferDataList.addAll(dataList);
+        if (dataList != null) {
+            mBufferDataList.addAll(dataList);
+        }
         if (getDragTransX() == 0) {
             flush();
         }
