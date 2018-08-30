@@ -180,6 +180,9 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                         shareWithPackageName("com.twitter.android", "");
                         break;
                     case R.string.facebook:
+//                        if (!mSharing) {
+//                            share(SHARE_MEDIA.FACEBOOK);
+//                        }
                         shareWithPackageName("com.facebook.katana", "");
                         break;
                     case R.string.telegram:

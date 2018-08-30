@@ -62,7 +62,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.registerTime)
     TextView mRegisterTime;
     private Unbinder mBind;
-    private int mOrderId;
+    private String mOrderId;
     private int mTradeDirection;
     private int mWaresId;
 
@@ -77,7 +77,7 @@ public class OtcSellUserInfoFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
         mWaresId = extras.getInt(ExtraKeys.WARES_ID);
-        mOrderId = extras.getInt(ExtraKeys.ORDER_ID);
+        mOrderId = extras.getString(ExtraKeys.ORDER_ID);
         mTradeDirection = extras.getInt(ExtraKeys.TRADE_DIRECTION);
     }
 

@@ -30,6 +30,7 @@ import com.songbai.futurex.model.local.AuthCodeGet;
 import com.songbai.futurex.model.local.AuthSendOld;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.CreateGoogleKey;
+import com.songbai.futurex.model.mine.GoogleAuthPic;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.ZXingUtils;
@@ -38,10 +39,13 @@ import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.AuthCodeViewController;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import sbai.com.glide.GlideApp;
 
 /**
  * @author yangguangda
@@ -70,11 +74,14 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
     TextView mGoogleAuthCodeText;
     @BindView(R.id.divider)
     View mDivider;
+    @BindView(R.id.image)
+    ImageView mImage;
     private Unbinder mBind;
     private AuthCodeViewController mAuthCodeViewController;
     private boolean mSendSms;
     private boolean mFreezeGetAuthCode;
     private boolean mReset;
+    private String mPic;
 
     @Nullable
     @Override
@@ -109,6 +116,7 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
         mAuthCodeText.setText(mSendSms ? R.string.sms_auth_code : R.string.mail_auth_code);
         mAuthCode.setHint(mSendSms ? R.string.please_input_sms_auth_code : R.string.please_input_mail_auth_code);
         createGoogleKey();
+        getGoogleAuthPic();
     }
 
     private ValidationWatcher mWatcher = new ValidationWatcher() {
@@ -128,6 +136,24 @@ public class GoogleAuthenticatorFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp<CreateGoogleKey> resp) {
                         setGoogleKey(resp.getData());
+                    }
+                })
+                .fire();
+    }
+
+    private void getGoogleAuthPic() {
+        Apic.getGoogleAuthPic().tag(TAG)
+                .callback(new Callback<Resp<ArrayList<GoogleAuthPic>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<ArrayList<GoogleAuthPic>> resp) {
+                        ArrayList<GoogleAuthPic> data = resp.getData();
+                        if (data != null && data.size() > 0) {
+                            mPic = data.get(0).getValue();
+                            GlideApp
+                                    .with(GoogleAuthenticatorFragment.this)
+                                    .load(mPic)
+                                    .into(mImage);
+                        }
                     }
                 })
                 .fire();

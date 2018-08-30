@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.songbai.futurex.websocket.im.IMParam;
 import com.songbai.futurex.websocket.msg.MsgParam;
 import com.songbai.futurex.websocket.notification.NotificationParam;
-import com.songbai.futurex.websocket.notification.NotificationProcessor;
 import com.songbai.futurex.websocket.otc.OtcParam;
 
 /**
@@ -29,7 +28,7 @@ public class PushDestUtils {
         return "queue:entrust".equals(dest);
     }
 
-    public static boolean isOtcChat(int id, String dest) {
+    public static boolean isOtcChat(String id, String dest) {
         return (OtcParam.OTC_CHAT + id).equals(dest);
     }
 
