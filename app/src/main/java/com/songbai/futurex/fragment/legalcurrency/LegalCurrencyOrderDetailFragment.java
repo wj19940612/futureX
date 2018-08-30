@@ -23,6 +23,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OrderBean;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
@@ -101,7 +102,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     LinearLayout mAskPayInfoGroup;
     @BindView(R.id.askPayInfo)
     TextView mAskPayInfo;
-    private int mOrderId;
+    private String mOrderId;
     private int mTradeDirection;
     private Unbinder mBind;
     private int mStatus;
@@ -121,7 +122,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-        mOrderId = extras.getInt(ExtraKeys.ORDER_ID);
+        mOrderId = extras.getString(ExtraKeys.ORDER_ID);
         mTradeDirection = extras.getInt(ExtraKeys.TRADE_DIRECTION);
     }
 
@@ -144,7 +145,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
                         @Override
                         public void onSuccess(Response<SysMessage> resp) {
-                            if (resp.getContent().getDataId() == mOrderId) {
+                            if (String.valueOf(resp.getContent().getDataId()).equals(mOrderId)) {
                                 otcOrderDetail();
                                 Intent data = new Intent();
                                 data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
@@ -184,7 +185,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void otcWaresMine() {
-        Apic.otcWaresMine("", String.valueOf(mOrderId), 1).tag(TAG)
+        Apic.otcWaresMine("", mOrderId, 1).tag(TAG)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -275,7 +276,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     private void setView(OtcOrderDetail otcOrderDetail) {
         mOtcOrderDetail = otcOrderDetail;
-        OtcOrderDetail.OrderBean order = otcOrderDetail.getOrder();
+        OrderBean order = otcOrderDetail.getOrder();
         String coinSymbol = order.getCoinSymbol();
         mTitleBar.setTitle(getString(mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY ?
                 R.string.buy_x : R.string.sell_x, coinSymbol.toUpperCase()));
@@ -293,7 +294,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         }
     }
 
-    private void setOrderInfoCard(OtcOrderDetail.OrderBean order, String coinSymbol) {
+    private void setOrderInfoCard(OrderBean order, String coinSymbol) {
         mTurnover.setText(getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale(order.getOrderAmount()),
                 order.getPayCurrency().toUpperCase()));
@@ -342,7 +343,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         }
     }
 
-    private void setBottomButtonStatus(OtcOrderDetail.OrderBean order) {
+    private void setBottomButtonStatus(OrderBean order) {
         mStatus = order.getStatus();
         order.setOrderType(2);
         mOriginOptionGroup.setVisibility(order.getOrderType() == 1 ? View.VISIBLE : View.GONE);
@@ -465,6 +466,13 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 break;
             case R.id.goTo365:
                 // TODO: 2018/8/30
+                Apic.otc365buy().tag(TAG)
+                        .callback(new Callback<Resp<Object>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Object> resp) {
+
+                            }
+                        }).fire();
                 break;
             default:
         }

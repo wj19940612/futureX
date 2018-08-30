@@ -14,6 +14,7 @@ import com.songbai.futurex.fragment.legalcurrency.OtcSellUserInfoFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OrderBean;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.status.AuthenticationStatus;
@@ -60,7 +61,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
     @BindView(R.id.orderStatus)
     TextView mOrderStatus;
     Unbinder unbinder;
-    private int mOrderId;
+    private String mOrderId;
     private int mTradeDirection;
 
     @Override
@@ -72,7 +73,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         setStatusBarDarkModeForM(true);
         ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
         Intent intent = getIntent();
-        mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
+        mOrderId = intent.getStringExtra(ExtraKeys.ORDER_ID);
         mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
         otcOrderDetail(mOrderId, mTradeDirection);
         otcWaresMine("", String.valueOf(mOrderId));
@@ -88,7 +89,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
                 }).fire();
     }
 
-    private void otcOrderDetail(int id, int direct) {
+    private void otcOrderDetail(String id, int direct) {
         Apic.otcOrderDetail(id, direct).tag(TAG)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
                     @Override
@@ -99,7 +100,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
     }
 
     private void setView(OtcOrderDetail otcOrderDetail) {
-        OtcOrderDetail.OrderBean order = otcOrderDetail.getOrder();
+        OrderBean order = otcOrderDetail.getOrder();
         mTurnover.setText(getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale(order.getOrderAmount()),
                 order.getPayCurrency().toUpperCase()));

@@ -28,6 +28,7 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.NewOTCPrice;
 import com.songbai.futurex.model.NewOTCYetOrder;
+import com.songbai.futurex.model.OrderBean;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
@@ -299,8 +300,8 @@ public class SimpleOTCFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<NewOTCYetOrder> resp) {
                         mNewOTCYetOrder = resp.getData();
                         mRecentOrderHint.setVisibility(mNewOTCYetOrder.getCount() > 0 ? View.VISIBLE : View.GONE);
-                        int id = mNewOTCYetOrder.getId();
-                        mRecentOrderHint.setVisibility(id > 0 ? View.VISIBLE : View.GONE);
+                        OrderBean id = mNewOTCYetOrder.getId();
+                        mRecentOrderHint.setVisibility(id != null ? View.VISIBLE : View.GONE);
                     }
                 }).fireFreely();
     }
@@ -341,10 +342,10 @@ public class SimpleOTCFragment extends BaseFragment {
                     if (mNewOTCYetOrder.getCount() > 1) {
                         lunchOrder();
                     } else {
-                        int id = mNewOTCYetOrder.getId();
+                        OrderBean id = mNewOTCYetOrder.getId();
                         UniqueActivity.launcher(this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, id)
-                                .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
+                                .putExtra(ExtraKeys.ORDER_ID, id.getOrderId())
+                                .putExtra(ExtraKeys.TRADE_DIRECTION, mNewOTCYetOrder.getDirect())
                                 .execute();
                     }
                 }

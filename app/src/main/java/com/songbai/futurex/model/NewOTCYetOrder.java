@@ -11,14 +11,15 @@ public class NewOTCYetOrder {
      * count : 2
      */
 
-    private int id;
+    private OrderBean id;
     private int count;
+    private int direct;
 
-    public int getId() {
+    public OrderBean getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(OrderBean id) {
         this.id = id;
     }
 
@@ -28,5 +29,13 @@ public class NewOTCYetOrder {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public int getDirect() {
+        return direct;
+    }
+
+    public void setDirect(int direct) {
+        this.direct = direct;
     }
 }
