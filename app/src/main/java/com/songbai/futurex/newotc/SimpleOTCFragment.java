@@ -23,6 +23,11 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.BaseFragment;
 import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragment;
+import com.songbai.futurex.fragment.mine.BindPhoneFragment;
+import com.songbai.futurex.fragment.mine.CashPwdFragment;
+import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
+import com.songbai.futurex.fragment.mine.SelectPayTypeFragment;
+import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
@@ -40,6 +45,7 @@ import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.dialog.MsgHintController;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 
 import butterknife.BindView;
@@ -52,6 +58,8 @@ import butterknife.Unbinder;
  * @date 2018/8/27
  */
 public class SimpleOTCFragment extends BaseFragment {
+    private static final int SHOULD_BIND_PAY = -1;
+
     @BindView(R.id.title)
     TextView mTitle;
     @BindView(R.id.order)
@@ -372,6 +380,18 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void trade() {
+        if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+            showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
+            return;
+        }
+        if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+            showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
+            return;
+        }
+        if (LocalUser.getUser().getUserInfo().getPayment() < 1) {
+            showAlertMsgHint(SHOULD_BIND_PAY);
+            return;
+        }
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
             buy("", mTurnover.getText().toString(), mSelectedCoinSymbol);
         } else {
@@ -395,12 +415,91 @@ public class SimpleOTCFragment extends BaseFragment {
         }
     }
 
+    private void showAlertMsgHint(final int code) {
+        int msg = 0;
+        int confirmText = R.string.ok;
+        switch (code) {
+            case SHOULD_BIND_PAY:
+                msg = R.string.have_not_bind_pay;
+                confirmText = R.string.go_to_bind;
+                break;
+            case Resp.Code.PHONE_NONE:
+                msg = R.string.should_bind_phone;
+                confirmText = R.string.go_to_set;
+                break;
+            case Resp.Code.CASH_PWD_NONE:
+                msg = R.string.set_draw_cash_pwd_hint;
+                confirmText = R.string.go_to_set;
+                break;
+            case Resp.Code.NEEDS_PRIMARY_CERTIFICATION:
+                msg = R.string.poster_owner_set_needs_primary_certification;
+                confirmText = R.string.go_to;
+                break;
+            case Resp.Code.NEEDS_SENIOR_CERTIFICATION:
+                msg = R.string.poster_owner_set_needs_advanced_certification;
+                confirmText = R.string.go_to;
+                break;
+            case Resp.Code.NEEDS_MORE_DEAL_COUNT:
+                msg = R.string.your_deal_count_is_less_than_limit;
+                confirmText = R.string.got_it;
+                break;
+            default:
+        }
+        MsgHintController withDrawPsdViewController = new MsgHintController(getActivity(), new MsgHintController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                switch (code) {
+                    case Resp.Code.PHONE_NONE:
+                        UniqueActivity.launcher(SimpleOTCFragment.this, BindPhoneFragment.class)
+                                .execute();
+                        break;
+                    case SHOULD_BIND_PAY:
+                        UniqueActivity.launcher(SimpleOTCFragment.this, SelectPayTypeFragment.class)
+                                .execute();
+                        break;
+                    case Resp.Code.CASH_PWD_NONE:
+                        UniqueActivity.launcher(SimpleOTCFragment.this, CashPwdFragment.class)
+                                .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
+                                .execute();
+                        break;
+                    case Resp.Code.NEEDS_PRIMARY_CERTIFICATION:
+                        UniqueActivity.launcher(SimpleOTCFragment.this, PrimaryCertificationFragment.class)
+                                .execute();
+                        break;
+                    case Resp.Code.NEEDS_SENIOR_CERTIFICATION:
+                        UniqueActivity.launcher(SimpleOTCFragment.this, SeniorCertificationFragment.class)
+                                .putExtra(ExtraKeys.AUTHENTICATION_STATUS, LocalUser.getUser().getUserInfo().getAuthenticationStatus())
+                                .execute();
+                        break;
+                    default:
+                }
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setConfirmText(confirmText);
+        withDrawPsdViewController.setMsg(msg);
+        withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
+    }
+
     private void sell(String coinCount, String coinSymbol, String drawPwd) {
         Apic.newOtcSell(coinCount, coinSymbol, md5Encrypt(drawPwd)).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         clearData();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        int code = failedResp.getCode();
+                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
+                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
+                            showAlertMsgHint(code);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
                     }
                 }).fire();
     }
@@ -411,6 +510,17 @@ public class SimpleOTCFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         clearData();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        int code = failedResp.getCode();
+                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
+                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
+                            showAlertMsgHint(code);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
                     }
                 }).fire();
     }

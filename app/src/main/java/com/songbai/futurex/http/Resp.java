@@ -9,6 +9,7 @@ public class Resp<T> {
         int IMAGE_AUTH_CODE_FAILED = 226;  // 图片验证码失败
         int PHONE_EXIST = 2010;  // 手机号码已经存在
         int PWD_ERROR = 2040;  // 密码错误
+        int PHONE_NONE = 2104;  // 密码错误
         int MAIL_EXIST = 2114;  // 	邮箱已存在
         int CASH_PWD_NONE = 2112;  // 未设置资金密码
         int REQUARE_IMAGE_AUTH = 2136;  // 输入图形验证码
