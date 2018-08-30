@@ -576,6 +576,9 @@
     <string name="password_inputs_is_not_same">密码输入不一致</string>
 
     <!--Market&Trade-->
+    <string name="main_index">主图：</string>
+    <string name="hide">隐藏</string>
+    <string name="sub_index">副图：</string>
     <string-array name="market_radio_header">
         <item>USDT</item>
         <item>BTC</item>
@@ -610,6 +613,7 @@
     <string name="high">高</string>
     <string name="low">低</string>
     <string name="more">更多</string>
+    <string name="index">指标</string>
     <string-array name="trade_detail_radio">
         <item>深度</item>
         <item>成交</item>
