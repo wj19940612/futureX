@@ -941,7 +941,7 @@ public class Apic {
      * GET
      * 订单详情--(v1.1)
      */
-    public static Api otcOrderDetail(int id, int direct) {
+    public static Api otcOrderDetail(String id, int direct) {
         return Api.get("/api/otc/order/detail.do",
                 new ReqParams()
                         .put("id", id)
@@ -953,7 +953,7 @@ public class Apic {
      * POST
      * 取消订单
      */
-    public static Api otcOrderCancel(int id) {
+    public static Api otcOrderCancel(String id) {
         return Api.post("/api/otc/order/cancel",
                 new ReqParams()
                         .put("id", id));
@@ -964,7 +964,7 @@ public class Apic {
      * POST
      * 订单状态修改
      */
-    public static Api otcOrderConfirm(int id, int status, String drawPass, String googleCode) {
+    public static Api otcOrderConfirm(String id, int status, String drawPass, String googleCode) {
         return Api.post("/api/otc/order/confirm",
                 new ReqParams()
                         .put("id", id)
@@ -991,7 +991,7 @@ public class Apic {
      * GET
      * 订单支付信息--(v1.1)
      */
-    public static Api orderPayInfo(int id) {
+    public static Api orderPayInfo(String id) {
         return Api.get("/api/otc/order/payInfo",
                 new ReqParams()
                         .put("id", id));
@@ -1002,7 +1002,7 @@ public class Apic {
      * GET
      * 历史消息
      */
-    public static Api otcChatHistory(int waresOrderId, String startTime, int size) {
+    public static Api otcChatHistory(String waresOrderId, String startTime, int size) {
         return Api.get("/api/otc/chat/history",
                 new ReqParams()
                         .put("waresOrderId", waresOrderId)
@@ -1015,7 +1015,7 @@ public class Apic {
      * POST
      * 发送消息 消息类型 1文字 2图片
      */
-    public static Api otcChatSend(String msg, int waresOrderId, int msgType) {
+    public static Api otcChatSend(String msg, String waresOrderId, int msgType) {
         return Api.post("/api/otc/chat/send",
                 new ReqParams()
                         .put("msg", msg)
@@ -1028,7 +1028,7 @@ public class Apic {
      * POST
      * 获取用户信息
      */
-    public static Api otcChatUser(int waresOrderId) {
+    public static Api otcChatUser(String waresOrderId) {
         return Api.get("/api/otc/chat/user",
                 new ReqParams()
                         .put("waresOrderId", waresOrderId));
@@ -1459,4 +1459,75 @@ public class Apic {
         return Api.post("/api/user/user/updateEntrustPush.do", new ReqParams().put("entrustPush", turnStatus));
     }
 
+    /**
+     * 简介
+     */
+    public static Api requestIntroduce(String symbol) {
+        return Api.get("/api/entrust/coin/detailBySymbol.do", new ReqParams().put("symbol", symbol));
+    }
+
+    /**
+     * /api/user/dictionary/findDictionaryByCode.do
+     * GET
+     * 获取google双重验证图片
+     */
+    public static Api getGoogleAuthPic() {
+        return Api.get("/api/user/dictionary/findDictionaryByCode.do", new ReqParams().put("type", "googleAuth"));
+    }
+
+    /**
+     * /api/otc/newOtc/v1/getPrice.do
+     * GET
+     * 新版otc获取价格
+     */
+    public static Api newOtcGetPrice() {
+        return Api.get("/api/otc/newOtc/v1/getPrice.do");
+    }
+
+    /**
+     * /api/otc/newOtc/v1/destineOrder.do
+     * POST
+     * 用户购买usdt--v1.5
+     */
+    public static Api newOtcDestineOrder(String cost, String coinCount, String coinSymbol) {
+        return Api.post("/api/otc/newOtc/v1/destineOrder.do",
+                new ReqParams()
+                        .put("cost", cost)
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol));
+    }
+
+    /**
+     * /api/otc/newOtc/v1/sell.do
+     * POST
+     * 用户出售usdt
+     */
+    public static Api newOtcSell(String coinCount, String coinSymbol, String drawPass) {
+        return Api.post("/api/otc/newOtc/v1/sell.do",
+                new ReqParams()
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol)
+                        .put("drawPass", drawPass));
+    }
+
+    /**
+     * /api/otc/newOtc/v1/getYetOrder.do
+     * GET
+     * 用户是否有未完成的法币订单
+     */
+    public static Api newOtcGetYetOrder() {
+        return Api.get("/api/otc/newOtc/v1/getYetOrder.do");
+    }
+
+    /**
+     * /api/otc/otc365/v1/otc365buy.do
+     * POST
+     * 跳转到otc365付款页面--v1.5
+     */
+    public static Api otc365buy(String waresOrderId, String syncUrl) {
+        return Api.post("/api/otc/otc365/v1/otc365buy.do",
+                new ReqParams()
+                        .put("waresOrderId", waresOrderId)
+                        .put("syncUrl", syncUrl));
+    }
 }

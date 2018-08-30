@@ -13,6 +13,7 @@
     <color name="text66">#666666</color>
     <color name="textBD">#BDBDBD</color>
     <color name="disable">#83868a</color>
+    <color name="text53">#5384b2</color>
 
     <color name="white">@android:color/white</color>
     <color name="white_20">#33FFFFFF</color>

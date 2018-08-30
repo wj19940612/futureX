@@ -8,8 +8,11 @@ public class Resp<T> {
         int IMAGE_AUTH_CODE_TIMEOUT = 225;  // 图片验证码超时
         int IMAGE_AUTH_CODE_FAILED = 226;  // 图片验证码失败
         int PHONE_EXIST = 2010;  // 手机号码已经存在
+        int PWD_ERROR = 2040;  // 密码错误
+        int PHONE_NONE = 2104;  // 密码错误
         int MAIL_EXIST = 2114;  // 	邮箱已存在
         int CASH_PWD_NONE = 2112;  // 未设置资金密码
+        int REQUARE_IMAGE_AUTH = 2136;  // 输入图形验证码
         int NEEDS_PRIMARY_CERTIFICATION = 3660;  // 需要初级认证
         int NEEDS_SENIOR_CERTIFICATION = 3661;  // 需要高级认证
         int NEEDS_MORE_DEAL_COUNT = 3662;  // 您的历史交易笔数未达到对方要求

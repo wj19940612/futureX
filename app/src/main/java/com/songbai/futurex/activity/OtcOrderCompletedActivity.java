@@ -3,6 +3,7 @@ package com.songbai.futurex.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.songbai.futurex.fragment.legalcurrency.OtcSellUserInfoFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OrderBean;
 import com.songbai.futurex.model.OtcOrderDetail;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.status.AuthenticationStatus;
@@ -59,7 +61,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
     @BindView(R.id.orderStatus)
     TextView mOrderStatus;
     Unbinder unbinder;
-    private int mOrderId;
+    private String mOrderId;
     private int mTradeDirection;
 
     @Override
@@ -71,7 +73,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         setStatusBarDarkModeForM(true);
         ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mTitleBar);
         Intent intent = getIntent();
-        mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
+        mOrderId = intent.getStringExtra(ExtraKeys.ORDER_ID);
         mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
         otcOrderDetail(mOrderId, mTradeDirection);
         otcWaresMine("", String.valueOf(mOrderId));
@@ -87,7 +89,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
                 }).fire();
     }
 
-    private void otcOrderDetail(int id, int direct) {
+    private void otcOrderDetail(String id, int direct) {
         Apic.otcOrderDetail(id, direct).tag(TAG)
                 .callback(new Callback<Resp<OtcOrderDetail>>() {
                     @Override
@@ -98,7 +100,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
     }
 
     private void setView(OtcOrderDetail otcOrderDetail) {
-        OtcOrderDetail.OrderBean order = otcOrderDetail.getOrder();
+        OrderBean order = otcOrderDetail.getOrder();
         mTurnover.setText(getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale(order.getOrderAmount()),
                 order.getPayCurrency().toUpperCase()));
@@ -112,10 +114,13 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         switch (order.getStatus()) {
             case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
+                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
                 mTitleBar.setTitle(R.string.canceled);
                 break;
             case OTCOrderStatus.ORDER_COMPLATED:
                 mOrderStatus.setText(R.string.completed);
+                mOrderStatus.setTextColor(ContextCompat.getColor(this, R.color.green));
+                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark,0,0,0);
                 mTitleBar.setTitle(R.string.completed);
                 break;
             default:

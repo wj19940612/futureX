@@ -580,6 +580,7 @@
     <string-array name="trade_detail_radio">
         <item>Depth</item>
         <item>Filled</item>
+        <item>Brief intro</item>
     </string-array>
     <string name="open_price_x">Open&#160;%1$s</string>
     <string name="highest_price_x">High&#160;%1$s</string>
@@ -752,4 +753,12 @@
     <string name="confirming">Confirming</string>
     <string name="succeeded">Succeeded</string>
     <string name="failed">Failed</string>
+    <string name="introduce">Brief intro</string>
+    <string name="release_time">Date of issue</string>
+    <string name="total_amount_of_distribution">Total amount</string>
+    <string name="total_amount_of_circulation">Amount of Circulation</string>
+    <string name="raise_the_price">Crowdfunding pricce</string>
+    <string name="white_paper">White paper</string>
+    <string name="block_query">Blockchain info</string>
+    <string name="official_network">Official website</string>
 </resources>

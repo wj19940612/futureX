@@ -69,7 +69,7 @@ public class BidPriceView extends LinearLayout {
         params.setMargins(mMargin12, 0, 0, 0);
         addView(mRank, params);
 
-        mVolume = getTextView(12, ContextCompat.getColor(getContext(), R.color.text66));
+        mVolume = getTextView(12, ContextCompat.getColor(getContext(), R.color.text99));
         mVolume.setMaxLines(1);
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;

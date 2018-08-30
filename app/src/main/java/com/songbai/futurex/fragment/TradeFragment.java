@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -27,6 +26,7 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -55,11 +55,13 @@ import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
+import com.songbai.futurex.view.BuySellSwitcher;
 import com.songbai.futurex.view.ChangePriceView;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.TradePercentSelectView;
 import com.songbai.futurex.view.TradeVolumeView;
 import com.songbai.futurex.view.VolumeInputView;
 import com.songbai.futurex.view.dialog.ItemSelectController;
@@ -102,7 +104,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private static final int REQ_CODE_SEARCH = 99;
 
     @BindView(R.id.tradeDirRadio)
-    RadioHeader mTradeDirRadio;
+    BuySellSwitcher mTradeDirRadio;
     @BindView(R.id.orderListFloatRadio)
     RadioHeader mOrderListFloatRadio;
     @BindView(R.id.decimalScale)
@@ -131,14 +133,16 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     TextView mTradeButton;
     @BindView(R.id.marketPriceView)
     TextView mMarketPriceView;
-    @BindView(R.id.tradeCurrencyRange)
-    TextView mTradeCurrencyRange;
+    @BindView(R.id.percentSelectView)
+    TradePercentSelectView mPercentSelectView;
+    //    @BindView(R.id.tradeCurrencyRange)
+//    TextView mTradeCurrencyRange;
     @BindView(R.id.orderListRadio)
     RadioHeader mOrderListRadio;
     @BindView(R.id.volumeInput)
     VolumeInputView mVolumeInput;
-    @BindView(R.id.tradeVolumeSeekBar)
-    SeekBar mTradeVolumeSeekBar;
+//    @BindView(R.id.tradeVolumeSeekBar)
+//    SeekBar mTradeVolumeSeekBar;
 
     @BindView(R.id.swipe_refresh_header)
     RefreshHeaderView mSwipeRefreshHeader;
@@ -181,6 +185,18 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private OrderAdapter mOrderAdapter;
     private CurrencyPairsPopup mPairsPopup;
 
+    private boolean mNotMain;
+
+    public static TradeFragment newsInstance(CurrencyPair currencyPair, int direction, boolean notMain) {
+        TradeFragment tradeFragment = new TradeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ExtraKeys.CURRENCY_PAIR, currencyPair);
+        bundle.putInt(ExtraKeys.TRADE_DIRECTION, direction);
+        bundle.putBoolean(ExtraKeys.NOT_MAIN, notMain);
+        tradeFragment.setArguments(bundle);
+        return tradeFragment;
+    }
+
     @Override
     public void onLoadMore() {
         mPage++;
@@ -189,6 +205,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     @Override
     public void onRefresh() {
+        requestUserAccount();
     }
 
     @NonNull
@@ -227,6 +244,16 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mCurrencyPair = getArguments().getParcelable(ExtraKeys.CURRENCY_PAIR);
+            mTradeDir = getArguments().getInt(ExtraKeys.TRADE_DIRECTION);
+            mNotMain = getArguments().getBoolean(ExtraKeys.NOT_MAIN);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -238,12 +265,13 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        addTopPaddingWithStatusBar(mTitleBar);
+        addStatusBarHeightPaddingTop(mTitleBar);
 
         initTitleBar();
-
+        mSwipeToLoadLayout.setOnRefreshListener(this);
+        mSwipeToLoadLayout.setOnLoadMoreListener(this);
         mTradeTypeValue = LIMIT_TRADE;
-        mTradeDirRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
+        mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
                 if (position == 0) { // buy in
@@ -291,20 +319,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             }
         });
 
-        mTradeVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mPercentSelectView.setOnPercentSelectListener(new TradePercentSelectView.OnPercentSelectListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    updateVolumeInputView();
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onPercentSelect(int percent, int max) {
+                updateVolumeInputView(percent, max);
             }
         });
 
@@ -364,15 +382,15 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mSwipeTarget.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int tradeDirRadioHeight = mTradeDirRadio.getHeight();
-                if (scrollY >= mOrderListRadio.getTop() - tradeDirRadioHeight) {
-                    int diff = scrollY - (mOrderListRadio.getTop() - tradeDirRadioHeight);
-                    if (diff <= tradeDirRadioHeight) {
-                        mTradeDirRadio.setTranslationY(-diff);
-                    }
-                } else if (mTradeDirRadio.getTranslationY() != 0) {
-                    mTradeDirRadio.setTranslationY(0);
-                }
+//                int tradeDirRadioHeight = mTradeDirRadio.getHeight();
+//                if (scrollY >= mOrderListRadio.getTop() - tradeDirRadioHeight) {
+//                    int diff = scrollY - (mOrderListRadio.getTop() - tradeDirRadioHeight);
+//                    if (diff <= tradeDirRadioHeight) {
+//                        mTradeDirRadio.setTranslationY(-diff);
+//                    }
+//                } else if (mTradeDirRadio.getTranslationY() != 0) {
+//                    mTradeDirRadio.setTranslationY(0);
+//                }
 
                 if (scrollY >= mOrderListRadio.getTop()) {
                     mOrderListFloatRadio.setVisibility(View.VISIBLE);
@@ -419,6 +437,25 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mPairArrow = customView.findViewById(R.id.pairArrow);
         mSwitchToMarketPage = customView.findViewById(R.id.switchToMarketPage);
 
+        if (mNotMain) {
+            mPairArrow.setVisibility(View.GONE);
+            mSwitchToMarketPage.setVisibility(View.INVISIBLE);
+        } else {
+            mPairName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    umengEventCount(UmengCountEventId.COIN0003);
+                    if (mCurrencyPair == null) return;
+
+                    if (mPairsPopup != null && mPairsPopup.isShowing()) {
+                        mPairsPopup.dismiss();
+                    } else {
+                        showCurrencyPairPopup();
+                    }
+                }
+            });
+        }
+
         mOptionalStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -430,19 +467,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             }
         });
 
-        mPairName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                umengEventCount(UmengCountEventId.COIN0003);
-                if (mCurrencyPair == null) return;
-
-                if (mPairsPopup != null && mPairsPopup.isShowing()) {
-                    mPairsPopup.dismiss();
-                } else {
-                    showCurrencyPairPopup();
-                }
-            }
-        });
         mPairArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -552,14 +576,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private void updateVolumeSeekBar() {
-        int max = mTradeVolumeSeekBar.getMax();
-        int progress = (int) (mVolumeInput.getVolume() / mTradeCurrencyVolume * max);
-        mTradeVolumeSeekBar.setProgress(progress);
+        int max = mPercentSelectView.getMax();
+        double progress = (mVolumeInput.getVolume() / mTradeCurrencyVolume * max);
+        mPercentSelectView.updatePercent(progress);
     }
 
-    private void updateVolumeInputView() {
-        int progress = mTradeVolumeSeekBar.getProgress();
-        int max = mTradeVolumeSeekBar.getMax();
+    private void updateVolumeInputView(int progress, int max) {
+//        int progress = mTradeVolumeSeekBar.getProgress();
+//        int max = mTradeVolumeSeekBar.getMax();
         double tradeVolume = mTradeCurrencyVolume * progress / max;
         mVolumeInput.setVolume(tradeVolume);
     }
@@ -621,8 +645,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mOrderAdapter.setOrderList(new ArrayList<Order>());
         mLastPrice.setText("--.--");
         mPriceChange.setText("--.--");
-        mTradeVolumeSeekBar.setProgress(0);
-        mTradeCurrencyRange.setText("");
+        mPercentSelectView.updatePercent(0);
+//        mTradeCurrencyRange.setText("");
     }
 
     private void updateMarketView(PairMarket pairMarket) {
@@ -654,6 +678,13 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                             if (mAvailableCurrencyList.size() > 0) {
                                 updateTradeCurrencyView();
                             }
+                            stopFreshOrLoadAnimation();
+                        }
+
+                        @Override
+                        public void onFailure(ReqError reqError) {
+                            super.onFailure(reqError);
+                            stopFreshOrLoadAnimation();
                         }
                     }).fireFreely();
         } else {
@@ -690,8 +721,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     CurrencyUtils.getPrice(availableCurrencyVolume, availableCurrencyScale), availableCurrencySign.toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
                     CurrencyUtils.getPrice(obtainableCurrencyVolume, obtainableCurrencyScale), obtainableCurrencySign.toUpperCase()));
-            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
-                    CurrencyUtils.getPrice(mTradeCurrencyVolume, tradeCurrencyScale), tradeCurrencySign.toUpperCase()));
+//            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
+//                    CurrencyUtils.getPrice(mTradeCurrencyVolume, tradeCurrencyScale), tradeCurrencySign.toUpperCase()));
         } else {
             String availableCurrencySign = mCurrencyPair.getSuffixSymbol();
             String obtainableCurrencySign = mCurrencyPair.getPrefixSymbol();
@@ -705,8 +736,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     "--", availableCurrencySign.toUpperCase()));
             mObtainableCurrency.setText(getString(R.string.obtainable_currency_x_x,
                     "--", obtainableCurrencySign.toUpperCase()));
-            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
-                    "0", obtainableCurrencySign.toUpperCase()));
+//            mTradeCurrencyRange.setText(getString(R.string.trade_currency_range_0_to_x_x,
+//                    "0", obtainableCurrencySign.toUpperCase()));
         }
     }
 
@@ -984,7 +1015,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (!LocalUser.getUser().isLogin()) return;
         int type = mOrderListRadio.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime,null, null)
+        Apic.getEntrustOrderList(mPage, type, endTime, null, null)
                 .id(mOrderListRadio.getSelectTab())
                 .tag(TAG)
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {

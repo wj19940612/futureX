@@ -612,6 +612,7 @@
     <string-array name="trade_detail_radio">
         <item>深度</item>
         <item>成交</item>
+        <item>簡介</item>
     </string-array>
     <string name="open_price_x">開&#160;%1$s</string>
     <string name="highest_price_x">高&#160;%1$s</string>
@@ -751,4 +752,12 @@
     <string name="confirming">確認中</string>
     <string name="succeeded">成功</string>
     <string name="failed">失敗</string>
+    <string name="introduce">簡介</string>
+    <string name="release_time">發行時間</string>
+    <string name="total_amount_of_distribution">發行總量</string>
+    <string name="total_amount_of_circulation">流通總量</string>
+    <string name="raise_the_price">眾籌價格</string>
+    <string name="white_paper">白皮書</string>
+    <string name="official_network">官網</string>
+    <string name="block_query">區塊查詢</string>
 </resources>

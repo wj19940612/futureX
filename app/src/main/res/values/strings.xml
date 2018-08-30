@@ -614,6 +614,7 @@
     <string-array name="trade_detail_radio">
         <item>深度</item>
         <item>成交</item>
+        <item>简介</item>
     </string-array>
     <string name="open_price_x">开&#160;%1$s</string>
     <string name="highest_price_x">高&#160;%1$s</string>
@@ -757,8 +758,35 @@
     <string name="mail_exists">邮箱已存在</string>
     <string name="go_login">去登录</string>
     <string name="re_enter">重新输入</string>
+
+    <string name="introduce">简介</string>
+    <string name="release_time">发行时间</string>
+    <string name="total_amount_of_distribution">发行总量</string>
+    <string name="total_amount_of_circulation">流通总量</string>
+    <string name="raise_the_price">众筹价格</string>
+    <string name="white_paper">白皮书</string>
+    <string name="official_network">官网</string>
+    <string name="block_query">区块查询</string>
     <string name="instructions">操作说明</string>
     <string name="option_one">方案一</string>
     <string name="option_two">方案二</string>
     <string name="option_two_desc">微信小程序搜索“双重验证”</string>
+    <string name="facebook_app_id">752006301820152</string>
+
+    <!--LEGAL_CURRENCY-->
+    <string-array name="simple_legal_currency_header">
+        <item>@string/buy_in</item>
+        <item>@string/sell_out</item>
+    </string-array>
+    <string name="have_not_complete_order">您有未完成订单，请前往处理</string>
+    <string name="buy_in_amount">买入数量</string>
+    <string name="sell_out_amount">卖出数量</string>
+    <string name="buy_in_price">买入估价</string>
+    <string name="sell_out_price">卖出估价</string>
+    <string name="trade_desc">交易说明</string>
+    <string name="legal_currency_rule">1.买卖USDT由平台统一担保，可放心兑换。\n\n\n2.请下单后15分钟内完成交易，否则该笔订单将被取消。\n\n\n3.禁止使用他人支付宝、微信代付、ATM及柜台转账等第三方转账，请使用本人绑定的银行卡通过手机银行或网银进行汇款，其他任何方式汇款都会造成延时处理。\n\n\n4.如果你的交易1小时内没有处理，请联系在线客服登记。会有专人24小时内与您联系，请保持手机畅通\n\n\n5.请切记备注【订单后4位】作为转账附言，否则将会出现延迟到账等情况。\n\n\n6. 单天最多只能发起10笔卖出订单。\n\n\n7.超过3笔取消订单将禁止当天法币交易\n\n\n8.有1个买单或者卖单未完成，暂停继续下单，完成交易后恢复</string>
+    <string name="should_bind_phone">需要先绑定手机</string>
+    <string name="otc365_buy_hint">请在OTC365页面完成交易</string>
+    <string name="otc365_sell_hint">请确认收款后转币</string>
+
 </resources>

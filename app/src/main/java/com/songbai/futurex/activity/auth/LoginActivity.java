@@ -81,6 +81,7 @@ public class LoginActivity extends BaseActivity {
 
     private AuthCodeViewController mAuthCodeViewController;
     private LoginData mLoginData;
+    private SmartDialog mSmartDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +194,7 @@ public class LoginActivity extends BaseActivity {
             case R.id.login:
                 if (mLoading.getVisibility() != View.VISIBLE) {
                     umengEventCount(UmengCountEventId.LOGIN0001);
-                    showImageAuthCodeDialog();
+                    login("");
                 }
                 break;
             case R.id.forgetPassword:
@@ -222,8 +223,10 @@ public class LoginActivity extends BaseActivity {
                 requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
             }
         });
+        mAuthCodeViewController.setControlByOutSide(true);
 
-        SmartDialog.solo(getActivity())
+        mSmartDialog = SmartDialog.solo(getActivity());
+        mSmartDialog
                 .setCustomViewController(mAuthCodeViewController)
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
                 .show();
@@ -264,9 +267,46 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     protected void onRespSuccess(Resp resp) {
+                        if (mSmartDialog != null) {
+                            mSmartDialog.dismiss();
+                        }
                         ToastUtil.show(R.string.login_success);
                         LocalUser.getUser().login();
                         requestUserInfo();
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        mLoading.setVisibility(View.GONE);
+                        mLoading.clearAnimation();
+                    }
+
+                    @Override
+                    public void onResponse(Resp resp) {
+                        if (resp.getCode() == Resp.Code.REQUARE_IMAGE_AUTH) {
+                            mLoading.setVisibility(View.GONE);
+                            mLoading.clearAnimation();
+                            showImageAuthCodeDialog();
+                        } else if (resp.getCode() == Resp.Code.PWD_ERROR) {
+                            mLoading.setVisibility(View.GONE);
+                            mLoading.clearAnimation();
+                            if (mSmartDialog != null) {
+                                mSmartDialog.dismiss();
+                            }
+                            super.onResponse(resp);
+                        } else if (resp.getCode() == Resp.Code.IMAGE_AUTH_CODE_FAILED) {
+                            mLoading.setVisibility(View.GONE);
+                            mLoading.clearAnimation();
+                            if (mSmartDialog != null) {
+                                ImageView imageView = mAuthCodeViewController.getAuthCodeImage();
+                                requestAuthCodeImage(imageView.getWidth(), imageView.getHeight());
+                                mAuthCodeViewController.clearAuthCode();
+                            }
+                            super.onResponse(resp);
+                        } else {
+                            super.onResponse(resp);
+                        }
                     }
                 }).fireFreely();
     }

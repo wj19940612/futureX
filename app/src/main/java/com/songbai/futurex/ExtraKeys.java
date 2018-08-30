@@ -59,4 +59,6 @@ public interface ExtraKeys {
 
     String PAGE_INDEX = "page_index";
     String ENTER_TAB = "enter_tab";
+
+    String NOT_MAIN = "not_main";
 }

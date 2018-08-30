@@ -19,14 +19,26 @@ import java.math.BigDecimal;
 public class MoneyValueFilter extends DigitsKeyListener {
 
     private static final String TAG = "MoneyValueFilter";
-    private static final String DECIMAIL_POINT = ".";
+    private static final String DECIMAL_POINT = ".";
     private static final String MINUS_SIGN = "-";
     private static final String PLUS_SIGN = "+";
+    private Context mContext;
     private double mMaxValue = Integer.MAX_VALUE;
     private double mMinValue = 0;
     private boolean mFilterMax;
     private boolean mFilterMin;
-    private Context mContext;
+    private int digits = 2;
+
+    private OnFilterMinListener mOnFilterMinListener;
+    private OnFilterMaxListener mOnFilterMaxListener;
+
+    public interface OnFilterMinListener {
+        void filterMin(double dold, double minValue);
+    }
+
+    public interface OnFilterMaxListener {
+        void filterMax(double dold, double maxValue);
+    }
 
     public MoneyValueFilter(Context context) {
         super(false, true);
@@ -38,22 +50,30 @@ public class MoneyValueFilter extends DigitsKeyListener {
         mContext = context;
     }
 
-    private int digits = 2;
-
     public MoneyValueFilter setDigits(int d) {
         digits = d;
         return this;
     }
 
     public MoneyValueFilter filterMax(double maxValue) {
-        mMaxValue = maxValue;
+        return filterMax(maxValue, null);
+    }
+
+    public MoneyValueFilter filterMin(double minValue) {
+        return filterMin(minValue, null);
+    }
+
+    public MoneyValueFilter filterMax(double maxValue, OnFilterMaxListener onFilterMaxListener) {
+        mMaxValue = Double.valueOf(FinanceUtil.formatWithScale(maxValue, digits));
         mFilterMax = true;
+        mOnFilterMaxListener = onFilterMaxListener;
         return this;
     }
 
-    public MoneyValueFilter filterMin(int minValue) {
-        mMinValue = minValue;
+    public MoneyValueFilter filterMin(double minValue, OnFilterMinListener onFilterMinListener) {
+        mMinValue = Double.valueOf(FinanceUtil.formatWithScale(minValue, digits));
         mFilterMin = true;
+        mOnFilterMinListener = onFilterMinListener;
         return this;
     }
 
@@ -79,28 +99,43 @@ public class MoneyValueFilter extends DigitsKeyListener {
         }
 
         //以点开始的时候，自动在前面添加0
-        if (source.toString().equals(DECIMAIL_POINT) && dstart == 0) {
+        if (source.toString().equals(DECIMAL_POINT) && dstart == 0) {
             return "0.";
         }
         //以-开始的时候，自动在前面添加0
-        if (source.toString().equals(DECIMAIL_POINT) && dstart == 1 && dest.toString().equals(MINUS_SIGN)) {
+        if (source.toString().equals(DECIMAL_POINT) && dstart == 1 && dest.toString().equals(MINUS_SIGN)) {
             return "0.";
         }
         //如果起始位置为0,且第二位跟的不是".",则无法后续输入
-        if (!source.toString().equals(DECIMAIL_POINT) && dest.toString().equals("0")) {
+        if (!source.toString().equals(DECIMAL_POINT) && "0".equals(dest.toString())) {
             return "";
         }
 
         //验证输入金额的最大值
         if (mFilterMax && !"".equals(source.toString())) {
             if (!source.toString().equals(MINUS_SIGN) && !source.toString().equals(PLUS_SIGN)) {
-                double dold = new BigDecimal(dest.toString() + source.toString()).doubleValue();
+                StringBuilder sb = new StringBuilder(dest.toString());
+                if (dstart < sb.toString().length()) {
+                    //在指定的位置，插入
+                    sb.insert(dstart, source.toString());
+                } else {
+                    sb.append(source.toString());
+                }
+                double dold = new BigDecimal(sb.toString()).doubleValue();
                 if (dold > mMaxValue) {
-                    ToastUtil.show(mContext.getString(R.string.max_can_not_greater_than, FinanceUtil.trimTrailingZero(mMaxValue)));
+                    if (mOnFilterMaxListener != null) {
+                        mOnFilterMaxListener.filterMax(dold, mMaxValue);
+                    } else {
+                        ToastUtil.show(mContext.getString(R.string.max_can_not_greater_than, FinanceUtil.subZeroAndDot(mMaxValue, digits)));
+                    }
                     return dest.subSequence(dstart, dend);
                 } else if (dold == mMaxValue) {
-                    if (DECIMAIL_POINT.equals(source.toString())) {
-                        ToastUtil.show(mContext.getString(R.string.max_can_not_greater_than, FinanceUtil.trimTrailingZero(mMaxValue)));
+                    if (DECIMAL_POINT.equals(source.toString())) {
+                        if (mOnFilterMaxListener != null) {
+                            mOnFilterMaxListener.filterMax(dold, mMaxValue);
+                        } else {
+                            ToastUtil.show(mContext.getString(R.string.max_can_not_greater_than, FinanceUtil.subZeroAndDot(mMaxValue, digits)));
+                        }
                         return dest.subSequence(dstart, dend);
                     }
                 }
@@ -110,14 +145,33 @@ public class MoneyValueFilter extends DigitsKeyListener {
         //验证输入金额的最小值
         if (mFilterMin && !"".equals(source.toString())) {
             if (!source.toString().equals(MINUS_SIGN) && !source.toString().equals(PLUS_SIGN)) {
-                double dold = new BigDecimal(dest.toString() + source.toString()).doubleValue();
+                StringBuilder sb = new StringBuilder(dest.toString());
+                if (dstart < sb.toString().length()) {
+                    //在指定的位置，插入
+                    sb.insert(dstart, source.toString());
+                } else {
+                    sb.append(source.toString());
+                }
+                double dold = new BigDecimal(sb.toString()).doubleValue();
                 if (dold < mMinValue) {
-                    ToastUtil.show(mContext.getString(R.string.min_can_not_less_than, FinanceUtil.trimTrailingZero(mMinValue)));
-                    return dest.subSequence(dstart, dend);
-                } else if (dold == mMinValue) {
-                    if (DECIMAIL_POINT.equals(source.toString())) {
-                        ToastUtil.show(mContext.getString(R.string.min_can_not_less_than, FinanceUtil.trimTrailingZero(mMinValue)));
+                    if (mMinValue < 0) {
+                        if (mOnFilterMinListener != null) {
+                            mOnFilterMinListener.filterMin(dold, mMinValue);
+                        } else {
+                            ToastUtil.show(mContext.getString(R.string.min_can_not_less_than, FinanceUtil.subZeroAndDot(mMinValue, digits)));
+                        }
                         return dest.subSequence(dstart, dend);
+                    }
+                } else if (dold == mMinValue) {
+                    if (DECIMAL_POINT.equals(source.toString())) {
+                        if (mMinValue < 0) {
+                            if (mOnFilterMinListener != null) {
+                                mOnFilterMinListener.filterMin(dold, mMinValue);
+                            } else {
+                                ToastUtil.show(mContext.getString(R.string.min_can_not_less_than, FinanceUtil.subZeroAndDot(mMinValue, digits)));
+                            }
+                            return dest.subSequence(dstart, dend);
+                        }
                     }
                 }
             }

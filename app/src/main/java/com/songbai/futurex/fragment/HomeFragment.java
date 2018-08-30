@@ -120,7 +120,6 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     private MarketSubscriber mMarketSubscriber;
     private List<EntrustPair.LatelyBean> mLatelyBeans;
     private ArrayList<PairRiseListBean> mPairRiseListBeans;
-    private boolean mStopBanner;
     private boolean mStopNotice;
 
     @Override
@@ -153,12 +152,6 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         mIncreaseRankAdapter.setOnItemClickListener(mOnItemClickListener);
         mIncreaseRank.setAdapter(mIncreaseRankAdapter);
         mHomeBanner.setOnBannerClickListener(this);
-        mHomeBanner.setOnBannerTouchListener(new HomeBanner.OnBannerTouchListener() {
-            @Override
-            public void onTouch(boolean touch) {
-                mStopBanner = touch;
-            }
-        });
         mNoticeWrapper.setOnNoticeTouchListener(new HomeNoticeLinearLayout.OnNoticeTouchListener() {
             @Override
             public void onTouch(boolean touch) {
@@ -289,6 +282,7 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<Banner>> resp) {
                         mHomeBanner.setHomeAdvertisement(resp.getData());
+                        mHomeBanner.startLoop();
                     }
                 })
                 .fire();
@@ -350,9 +344,6 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        if (!mStopBanner) {
-            mHomeBanner.nextAdvertisement();
-        }
         if (!mStopNotice) {
             setNotice();
         }
@@ -400,8 +391,9 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     .execute();
         } else if (banner.getJumpType() == 3) {
             Intent intent = JumpIntentUtil.getJumpIntent(getContext(), banner);
-            if (intent == null) return;
-
+            if (intent == null) {
+                return;
+            }
             startActivity(intent);
         }
     }
