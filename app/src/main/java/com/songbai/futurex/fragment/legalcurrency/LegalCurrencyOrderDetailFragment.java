@@ -91,6 +91,16 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     TextView mCancelOrder;
     @BindView(R.id.confirm)
     TextView mConfirm;
+    @BindView(R.id.originOptionGroup)
+    LinearLayout mOriginOptionGroup;
+    @BindView(R.id.goTo365)
+    TextView mGoTo365;
+    @BindView(R.id.otc365OptionGroup)
+    LinearLayout mOtc365OptionGroup;
+    @BindView(R.id.askPayInfoGroup)
+    LinearLayout mAskPayInfoGroup;
+    @BindView(R.id.askPayInfo)
+    TextView mAskPayInfo;
     private int mOrderId;
     private int mTradeDirection;
     private Unbinder mBind;
@@ -334,6 +344,20 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     private void setBottomButtonStatus(OtcOrderDetail.OrderBean order) {
         mStatus = order.getStatus();
+        order.setOrderType(2);
+        mOriginOptionGroup.setVisibility(order.getOrderType() == 1 ? View.VISIBLE : View.GONE);
+        mOtc365OptionGroup.setVisibility(order.getOrderType() != 1 ? View.VISIBLE : View.GONE);
+        if (order.getOrderType() == 1) {
+            mAskPayInfoGroup.setVisibility(View.VISIBLE);
+            mPayInfo.setVisibility(View.VISIBLE);
+            mAskPayInfo.setVisibility(View.VISIBLE);
+        } else {
+            mAskPayInfo.setVisibility(View.GONE);
+            if (mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY) {
+                mAskPayInfoGroup.setVisibility(View.GONE);
+                mPayInfo.setVisibility(View.GONE);
+            }
+        }
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
             int id = user.getUserInfo().getId();
@@ -380,6 +404,15 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mPayInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mPayInfo.hideAll(false);
+        if (mOtcOrderDetail != null) {
+            if (mOtcOrderDetail.getOrder().getOrderType() != 1) {
+                mAskPayInfo.setVisibility(View.GONE);
+                if (mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY) {
+                    mAskPayInfoGroup.setVisibility(View.GONE);
+                    mPayInfo.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     @Override
@@ -389,7 +422,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mMsgProcessor.unregisterMsg();
     }
 
-    @OnClick({R.id.sellerInfo, R.id.askPayInfo, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
+    @OnClick({R.id.sellerInfo, R.id.askPayInfo, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm, R.id.goTo365})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.sellerInfo:
@@ -429,6 +462,9 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 } else {
                     showTransferConfirm();
                 }
+                break;
+            case R.id.goTo365:
+                // TODO: 2018/8/30
                 break;
             default:
         }

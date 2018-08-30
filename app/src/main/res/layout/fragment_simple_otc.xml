@@ -61,23 +61,6 @@
         app:tabArray="@array/simple_legal_currency_header"
         app:tabInterval="10dp"/>
 
-    <LinearLayout
-        android:id="@+id/recentOrderHint"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_below="@id/radioHeader"
-        android:background="#99000000"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/have_not_complete_order"
-            android:textColor="@color/white"
-            android:textSize="13sp"/>
-    </LinearLayout>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -216,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="30dp"
-                android:text="交易说明"
+                android:text="@string/trade_desc"
                 android:textColor="@color/text99"
                 android:textSize="17sp"/>
 
@@ -232,4 +215,21 @@
                 android:textSize="13sp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/recentOrderHint"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_below="@id/radioHeader"
+        android:background="#99000000"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/have_not_complete_order"
+            android:textColor="@color/white"
+            android:textSize="13sp"/>
+    </LinearLayout>
 </RelativeLayout>

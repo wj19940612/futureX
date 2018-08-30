@@ -49,6 +49,7 @@ public class OtcOrderDetail {
          * orderId : 1012153639990292481
          * orderPrice : 112.0
          * orderTime : 1530151207000
+         * orderType : 1
          * payCurrency : twd
          * priceType : 1
          * quotaPrice : 112.0
@@ -70,6 +71,7 @@ public class OtcOrderDetail {
         private String orderId;
         private double orderPrice;
         private long orderTime;
+        private int orderType;
         private String payCurrency;
         private int priceType;
         private double quotaPrice;
@@ -186,6 +188,14 @@ public class OtcOrderDetail {
 
         public void setOrderTime(long orderTime) {
             this.orderTime = orderTime;
+        }
+
+        public int getOrderType() {
+            return orderType;
+        }
+
+        public void setOrderType(int orderType) {
+            this.orderType = orderType;
         }
 
         public String getPayCurrency() {

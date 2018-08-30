@@ -172,6 +172,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
+                android:id="@+id/askPayInfoGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp">
@@ -234,6 +235,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
+        android:id="@+id/originOptionGroup"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_alignParentBottom="true"
@@ -295,5 +297,34 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/otc365OptionGroup"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="start|center"
+            android:paddingLeft="24dp"
+            android:text="请在OTC365页面完成交易"
+            android:textColor="@color/text99"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/goTo365"
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_primary"
+            android:gravity="center"
+            android:text="@string/go_to"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
     </LinearLayout>
 </RelativeLayout>
