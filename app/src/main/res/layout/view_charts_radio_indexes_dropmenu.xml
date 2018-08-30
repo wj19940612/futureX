@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:text="主图："
+        android:text="@string/main_index"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/viceIndexTitle"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
-        android:text="隐藏"
+        android:text="@string/hide"
         android:textColor="@color/text66"
         app:layout_constraintBottom_toBottomOf="@id/mainIndexTitle"
         app:layout_constraintRight_toRightOf="parent"/>
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="24dp"
-        android:text="副图："
+        android:text="@string/sub_index"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mainIndexTitle"/>
@@ -112,7 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
-        android:text="隐藏"
+        android:text="@string/hide"
         android:textColor="@color/text66"
         app:layout_constraintBottom_toBottomOf="@id/viceIndexTitle"
         app:layout_constraintRight_toRightOf="parent"/>

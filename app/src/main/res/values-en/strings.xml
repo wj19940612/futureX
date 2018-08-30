@@ -542,6 +542,9 @@
     <string name="password_inputs_is_not_same">Inconsistent password</string>
 
     <!--Market&Trade-->
+    <string name="main_index">Main: </string>
+    <string name="hide">Hide</string>
+    <string name="sub_index">Sub: </string>
     <string-array name="market_radio_header">
         <item>USDT</item>
         <item>BTC</item>

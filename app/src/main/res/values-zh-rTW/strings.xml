@@ -574,6 +574,9 @@
     <string name="password_inputs_is_not_same">密碼輸入不一致</string>
 
     <!--Market&Trade-->
+    <string name="main_index">主圖：</string>
+    <string name="hide">隱藏</string>
+    <string name="sub_index">副圖：</string>
     <string-array name="market_radio_header">
         <item>USDT</item>
         <item>BTC</item>
