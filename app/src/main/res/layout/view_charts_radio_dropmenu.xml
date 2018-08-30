@@ -1,100 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:id="@+id/chartRadioDropMenu"
+              xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/bgF5"
+              android:background="@drawable/bg_f5_with_bottom_shadow"
               android:gravity="center_vertical"
-              android:paddingBottom="14dp"
-              android:paddingTop="14dp">
+              android:minHeight="64dp"
+              android:paddingBottom="4dp">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
-        android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:text="@string/one_min"
             android:textColor="@color/text66"
-            android:textSize="13sp"/>
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="12dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:text="@string/five_min"
             android:textColor="@color/text66"
-            android:textSize="13sp"/>
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="12dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:text="@string/thirty_min"
             android:textColor="@color/text66"
-            android:textSize="13sp"/>
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="12dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:text="@string/week_line"
             android:textColor="@color/text66"
-            android:textSize="13sp"/>
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="12dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:text="@string/month_line"
             android:textColor="@color/text66"
-            android:textSize="13sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_weight="1"
-        android:gravity="center|bottom"
-        android:orientation="horizontal">
+            android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>
 

@@ -610,6 +610,7 @@
     <string name="high">高</string>
     <string name="low">低</string>
     <string name="more">更多</string>
+    <string name="index">指标</string>
     <string-array name="trade_detail_radio">
         <item>深度</item>
         <item>成交</item>

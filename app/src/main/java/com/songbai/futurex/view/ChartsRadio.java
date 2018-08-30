@@ -31,10 +31,16 @@ public class ChartsRadio extends LinearLayout {
     private OnTabSelectedListener mOnTabSelectedListener;
 
     private LinearLayout mChartsRadioMain;
-    private LinearLayout mChartsRadioDropMenu;
+    private ViewGroup mChartsRadioDropMenu;
+    private ViewGroup mIndexesDropMenu;
 
-    private ImageView mMoreTriangle;
+    private int mMoreTabIndex;
     private TextView mMoreTab;
+    private ImageView mMoreTriangle;
+
+    private int mIndexTabIndex;
+    private TextView mIndexTab;
+    private ImageView mIndexTriangle;
 
     private int mSelectedPosition;
 
@@ -51,15 +57,17 @@ public class ChartsRadio extends LinearLayout {
     private void init() {
         setOrientation(VERTICAL);
         mChartsRadioMain = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.view_charts_radio, this, false);
-        mChartsRadioDropMenu = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.view_charts_radio_dropmenu, this, false);
         addView(mChartsRadioMain);
-        addView(mChartsRadioDropMenu);
-        mChartsRadioDropMenu.setVisibility(GONE);
-        mMoreTriangle = mChartsRadioMain.findViewById(R.id.moreTriangle);
+
+        mMoreTabIndex = mChartsRadioMain.getChildCount() - 2;
+        mIndexTabIndex = mChartsRadioMain.getChildCount() - 1;
+
         mMoreTab = mChartsRadioMain.findViewById(R.id.moreTab);
+        mMoreTriangle = mChartsRadioMain.findViewById(R.id.moreTriangle);
+        mIndexTab = mChartsRadioMain.findViewById(R.id.indexesTab);
+        mIndexTriangle = mChartsRadioMain.findViewById(R.id.indexesTriangle);
 
         initChartsRadioMain();
-        initChartsRadioDropMenu();
 
         select(0);
     }
@@ -74,41 +82,51 @@ public class ChartsRadio extends LinearLayout {
         mOnTabSelectedListener = onTabSelectedListener;
     }
 
-    private void initChartsRadioDropMenu() {
-        final int moreTabIndex = mChartsRadioMain.getChildCount() - 1;
-        for (int i = 0; i < mChartsRadioDropMenu.getChildCount() - 1; i++) {
+    public void setIndexesDropMenu(ViewGroup indexesDropMenu) {
+        mIndexesDropMenu = indexesDropMenu;
+        if (mIndexesDropMenu == null) return;
+
+    }
+
+    public void setChartsRadioDropMenu(ViewGroup chartsRadioDropMenu) {
+        mChartsRadioDropMenu = chartsRadioDropMenu;
+        if (mChartsRadioDropMenu == null) return;
+
+        for (int i = 0; i < mChartsRadioDropMenu.getChildCount(); i++) {
             final int finalI = i;
             mChartsRadioDropMenu.getChildAt(i).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mMoreTriangle.setImageResource(R.drawable.ic_triangle);
-                    closeDropMenu();
+                    closeMoreDropMenu();
 
                     if (v instanceof ViewGroup && ((ViewGroup) v).getChildAt(0) instanceof TextView) {
                         View childAt = ((ViewGroup) v).getChildAt(0);
                         mMoreTab.setText(((TextView) childAt).getText());
                     }
 
-                    select(moreTabIndex);
-                    onTabSelected(moreTabIndex + finalI);
+                    select(mMoreTabIndex);
+                    onTabSelected(mMoreTabIndex + finalI);
                 }
             });
         }
     }
 
     private void initChartsRadioMain() {
-        int moreTabIndex = mChartsRadioMain.getChildCount() - 1;
-        for (int i = 0; i < moreTabIndex; i++) {
+        for (int i = 0; i < mMoreTabIndex; i++) {
             final int finalI = i;
             mChartsRadioMain.getChildAt(i).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mChartsRadioDropMenu.getVisibility() != View.GONE) {
+                    if (isMoreDropMenuShow()) {
                         mMoreTab.setText(R.string.more);
-                        closeDropMenu();
+                        closeMoreDropMenu();
                     }
                     if (mMoreTab.isSelected()) {
                         mMoreTab.setText(R.string.more);
+                    }
+                    if (isIndexDropMenuShow()) {
+                        closeIndexDropMenu();
                     }
 
                     select(finalI);
@@ -116,29 +134,74 @@ public class ChartsRadio extends LinearLayout {
                 }
             });
         }
-        mChartsRadioMain.getChildAt(moreTabIndex)
-                .setOnClickListener(new OnClickListener() {
+
+        // moreTab
+        mChartsRadioMain.getChildAt(mMoreTabIndex).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mChartsRadioDropMenu.getVisibility() == View.GONE) {
-                    showDropMenu();
+                if (isMoreDropMenuShow()) {
+                    closeMoreDropMenu();
                 } else {
-                    closeDropMenu();
+                    showMoreDropMenu();
+                }
+            }
+        });
+
+        // indexTab
+        mChartsRadioMain.getChildAt(mIndexTabIndex).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isIndexDropMenuShow()) {
+                    closeIndexDropMenu();
+                } else {
+                    showIndexDropMenu();
                 }
             }
         });
     }
 
-    private void showDropMenu() {
+    private boolean isMoreDropMenuShow() {
+        if (mChartsRadioDropMenu != null && mChartsRadioDropMenu.getVisibility() == VISIBLE) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isIndexDropMenuShow() {
+        if (mIndexesDropMenu != null && mIndexesDropMenu.getVisibility() == VISIBLE) {
+            return true;
+        }
+        return false;
+    }
+
+    private void showMoreDropMenu() {
+        if (isIndexDropMenuShow()) {
+            closeIndexDropMenu();
+        }
         mMoreTriangle.setImageResource(R.drawable.ic_triangle_highlight);
         Animation expendY = AnimUtils.createExpendY(mChartsRadioDropMenu, 300);
         mChartsRadioDropMenu.startAnimation(expendY);
     }
 
-    private void closeDropMenu() {
+    private void closeMoreDropMenu() {
         mMoreTriangle.setImageResource(R.drawable.ic_triangle);
         Animation collapseY = AnimUtils.createCollapseY(mChartsRadioDropMenu, 300);
         mChartsRadioDropMenu.startAnimation(collapseY);
+    }
+
+    private void showIndexDropMenu() {
+        if (isMoreDropMenuShow()) {
+            closeMoreDropMenu();
+        }
+        mIndexTriangle.setImageResource(R.drawable.ic_triangle_highlight);
+        Animation expendY = AnimUtils.createExpendY(mIndexesDropMenu, 300);
+        mIndexesDropMenu.startAnimation(expendY);
+    }
+
+    private void closeIndexDropMenu() {
+        mIndexTriangle.setImageResource(R.drawable.ic_triangle);
+        Animation collapseY = AnimUtils.createCollapseY(mIndexesDropMenu, 300);
+        mIndexesDropMenu.startAnimation(collapseY);
     }
 
     private void onTabSelected(int index) {

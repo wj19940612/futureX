@@ -8,12 +8,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -120,6 +122,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.dimView)
     View mDimView;
 
+    @BindView(R.id.chartRadioDropMenu)
+    LinearLayout mChartRadioDropMenu;
+    @BindView(R.id.indexDropMenu)
+    ConstraintLayout mIndexDropMenu;
+
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
     private PairDesc mPairDesc;
@@ -162,6 +169,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 }
             }
         });
+        mChartRadio.setChartsRadioDropMenu(mChartRadioDropMenu);
+        mChartRadio.setIndexesDropMenu(mIndexDropMenu);
         mTradeDetailRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {

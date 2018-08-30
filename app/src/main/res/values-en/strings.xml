@@ -576,6 +576,7 @@
     <string name="high">High</string>
     <string name="low">Low</string>
     <string name="more">More</string>
+    <string name="index">index</string>
     <string-array name="trade_detail_radio">
         <item>Depth</item>
         <item>Filled</item>
