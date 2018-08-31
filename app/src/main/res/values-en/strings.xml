@@ -579,7 +579,7 @@
     <string-array name="trade_detail_radio">
         <item>Depth</item>
         <item>Filled</item>
-        <item>Brief intro</item>
+        <item>intro</item>
     </string-array>
     <string name="open_price_x">Open&#160;%1$s</string>
     <string name="highest_price_x">High&#160;%1$s</string>

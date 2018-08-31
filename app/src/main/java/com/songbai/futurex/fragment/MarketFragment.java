@@ -173,7 +173,7 @@ public class MarketFragment extends BaseFragment {
                     new DataParser<Response<Map<String, MarketData>>>(data) {
                         @Override
                         public void onSuccess(Response<Map<String, MarketData>> mapResponse) {
-                            setMarketDataList(mapResponse.getContent());
+//                            setMarketDataList(mapResponse.getContent());
                         }
                     }.parse();
                 }

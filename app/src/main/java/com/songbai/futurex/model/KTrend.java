@@ -1,6 +1,8 @@
 package com.songbai.futurex.model;
 
-public class KTrend {
+import android.support.annotation.NonNull;
+
+public class KTrend implements Comparable<KTrend> {
     private double closePrice;
     private double nowVolume;
     private String time;
@@ -36,5 +38,16 @@ public class KTrend {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public int compareTo(@NonNull KTrend kTrend) {
+        if (this.closePrice - kTrend.closePrice == 0) {
+            return 0;
+        } else if (this.closePrice - kTrend.closePrice > 0) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

@@ -24,6 +24,8 @@ import com.songbai.futurex.model.KTrend;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
+import com.songbai.futurex.view.chart.TimeShareChart;
+import com.songbai.futurex.view.chart.TimeShareSurfaceView;
 import com.songbai.futurex.view.recycler.DividerItemDecor;
 import com.songbai.futurex.websocket.model.MarketData;
 
@@ -120,6 +122,7 @@ public class MarketListFragment extends BaseFragment {
                 .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
                     @Override
                     protected void onRespData(List<CurrencyPair> data) {
+//                        data.addAll(data);
                         Collections.sort(data);
                         mCurrencyPairAdapter.setGroupableList(data);
 
@@ -158,7 +161,9 @@ public class MarketListFragment extends BaseFragment {
 
     private void updateKTrendData(HashMap<String, List<KTrend>> data) {
         if (mCurrencyPairAdapter != null) {
-            mCurrencyPairAdapter.setKTrendListMap(data);
+            HashMap<String, List<KTrend>> hashMap = new HashMap<>();
+            hashMap.put("eth_usdt",data.get("eth_usdt"));
+            mCurrencyPairAdapter.setKTrendListMap(hashMap);
             mCurrencyPairAdapter.notifyDataSetChanged();
         }
     }
@@ -167,6 +172,7 @@ public class MarketListFragment extends BaseFragment {
         StringBuilder stringBuilder = new StringBuilder();
         for (CurrencyPair currencyPair : data) {
             stringBuilder.append(currencyPair.getPairs());
+            stringBuilder.append(",");
         }
         return stringBuilder.toString();
     }
@@ -214,7 +220,7 @@ public class MarketListFragment extends BaseFragment {
                 final Groupable item = getItem(position);
                 if (item instanceof CurrencyPair) {
                     final CurrencyPair pair = (CurrencyPair) item;
-                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext);
+                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext,mKTrendListMap==null?null:mKTrendListMap.get(pair.getPairs()));
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -237,13 +243,16 @@ public class MarketListFragment extends BaseFragment {
             TextView mLastPrice;
             @BindView(R.id.priceChange)
             TextView mPriceChange;
+            @BindView(R.id.chart)
+            TimeShareSurfaceView mTimeShareChart;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context) {
+            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context,List<KTrend> mKTrends) {
+                mTimeShareChart.updateData(mKTrends);
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
