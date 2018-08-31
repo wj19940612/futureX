@@ -974,6 +974,20 @@ public class Apic {
     }
 
     /**
+     * /api/otc/newOtc/v1/confirm.do
+     * POST
+     * 订单确认--v1.5(同老版的订单确认)
+     */
+    public static Api otc365OrderConfirm(String id, int status, String drawPass, String googleCode) {
+        return Api.post("/api/otc/newOtc/v1/confirm.do",
+                new ReqParams()
+                        .put("id", id)
+                        .put("status", status)
+                        .put("drawPass", drawPass)
+                        .put("googleCode", googleCode));
+    }
+
+    /**
      * /api/otc/wares/mine
      * GET
      * (改)个人广告主页-个人信息(V1.2)

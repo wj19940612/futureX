@@ -2,7 +2,6 @@ package com.songbai.futurex.newotc;
 
 import android.webkit.WebView;
 
-import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.activity.WebActivity;
 
 /**
@@ -12,7 +11,7 @@ import com.songbai.futurex.activity.WebActivity;
 public class Otc365FilterWebActivity extends WebActivity {
     @Override
     protected boolean onShouldOverrideUrlLoading(WebView view, String url) {
-        boolean contains = url.contains(BuildConfig.HOST);
+        boolean contains = url.contains("otc/otcback/v1/syncBackMethod.do?company_order_num=");
         if (contains) {
             finish();
         }

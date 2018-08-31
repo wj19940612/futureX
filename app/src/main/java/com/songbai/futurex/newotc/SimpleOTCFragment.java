@@ -24,6 +24,7 @@ import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.fragment.BaseFragment;
 import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragment;
+import com.songbai.futurex.fragment.mine.AddBankingCardFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.CashPwdFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
@@ -355,9 +356,8 @@ public class SimpleOTCFragment extends BaseFragment {
                     if (mNewOTCYetOrder.getCount() > 1) {
                         lunchOrder();
                     } else {
-                        String id = mNewOTCYetOrder.getId();
                         UniqueActivity.launcher(this, LegalCurrencyOrderDetailFragment.class)
-                                .putExtra(ExtraKeys.ORDER_ID, id)
+                                .putExtra(ExtraKeys.ORDER_ID, mNewOTCYetOrder.getId())
                                 .putExtra(ExtraKeys.TRADE_DIRECTION, mNewOTCYetOrder.getDirect())
                                 .execute();
                     }
@@ -425,6 +425,7 @@ public class SimpleOTCFragment extends BaseFragment {
         int msg = 0;
         int confirmText = R.string.ok;
         switch (code) {
+            case Resp.Code.BANK_CADR_NONE:
             case SHOULD_BIND_PAY:
                 msg = R.string.have_not_bind_pay;
                 confirmText = R.string.go_to_bind;
@@ -457,6 +458,10 @@ public class SimpleOTCFragment extends BaseFragment {
                 switch (code) {
                     case Resp.Code.PHONE_NONE:
                         UniqueActivity.launcher(SimpleOTCFragment.this, BindPhoneFragment.class)
+                                .execute();
+                        break;
+                    case Resp.Code.BANK_CADR_NONE:
+                        UniqueActivity.launcher(SimpleOTCFragment.this, AddBankingCardFragment.class)
                                 .execute();
                         break;
                     case SHOULD_BIND_PAY:
@@ -496,8 +501,8 @@ public class SimpleOTCFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<NewOrderData> resp) {
                         clearData();
                         NewOrderData data = resp.getData();
-                        if (data.getOrderType() == 1) {
-                            OpenOtc365(data);
+                        if (data.getOrderType() == 1 && data.getParam() != null) {
+                            openOtc365(data);
                         } else {
                             String id = String.valueOf(data.getId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
@@ -511,7 +516,7 @@ public class SimpleOTCFragment extends BaseFragment {
                     protected void onRespFailure(Resp failedResp) {
                         int code = failedResp.getCode();
                         if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
-                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
+                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.BANK_CADR_NONE) {
                             showAlertMsgHint(code);
                         } else {
                             super.onRespFailure(failedResp);
@@ -520,28 +525,30 @@ public class SimpleOTCFragment extends BaseFragment {
                 }).fire();
     }
 
-    private void OpenOtc365(NewOrderData data) {
+    private void openOtc365(NewOrderData data) {
         ParamBean param = data.getParam();
-        StringBuilder builder = new StringBuilder();
-        //拼接post提交参数
-        builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
-                .append("sync_url=").append(param.getSync_url()).append("&")
-                .append("coin_sign=").append(param.getCoin_sign()).append("&")
-                .append("sign=").append(param.getSign()).append("&")
-                .append("order_time=").append(param.getOrder_time()).append("&")
-                .append("pay_card_num=").append(param.getPay_card_num()).append("&")
-                .append("async_url=").append(param.getAsync_url()).append("&")
-                .append("id_card_num=").append(param.getId_card_num()).append("&")
-                .append("kyc=").append(param.getKyc()).append("&")
-                .append("phone=").append(param.getPhone()).append("&")
-                .append("company_order_num=").append(param.getCompany_order_num()).append("&")
-                .append("appkey=").append(param.getAppkey()).append("&")
-                .append("id_card_type=").append(param.getId_card_type()).append("&")
-                .append("username=").append(param.getUsername()).append("&");
-        Launcher.with(getActivity(), Otc365FilterWebActivity.class)
-                .putExtra(WebActivity.EX_URL, data.getTargetUrl())
-                .putExtra(WebActivity.EX_POST_DATA, builder.toString())
-                .execute();
+        if (param != null) {
+            StringBuilder builder = new StringBuilder();
+            //拼接post提交参数
+            builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
+                    .append("sync_url=").append(param.getSync_url()).append("&")
+                    .append("coin_sign=").append(param.getCoin_sign()).append("&")
+                    .append("sign=").append(param.getSign()).append("&")
+                    .append("order_time=").append(param.getOrder_time()).append("&")
+                    .append("pay_card_num=").append(param.getPay_card_num()).append("&")
+                    .append("async_url=").append(param.getAsync_url()).append("&")
+                    .append("id_card_num=").append(param.getId_card_num()).append("&")
+                    .append("kyc=").append(param.getKyc()).append("&")
+                    .append("phone=").append(param.getPhone()).append("&")
+                    .append("company_order_num=").append(param.getCompany_order_num()).append("&")
+                    .append("appkey=").append(param.getAppkey()).append("&")
+                    .append("id_card_type=").append(param.getId_card_type()).append("&")
+                    .append("username=").append(param.getUsername());
+            Launcher.with(getActivity(), Otc365FilterWebActivity.class)
+                    .putExtra(WebActivity.EX_URL, data.getTargetUrl())
+                    .putExtra(WebActivity.EX_POST_DATA, builder.toString())
+                    .execute();
+        }
     }
 
     private void buy(String cost, String coinCount, String coinSymbol) {
@@ -552,7 +559,7 @@ public class SimpleOTCFragment extends BaseFragment {
                         clearData();
                         NewOrderData data = resp.getData();
                         if (data.getOrderType() == 1) {
-                            OpenOtc365(data);
+                            openOtc365(data);
                         } else {
                             String id = String.valueOf(data.getId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
@@ -566,7 +573,7 @@ public class SimpleOTCFragment extends BaseFragment {
                     protected void onRespFailure(Resp failedResp) {
                         int code = failedResp.getCode();
                         if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
-                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT) {
+                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.BANK_CADR_NONE) {
                             showAlertMsgHint(code);
                         } else {
                             super.onRespFailure(failedResp);
