@@ -532,7 +532,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     });
             mPairsPopup.setDimView(mDimView);
         }
-        mPairsPopup.show(mOrderListFloatRadio);
+        mPairsPopup.show(mTitleBar);
         mPairsPopup.selectCounterCurrency(mCurrencyPair.getSuffixSymbol());
     }
 
