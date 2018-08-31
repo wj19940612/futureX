@@ -51,6 +51,7 @@ import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
@@ -265,7 +266,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        addTopPaddingWithStatusBar(mTitleBar);
 
         initTitleBar();
 
@@ -277,12 +277,16 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     mTradeDir = TradeDir.DIR_BUY_IN;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    mPercentSelectView.reset();
                     mVolumeInput.reset();
+                    mVolumeInput.setBaseCurrency(mCurrencyPair.getSuffixSymbol().toUpperCase());
                 } else {
                     mTradeDir = TradeDir.DIR_SELL_OUT;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    mPercentSelectView.reset();
                     mVolumeInput.reset();
+                    mVolumeInput.setBaseCurrency(mCurrencyPair.getPrefixSymbol().toUpperCase());
                 }
             }
         });
@@ -440,6 +444,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             mPairArrow.setVisibility(View.GONE);
             mSwitchToMarketPage.setVisibility(View.INVISIBLE);
         } else {
+            addTopPaddingWithStatusBar(mTitleBar);
             mPairName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -583,8 +588,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private void updateVolumeInputView(int progress, int max) {
 //        int progress = mTradeVolumeSeekBar.getProgress();
 //        int max = mTradeVolumeSeekBar.getMax();
-        double tradeVolume = mTradeCurrencyVolume * progress / max;
-        mVolumeInput.setVolume(tradeVolume);
+        mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max,20));
     }
 
     private void updateTradeAmount() {

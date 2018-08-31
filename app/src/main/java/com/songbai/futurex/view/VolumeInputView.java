@@ -99,6 +99,12 @@ public class VolumeInputView extends FrameLayout {
         onVolumeChange();
     }
 
+    public void setVolume(String volume) {
+        mVolume.setText(formatVolume(String.valueOf(volume)));
+        mVolume.setSelection(mVolume.getText().toString().length());
+        onVolumeChange();
+    }
+
     public void reset() {
         mTextWatcherDisable = true;
         mVolume.setText("");
