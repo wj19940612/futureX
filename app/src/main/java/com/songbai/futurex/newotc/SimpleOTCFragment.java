@@ -538,7 +538,7 @@ public class SimpleOTCFragment extends BaseFragment {
                 .append("appkey=").append(param.getAppkey()).append("&")
                 .append("id_card_type=").append(param.getId_card_type()).append("&")
                 .append("username=").append(param.getUsername()).append("&");
-        Launcher.with(getActivity(), WebActivity.class)
+        Launcher.with(getActivity(), Otc365FilterWebActivity.class)
                 .putExtra(WebActivity.EX_URL, data.getTargetUrl())
                 .putExtra(WebActivity.EX_POST_DATA, builder.toString())
                 .execute();

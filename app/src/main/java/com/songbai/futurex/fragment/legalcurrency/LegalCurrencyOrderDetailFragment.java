@@ -34,6 +34,7 @@ import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
+import com.songbai.futurex.newotc.Otc365FilterWebActivity;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
@@ -506,7 +507,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                                 .append("appkey=").append(param.getAppkey()).append("&")
                                 .append("id_card_type=").append(param.getId_card_type()).append("&")
                                 .append("username=").append(param.getUsername()).append("&");
-                        Launcher.with(getActivity(), WebActivity.class)
+                        Launcher.with(getActivity(), Otc365FilterWebActivity.class)
                                 .putExtra(WebActivity.EX_URL, data.getTargetUrl())
                                 .putExtra(WebActivity.EX_POST_DATA, builder.toString())
                                 .execute();
