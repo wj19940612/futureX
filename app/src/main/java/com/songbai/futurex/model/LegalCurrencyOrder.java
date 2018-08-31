@@ -27,7 +27,7 @@ public class LegalCurrencyOrder {
     private String changePortrait;
     private String coinSymbol;
     private int direct;
-    private int id;
+    private String id;
     private double orderAmount;
     private double orderCount;
     private String orderId;
@@ -70,11 +70,11 @@ public class LegalCurrencyOrder {
         this.direct = direct;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

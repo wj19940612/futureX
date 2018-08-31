@@ -135,14 +135,14 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         case 3:
                         case 5:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
-                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                    .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 2)
                                     .execute();
                             break;
                         case 2:
                         case 4:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
-                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                    .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
                                     .execute();
                             break;
@@ -160,7 +160,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                     return;
                                 }
                                 Launcher.with(getActivity(), OtcOrderCompletedActivity.class)
-                                        .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                        .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                         .putExtra(ExtraKeys.TRADE_DIRECTION, direct)
                                         .execute();
                             }
@@ -179,7 +179,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                     return;
                                 }
                                 UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
-                                        .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                        .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                         .putExtra(ExtraKeys.TRADE_DIRECTION, direct)
                                         .execute();
                             }

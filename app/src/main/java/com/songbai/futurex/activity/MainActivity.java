@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
@@ -21,6 +23,8 @@ import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.AppVersion;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.newotc.SimpleOTCFragment;
+import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.OnNavigationListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
@@ -169,6 +173,19 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
+                KeyBoardUtils.closeKeyboard(v);
+                v.clearFocus();
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+    }
+
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
@@ -186,7 +203,8 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
                 case PAGE_MARKET:
                     return new MarketFragment();
                 case PAGE_LEGAL_CURRENCY:
-                    return new LegalCurrencyFragment();
+//                    return new LegalCurrencyFragment();
+                    return new SimpleOTCFragment();
                 case PAGE_TRADE:
                     return new TradeFragment();
                 case PAGE_MINE:

@@ -30,6 +30,7 @@ import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OrderBean;
 import com.songbai.futurex.model.OtcChatMessage;
 import com.songbai.futurex.model.OtcChatUserInfo;
 import com.songbai.futurex.model.OtcOrderDetail;
@@ -100,7 +101,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
     private OtcProcessor mOtcProcessor;
 
-    private int mOrderId;
+    private String mOrderId;
     private int mTradeDirection;
     private static OtcChatUserInfo mRightOtcChatUserInfo;
     private static OtcChatUserInfo mLeftOtcChatUserInfo;
@@ -125,7 +126,7 @@ public class OtcTradeChatActivity extends BaseActivity {
         setContentView(R.layout.activity_otc_trade_chat);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        mOrderId = intent.getIntExtra(ExtraKeys.ORDER_ID, 0);
+        mOrderId = intent.getStringExtra(ExtraKeys.ORDER_ID);
         mTradeDirection = intent.getIntExtra(ExtraKeys.TRADE_DIRECTION, 0);
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
@@ -244,7 +245,7 @@ public class OtcTradeChatActivity extends BaseActivity {
 
                         @Override
                         public void onSuccess(Response<SysMessage> resp) {
-                            if (resp.getContent().getDataId() == mOrderId) {
+                            if (String.valueOf(resp.getContent().getDataId()).equals(mOrderId)) {
                                 otcOrderDetail();
                             }
                         }
@@ -343,7 +344,7 @@ public class OtcTradeChatActivity extends BaseActivity {
     }
 
     private void setOrderInfo(OtcOrderDetail otcOrderDetail) {
-        OtcOrderDetail.OrderBean order = otcOrderDetail.getOrder();
+        OrderBean order = otcOrderDetail.getOrder();
         mTurnover.setText(getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale(order.getOrderAmount()),
                 order.getPayCurrency().toUpperCase()));

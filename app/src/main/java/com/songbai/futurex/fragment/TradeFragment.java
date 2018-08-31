@@ -13,14 +13,12 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -28,6 +26,7 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -207,6 +206,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     @Override
     public void onRefresh() {
+        requestUserAccount();
     }
 
     @NonNull
@@ -268,7 +268,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         super.onActivityCreated(savedInstanceState);
 
         initTitleBar();
-
+        mSwipeToLoadLayout.setOnRefreshListener(this);
+        mSwipeToLoadLayout.setOnLoadMoreListener(this);
         mTradeTypeValue = LIMIT_TRADE;
         mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
@@ -536,7 +537,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     });
             mPairsPopup.setDimView(mDimView);
         }
-        mPairsPopup.show(mOrderListFloatRadio);
+        mPairsPopup.show(mTitleBar);
         mPairsPopup.selectCounterCurrency(mCurrencyPair.getSuffixSymbol());
     }
 
@@ -681,6 +682,13 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                             if (mAvailableCurrencyList.size() > 0) {
                                 updateTradeCurrencyView();
                             }
+                            stopFreshOrLoadAnimation();
+                        }
+
+                        @Override
+                        public void onFailure(ReqError reqError) {
+                            super.onFailure(reqError);
+                            stopFreshOrLoadAnimation();
                         }
                     }).fireFreely();
         } else {

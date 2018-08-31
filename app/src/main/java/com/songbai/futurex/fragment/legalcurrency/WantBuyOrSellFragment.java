@@ -314,9 +314,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
     private void otcOrderBuy(int id, String cost, String coinCount) {
         Apic.otcOrderBuy(id, cost, coinCount).tag(TAG)
-                .callback(new Callback<Resp<Integer>>() {
+                .callback(new Callback<Resp<String>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Integer> resp) {
+                    protected void onRespSuccess(Resp<String> resp) {
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }
@@ -345,9 +345,9 @@ public class WantBuyOrSellFragment extends BaseSwipeLoadFragment implements OnRV
 
     private void otcOrderSell(int id, String coinCount, String drawPass) {
         Apic.otcOrderSell(id, coinCount, md5Encrypt(drawPass)).tag(TAG)
-                .callback(new Callback<Resp<Integer>>() {
+                .callback(new Callback<Resp<String>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Integer> resp) {
+                    protected void onRespSuccess(Resp<String> resp) {
                         if (mSmartDialog != null) {
                             mSmartDialog.dismiss();
                         }

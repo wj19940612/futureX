@@ -201,9 +201,9 @@ public class LegalCurrencyPayFragment extends UniqueActivity.UniFragment {
             withDrawPsdViewController.setMsg(R.string.set_draw_cash_pwd_hint);
             withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
         } else {
-            umengEventCount(UmengCountEventId.LEGALPAY0003);
-            UniqueActivity.launcher(this, AddBankingCardFragment.class)
-                    .execute(this, REQUEST_ADD_PAY);
+            UniqueActivity.launcher(this, SelectPayTypeFragment.class)
+                    .putExtra(ExtraKeys.BIND_BANK_LIST, mBindBankList)
+                    .execute(this, REQUEST_SELECT_PAY);
         }
     }
 

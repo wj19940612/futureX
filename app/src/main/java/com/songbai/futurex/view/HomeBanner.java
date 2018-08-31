@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.model.home.Banner;
+import com.songbai.futurex.utils.TimerHandler;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,32 +25,54 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sbai.com.glide.GlideApp;
 
-public class HomeBanner extends FrameLayout {
+public class HomeBanner extends FrameLayout implements TimerHandler.TimerCallback {
 
     @BindView(R.id.viewPager)
     InfiniteViewPager mViewPager;
     @BindView(R.id.pageIndicator)
     PageIndicator mPageIndicator;
+    private TimerHandler mTimerHandler;
+    private int mLoopTime = 3000;
+
+    public void setLoopTime(int loopTime) {
+        mLoopTime = loopTime;
+    }
+
+    public void startLoop() {
+        startScheduleJobRightNow(mLoopTime, mLoopTime);
+    }
+
+    protected void startScheduleJobRightNow(int millisecond, long delayMillis) {
+        stopScheduleJob();
+
+        if (mTimerHandler == null) {
+            mTimerHandler = new TimerHandler(this);
+        }
+        mTimerHandler.sendEmptyMessageDelayed(millisecond, delayMillis);
+    }
+
+    protected void stopScheduleJob() {
+        if (mTimerHandler != null) {
+            mTimerHandler.removeCallbacksAndMessages(null);
+            mTimerHandler.resetCount();
+        }
+    }
 
     private AdvertisementAdapter mAdapter;
+
+    @Override
+    public void onTimeUp(int count) {
+        nextAdvertisement();
+    }
 
     public interface OnBannerClickListener {
         void onBannerClick(Banner information);
     }
 
-    public interface OnBannerTouchListener {
-        void onTouch(boolean touch);
-    }
-
     private OnBannerClickListener mOnBannerClickListener;
-    private OnBannerTouchListener mOnBannerTouchListener;
 
     public void setOnBannerClickListener(OnBannerClickListener onBannerClickListener) {
         mOnBannerClickListener = onBannerClickListener;
-    }
-
-    public void setOnBannerTouchListener(OnBannerTouchListener onBannerTouchListener) {
-        mOnBannerTouchListener = onBannerTouchListener;
     }
 
     public HomeBanner(Context context) {
@@ -65,6 +88,18 @@ public class HomeBanner extends FrameLayout {
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.home_banner, this, true);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startScheduleJobRightNow(mLoopTime, mLoopTime);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopScheduleJob();
     }
 
     private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -128,17 +163,14 @@ public class HomeBanner extends FrameLayout {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (mOnBannerTouchListener != null) {
-                    mOnBannerTouchListener.onTouch(true);
-                }
+                stopScheduleJob();
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_OUTSIDE:
-                if (mOnBannerTouchListener != null) {
-                    mOnBannerTouchListener.onTouch(false);
-                }
+                startScheduleJobRightNow(mLoopTime, mLoopTime);
                 break;
+            default:
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -185,6 +217,7 @@ public class HomeBanner extends FrameLayout {
             return view == object;
         }
 
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             int pos = position;

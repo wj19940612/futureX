@@ -59,7 +59,7 @@ public class KlineView extends RelativeLayout {
         mMAsView = LayoutInflater.from(getContext()).inflate(R.layout.view_moving_averages, null);
         RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         int rightMargin = (int) mKline.dp2Px(12);
-        params.setMargins(0, 0, rightMargin, 0);
+        params.setMargins(0, rightMargin / 3, rightMargin, 0);
         params.addRule(ALIGN_PARENT_RIGHT);
 
         mMa5 = mMAsView.findViewById(R.id.ma5);

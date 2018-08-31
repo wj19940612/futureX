@@ -43,6 +43,7 @@ public class WebActivity extends BaseActivity {
     public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
 
     public static final String EX_URL = "url";
+    public static final String EX_POST_DATA = "post_data";
     public static final String EX_TITLE = "title";
     public static final String EX_HTML = "html";
     @BindView(R.id.title)
@@ -66,6 +67,7 @@ public class WebActivity extends BaseActivity {
     private WebViewClient mWebViewClient;
 
     private boolean mHasCloseView;
+    private String mPostData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,6 +117,7 @@ public class WebActivity extends BaseActivity {
                         }
                     }, 200);
                     break;
+                default:
             }
         }
     }
@@ -123,6 +126,7 @@ public class WebActivity extends BaseActivity {
         mTitle = intent.getStringExtra(EX_TITLE);
         mPageUrl = intent.getStringExtra(EX_URL);
         mPureHtml = intent.getStringExtra(EX_HTML);
+        mPostData = intent.getStringExtra(EX_POST_DATA);
 
         tryToFixPageUrl();
     }
@@ -244,7 +248,11 @@ public class WebActivity extends BaseActivity {
     protected void loadPage() {
         updateTitleText(mTitle);
         if (!TextUtils.isEmpty(mPageUrl)) {
-            mWebView.loadUrl(mPageUrl);
+            if (TextUtils.isEmpty(mPostData)) {
+                mWebView.loadUrl(mPageUrl);
+            }else {
+                mWebView.postUrl(mPageUrl,mPostData.getBytes());
+            }
         } else if (!TextUtils.isEmpty(mPureHtml)) {
             openWebView(mPureHtml);
         } else if (TextUtils.isEmpty(mPureHtml)) {
@@ -327,7 +335,6 @@ public class WebActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(titleText) && !url.contains(titleText)) {
                     mTitle = titleText;
                 }
-                Log.e("wtf", "onPageFinished: " + mTitle);
                 mTitleView.setText(mTitle);
                 mTitleView.setSelected(true);
             } else {
