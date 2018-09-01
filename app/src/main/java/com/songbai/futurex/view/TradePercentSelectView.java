@@ -36,6 +36,13 @@ public class TradePercentSelectView extends LinearLayout {
     private OnPercentSelectListener mOnPercentSelectListener;
     private int mSelectPercent;
 
+    public void reset() {
+        mFirthBtn.setSelected(false);
+        mSecondBtn.setSelected(false);
+        mThirdBtn.setSelected(false);
+        mFourthBtn.setSelected(false);
+    }
+
     public interface OnPercentSelectListener {
         public void onPercentSelect(int percent, int max);
     }

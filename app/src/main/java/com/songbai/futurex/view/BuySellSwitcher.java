@@ -27,7 +27,7 @@ public class BuySellSwitcher extends RelativeLayout {
     @BindView(R.id.sellBtn)
     TextView mSellBtn;
 
-    private int mSelectedPosition;
+    private int mSelectedPosition = -1;
 
     private OnTabSelectedListener mOnTabSelectedListener;
 

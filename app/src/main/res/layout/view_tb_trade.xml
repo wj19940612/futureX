@@ -5,6 +5,15 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <ImageView
+        android:id="@+id/backView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:src="@drawable/ic_black_back"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/pairName"
         android:layout_width="wrap_content"
@@ -30,7 +39,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="20dp"
-        android:src="@drawable/ic_market"/>
+        android:src="@drawable/ic_market"
+        android:visibility="visible"/>
 
     <ImageView
         android:id="@+id/optionalStatus"
