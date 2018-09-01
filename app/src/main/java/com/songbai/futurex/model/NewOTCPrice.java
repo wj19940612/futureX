@@ -7,27 +7,35 @@ package com.songbai.futurex.model;
 public class NewOTCPrice {
 
     /**
-     * buyPrice : 6.92
-     * buyMinCount : 9.99
-     * buyMaxPrice : 50000.0
-     * sellMinPrice : 69.1
-     * buyMaxCount : 7225.43
-     * sellPrice : 6.9
+     * buyPrice : 7.27
+     * buyMaxPrice : 80000.0
+     * buyMaxCount : 137.74
+     * sellPrice : 6.85
      * sellMinCount : 10.0
+     * sellWaresCount : 0
      * sellMaxPrice : 50000.0
-     * buyMinPrice : 69.1
-     * sellMaxCount : 7235.89
+     * buyMinPrice : 1.0
+     * buyWaresCount : 3
+     * buyMinCount : 0.2
+     * sellMinPrice : 68.6
+     * sellQuotaPrice : 6.86
+     * buyQuotaPrice : 6.91
+     * sellMaxCount : 7288.63
      */
 
     private double buyPrice;
-    private double sellPrice;
-    private double buyMinCount;
-    private double buyMaxCount;
-    private double buyMinPrice;
     private double buyMaxPrice;
-    private double sellMinPrice;
-    private double sellMaxPrice;
+    private double buyMaxCount;
+    private double sellPrice;
     private double sellMinCount;
+    private int sellWaresCount;
+    private double sellMaxPrice;
+    private double buyMinPrice;
+    private int buyWaresCount;
+    private double buyMinCount;
+    private double sellMinPrice;
+    private double sellQuotaPrice;
+    private double buyQuotaPrice;
     private double sellMaxCount;
 
     public double getBuyPrice() {
@@ -38,20 +46,12 @@ public class NewOTCPrice {
         this.buyPrice = buyPrice;
     }
 
-    public double getSellPrice() {
-        return sellPrice;
+    public double getBuyMaxPrice() {
+        return buyMaxPrice;
     }
 
-    public void setSellPrice(double sellPrice) {
-        this.sellPrice = sellPrice;
-    }
-
-    public double getBuyMinCount() {
-        return buyMinCount;
-    }
-
-    public void setBuyMinCount(double buyMinCount) {
-        this.buyMinCount = buyMinCount;
+    public void setBuyMaxPrice(double buyMaxPrice) {
+        this.buyMaxPrice = buyMaxPrice;
     }
 
     public double getBuyMaxCount() {
@@ -62,28 +62,28 @@ public class NewOTCPrice {
         this.buyMaxCount = buyMaxCount;
     }
 
-    public double getBuyMinPrice() {
-        return buyMinPrice;
+    public double getSellPrice() {
+        return sellPrice;
     }
 
-    public void setBuyMinPrice(double buyMinPrice) {
-        this.buyMinPrice = buyMinPrice;
+    public void setSellPrice(double sellPrice) {
+        this.sellPrice = sellPrice;
     }
 
-    public double getBuyMaxPrice() {
-        return buyMaxPrice;
+    public double getSellMinCount() {
+        return sellMinCount;
     }
 
-    public void setBuyMaxPrice(double buyMaxPrice) {
-        this.buyMaxPrice = buyMaxPrice;
+    public void setSellMinCount(double sellMinCount) {
+        this.sellMinCount = sellMinCount;
     }
 
-    public double getSellMinPrice() {
-        return sellMinPrice;
+    public int getSellWaresCount() {
+        return sellWaresCount;
     }
 
-    public void setSellMinPrice(double sellMinPrice) {
-        this.sellMinPrice = sellMinPrice;
+    public void setSellWaresCount(int sellWaresCount) {
+        this.sellWaresCount = sellWaresCount;
     }
 
     public double getSellMaxPrice() {
@@ -94,12 +94,52 @@ public class NewOTCPrice {
         this.sellMaxPrice = sellMaxPrice;
     }
 
-    public double getSellMinCount() {
-        return sellMinCount;
+    public double getBuyMinPrice() {
+        return buyMinPrice;
     }
 
-    public void setSellMinCount(double sellMinCount) {
-        this.sellMinCount = sellMinCount;
+    public void setBuyMinPrice(double buyMinPrice) {
+        this.buyMinPrice = buyMinPrice;
+    }
+
+    public int getBuyWaresCount() {
+        return buyWaresCount;
+    }
+
+    public void setBuyWaresCount(int buyWaresCount) {
+        this.buyWaresCount = buyWaresCount;
+    }
+
+    public double getBuyMinCount() {
+        return buyMinCount;
+    }
+
+    public void setBuyMinCount(double buyMinCount) {
+        this.buyMinCount = buyMinCount;
+    }
+
+    public double getSellMinPrice() {
+        return sellMinPrice;
+    }
+
+    public void setSellMinPrice(double sellMinPrice) {
+        this.sellMinPrice = sellMinPrice;
+    }
+
+    public double getSellQuotaPrice() {
+        return sellQuotaPrice;
+    }
+
+    public void setSellQuotaPrice(double sellQuotaPrice) {
+        this.sellQuotaPrice = sellQuotaPrice;
+    }
+
+    public double getBuyQuotaPrice() {
+        return buyQuotaPrice;
+    }
+
+    public void setBuyQuotaPrice(double buyQuotaPrice) {
+        this.buyQuotaPrice = buyQuotaPrice;
     }
 
     public double getSellMaxCount() {

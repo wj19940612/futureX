@@ -50,6 +50,7 @@ import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.msg.MsgProcessor;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -523,7 +524,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                                     .append("company_order_num=").append(param.getCompany_order_num()).append("&")
                                     .append("appkey=").append(param.getAppkey()).append("&")
                                     .append("id_card_type=").append(param.getId_card_type()).append("&")
-                                    .append("username=").append(param.getUsername()).append("&");
+                                    .append("username=").append(URLEncoder.encode(param.getUsername())).append("&");
                             Launcher.with(getActivity(), Otc365FilterWebActivity.class)
                                     .putExtra(WebActivity.EX_URL, data.getTargetUrl())
                                     .putExtra(WebActivity.EX_POST_DATA, builder.toString())

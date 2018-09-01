@@ -101,6 +101,7 @@ public class OtcOrderCompletedActivity extends BaseActivity {
 
     private void setView(OtcOrderDetail otcOrderDetail) {
         OrderBean order = otcOrderDetail.getOrder();
+        mContractEachOther.setVisibility(order.getOrderType() == 1 ? View.GONE : View.VISIBLE);
         mTurnover.setText(getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale(order.getOrderAmount()),
                 order.getPayCurrency().toUpperCase()));
@@ -114,13 +115,13 @@ public class OtcOrderCompletedActivity extends BaseActivity {
         switch (order.getStatus()) {
             case OTCOrderStatus.ORDER_CANCLED:
                 mOrderStatus.setText(R.string.canceled);
-                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 mTitleBar.setTitle(R.string.canceled);
                 break;
             case OTCOrderStatus.ORDER_COMPLATED:
                 mOrderStatus.setText(R.string.completed);
                 mOrderStatus.setTextColor(ContextCompat.getColor(this, R.color.green));
-                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark,0,0,0);
+                mOrderStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_common_checkmark, 0, 0, 0);
                 mTitleBar.setTitle(R.string.completed);
                 break;
             default:

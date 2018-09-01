@@ -38,6 +38,7 @@ import com.songbai.futurex.model.NewOTCYetOrder;
 import com.songbai.futurex.model.NewOrderData;
 import com.songbai.futurex.model.ParamBean;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -51,6 +52,11 @@ import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.MsgHintController;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
+import com.songbai.futurex.websocket.DataParser;
+import com.songbai.futurex.websocket.OnDataRecListener;
+import com.songbai.futurex.websocket.PushDestUtils;
+import com.songbai.futurex.websocket.Response;
+import com.songbai.futurex.websocket.msg.MsgProcessor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -132,6 +138,7 @@ public class SimpleOTCFragment extends BaseFragment {
         }
     };
     private NewOTCYetOrder mNewOTCYetOrder;
+    private MsgProcessor mMsgProcessor;
 
     private void setAmountAndTurnover() {
         if (mNewOTCPrice != null) {
@@ -190,6 +197,29 @@ public class SimpleOTCFragment extends BaseFragment {
         });
         setView();
         getPrice();
+        initSocketListener();
+        initMsgPush();
+    }
+
+    private void initSocketListener() {
+        mMsgProcessor = new MsgProcessor(new OnDataRecListener() {
+            @Override
+            public void onDataReceive(String data, int code, String dest) {
+                if (PushDestUtils.isMsg(dest)) {
+                    new DataParser<Response<SysMessage>>(data) {
+
+                        @Override
+                        public void onSuccess(Response<SysMessage> resp) {
+                            getYetOrder();
+                        }
+                    }.parse();
+                }
+            }
+        });
+    }
+
+    private void initMsgPush() {
+        mMsgProcessor.registerMsg();
     }
 
     private void resetValueCal() {
@@ -219,6 +249,13 @@ public class SimpleOTCFragment extends BaseFragment {
             getPrice();
             getYetOrder();
         }
+        mMsgProcessor.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMsgProcessor.pause();
     }
 
     @Override
@@ -306,6 +343,7 @@ public class SimpleOTCFragment extends BaseFragment {
 
     private void getYetOrder() {
         if (!LocalUser.getUser().isLogin()) {
+            mRecentOrderHint.setVisibility(View.GONE);
             return;
         }
         Apic.newOtcGetYetOrder().tag(TAG)
@@ -314,8 +352,10 @@ public class SimpleOTCFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<NewOTCYetOrder> resp) {
                         mNewOTCYetOrder = resp.getData();
                         mRecentOrderHint.setVisibility(mNewOTCYetOrder.getCount() > 0 ? View.VISIBLE : View.GONE);
-                        String id = mNewOTCYetOrder.getId();
-                        mRecentOrderHint.setVisibility(!TextUtils.isEmpty(id) ? View.VISIBLE : View.GONE);
+                        if (mNewOTCYetOrder.getCount() == 0) {
+                            String id = mNewOTCYetOrder.getId();
+                            mRecentOrderHint.setVisibility(!TextUtils.isEmpty(id) ? View.VISIBLE : View.GONE);
+                        }
                     }
                 }).fireFreely();
     }
@@ -337,6 +377,16 @@ public class SimpleOTCFragment extends BaseFragment {
         mTradeAmountText.setText(mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY ? R.string.buy_in_amount : R.string.sell_out_amount);
         mCoinSymbol.setText(mSelectedCoinSymbol.toUpperCase());
         mTurnoverSymbol.setText(mSelectedLegalSymbol.toUpperCase());
+        mCoinSymbol.post(new Runnable() {
+            @Override
+            public void run() {
+                int coinSymbolMeasuredWidth = mCoinSymbol.getMeasuredWidth();
+                int turnoverSymbolMeasuredWidth = mTurnoverSymbol.getMeasuredWidth();
+                int minWidth = Math.max(coinSymbolMeasuredWidth, turnoverSymbolMeasuredWidth);
+                mCoinSymbol.setMinWidth(minWidth);
+                mTurnoverSymbol.setMinWidth(minWidth);
+            }
+        });
         mConfirm.setText(mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY ? R.string.buy_in : R.string.sell_out);
         mConfirm.setBackgroundResource(mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY ? R.drawable.btn_primary : R.drawable.btn_red);
     }
@@ -345,6 +395,7 @@ public class SimpleOTCFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         Network.unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
+        mMsgProcessor.unregisterMsg();
         unbinder.unbind();
     }
 
@@ -367,6 +418,12 @@ public class SimpleOTCFragment extends BaseFragment {
                 lunchOrder();
                 break;
             case R.id.confirm:
+                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
+                    return;
+                }
+                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
+                    return;
+                }
                 if (LocalUser.getUser().isLogin()) {
                     trade();
                 } else {
@@ -504,7 +561,7 @@ public class SimpleOTCFragment extends BaseFragment {
                         if (data.getOrderType() == 1 && data.getParam() != null) {
                             openOtc365(data);
                         } else {
-                            String id = String.valueOf(data.getId());
+                            String id = String.valueOf(data.getOrderId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, id)
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, mNewOTCYetOrder.getDirect())
