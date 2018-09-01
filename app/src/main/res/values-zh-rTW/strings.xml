@@ -784,4 +784,5 @@
     <string name="otc365_sell_hint">請確認收款後轉幣</string>
     <string name="please_input_volume">請輸入數量</string>
     <string name="please_input_amount">請輸入金額</string>
+    <string name="select_base_coin_type">選擇基礎幣種</string>
 </resources>
