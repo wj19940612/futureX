@@ -34,6 +34,8 @@ public class TimeShareChart extends View {
     private Path mPath;
     private float baseArea;
 
+    private Bitmap mBitmap;
+
 
     public TimeShareChart(Context context) {
         this(context, null);
@@ -103,32 +105,39 @@ public class TimeShareChart extends View {
         if (mKTrends == null || mKTrends.size() == 0) return;
 
 
-        canvas.rotate(180);
-        canvas.translate(-getWidth(), -getHeight());
-        double dx = (double) getWidth() / mKTrends.size();
-        double dy = (double) (getHeight() - baseArea) / mMaxClose;
-        int startX;
-        int startY;
-        int endX;
-        int endY;
+        if (mBitmap == null) {
+            mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas bitmapCanvas = new Canvas(mBitmap);
+            bitmapCanvas.rotate(180);
+            bitmapCanvas.translate(-getWidth(), -getHeight());
+            double dx = (double) getWidth() / mKTrends.size();
+            double dy = (double) (getHeight() - baseArea) / mMaxClose;
+            int startX;
+            int startY;
+            int endX;
+            int endY;
 //        mPath.moveTo(0,0);
 //        mPath.lineTo(200,0);
 //        mPath.lineTo(200,getHeight());
 //        mPath.lineTo(0,getHeight()-60);
 //        mPath.lineTo(0,0);
 //        canvas.drawPath(mPath,mShaderPaint);
-        for (int i = 1; i < mKTrends.size(); i++) {
-            startX = (int) (getWidth() - (dx * (i - 1)));
-            startY = (int) (dy * mKTrends.get(i - 1).getClosePrice() + baseArea);
-            endX = (int) (getWidth() - (dx * (i)));
-            endY = (int) (dy * mKTrends.get(i).getClosePrice() + baseArea);
-            Log.e("zzz", "mKTrends:" + i + "  startY:" + startY + " endY:" + endY);
-            mPath.moveTo(startX, 0);
-            mPath.lineTo(endX, 0);
-            mPath.lineTo(endX, endY);
-            mPath.lineTo(startX, startY);
-            mPath.lineTo(startX, 0);
-            canvas.drawPath(mPath, mShaderPaint);
+            for (int i = 1; i < mKTrends.size(); i++) {
+                startX = (int) (getWidth() - (dx * (i - 1)));
+                startY = (int) (dy * mKTrends.get(i - 1).getClosePrice() + baseArea);
+                endX = (int) (getWidth() - (dx * (i)));
+                endY = (int) (dy * mKTrends.get(i).getClosePrice() + baseArea);
+                Log.e("zzz", "mKTrends:" + i + "  startY:" + startY + " endY:" + endY);
+                mPath.moveTo(startX, 0);
+                mPath.lineTo(endX, 0);
+                mPath.lineTo(endX, endY);
+                mPath.lineTo(startX, startY);
+                mPath.lineTo(startX, 0);
+                bitmapCanvas.drawPath(mPath, mShaderPaint);
+            }
+            canvas.drawBitmap(mBitmap, 0, 0, null);
+        } else {
+            canvas.drawBitmap(mBitmap, 0, 0, null);
         }
 
     }

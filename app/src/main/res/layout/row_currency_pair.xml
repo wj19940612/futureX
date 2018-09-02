@@ -76,7 +76,7 @@
             tools:text="+13.38%"/>
     </LinearLayout>
 
-    <com.songbai.futurex.view.chart.TimeShareSurfaceView
+    <com.songbai.futurex.view.chart.TimeShareChart
         android:id="@+id/chart"
         android:layout_width="90dp"
         android:layout_height="match_parent"

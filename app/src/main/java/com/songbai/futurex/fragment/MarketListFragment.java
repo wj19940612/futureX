@@ -122,7 +122,7 @@ public class MarketListFragment extends BaseFragment {
                 .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
                     @Override
                     protected void onRespData(List<CurrencyPair> data) {
-//                        data.addAll(data);
+                        data.addAll(data);
                         Collections.sort(data);
                         mCurrencyPairAdapter.setGroupableList(data);
 
@@ -244,7 +244,7 @@ public class MarketListFragment extends BaseFragment {
             @BindView(R.id.priceChange)
             TextView mPriceChange;
             @BindView(R.id.chart)
-            TimeShareSurfaceView mTimeShareChart;
+            TimeShareChart mTimeShareChart;
 
             public ViewHolder(View itemView) {
                 super(itemView);
