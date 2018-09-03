@@ -250,8 +250,8 @@ public class WebActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mPageUrl)) {
             if (TextUtils.isEmpty(mPostData)) {
                 mWebView.loadUrl(mPageUrl);
-            }else {
-                mWebView.postUrl(mPageUrl,mPostData.getBytes());
+            } else {
+                mWebView.postUrl(mPageUrl, mPostData.getBytes());
             }
         } else if (!TextUtils.isEmpty(mPureHtml)) {
             openWebView(mPureHtml);
