@@ -230,7 +230,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void needGoogle() {
-        Apic.needGoogle("DRAW").tag(TAG)
+        Apic.needGoogle("CNY_TRADE").tag(TAG)
                 .callback(new Callback<Resp<Boolean>>() {
                     @Override
                     protected void onRespSuccess(Resp<Boolean> resp) {

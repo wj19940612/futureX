@@ -164,6 +164,7 @@ public class WebActivity extends BaseActivity {
         webSettings.setEnableSmoothTransition(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
@@ -174,7 +175,7 @@ public class WebActivity extends BaseActivity {
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.setDrawingCacheEnabled(true);
         mWebView.addJavascriptInterface(new AppJs(this), "AppJs");
-        if (Build.VERSION.SDK_INT >= 19) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -250,8 +251,8 @@ public class WebActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mPageUrl)) {
             if (TextUtils.isEmpty(mPostData)) {
                 mWebView.loadUrl(mPageUrl);
-            }else {
-                mWebView.postUrl(mPageUrl,mPostData.getBytes());
+            } else {
+                mWebView.postUrl(mPageUrl, mPostData.getBytes());
             }
         } else if (!TextUtils.isEmpty(mPureHtml)) {
             openWebView(mPureHtml);

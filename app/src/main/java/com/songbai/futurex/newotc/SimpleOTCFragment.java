@@ -239,6 +239,13 @@ public class SimpleOTCFragment extends BaseFragment {
                 enabled = true;
             }
         }
+        if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
+            enabled = false;
+            mConfirm.setText(R.string.trading_closed);
+        } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
+            enabled = false;
+            mConfirm.setText(R.string.trading_closed);
+        }
         mConfirm.setEnabled(enabled);
     }
 
@@ -561,7 +568,7 @@ public class SimpleOTCFragment extends BaseFragment {
                         if (data.getOrderType() == 1 && data.getParam() != null) {
                             openOtc365(data);
                         } else {
-                            String id = String.valueOf(data.getOrderId());
+                            String id = String.valueOf(data.getId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, id)
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
@@ -621,7 +628,7 @@ public class SimpleOTCFragment extends BaseFragment {
                             String id = String.valueOf(data.getId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, id)
-                                    .putExtra(ExtraKeys.TRADE_DIRECTION, mNewOTCYetOrder.getDirect())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
                                     .execute();
                         }
                     }

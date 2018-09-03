@@ -620,15 +620,17 @@ public class Apic {
     }
 
     /**
-     * /api/user/user/inviteAward
+     * /api/user/v1/user/inviteAward.do
      * GET
-     * 奖励记录
+     * 奖励记录--v1.5
      */
-    public static Api inviteAward(int page, int pageSize) {
-        return Api.get("/api/user/user/inviteAward",
+    public static Api inviteAward(int page, int pageSize, String wid) {
+        return Api.get("/api/user/v1/user/inviteAward.do",
                 new ReqParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("scrollType", 1)
+                        .put("wid", wid));
     }
 
     /**

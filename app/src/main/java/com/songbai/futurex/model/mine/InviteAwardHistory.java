@@ -15,6 +15,7 @@ public class InviteAwardHistory {
     private String coinType;
     private long createTime;
     private String value;
+    private String wid;
 
     public String getCoinType() {
         return coinType;
@@ -38,5 +39,13 @@ public class InviteAwardHistory {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getWid() {
+        return wid;
+    }
+
+    public void setWid(String wid) {
+        this.wid = wid;
     }
 }
