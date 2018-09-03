@@ -125,9 +125,6 @@
             android:name=".activity.mine.PropertyFlowActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".fragment.mine.RechargeHistoryActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.mine.SetGesturePwdActivity"
             android:screenOrientation="portrait"/>
         <activity

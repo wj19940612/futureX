@@ -92,15 +92,16 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
                                 InviteAwardHistory inviteAwardHistory = data.get(data.size() - 1);
                                 mWid = inviteAwardHistory.getWid();
                             }
+                            pagingWrap.setStart(mPage);
                             mAdapter.setList(pagingWrap);
                             mAdapter.notifyDataSetChanged();
                             stopFreshOrLoadAnimation();
                             mRecyclerView.hideAll(false);
-                            if (pagingWrap.getTotal() - 1 > mPage) {
+                            if (pagingWrap.isLast()) {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            } else {
                                 mPage++;
                                 mSwipeToLoadLayout.setLoadMoreEnabled(true);
-                            } else {
-                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
                             }
                         }
                     }
@@ -128,6 +129,7 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     @Override
     public void onRefresh() {
         mPage = 0;
+        mWid = "";
         getAwardHistory();
     }
 
