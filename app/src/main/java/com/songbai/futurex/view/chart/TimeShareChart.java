@@ -11,6 +11,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +22,9 @@ import com.songbai.futurex.utils.Display;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TimeShareChart extends View {
 
@@ -29,12 +32,13 @@ public class TimeShareChart extends View {
     private Paint mShaderPaint;
     private LinearGradient mShader;
     private List<KTrend> mKTrends;
-    private boolean mIsInited;
     private double mMaxClose;
     private Path mPath;
+    private Path mStrokePath;
     private float baseArea;
 
-    private Bitmap mBitmap;
+    private String mPair;
+    private Map<String, Bitmap> mBitmaps;
 
 
     public TimeShareChart(Context context) {
@@ -51,27 +55,34 @@ public class TimeShareChart extends View {
     }
 
     private void init() {
+        mBitmaps = new HashMap<>();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);//消除锯齿
-        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.green));
 
         mShaderPaint = new Paint();
         mShaderPaint.setAntiAlias(true);
         mShaderPaint.setStyle(Paint.Style.FILL);
-//        mShaderPaint.setColor(ContextCompat.getColor(getContext(), R.color.green));
-//        mShader = new LinearGradient(0, 0, 0, 100, new int[]{ContextCompat.getColor(getContext(), R.color.white), ContextCompat.getColor(getContext(), R.color.alphaGreen)}, null, Shader.TileMode.CLAMP);
-//        mShaderPaint.setShader(mShader);
         mShaderPaint.setShader(new LinearGradient(0, 0, 0, Display.dp2Px(52, getResources()), new int[]{ContextCompat.getColor(getContext(), R.color.white_20), ContextCompat.getColor(getContext(), R.color.alphaGreen)}, null, Shader.TileMode.CLAMP));
 
         baseArea = Display.dp2Px(12, getResources());
         mPath = new Path();
+        mStrokePath = new Path();
     }
 
-    public void updateData(List<KTrend> data) {
-        if (data != null && data.size() > 0 && !mIsInited) {
+    public void updateData(String pair, List<KTrend> data) {
+        Log.e("zzz", "updateData:" + pair);
+        if (!TextUtils.isEmpty(pair)) {
+            mPair = pair;
+        }
+        if (data != null && data.size() > 0) {
             getDrawData(data);
-            mIsInited = true;
+            invalidate(0, 0, getWidth(), getHeight());
+        } else {
+            if (mKTrends != null) {
+                mKTrends.clear();
+            }
             invalidate(0, 0, getWidth(), getHeight());
         }
     }
@@ -105,8 +116,8 @@ public class TimeShareChart extends View {
         if (mKTrends == null || mKTrends.size() == 0) return;
 
 
-        if (mBitmap == null) {
-            mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        if (mBitmaps.get(mPair) == null) {
+            Bitmap mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
             Canvas bitmapCanvas = new Canvas(mBitmap);
             bitmapCanvas.rotate(180);
             bitmapCanvas.translate(-getWidth(), -getHeight());
@@ -122,22 +133,30 @@ public class TimeShareChart extends View {
 //        mPath.lineTo(0,getHeight()-60);
 //        mPath.lineTo(0,0);
 //        canvas.drawPath(mPath,mShaderPaint);
+            mPath.moveTo(getWidth(), 0);
+            mPath.lineTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
+            mStrokePath.moveTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
             for (int i = 1; i < mKTrends.size(); i++) {
                 startX = (int) (getWidth() - (dx * (i - 1)));
                 startY = (int) (dy * mKTrends.get(i - 1).getClosePrice() + baseArea);
                 endX = (int) (getWidth() - (dx * (i)));
                 endY = (int) (dy * mKTrends.get(i).getClosePrice() + baseArea);
                 Log.e("zzz", "mKTrends:" + i + "  startY:" + startY + " endY:" + endY);
-                mPath.moveTo(startX, 0);
-                mPath.lineTo(endX, 0);
-                mPath.lineTo(endX, endY);
+                mStrokePath.lineTo(startX, startY);
                 mPath.lineTo(startX, startY);
-                mPath.lineTo(startX, 0);
-                bitmapCanvas.drawPath(mPath, mShaderPaint);
+//                mPath.lineTo(endX, 0);
+                mStrokePath.lineTo(endX, endY);
+                mPath.lineTo(endX, endY);
+//                mPath.lineTo(startX, startY);
             }
+            mPath.lineTo(0, 0);
+            bitmapCanvas.drawPath(mPath, mShaderPaint);
+            bitmapCanvas.drawPath(mStrokePath, mPaint);
+
             canvas.drawBitmap(mBitmap, 0, 0, null);
+            mBitmaps.put(mPair, mBitmap);
         } else {
-            canvas.drawBitmap(mBitmap, 0, 0, null);
+            canvas.drawBitmap(mBitmaps.get(mPair), 0, 0, null);
         }
 
     }

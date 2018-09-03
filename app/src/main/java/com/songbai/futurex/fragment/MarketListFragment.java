@@ -2,18 +2,22 @@ package com.songbai.futurex.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Apic;
@@ -25,7 +29,6 @@ import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
 import com.songbai.futurex.view.chart.TimeShareChart;
-import com.songbai.futurex.view.chart.TimeShareSurfaceView;
 import com.songbai.futurex.view.recycler.DividerItemDecor;
 import com.songbai.futurex.websocket.model.MarketData;
 
@@ -65,6 +68,7 @@ public class MarketListFragment extends BaseFragment {
 
     private String mCounterCurrency;
     private Map<String, MarketData> mMarketDataList;
+    MarketDiffCallback mMarketDiffCallback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +89,7 @@ public class MarketListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mMarketDiffCallback = new MarketDiffCallback();
         mPairList.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecor dividerItemDecor = new DividerItemDecor(getActivity(), DividerItemDecoration.VERTICAL);
         mPairList.addItemDecoration(dividerItemDecor);
@@ -105,16 +110,25 @@ public class MarketListFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && mCurrencyPairAdapter != null) {
+        if (isVisibleToUser && mCurrencyPairAdapter != null && isAdded()) {
             mCurrencyPairAdapter.setMarketDataList(mMarketDataList);
         }
     }
 
     public void setMarketDataList(Map<String, MarketData> marketDataList) {
-        mMarketDataList = marketDataList;
-        if (getUserVisibleHint() && mCurrencyPairAdapter != null) {
+        if (mCurrencyPairAdapter != null && getUserVisibleHint()) {
+            mMarketDiffCallback.setOldList(mCurrencyPairAdapter.getGroupList());
+            mMarketDiffCallback.setNewList(mCurrencyPairAdapter.getGroupList());
+            mMarketDiffCallback.setMarketMap(marketDataList);
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mMarketDiffCallback);
             mCurrencyPairAdapter.setMarketDataList(mMarketDataList);
+            diffResult.dispatchUpdatesTo(mCurrencyPairAdapter);
         }
+
+        mMarketDataList = marketDataList;
+//        if (getUserVisibleHint() && mCurrencyPairAdapter != null) {
+//            mCurrencyPairAdapter.setMarketDataList(mMarketDataList);
+//        }
     }
 
     private void requestPairList(String counterCurrency) {
@@ -162,7 +176,7 @@ public class MarketListFragment extends BaseFragment {
     private void updateKTrendData(HashMap<String, List<KTrend>> data) {
         if (mCurrencyPairAdapter != null) {
             HashMap<String, List<KTrend>> hashMap = new HashMap<>();
-            hashMap.put("eth_usdt",data.get("eth_usdt"));
+            hashMap.put("eth_usdt", data.get("eth_usdt"));
             mCurrencyPairAdapter.setKTrendListMap(hashMap);
             mCurrencyPairAdapter.notifyDataSetChanged();
         }
@@ -213,6 +227,19 @@ public class MarketListFragment extends BaseFragment {
         }
 
         @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (payloads.isEmpty()) {
+                onBindViewHolder(holder, position);
+            } else if (holder instanceof ViewHolder) {
+                Log.e("zzz","bind data");
+                Bundle bundle = (Bundle) payloads.get(0);
+                MarketData marketData = bundle.getParcelable(ExtraKeys.MARKET_DATA);
+                CurrencyPair currencyPair = bundle.getParcelable(ExtraKeys.CURRENCY_PAIR);
+                ((ViewHolder) holder).bind(currencyPair, marketData, mContext);
+            }
+        }
+
+        @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof GroupHeaderHolder) {
                 ((GroupHeaderHolder) holder).bind(getItem(position));
@@ -220,7 +247,7 @@ public class MarketListFragment extends BaseFragment {
                 final Groupable item = getItem(position);
                 if (item instanceof CurrencyPair) {
                     final CurrencyPair pair = (CurrencyPair) item;
-                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext,mKTrendListMap==null?null:mKTrendListMap.get(pair.getPairs()));
+                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()));
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -251,12 +278,33 @@ public class MarketListFragment extends BaseFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context,List<KTrend> mKTrends) {
-                mTimeShareChart.updateData(mKTrends);
+            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends) {
+                mTimeShareChart.updateData(pair.getPairs(), mKTrends);
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
+                    mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+                    if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                    }
+                } else {
+                    mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    if (pair.getUpDropSpeed() < 0) {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                    } else {
+                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                    }
+                }
+            }
+
+            public void bind(CurrencyPair pair, MarketData marketData, Context context) {
+                if (marketData != null && marketData != null) {
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
@@ -298,4 +346,107 @@ public class MarketListFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+    static class MarketDiffCallback extends DiffUtil.Callback {
+        private Map<String, MarketData> mMarketMap;
+        private List<GroupAdapter.Group<CurrencyPair>> mOldList;
+        private List<GroupAdapter.Group<CurrencyPair>> mNewList;
+
+        public void setOldList(List<GroupAdapter.Group<CurrencyPair>> oldList) {
+            mOldList = oldList;
+        }
+
+        public void setNewList(List<GroupAdapter.Group<CurrencyPair>> newList) {
+            mNewList = newList;
+        }
+
+        public void setMarketMap(Map<String, MarketData> marketMap) {
+            mMarketMap = marketMap;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return mOldList == null ? 0 : getItemCount(mOldList);
+        }
+
+        @Override
+        public int getNewListSize() {
+            return mNewList == null ? 0 : getItemCount(mNewList);
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            if (oldItemPosition != newItemPosition || mOldList == null || mNewList == null) {
+                return false;
+            }
+            if (mOldList.size() != mNewList.size()) {
+                return false;
+            }
+            final GroupAdapter.Groupable oldItem = getItem(oldItemPosition, mOldList);
+            final GroupAdapter.Groupable newItem = getItem(oldItemPosition, mNewList);
+            if (oldItem == null || newItem == null || !(oldItem instanceof CurrencyPair) || !(newItem instanceof CurrencyPair)) {
+                return false;
+            }
+            return ((CurrencyPair) oldItem).getPairs().equals(((CurrencyPair) newItem).getPairs());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            final GroupAdapter.Groupable oldItem = getItem(oldItemPosition, mOldList);
+            final GroupAdapter.Groupable newItem = getItem(oldItemPosition, mNewList);
+            if (oldItem == null || newItem == null || !(oldItem instanceof CurrencyPair) || !(newItem instanceof CurrencyPair)) {
+                return false;
+            }
+            if(((CurrencyPair) newItem).getPairs().equals("bch_usdt")){
+                Log.e("zzz","same data");
+                return true;
+            }
+            Log.e("zzz","no same data");
+
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+            // 定向刷新中的部分更新
+            // 效率最高
+
+
+            final GroupAdapter.Groupable newItem = getItem(newItemPosition, mNewList);
+            if ( newItem == null || !(newItem instanceof CurrencyPair)) {
+                return null;
+            }
+
+            Bundle payload = new Bundle();
+            Log.e("zzz","put bind");
+            payload.putString(ExtraKeys.MARKET_DATA, "235");
+            payload.putString(ExtraKeys.CURRENCY_PAIR, "222");
+            return payload;
+        }
+
+        public GroupAdapter.Groupable getItem(int position, List<GroupAdapter.Group<CurrencyPair>> mGroupList) {
+            int firstIndex = 0;
+            for (GroupAdapter.Group group : mGroupList) {
+                int size = group.getItemCount();
+                int index = position - firstIndex;
+                if (index < size) {
+                    return group.getItem(index);
+                }
+                firstIndex += size;
+            }
+            return null;
+        }
+
+        public int getItemCount(List<GroupAdapter.Group<CurrencyPair>> mGroupList) {
+            int count = 0;
+            for (GroupAdapter.Group group : mGroupList) {
+                count += group.getItemCount();
+            }
+            return count;
+        }
+
+    }
+
+
 }
