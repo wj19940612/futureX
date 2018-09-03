@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orderListFloatRadio"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"
         app:load_more_enabled="false"
         app:load_more_final_drag_offset="@dimen/load_more_final_offset"
         app:load_more_trigger_offset="@dimen/load_more_trigger_offset"
@@ -42,10 +42,10 @@
                     android:id="@+id/priceLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/titleBar"
-                    android:paddingLeft="12dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/titleBar">
 
                     <com.songbai.futurex.view.autofit.AutofitTextView
                         android:id="@+id/lastPrice"
@@ -63,8 +63,8 @@
                         android:id="@+id/priceChange"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
                         android:maxLines="1"
                         android:text="0.00%"
                         android:textColor="@color/green"
@@ -104,9 +104,9 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="12dp"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingLeft="12dp">
 
                         <TextView
                             android:id="@+id/tradeType"
@@ -191,8 +191,8 @@
                             android:id="@+id/availableCurrency"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="25dp"
+                            android:layout_marginTop="10dp"
                             android:maxLines="1"
                             android:textColor="@color/text99"
                             android:textSize="12sp"
@@ -215,8 +215,8 @@
                             android:id="@+id/percentSelectView"
                             android:layout_width="140dp"
                             android:layout_height="56dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginLeft="25dp"/>
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginTop="10dp"/>
 
                         <TextView
                             android:id="@+id/tradeButton"

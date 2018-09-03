@@ -13,6 +13,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,7 @@ import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
@@ -168,6 +170,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     TextView mPairName;
     ImageView mPairArrow;
     ImageView mSwitchToMarketPage;
+    ImageView mBackView;
 
     private CurrencyPair mCurrencyPair;
     private String mTradePair;
@@ -265,7 +268,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        addStatusBarHeightPaddingTop(mTitleBar);
 
         initTitleBar();
         mSwipeToLoadLayout.setOnRefreshListener(this);
@@ -274,16 +276,23 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
+                Log.e("zzz","onTabSelected:"+mCurrencyPair==null?"true":"false");
+                if (mCurrencyPair == null) return;
+
                 if (position == 0) { // buy in
                     mTradeDir = TradeDir.DIR_BUY_IN;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    mPercentSelectView.reset();
                     mVolumeInput.reset();
+                    mVolumeInput.setBaseCurrency(mCurrencyPair.getSuffixSymbol().toUpperCase());
                 } else {
                     mTradeDir = TradeDir.DIR_SELL_OUT;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    mPercentSelectView.reset();
                     mVolumeInput.reset();
+                    mVolumeInput.setBaseCurrency(mCurrencyPair.getPrefixSymbol().toUpperCase());
                 }
             }
         });
@@ -436,11 +445,20 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mPairName = customView.findViewById(R.id.pairName);
         mPairArrow = customView.findViewById(R.id.pairArrow);
         mSwitchToMarketPage = customView.findViewById(R.id.switchToMarketPage);
+        mBackView = customView.findViewById(R.id.backView);
 
         if (mNotMain) {
+            mBackView.setVisibility(View.VISIBLE);
             mPairArrow.setVisibility(View.GONE);
             mSwitchToMarketPage.setVisibility(View.INVISIBLE);
+            mBackView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().finish();
+                }
+            });
         } else {
+            addTopPaddingWithStatusBar(mTitleBar);
             mPairName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -532,7 +550,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     });
             mPairsPopup.setDimView(mDimView);
         }
-        mPairsPopup.show(mOrderListFloatRadio);
+        mPairsPopup.show(mTitleBar);
         mPairsPopup.selectCounterCurrency(mCurrencyPair.getSuffixSymbol());
     }
 
@@ -584,8 +602,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private void updateVolumeInputView(int progress, int max) {
 //        int progress = mTradeVolumeSeekBar.getProgress();
 //        int max = mTradeVolumeSeekBar.getMax();
-        double tradeVolume = mTradeCurrencyVolume * progress / max;
-        mVolumeInput.setVolume(tradeVolume);
+        mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max, 20));
     }
 
     private void updateTradeAmount() {
@@ -646,6 +663,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mLastPrice.setText("--.--");
         mPriceChange.setText("--.--");
         mPercentSelectView.updatePercent(0);
+        mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
+
 //        mTradeCurrencyRange.setText("");
     }
 
@@ -778,7 +797,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (mTradeDir == TradeDir.DIR_BUY_IN) {
             int tradeTypeRes;
             if (mTradeTypeValue == LIMIT_TRADE) {
-                tradeTypeRes = R.string.buy_limit;
+                tradeTypeRes = R.string.limit_price;
                 mChangePriceView.setVisibility(View.VISIBLE);
                 mMarketPriceView.setVisibility(View.GONE);
             } else {
@@ -793,7 +812,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         } else {
             int tradeTypeRes;
             if (mTradeTypeValue == LIMIT_TRADE) {
-                tradeTypeRes = R.string.sell_limit;
+                tradeTypeRes = R.string.limit_price;
                 mChangePriceView.setVisibility(View.VISIBLE);
                 mMarketPriceView.setVisibility(View.GONE);
             } else {
@@ -858,6 +877,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mPairDesc.getSuffixSymbol().getBalancePoint());
         mOrderAdapter.setOrderType(mOrderListRadio.getSelectedPosition() == 0
                 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST);
+
+        mTradeTypeValue = LIMIT_TRADE;
+        updateTradeDirectionView();
+
+        mVolumeInput.setBaseCurrency(mTradeDir == TradeDir.DIR_BUY_IN ?mCurrencyPair.getSuffixSymbol().toUpperCase():mCurrencyPair.getPrefixSymbol().toUpperCase());
     }
 
     private void updateOptionalStatus() {

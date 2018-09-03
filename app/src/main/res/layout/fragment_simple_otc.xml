@@ -125,16 +125,17 @@
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
                     android:gravity="end|center_vertical"
+                    android:hint="@string/please_input_volume"
                     android:inputType="numberDecimal"
                     android:textColor="@color/text99"
-                    android:textSize="15sp"
-                    tools:text="1"/>
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/coinSymbol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
+                    android:gravity="end"
                     android:textColor="@color/text22"
                     android:textSize="15sp"
                     tools:text="BTC"/>
@@ -165,16 +166,17 @@
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
                     android:gravity="end|center_vertical"
+                    android:hint="@string/please_input_amount"
                     android:inputType="numberDecimal"
                     android:textColor="@color/text99"
-                    android:textSize="15sp"
-                    tools:text="1"/>
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/turnoverSymbol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
+                    android:gravity="end"
                     android:textColor="@color/text22"
                     android:textSize="15sp"
                     tools:text="BTC"/>

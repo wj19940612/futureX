@@ -49,9 +49,10 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -227,6 +228,9 @@
 
         <activity
             android:name=".activity.SingleTradeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".newotc.Otc365FilterWebActivity"
             android:screenOrientation="portrait"/>
     </application>
 </manifest>

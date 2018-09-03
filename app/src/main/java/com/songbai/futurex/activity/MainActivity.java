@@ -169,7 +169,10 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
             ToastUtil.show(R.string.back_press_hint);
             mFirstBackTime = secondTime;
         } else {
-            super.onBackPressed();
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
         }
     }
 

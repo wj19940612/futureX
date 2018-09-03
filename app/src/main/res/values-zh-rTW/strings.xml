@@ -763,4 +763,26 @@
     <string name="white_paper">白皮書</string>
     <string name="official_network">官網</string>
     <string name="block_query">區塊查詢</string>
+    <string name="back_press_hint">再按一次退出</string>
+    <string name="phone_exists">手機號碼已存在</string>
+    <string name="mail_exists">郵箱已存在</string>
+    <string name="go_login">去登錄</string>
+    <string name="re_enter">重新輸入</string>
+    <string name="instructions">操作說明</string>
+    <string name="option_one">方案一</string>
+    <string name="option_two">方案二</string>
+    <string name="option_two_desc">微信小程序搜索「雙重驗證」</string>
+    <string name="have_not_complete_order">您有未完成訂單，請前往處理&#8195;►</string>
+    <string name="buy_in_amount">買入數量</string>
+    <string name="sell_out_amount">賣出數量</string>
+    <string name="buy_in_price">買入估價</string>
+    <string name="sell_out_price">賣出估價</string>
+    <string name="trade_desc">交易說明</string>
+    <string name="legal_currency_rule">1.買賣USDT由平台統一擔保，可放心兌換。\n\n\n2.請下單後15分鐘內完成交易，否則該筆訂單將被取消。\n\n\n3.禁止使用他人支付寶、微信代付、ATM及櫃檯轉賬等第三方轉賬，請使用本人綁定的銀行卡通過手機銀行或網銀進行匯款，其他任何方式匯款都會造成延時處理。\n\n\n4.如果你的交易1小時內沒有處理，請聯繫在線客服登記。會有專人24小時內與您聯繫，請保持手機暢通\n\n\n5.請切記備註【訂單後4位】作為轉賬附言，否則將會出現延遲到賬等情況。\n\n\n6. 單天最多只能發起10筆賣出訂單。\n\n\n7.超過3筆取消訂單將禁止當天法幣交易\n\n\n8.有1個買單或者賣單未完成，暫停繼續下單，完成交易後恢復</string>
+    <string name="should_bind_phone">需要先綁定手機</string>
+    <string name="otc365_buy_hint">請在OTC365頁面完成交易</string>
+    <string name="otc365_sell_hint">請確認收款後轉幣</string>
+    <string name="please_input_volume">請輸入數量</string>
+    <string name="please_input_amount">請輸入金額</string>
+    <string name="select_base_coin_type">選擇基礎幣種</string>
 </resources>

@@ -34,6 +34,7 @@ import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
+import com.songbai.futurex.newotc.Otc365FilterWebActivity;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
@@ -49,6 +50,7 @@ import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.msg.MsgProcessor;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -255,6 +257,23 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 }).fire();
     }
 
+    private void otc365OrderConfirm(int status, String drawPass, String googleCode) {
+        Apic.otc365OrderConfirm(mOrderId, status, drawPass, googleCode).tag(TAG)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (mOtcOrderDetail != null) {
+                            mOtcOrderDetail.getOrder().setStatus(mIsBuyer ? OTCOrderStatus.ORDER_PAIED : OTCOrderStatus.ORDER_COMPLATED);
+                            setView(mOtcOrderDetail);
+                        }
+                        otcOrderDetail();
+                        Intent data = new Intent();
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
+                        setResult(LEGAL_CURRENCY_ORDER_RESULT, data);
+                    }
+                }).fire();
+    }
+
     private void setWaresUserInfo(WaresUserInfo waresUserInfo) {
         GlideApp
                 .with(getContext())
@@ -350,10 +369,9 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     private void setBottomButtonStatus(OrderBean order) {
         mStatus = order.getStatus();
-        order.setOrderType(2);
-        mOriginOptionGroup.setVisibility(order.getOrderType() == 1 ? View.VISIBLE : View.GONE);
-        mOtc365OptionGroup.setVisibility(order.getOrderType() != 1 ? View.VISIBLE : View.GONE);
-        if (order.getOrderType() == 1) {
+        mOriginOptionGroup.setVisibility(order.getOrderType() != 1 ? View.VISIBLE : View.GONE);
+        mOtc365OptionGroup.setVisibility(order.getOrderType() == 1 ? View.VISIBLE : View.GONE);
+        if (order.getOrderType() != 1) {
             mAskPayInfoGroup.setVisibility(View.VISIBLE);
             mPayInfo.setVisibility(View.VISIBLE);
             mAskPayInfo.setVisibility(View.VISIBLE);
@@ -414,7 +432,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         adapter.notifyDataSetChanged();
         mPayInfo.hideAll(false);
         if (mOtcOrderDetail != null) {
-            if (mOtcOrderDetail.getOrder().getOrderType() != 1) {
+            if (mOtcOrderDetail.getOrder().getOrderType() == 1) {
                 mAskPayInfo.setVisibility(View.GONE);
                 if (mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY) {
                     mAskPayInfoGroup.setVisibility(View.GONE);
@@ -490,26 +508,29 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                     protected void onRespSuccess(Resp<OTC365Data> resp) {
                         OTC365Data data = resp.getData();
                         ParamBean param = data.getParam();
-                        StringBuilder builder = new StringBuilder();
-                        //拼接post提交参数
-                        builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
-                                .append("sync_url=").append(param.getSync_url()).append("&")
-                                .append("coin_sign=").append(param.getCoin_sign()).append("&")
-                                .append("sign=").append(param.getSign()).append("&")
-                                .append("order_time=").append(param.getOrder_time()).append("&")
-                                .append("pay_card_num=").append(param.getPay_card_num()).append("&")
-                                .append("async_url=").append(param.getAsync_url()).append("&")
-                                .append("id_card_num=").append(param.getId_card_num()).append("&")
-                                .append("kyc=").append(param.getKyc()).append("&")
-                                .append("phone=").append(param.getPhone()).append("&")
-                                .append("company_order_num=").append(param.getCompany_order_num()).append("&")
-                                .append("appkey=").append(param.getAppkey()).append("&")
-                                .append("id_card_type=").append(param.getId_card_type()).append("&")
-                                .append("username=").append(param.getUsername()).append("&");
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_URL, data.getTargetUrl())
-                                .putExtra(WebActivity.EX_POST_DATA, builder.toString())
-                                .execute();
+                        if (param != null) {
+                            StringBuilder builder = new StringBuilder();
+                            //拼接post提交参数
+                            builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
+                                    .append("sync_url=").append(param.getSync_url()).append("&")
+                                    .append("coin_sign=").append(param.getCoin_sign()).append("&")
+                                    .append("sign=").append(param.getSign()).append("&")
+                                    .append("order_time=").append(param.getOrder_time()).append("&")
+                                    .append("pay_card_num=").append(param.getPay_card_num()).append("&")
+                                    .append("async_url=").append(param.getAsync_url()).append("&")
+                                    .append("id_card_num=").append(param.getId_card_num()).append("&")
+                                    .append("kyc=").append(param.getKyc()).append("&")
+                                    .append("phone=").append(param.getPhone()).append("&")
+                                    .append("company_order_num=").append(param.getCompany_order_num()).append("&")
+                                    .append("appkey=").append(param.getAppkey()).append("&")
+                                    .append("id_card_type=").append(param.getId_card_type()).append("&")
+                                    .append("username=").append(URLEncoder.encode(param.getUsername())).append("&");
+                            Launcher.with(getActivity(), Otc365FilterWebActivity.class)
+                                    .putExtra(WebActivity.EX_URL, data.getTargetUrl())
+                                    .putExtra(WebActivity.EX_POST_DATA, builder.toString())
+                                    .execute();
+                        }
+
                     }
                 }).fire();
     }
@@ -536,7 +557,13 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
                     @Override
                     public void onConfirmClick(String cashPwd, String googleAuth) {
-                        otcOrderConfirm(mStatus, md5Encrypt(cashPwd), mNeedGoogle ? googleAuth : "");
+                        if (mOtcOrderDetail != null) {
+                            if (mOtcOrderDetail.getOrder().getOrderType() == 1) {
+                                otc365OrderConfirm(mStatus, md5Encrypt(cashPwd), mNeedGoogle ? googleAuth : "");
+                            } else {
+                                otcOrderConfirm(mStatus, md5Encrypt(cashPwd), mNeedGoogle ? googleAuth : "");
+                            }
+                        }
                     }
                 });
         withDrawPsdViewController.setShowGoogleAuth(mNeedGoogle);

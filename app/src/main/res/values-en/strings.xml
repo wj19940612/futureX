@@ -542,9 +542,9 @@
     <string name="password_inputs_is_not_same">Inconsistent password</string>
 
     <!--Market&Trade-->
-    <string name="main_index">Main: </string>
+    <string name="main_index">Main：</string>
     <string name="hide">Hide</string>
-    <string name="sub_index">Sub: </string>
+    <string name="sub_index">Sub：</string>
     <string-array name="market_radio_header">
         <item>USDT</item>
         <item>BTC</item>
@@ -579,7 +579,7 @@
     <string name="high">High</string>
     <string name="low">Low</string>
     <string name="more">More</string>
-    <string name="index">index</string>
+    <string name="index">Index</string>
     <string-array name="trade_detail_radio">
         <item>Depth</item>
         <item>Filled</item>
@@ -760,8 +760,30 @@
     <string name="release_time">Date of issue</string>
     <string name="total_amount_of_distribution">Total amount</string>
     <string name="total_amount_of_circulation">Amount of Circulation</string>
-    <string name="raise_the_price">Crowdfunding pricce</string>
-    <string name="white_paper">White paper</string>
+    <string name="raise_the_price">Crowdfunding price</string>
     <string name="block_query">Blockchain info</string>
     <string name="official_network">Official website</string>
+    <string name="back_press_hint">Press again to exit</string>
+    <string name="phone_exists">Phone number already exists</string>
+    <string name="mail_exists">Email already exists</string>
+    <string name="go_login">Log in now</string>
+    <string name="re_enter">Reenter</string>
+    <string name="instructions">Instructions</string>
+    <string name="option_one">Plan A</string>
+    <string name="option_two">" Plan B"</string>
+    <string name="option_two_desc">Search WeChat mini program “2-setp verification”</string>
+    <string name="have_not_complete_order">You have unfilled orders. Please go for process.&#8195;►</string>
+    <string name="buy_in_amount">Number</string>
+    <string name="sell_out_amount">Number</string>
+    <string name="buy_in_price">Evaluation</string>
+    <string name="sell_out_price">Evaluation</string>
+    <string name="trade_desc">Notes</string>
+    <string name="should_bind_phone">Please bind a phone number first</string>
+    <string name="otc365_buy_hint">Please complete the trade on page of OTC365</string>
+    <string name="otc365_sell_hint">Please release the coins after receiving money</string>
+    <string name="legal_currency_rule">1.USDT trading is guaranteed by the platform.\n\n\n2.Once the order is made, please complete your trade within 15 minutes, otherwise the order will be cancelled.\n\n\n3.It is forbidden to use other people’s Alipay or WeChat to pay. Neither is it with third-party transaction such as ATM and counter. Please transfer money with E-bank or mobile bank bound with your own bankcard. Any other ways of transaction may cause a delay.\n\n\n4.If your transaction is not processed in 1 hour, please contact customer service. Keep your phone open, and we will contact you in 24 hours.\n\n\n5.Please write down last 4 digits of the order as a remark, otherwise the transaction may be delayed.\n\n\n6.You can launch up to 10 sales orders per day.\n\n\n7.If you cancel more than 3 orders within a day, you will be forbidden to make OTC trades in the rest of the day.\n\n\n8.You cannot make another order if you have an unfilled one.</string>
+    <string name="please_input_volume">Input volume</string>
+    <string name="please_input_amount">Input amount</string>
+    <string name="white_paper">White paper</string>
+    <string name="select_base_coin_type">Token</string>
 </resources>
