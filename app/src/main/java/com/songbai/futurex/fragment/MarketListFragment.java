@@ -121,7 +121,7 @@ public class MarketListFragment extends BaseFragment {
             mMarketDiffCallback.setNewList(mCurrencyPairAdapter.getGroupList());
             mMarketDiffCallback.setMarketMap(marketDataList);
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mMarketDiffCallback);
-            mCurrencyPairAdapter.setMarketDataList(mMarketDataList);
+            mCurrencyPairAdapter.setMarketDataListData(mMarketDataList);
             diffResult.dispatchUpdatesTo(mCurrencyPairAdapter);
         }
 
@@ -208,6 +208,10 @@ public class MarketListFragment extends BaseFragment {
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
             mMarketDataList = marketDataList;
             notifyDataSetChanged();
+        }
+
+        public void setMarketDataListData(Map<String, MarketData> marketDataList) {
+            mMarketDataList = marketDataList;
         }
 
         public void setKTrendListMap(Map<String, List<KTrend>> kTrendListMap) {
@@ -420,8 +424,8 @@ public class MarketListFragment extends BaseFragment {
 
             Bundle payload = new Bundle();
             Log.e("zzz","put bind");
-            payload.putString(ExtraKeys.MARKET_DATA, "235");
-            payload.putString(ExtraKeys.CURRENCY_PAIR, "222");
+            payload.putParcelable(ExtraKeys.MARKET_DATA, mMarketMap.get(((CurrencyPair)newItem).getPairs()));
+            payload.putParcelable(ExtraKeys.CURRENCY_PAIR, (CurrencyPair)newItem);
             return payload;
         }
 
