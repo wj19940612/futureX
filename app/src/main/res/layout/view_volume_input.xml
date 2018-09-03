@@ -7,18 +7,18 @@
     android:background="@drawable/bg_f5_r4"
     android:gravity="center_vertical">
 
-    <EditText
+    <com.songbai.futurex.view.autofit.AutoAdjustSizeEditText
         android:id="@+id/volume"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_weight="1"
+        android:layout_marginLeft="10dp"
         android:background="@null"
         android:hint="@string/volume"
         android:inputType="numberDecimal"
-        android:maxLines="1"
         android:textColor="@color/text22"
-        android:textSize="15sp"/>
+        android:textSize="15sp"
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/baseCurrency"

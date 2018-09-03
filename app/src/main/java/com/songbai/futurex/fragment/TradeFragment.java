@@ -276,7 +276,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
-                Log.e("zzz","onTabSelected:"+mCurrencyPair==null?"true":"false");
+                Log.e("zzz", "onTabSelected:" + mCurrencyPair == null ? "true" : "false");
                 if (mCurrencyPair == null) return;
 
                 if (position == 0) { // buy in
@@ -299,7 +299,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
         mTradeVolumeView.setOnItemClickListener(new TradeVolumeView.OnItemClickListener() {
             @Override
-            public void onItemClick(double price, double volume) {
+            public void onItemClick(String price, String volume) {
                 if (mChangePriceView.getVisibility() == View.GONE) return;
                 mChangePriceView.setPrice(price);
                 mChangePriceView.startScaleAnim();
@@ -611,6 +611,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             double volume = mVolumeInput.getVolume();
             int scale = mPairDesc.getSuffixSymbol().getBalancePoint();
             String unit = mCurrencyPair.getSuffixSymbol();
+            if (volume == 0) {
+                mTradeAmount.setText("--  " + unit.toUpperCase());
+                return;
+            }
             double amt = price * volume;
             String tradeAmt = "0";
             if (amt != 0) {
@@ -666,6 +670,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
 
 //        mTradeCurrencyRange.setText("");
+    }
+
+    private void resetMakeOrder(){
+        mVolumeInput.reset();
     }
 
     private void updateMarketView(PairMarket pairMarket) {
@@ -782,6 +790,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private double getTradePrice() {
+        if (mChangePriceView == null) return 0;
+
         double price = mChangePriceView.getPrice();
         if (mTradeTypeValue == MARKET_TRADE) {
             if (mTradeDir == TradeDir.DIR_BUY_IN) {
@@ -808,7 +818,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.buy_in);
             mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
-            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+//            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
         } else {
             int tradeTypeRes;
             if (mTradeTypeValue == LIMIT_TRADE) {
@@ -823,7 +833,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.sell_out);
             mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);
-            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
+//            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
         }
     }
 
@@ -881,7 +891,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeTypeValue = LIMIT_TRADE;
         updateTradeDirectionView();
 
-        mVolumeInput.setBaseCurrency(mTradeDir == TradeDir.DIR_BUY_IN ?mCurrencyPair.getSuffixSymbol().toUpperCase():mCurrencyPair.getPrefixSymbol().toUpperCase());
+        mVolumeInput.setBaseCurrency(mTradeDir == TradeDir.DIR_BUY_IN ? mCurrencyPair.getSuffixSymbol().toUpperCase() : mCurrencyPair.getPrefixSymbol().toUpperCase());
     }
 
     private void updateOptionalStatus() {
@@ -973,6 +983,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             case R.id.tradeButton:
                 if (LocalUser.getUser().isLogin()) {
                     makeOrder();
+                    resetMakeOrder();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

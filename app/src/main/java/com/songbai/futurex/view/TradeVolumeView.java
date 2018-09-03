@@ -52,7 +52,7 @@ public class TradeVolumeView extends LinearLayout {
     private OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(double price, double volume);
+        void onItemClick(String price, String String);
     }
 
     public TradeVolumeView(Context context) {
@@ -156,10 +156,10 @@ public class TradeVolumeView extends LinearLayout {
 
     private void onItemClick(String price, String volume) {
         try {
-            double p = Double.parseDouble(price);
-            double v = Double.parseDouble(volume);
+//            double p = Double.parseDouble(price);
+//            double v = Double.parseDouble(volume);
             if (mOnItemClickListener != null) {
-                mOnItemClickListener.onItemClick(p, v);
+                mOnItemClickListener.onItemClick(price, volume);
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
