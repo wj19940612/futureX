@@ -58,6 +58,10 @@ import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.msg.MsgProcessor;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -592,27 +596,52 @@ public class SimpleOTCFragment extends BaseFragment {
     private void openOtc365(NewOrderData data) {
         ParamBean param = data.getParam();
         if (param != null) {
-            StringBuilder builder = new StringBuilder();
-            //拼接post提交参数
-            builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
-                    .append("sync_url=").append(param.getSync_url()).append("&")
-                    .append("coin_sign=").append(param.getCoin_sign()).append("&")
-                    .append("sign=").append(param.getSign()).append("&")
-                    .append("order_time=").append(param.getOrder_time()).append("&")
-                    .append("pay_card_num=").append(param.getPay_card_num()).append("&")
-                    .append("async_url=").append(param.getAsync_url()).append("&")
-                    .append("id_card_num=").append(param.getId_card_num()).append("&")
-                    .append("kyc=").append(param.getKyc()).append("&")
-                    .append("phone=").append(param.getPhone()).append("&")
-                    .append("company_order_num=").append(param.getCompany_order_num()).append("&")
-                    .append("appkey=").append(param.getAppkey()).append("&")
-                    .append("id_card_type=").append(param.getId_card_type()).append("&")
-                    .append("username=").append(param.getUsername());
             Launcher.with(getActivity(), Otc365FilterWebActivity.class)
                     .putExtra(WebActivity.EX_URL, data.getTargetUrl())
-                    .putExtra(WebActivity.EX_POST_DATA, builder.toString())
+                    .putExtra(WebActivity.EX_POST_DATA, createPostData(param))
                     .execute();
         }
+    }
+
+    public String createPostData(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        String[] types1 = {"int", "java.lang.String", "boolean", "char", "float", "double", "long", "short", "byte"};
+        String[] types2 = {"Integer", "java.lang.String", "java.lang.Boolean", "java.lang.Character", "java.lang.Float", "java.lang.Double", "java.lang.Long", "java.lang.Short", "java.lang.Byte"};
+        for (Field field : fields) {
+            field.setAccessible(true);
+            // 字段名
+            String key = field.getName();
+            if ("$change".equals(key) || "serialVersionUID".equals(key)) {
+                continue;
+            }
+            builder.append(key).append("=");
+            // 字段值
+            for (int i = 0; i < types1.length; i++) {
+                if (field.getType().getName()
+                        .equalsIgnoreCase(types1[i]) || field.getType().getName().equalsIgnoreCase(types2[i])) {
+                    try {
+                        Object value = field.get(obj);
+                        builder.append(getEncode(String.valueOf(value))).append("&");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return builder.toString();
+    }
+
+    private String getEncode(String value) {
+        try {
+            return URLEncoder.encode(value, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private void buy(String cost, String coinCount, String coinSymbol) {

@@ -733,7 +733,7 @@
     <string name="select_a_poster">Select a poster</string>
     <string name="share">Share</string>
     <string name="can_open_accessibility_service">Use the assistant to share the content</string>
-    <string name="confirmation_volume">Confirmations</string>
+    <string name="confirmation_volume">Confirms</string>
     <string name="status_three_space">Status</string>
     <string name="accessibility_service_name">Share assistant</string>
     <string name="no_enough_balance">Insufficient balance</string>
