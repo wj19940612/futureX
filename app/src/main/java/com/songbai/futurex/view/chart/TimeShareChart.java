@@ -40,8 +40,8 @@ public class TimeShareChart extends View {
     private List<KTrend> mKTrends;
     private double mMaxClose;
     private double mMinClose;
-    private Path mPath;
-    private Path mStrokePath;
+    //    private Path mPath;
+//    private Path mStrokePath;
     private float baseArea;
 
     private String mPair;
@@ -74,11 +74,11 @@ public class TimeShareChart extends View {
         mShaderPaint.setShader(new LinearGradient(0, 0, 0, Display.dp2Px(CANVAS_HEIGHT, getResources()), new int[]{ContextCompat.getColor(getContext(), R.color.alphaGreen), ContextCompat.getColor(getContext(), R.color.alphaGreen)}, null, Shader.TileMode.CLAMP));
 
         baseArea = Display.dp2Px(12, getResources());
-        mPath = new Path();
-        mStrokePath = new Path();
+//        mPath = new Path();
+//        mStrokePath = new Path();
     }
 
-    public void updateData(String pair, List<KTrend> data,double upDropSeed) {
+    public void updateData(String pair, List<KTrend> data, double upDropSeed) {
         Log.e("zzz", "updateData:" + pair);
         if (!TextUtils.isEmpty(pair)) {
             mPair = pair;
@@ -96,12 +96,12 @@ public class TimeShareChart extends View {
         }
     }
 
-    private void initPaintColor(double upDropSeed){
+    private void initPaintColor(double upDropSeed) {
         if (upDropSeed < 0) {
-            mPaint.setColor(ContextCompat.getColor(getContext(),R.color.red));
+            mPaint.setColor(ContextCompat.getColor(getContext(), R.color.red));
             mShaderPaint.setShader(new LinearGradient(0, 0, 0, Display.dp2Px(CANVAS_HEIGHT, getResources()), new int[]{ContextCompat.getColor(getContext(), R.color.alphaRed), ContextCompat.getColor(getContext(), R.color.alphaRed)}, null, Shader.TileMode.CLAMP));
-        }else{
-            mPaint.setColor(ContextCompat.getColor(getContext(),R.color.green));
+        } else {
+            mPaint.setColor(ContextCompat.getColor(getContext(), R.color.green));
             mShaderPaint.setShader(new LinearGradient(0, 0, 0, Display.dp2Px(CANVAS_HEIGHT, getResources()), new int[]{ContextCompat.getColor(getContext(), R.color.alphaGreen), ContextCompat.getColor(getContext(), R.color.alphaGreen)}, null, Shader.TileMode.CLAMP));
         }
     }
@@ -117,7 +117,7 @@ public class TimeShareChart extends View {
         mMinClose = Collections.min(mKTrends).getClosePrice();
     }
 
-    public void justDraw(String pair, List<KTrend> data) {
+    public void justDraw(String pair, List<KTrend> data, double upDropSeed) {
         Log.e("zzz", "justDraw:" + pair);
         if (!TextUtils.isEmpty(pair)) {
             mPair = pair;
@@ -125,6 +125,7 @@ public class TimeShareChart extends View {
 
         if (data != null && data.size() > 0) {
             getDrawData(data);
+            initPaintColor(upDropSeed);
             invalidate(0, 0, getWidth(), getHeight());
         } else {
             if (mKTrends != null) {
@@ -140,33 +141,99 @@ public class TimeShareChart extends View {
         Log.e("zzz", "onDraw");
         super.onDraw(canvas);
 
-        if (mKTrends == null || mKTrends.size() == 0) return;
+        if (mKTrends == null || mKTrends.size() == 0 || TextUtils.isEmpty(mPair)) return;
 
-        Bitmap pairBitmap = ChartBitmapCache.getInstance().getBimtap(mPair);
+        drawPath(canvas);
 
-        if (pairBitmap == null || mForceRefresh) {
-            Log.e("zzz", "draw bitmap:" + mPair);
-            Bitmap mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas bitmapCanvas = new Canvas(mBitmap);
-            //转换坐标系
-            bitmapCanvas.rotate(180);
-            bitmapCanvas.translate(-getWidth(), -getHeight());
+//        Bitmap pairBitmap = ChartBitmapCache.getInstance().getBitmap(mPair);
+//
+//        if (pairBitmap == null || mForceRefresh) {
+//            Log.e("zzz", "draw bitmap:" + mPair);
+//            Bitmap mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+//            Canvas bitmapCanvas = new Canvas(mBitmap);
+//            //转换坐标系
+//            bitmapCanvas.rotate(180);
+//            bitmapCanvas.translate(-getWidth(), -getHeight());
+//
+//            if (mMaxClose == mMinClose) {
+//                mPath.reset();
+//                mPath.moveTo(getWidth(), 0);
+//                mPath.lineTo(getWidth(), (getHeight() - baseArea) / 2 + baseArea);
+//                mPath.lineTo(0, (getHeight() - baseArea) / 2 + baseArea);
+//                mPath.lineTo(0, 0);
+//                mStrokePath.reset();
+//
+//                mStrokePath.moveTo(getWidth(), (getHeight() - baseArea) / 2 + baseArea);
+//                mStrokePath.lineTo(0, (getHeight() - baseArea) / 2 + baseArea);
+//                bitmapCanvas.drawPath(mPath, mShaderPaint);
+//                bitmapCanvas.drawPath(mStrokePath, mPaint);
+//
+//                canvas.drawBitmap(mBitmap, 0, 0, null);
+//                ChartBitmapCache.getInstance().putBitmap(mPair, mBitmap);
+//                mForceRefresh = false;
+//            } else {
+//                double dx = (double) getWidth() / mKTrends.size();
+//                double dy = (double) (getHeight() - baseArea) / (mMaxClose - mMinClose);
+//
+//                int startX;
+//                int startY;
+//                int endX;
+//                int endY;
+//                mPath.reset();
+//                mPath.moveTo(getWidth(), 0);
+//                mPath.lineTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
+//                mStrokePath.reset();
+//                mStrokePath.moveTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
+//                for (int i = 1; i < mKTrends.size(); i++) {
+//                    startX = (int) (getWidth() - (dx * (i - 1)));
+//                    startY = (int) (dy * mKTrends.get(i - 1).getClosePrice() + baseArea);
+//                    endX = (int) (getWidth() - (dx * (i)));
+//                    endY = (int) (dy * mKTrends.get(i).getClosePrice() + baseArea);
+////                Log.e("zzz", mPair + i + "  startY:" + startY + " endY:" + endY);
+//                    mStrokePath.lineTo(startX, startY);
+//                    mPath.lineTo(startX, startY);
+//
+//                    mStrokePath.lineTo(endX, endY);
+//                    mPath.lineTo(endX, endY);
+//                }
+//                mPath.lineTo(0, 0);
+//                bitmapCanvas.drawPath(mPath, mShaderPaint);
+//                bitmapCanvas.drawPath(mStrokePath, mPaint);
+//
+//                canvas.drawBitmap(mBitmap, 0, 0, null);
+//                ChartBitmapCache.getInstance().putBitmap(mPair, mBitmap);
+//                mForceRefresh = false;
+//            }
+//        } else {
+//            Log.e("zzz", "set bitmap:" + mPair);
+//            canvas.drawBitmap(pairBitmap, 0, 0, null);
+//        }
+    }
 
+    private void drawPath(Canvas canvas) {
+        Path path = ChartBitmapCache.getInstance().getPath(mPair);
+        Path strokePath = ChartBitmapCache.getInstance().getStrokePath(mPair);
+
+        canvas.rotate(180);
+        canvas.translate(-getWidth(), -getHeight());
+        if (path == null || strokePath == null || mForceRefresh) {
             if (mMaxClose == mMinClose) {
-                mPath.reset();
-                mPath.moveTo(getWidth(), 0);
-                mPath.lineTo(getWidth(), (getHeight() - baseArea) / 2 + baseArea);
-                mPath.lineTo(0, (getHeight() - baseArea) / 2 + baseArea);
-                mPath.lineTo(0, 0);
-                mStrokePath.reset();
+                path = new Path();
+                path.reset();
+                strokePath = new Path();
+                strokePath.reset();
+                path.moveTo(getWidth(), 0);
+                path.lineTo(getWidth(), (getHeight() - baseArea) / 2 + baseArea);
+                path.lineTo(0, (getHeight() - baseArea) / 2 + baseArea);
+                path.lineTo(00, 0);
 
-                mStrokePath.moveTo(getWidth(), (getHeight() - baseArea) / 2 + baseArea);
-                mStrokePath.lineTo(0, (getHeight() - baseArea) / 2 + baseArea);
-                bitmapCanvas.drawPath(mPath, mShaderPaint);
-                bitmapCanvas.drawPath(mStrokePath, mPaint);
+                strokePath.moveTo(getWidth(), (getHeight() - baseArea) / 2 + baseArea);
+                strokePath.lineTo(0, (getHeight() - baseArea) / 2 + baseArea);
+                canvas.drawPath(path, mShaderPaint);
+                canvas.drawPath(strokePath, mPaint);
 
-                canvas.drawBitmap(mBitmap, 0, 0, null);
-                ChartBitmapCache.getInstance().putBitmap(mPair, mBitmap);
+                ChartBitmapCache.getInstance().putPath(mPair, path);
+                ChartBitmapCache.getInstance().putStrokePath(mPair, strokePath);
                 mForceRefresh = false;
             } else {
                 double dx = (double) getWidth() / mKTrends.size();
@@ -176,35 +243,37 @@ public class TimeShareChart extends View {
                 int startY;
                 int endX;
                 int endY;
-                mPath.reset();
-                mPath.moveTo(getWidth(), 0);
-                mPath.lineTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
-                mStrokePath.reset();
-                mStrokePath.moveTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
+                path = new Path();
+                path.reset();
+                strokePath = new Path();
+                strokePath.reset();
+
+                path.moveTo(getWidth(), 0);
+                path.lineTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
+                strokePath.moveTo(getWidth(), (float) (dy * mKTrends.get(0).getClosePrice() + baseArea));
                 for (int i = 1; i < mKTrends.size(); i++) {
                     startX = (int) (getWidth() - (dx * (i - 1)));
                     startY = (int) (dy * mKTrends.get(i - 1).getClosePrice() + baseArea);
                     endX = (int) (getWidth() - (dx * (i)));
                     endY = (int) (dy * mKTrends.get(i).getClosePrice() + baseArea);
 //                Log.e("zzz", mPair + i + "  startY:" + startY + " endY:" + endY);
-                    mStrokePath.lineTo(startX, startY);
-                    mPath.lineTo(startX, startY);
+                    strokePath.lineTo(startX, startY);
+                    path.lineTo(startX, startY);
 
-                    mStrokePath.lineTo(endX, endY);
-                    mPath.lineTo(endX, endY);
+                    strokePath.lineTo(endX, endY);
+                    path.lineTo(endX, endY);
                 }
-                mPath.lineTo(0, 0);
-                bitmapCanvas.drawPath(mPath, mShaderPaint);
-                bitmapCanvas.drawPath(mStrokePath, mPaint);
+                path.lineTo(0, 0);
+                canvas.drawPath(path, mShaderPaint);
+                canvas.drawPath(strokePath, mPaint);
 
-                canvas.drawBitmap(mBitmap, 0, 0, null);
-                ChartBitmapCache.getInstance().putBitmap(mPair, mBitmap);
+                ChartBitmapCache.getInstance().putPath(mPair, path);
+                ChartBitmapCache.getInstance().putPath(mPair, strokePath);
                 mForceRefresh = false;
             }
         } else {
-            Log.e("zzz", "set bitmap:" + mPair);
-            canvas.drawBitmap(pairBitmap, 0, 0, null);
+            canvas.drawPath(path, mShaderPaint);
+            canvas.drawPath(strokePath, mPaint);
         }
-
     }
 }

@@ -2,7 +2,6 @@ package com.songbai.futurex.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -11,13 +10,13 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -26,12 +25,15 @@ import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.KTrend;
+import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.adapter.GroupAdapter;
 import com.songbai.futurex.view.chart.TimeShareChart;
 import com.songbai.futurex.view.recycler.DividerItemDecor;
 import com.songbai.futurex.websocket.model.MarketData;
+import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
+import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,7 +53,7 @@ import butterknife.Unbinder;
  * <p>
  * APIs:
  */
-public class MarketListFragment extends BaseFragment {
+public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
 
     public static MarketListFragment newInstance(String counterCurrency) {
         MarketListFragment fragment = new MarketListFragment();
@@ -61,7 +63,13 @@ public class MarketListFragment extends BaseFragment {
         return fragment;
     }
 
-    @BindView(R.id.pairList)
+    @BindView(R.id.swipe_refresh_header)
+    RefreshHeaderView mSwipeRefreshHeader;
+    @BindView(R.id.swipe_load_more_footer)
+    LoadMoreFooterView mSwipeLoadMoreFooter;
+    @BindView(R.id.swipeToLoadLayout)
+    SwipeToLoadLayout mSwipeToLoadLayout;
+    @BindView(R.id.swipe_target)
     RecyclerView mPairList;
     @BindView(R.id.emptyView)
     LinearLayout mEmptyView;
@@ -92,6 +100,7 @@ public class MarketListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mSwipeToLoadLayout.setLoadMoreEnabled(false);
         mMarketDiffCallback = new MarketDiffCallback();
         mPairList.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecor dividerItemDecor = new DividerItemDecor(getActivity(), DividerItemDecoration.VERTICAL);
@@ -115,7 +124,8 @@ public class MarketListFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && mCurrencyPairAdapter != null && isAdded()) {
-            mCurrencyPairAdapter.setMarketDataList(mMarketDataList);
+            mCurrencyPairAdapter.setMarketDataListData(mMarketDataList);
+            requestPairList(mCounterCurrency);
         }
     }
 
@@ -151,6 +161,12 @@ public class MarketListFragment extends BaseFragment {
                             if (data.isEmpty()) return;
                             Preference.get().setDefaultTradePair(data.get(0).getPairs());
                         } // Save the default trade pair
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopFreshOrLoadAnimation();
                     }
                 }).fireFreely();
     }
@@ -191,6 +207,40 @@ public class MarketListFragment extends BaseFragment {
             stringBuilder.append(",");
         }
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void onLoadMore() {
+
+    }
+
+    @Override
+    public void onRefresh() {
+        requestPairList(mCounterCurrency);
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView getSwipeTargetView() {
+        return mPairList;
+    }
+
+    @NonNull
+    @Override
+    public SwipeToLoadLayout getSwipeToLoadLayout() {
+        return mSwipeToLoadLayout;
+    }
+
+    @NonNull
+    @Override
+    public RefreshHeaderView getRefreshHeaderView() {
+        return mSwipeRefreshHeader;
+    }
+
+    @NonNull
+    @Override
+    public LoadMoreFooterView getLoadMoreFooterView() {
+        return mLoadMoreFooterView;
     }
 
     static class CurrencyPairAdapter extends GroupAdapter<CurrencyPair> {
@@ -297,26 +347,26 @@ public class MarketListFragment extends BaseFragment {
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 } else {
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
                     upDropSeed = pair.getUpDropSpeed();
                     if (pair.getUpDropSpeed() < 0) {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 }
 
                 if (!pairsSet.contains(pair.getPairs())) {
-                    mTimeShareChart.updateData(pair.getPairs(), mKTrends,upDropSeed);
+                    mTimeShareChart.updateData(pair.getPairs(), mKTrends, upDropSeed);
                     pairsSet.add(pair.getPairs());
-                }else{
-                    mTimeShareChart.justDraw(pair.getPairs(), mKTrends);
+                } else {
+                    mTimeShareChart.justDraw(pair.getPairs(), mKTrends,upDropSeed);
                 }
             }
 
@@ -326,17 +376,17 @@ public class MarketListFragment extends BaseFragment {
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 } else {
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
                     if (pair.getUpDropSpeed() < 0) {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
-                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 }
             }
