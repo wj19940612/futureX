@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
+        android:layout_centerVertical="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -31,7 +32,7 @@
                 android:id="@+id/counterCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="6dp"
                 android:textColor="@color/text99"
                 android:textSize="10sp"
                 tools:text="USDT"/>
@@ -46,14 +47,21 @@
             tools:text="24H量 1531"/>
     </LinearLayout>
 
+    <com.songbai.futurex.view.chart.TimeShareChart
+        android:id="@+id/chart"
+        android:layout_width="90dp"
+        android:layout_alignParentRight="true"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"/>
+
     <LinearLayout
         android:id="@+id/priceLine"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_toLeftOf="@+id/chart"
         android:orientation="vertical"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp">
+        android:layout_marginRight="12dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:id="@+id/lastPrice"
@@ -62,33 +70,30 @@
             android:textColor="@color/text49"
             android:textSize="16sp"
             tools:text="1103733333.13"
-            android:layout_gravity="right"/>
+            android:layout_gravity="right"
+            android:includeFontPadding="false"/>
 
         <TextView
             android:id="@+id/priceChange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_alignRight="@+id/lastPrice"
             android:layout_gravity="right"
             android:gravity="center"
-            android:maxWidth="70dp"
             android:textColor="@color/green"
             android:textSize="14sp"
+            android:includeFontPadding="false"
             tools:text="+13.38%"/>
     </LinearLayout>
-
-    <com.songbai.futurex.view.chart.TimeShareChart
-        android:id="@+id/chart"
-        android:layout_width="90dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="16dp"/>
 
     <ImageView
         android:id="@+id/dragIcon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="35dp"
         android:paddingLeft="16dp"
         android:src="@drawable/ic_drag"
         android:visibility="gone"/>
-</LinearLayout>
+</RelativeLayout>

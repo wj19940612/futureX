@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -70,7 +71,7 @@ public class MarketListFragment extends BaseFragment {
 
     private String mCounterCurrency;
     private Map<String, MarketData> mMarketDataList;
-    MarketDiffCallback mMarketDiffCallback;
+    private MarketDiffCallback mMarketDiffCallback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -286,32 +287,36 @@ public class MarketListFragment extends BaseFragment {
             }
 
             public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends, Set<String> pairsSet) {
-                if (!pairsSet.contains(pair.getPairs())) {
-                    mTimeShareChart.updateData(pair.getPairs(), mKTrends);
-                    pairsSet.add(pair.getPairs());
-                }else{
-                    mTimeShareChart.justDraw(pair.getPairs(), mKTrends);
-                }
+                double upDropSeed;
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
+                    upDropSeed = marketData.getUpDropSpeed();
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
                     } else {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
                     }
                 } else {
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    upDropSeed = pair.getUpDropSpeed();
                     if (pair.getUpDropSpeed() < 0) {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
                     } else {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
                     }
+                }
+
+                if (!pairsSet.contains(pair.getPairs())) {
+                    mTimeShareChart.updateData(pair.getPairs(), mKTrends,upDropSeed);
+                    pairsSet.add(pair.getPairs());
+                }else{
+                    mTimeShareChart.justDraw(pair.getPairs(), mKTrends);
                 }
             }
 
@@ -321,17 +326,17 @@ public class MarketListFragment extends BaseFragment {
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
                     } else {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
                     }
                 } else {
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
                     if (pair.getUpDropSpeed() < 0) {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.red));
                     } else {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context,R.color.green));
                     }
                 }
             }
@@ -359,7 +364,7 @@ public class MarketListFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    static class MarketDiffCallback extends DiffUtil.Callback {
+    public static class MarketDiffCallback extends DiffUtil.Callback {
         private Map<String, MarketData> mMarketMap;
         private List<GroupAdapter.Group<CurrencyPair>> mOldList;
         private List<GroupAdapter.Group<CurrencyPair>> mNewList;
@@ -404,15 +409,6 @@ public class MarketListFragment extends BaseFragment {
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            final GroupAdapter.Groupable oldItem = getItem(oldItemPosition, mOldList);
-            final GroupAdapter.Groupable newItem = getItem(oldItemPosition, mNewList);
-            if (oldItem == null || newItem == null || !(oldItem instanceof CurrencyPair) || !(newItem instanceof CurrencyPair)) {
-                return false;
-            }
-            if (((CurrencyPair) newItem).getPairs().equals(((CurrencyPair) oldItem).getPairs())) {
-                return true;
-            }
-
             return false;
         }
 
