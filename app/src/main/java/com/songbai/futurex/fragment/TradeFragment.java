@@ -315,7 +315,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             public void onPriceChange(double price) {
                 updateTradeCurrencyView();
                 updateTradeAmount();
-                updateVolumeSeekBar();
+//                updateVolumeSeekBar();
             }
         });
 
@@ -323,11 +323,17 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             @Override
             public void onVolumeChange(double volume) {
                 updateTradeAmount();
-                updateVolumeSeekBar();
+//                updateVolumeSeekBar();
 
                 if (LocalUser.getUser().isLogin() && volume > mTradeCurrencyVolume) {
                     ToastUtil.show(R.string.no_enough_balance);
                 }
+            }
+
+            @Override
+            public void onVolumeInputChange(double volume) {
+                Log.e("zzz","onVolumeInputChange:"+volume);
+                updateVolumeSeekBar();
             }
         });
 
@@ -606,7 +612,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private void updateVolumeInputView(int progress, int max) {
 //        int progress = mTradeVolumeSeekBar.getProgress();
 //        int max = mTradeVolumeSeekBar.getMax();
-        mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max, 20));
+        mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max, 100));
     }
 
     private void updateTradeAmount() {
@@ -886,6 +892,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
+        mVolumeInput.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mChangePriceView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mOrderAdapter.setScale(mPairDesc.getPrefixSymbol().getBalancePoint(),
@@ -988,7 +995,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             case R.id.tradeButton:
                 if (LocalUser.getUser().isLogin()) {
                     makeOrder();
-                    resetMakeOrder();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -998,6 +1004,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void makeOrder() {
         if (mCurrencyPair == null) return;
+
+        if(mVolumeInput.getVolume() == 0){
+            ToastUtil.show(R.string.please_input_right_amount);
+            return;
+        }
         final MakeOrder makeOrder = new MakeOrder();
         int direction = mTradeDir == TradeDir.DIR_BUY_IN ? Order.DIR_BUY : Order.DIR_SELL;
         makeOrder.setDirection(direction);
@@ -1007,6 +1018,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         makeOrder.setEntrustPrice(getTradePrice());
 
         requestMakeOrder(makeOrder);
+        resetMakeOrder();
     }
 
     private void requestMakeOrder(final MakeOrder makeOrder) {

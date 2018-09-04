@@ -22,7 +22,7 @@ public class TradePercentSelectView extends LinearLayout {
     public static final int THIRD = 75;
     public static final int FOURTH = 100;
 
-    public static final double DIFF = 0.1;
+    public static final double DIFF = 0.0;
 
     @BindView(R.id.firstBtn)
     TextView mFirthBtn;
