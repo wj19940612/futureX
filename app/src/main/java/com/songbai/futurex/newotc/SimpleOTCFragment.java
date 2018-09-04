@@ -197,6 +197,7 @@ public class SimpleOTCFragment extends BaseFragment {
                 setView();
                 setPrice();
                 setLimit();
+                checkConfirmEnable();
             }
         });
         setView();
@@ -237,18 +238,22 @@ public class SimpleOTCFragment extends BaseFragment {
         boolean enabled = !TextUtils.isEmpty(turnover) && !TextUtils.isEmpty(tradeAmount);
         if (enabled) {
             enabled = false;
-            if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && Double.valueOf(turnover) >= mNewOTCPrice.getBuyMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getBuyMaxPrice()) {
-                enabled = true;
-            } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && Double.valueOf(turnover) >= mNewOTCPrice.getSellMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getSellMaxPrice()) {
-                enabled = true;
+            if (mNewOTCPrice != null) {
+                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && Double.valueOf(turnover) >= mNewOTCPrice.getBuyMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getBuyMaxPrice()) {
+                    enabled = true;
+                } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && Double.valueOf(turnover) >= mNewOTCPrice.getSellMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getSellMaxPrice()) {
+                    enabled = true;
+                }
             }
         }
-        if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
-            enabled = false;
-            mConfirm.setText(R.string.trading_closed);
-        } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
-            enabled = false;
-            mConfirm.setText(R.string.trading_closed);
+        if (mNewOTCPrice != null) {
+            if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
+                enabled = false;
+                mConfirm.setText(R.string.trading_closed);
+            } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
+                enabled = false;
+                mConfirm.setText(R.string.trading_closed);
+            }
         }
         mConfirm.setEnabled(enabled);
     }
@@ -429,11 +434,13 @@ public class SimpleOTCFragment extends BaseFragment {
                 lunchOrder();
                 break;
             case R.id.confirm:
-                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
-                    return;
-                }
-                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
-                    return;
+                if (mNewOTCPrice != null) {
+                    if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
+                        return;
+                    }
+                    if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
+                        return;
+                    }
                 }
                 if (LocalUser.getUser().isLogin()) {
                     trade();
