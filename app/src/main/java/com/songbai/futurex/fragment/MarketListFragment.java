@@ -34,8 +34,10 @@ import com.songbai.futurex.websocket.model.MarketData;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,6 +104,7 @@ public class MarketListFragment extends BaseFragment {
                 }
             }
         });
+        mPairList.setItemAnimator(null);
         mPairList.setAdapter(mCurrencyPairAdapter);
 
         requestPairList(mCounterCurrency);
@@ -175,9 +178,7 @@ public class MarketListFragment extends BaseFragment {
 
     private void updateKTrendData(HashMap<String, List<KTrend>> data) {
         if (mCurrencyPairAdapter != null) {
-            HashMap<String, List<KTrend>> hashMap = new HashMap<>();
-            hashMap.put("eth_usdt", data.get("eth_usdt"));
-            mCurrencyPairAdapter.setKTrendListMap(hashMap);
+            mCurrencyPairAdapter.setKTrendListMap(data);
             mCurrencyPairAdapter.notifyDataSetChanged();
         }
     }
@@ -197,12 +198,14 @@ public class MarketListFragment extends BaseFragment {
         private Context mContext;
         private OnRVItemClickListener mOnRVItemClickListener;
         private Map<String, List<KTrend>> mKTrendListMap;
+        private Set<String> mPairsSet;
 
         public CurrencyPairAdapter(Context context, OnRVItemClickListener onRVItemClickListener) {
             super();
             mMarketDataList = new HashMap<>();
             mContext = context;
             mOnRVItemClickListener = onRVItemClickListener;
+            mPairsSet = new HashSet<>();
         }
 
         public void setMarketDataList(Map<String, MarketData> marketDataList) {
@@ -216,6 +219,7 @@ public class MarketListFragment extends BaseFragment {
 
         public void setKTrendListMap(Map<String, List<KTrend>> kTrendListMap) {
             mKTrendListMap = kTrendListMap;
+            mPairsSet.clear();
         }
 
         @NonNull
@@ -235,7 +239,6 @@ public class MarketListFragment extends BaseFragment {
             if (payloads.isEmpty()) {
                 onBindViewHolder(holder, position);
             } else if (holder instanceof ViewHolder) {
-                Log.e("zzz","bind data");
                 Bundle bundle = (Bundle) payloads.get(0);
                 MarketData marketData = bundle.getParcelable(ExtraKeys.MARKET_DATA);
                 CurrencyPair currencyPair = bundle.getParcelable(ExtraKeys.CURRENCY_PAIR);
@@ -251,7 +254,7 @@ public class MarketListFragment extends BaseFragment {
                 final Groupable item = getItem(position);
                 if (item instanceof CurrencyPair) {
                     final CurrencyPair pair = (CurrencyPair) item;
-                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()));
+                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()), mPairsSet);
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -282,8 +285,13 @@ public class MarketListFragment extends BaseFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends) {
-                mTimeShareChart.updateData(pair.getPairs(), mKTrends);
+            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends, Set<String> pairsSet) {
+                if (!pairsSet.contains(pair.getPairs())) {
+                    mTimeShareChart.updateData(pair.getPairs(), mKTrends);
+                    pairsSet.add(pair.getPairs());
+                }else{
+                    mTimeShareChart.justDraw(pair.getPairs(), mKTrends);
+                }
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
@@ -401,11 +409,9 @@ public class MarketListFragment extends BaseFragment {
             if (oldItem == null || newItem == null || !(oldItem instanceof CurrencyPair) || !(newItem instanceof CurrencyPair)) {
                 return false;
             }
-            if(((CurrencyPair) newItem).getPairs().equals("bch_usdt")){
-                Log.e("zzz","same data");
+            if (((CurrencyPair) newItem).getPairs().equals(((CurrencyPair) oldItem).getPairs())) {
                 return true;
             }
-            Log.e("zzz","no same data");
 
             return false;
         }
@@ -418,14 +424,13 @@ public class MarketListFragment extends BaseFragment {
 
 
             final GroupAdapter.Groupable newItem = getItem(newItemPosition, mNewList);
-            if ( newItem == null || !(newItem instanceof CurrencyPair)) {
+            if (newItem == null || !(newItem instanceof CurrencyPair)) {
                 return null;
             }
 
             Bundle payload = new Bundle();
-            Log.e("zzz","put bind");
-            payload.putParcelable(ExtraKeys.MARKET_DATA, mMarketMap.get(((CurrencyPair)newItem).getPairs()));
-            payload.putParcelable(ExtraKeys.CURRENCY_PAIR, (CurrencyPair)newItem);
+            payload.putParcelable(ExtraKeys.MARKET_DATA, mMarketMap.get(((CurrencyPair) newItem).getPairs()));
+            payload.putParcelable(ExtraKeys.CURRENCY_PAIR, (CurrencyPair) newItem);
             return payload;
         }
 
