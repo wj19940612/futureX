@@ -34,6 +34,7 @@ import sbai.com.glide.GlideApp;
 public class TimeShareChart extends View {
 
     public static final int CANVAS_HEIGHT = 52;
+    public static final float STROKE_WIDTH = 0.5f;
 
     private Paint mPaint;
     private Paint mShaderPaint;
@@ -67,6 +68,7 @@ public class TimeShareChart extends View {
         mPaint.setAntiAlias(true);//消除锯齿
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.green));
+        mPaint.setStrokeWidth(Display.dp2Px(STROKE_WIDTH,getResources()));
 
         mShaderPaint = new Paint();
         mShaderPaint.setAntiAlias(true);
