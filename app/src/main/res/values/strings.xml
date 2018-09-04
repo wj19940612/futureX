@@ -795,5 +795,7 @@
     <string name="please_input_amount">请输入金额</string>
     <string name="select_base_coin_type">选择基础币种</string>
     <string name="trading_closed">交易关闭</string>
+    <string name="please_input_right_amount">请填写正确的数量</string>
+
 
 </resources>
