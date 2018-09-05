@@ -169,4 +169,10 @@ public class TradePercentSelectView extends LinearLayout {
             mOnPercentSelectListener.onPercentSelect(selectPercent, FOURTH);
         }
     }
+
+    public void updateSelectPercent(){
+        if (mOnPercentSelectListener != null) {
+            mOnPercentSelectListener.onPercentSelect(mSelectPercent, FOURTH);
+        }
+    }
 }

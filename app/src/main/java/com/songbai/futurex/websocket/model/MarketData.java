@@ -1,5 +1,8 @@
 package com.songbai.futurex.websocket.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Modified by john on 2018/6/13
  * <p>
@@ -7,7 +10,7 @@ package com.songbai.futurex.websocket.model;
  * <p>
  * APIs:
  */
-public class MarketData {
+public class MarketData implements Parcelable{
 
 
     /**
@@ -45,6 +48,62 @@ public class MarketData {
     private double turnover;
     private double lastPrice;
     private int status;
+
+    protected MarketData(Parcel in) {
+        highestPrice = in.readDouble();
+        lowestPrice = in.readDouble();
+        preSetPrice = in.readDouble();
+        code = in.readString();
+        lastVolume = in.readDouble();
+        openPrice = in.readDouble();
+        preClsPrice = in.readDouble();
+        upDropSpeed = in.readDouble();
+        volume = in.readDouble();
+        upTime = in.readLong();
+        upDropPrice = in.readDouble();
+        tradeDay = in.readString();
+        upTimeFormat = in.readString();
+        turnover = in.readDouble();
+        lastPrice = in.readDouble();
+        status = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(highestPrice);
+        dest.writeDouble(lowestPrice);
+        dest.writeDouble(preSetPrice);
+        dest.writeString(code);
+        dest.writeDouble(lastVolume);
+        dest.writeDouble(openPrice);
+        dest.writeDouble(preClsPrice);
+        dest.writeDouble(upDropSpeed);
+        dest.writeDouble(volume);
+        dest.writeLong(upTime);
+        dest.writeDouble(upDropPrice);
+        dest.writeString(tradeDay);
+        dest.writeString(upTimeFormat);
+        dest.writeDouble(turnover);
+        dest.writeDouble(lastPrice);
+        dest.writeInt(status);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<MarketData> CREATOR = new Creator<MarketData>() {
+        @Override
+        public MarketData createFromParcel(Parcel in) {
+            return new MarketData(in);
+        }
+
+        @Override
+        public MarketData[] newArray(int size) {
+            return new MarketData[size];
+        }
+    };
 
     public double getHighestPrice() {
         return highestPrice;

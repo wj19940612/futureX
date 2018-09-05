@@ -163,6 +163,11 @@ public class MarketFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 mRadioHeader.selectTab(position);
+                if(position ==3){
+                    mEditToggle.setVisibility(View.VISIBLE);
+                }else {
+                    mEditToggle.setVisibility(View.GONE);
+                }
             }
         });
 

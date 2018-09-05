@@ -1491,7 +1491,14 @@ public class Apic {
     }
 
     /**
-     * /api/user/dictionary/findDictionaryByCode.do
+     * 获取多个交易对的趋势行情
+     */
+    public static Api requestKTrendPairs(String pairs) {
+        return Api.get("/api/quota/quota/list/kTrend", new ReqParams().put("pairs", pairs));
+    }
+
+
+    /**  /api/user/dictionary/findDictionaryByCode.do
      * GET
      * 获取google双重验证图片
      */

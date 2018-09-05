@@ -279,7 +279,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
-                Log.e("zzz", "onTabSelected:" + mCurrencyPair == null ? "true" : "false");
+//                Log.e("zzz", "onTabSelected:" + mCurrencyPair == null ? "true" : "false");
                 if (mCurrencyPair == null) return;
 
                 if (position == 0) { // buy in
@@ -315,6 +315,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             public void onPriceChange(double price) {
                 updateTradeCurrencyView();
                 updateTradeAmount();
+                updateSelectPercentView();
 //                updateVolumeSeekBar();
             }
         });
@@ -332,7 +333,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
             @Override
             public void onVolumeInputChange(double volume) {
-                Log.e("zzz","onVolumeInputChange:"+volume);
+//                Log.e("zzz","onVolumeInputChange:"+volume);
                 updateVolumeSeekBar();
             }
         });
@@ -609,10 +610,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mPercentSelectView.updatePercent(progress);
     }
 
+    private void updateSelectPercentView() {
+        mPercentSelectView.updateSelectPercent();
+    }
+
     private void updateVolumeInputView(int progress, int max) {
-//        int progress = mTradeVolumeSeekBar.getProgress();
-//        int max = mTradeVolumeSeekBar.getMax();
-        mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max, 100));
+        if (progress > 0) {
+            mVolumeInput.setVolume(mTradeCurrencyVolume * progress / max);
+        }
     }
 
     private void updateTradeAmount() {
@@ -683,7 +688,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 //        mTradeCurrencyRange.setText("");
     }
 
-    private void resetMakeOrder(){
+    private void resetMakeOrder() {
         mVolumeInput.reset();
     }
 
@@ -1005,7 +1010,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private void makeOrder() {
         if (mCurrencyPair == null) return;
 
-        if(mVolumeInput.getVolume() == 0){
+        if (mVolumeInput.getVolume() == 0) {
             ToastUtil.show(R.string.please_input_right_amount);
             return;
         }
