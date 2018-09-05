@@ -9,7 +9,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import java.math.RoundingMode;
@@ -17,9 +19,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- *
  * base chart for kline and trend chart
- *
  */
 public abstract class BaseChart extends View {
 
@@ -51,8 +51,14 @@ public abstract class BaseChart extends View {
     private StringBuilder mStringBuilder;
     private Handler mHandler;
     private Paint.FontMetrics mFontMetrics;
-
     protected ChartCfg mChartCfg;
+    private ScaleGestureDetector mScaleGestureDetector;
+    private GestureDetector mGestureDetector;
+    private OnViewScaleChangedListener mOnViewScaleChangedListener;
+
+    public interface OnViewScaleChangedListener {
+        void onViewScaleChanged(float scale);
+    }
 
     protected float mFontSize;
     protected int mFontHeight;
@@ -100,7 +106,8 @@ public abstract class BaseChart extends View {
         mStringBuilder = new StringBuilder();
         mHandler = new ChartHandler();
         mChartCfg = new ChartCfg();
-
+        mScaleGestureDetector = new ScaleGestureDetector(getContext(), mOnScaleGestureListener);
+        mGestureDetector = new GestureDetector(getContext(), mSimpleOnGestureListener);
 
         // text font
         mFontSize = sp2Px(FONT_SIZE_DP);
@@ -143,12 +150,6 @@ public abstract class BaseChart extends View {
                 }
             }
         }
-    }
-
-    public void setChartCfg(ChartCfg chartCfg) {
-        mChartCfg = chartCfg;
-
-        redraw();
     }
 
     public ChartCfg getChartCfg() {
@@ -222,14 +223,60 @@ public abstract class BaseChart extends View {
         return super.dispatchTouchEvent(event);
     }
 
+    private ScaleGestureDetector.SimpleOnScaleGestureListener mOnScaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+        private float mPreScale = 1;
+
+        @Override
+        public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+            float scale = scaleGestureDetector.getScaleFactor() * mPreScale;
+
+            if (scale > 2.04) {
+                scale = 2.04f;
+            }
+
+            if (scale < 0.5) {
+                scale = 0.5f;
+            }
+
+            if (mPreScale != scale) {
+                mChartCfg.setViewScale(scale);
+                mPreScale = scale;
+                if (mOnViewScaleChangedListener != null) {
+                    mOnViewScaleChangedListener.onViewScaleChanged(scale);
+                }
+
+                redraw();
+                return true;
+            }
+
+            return false;
+        }
+    };
+
+    private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Message message = mHandler.obtainMessage(WHAT_LONG_PRESS, e);
+            mHandler.sendMessage(message);
+        }
+    };
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        mScaleGestureDetector.onTouchEvent(event);
+
+        mGestureDetector.onTouchEvent(event);
+
         switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                if (mAction == Action.NONE) {
-                    Message message = mHandler.obtainMessage(WHAT_LONG_PRESS, event);
-                    mHandler.sendMessageDelayed(message, DELAY_LONG_PRESS);
-                } else if (mAction == Action.TOUCH) {
+                if (mAction == Action.TOUCH) {
                     Message message = mHandler.obtainMessage(WHAT_ONE_CLICK, event);
                     mHandler.sendMessageDelayed(message, DELAY_ONE_CLICK);
                 }
@@ -246,7 +293,6 @@ public abstract class BaseChart extends View {
                     return false;
                 }
 
-                mHandler.removeMessages(WHAT_LONG_PRESS);
                 mHandler.removeMessages(WHAT_ONE_CLICK);
 
                 if (mAction == Action.TOUCH) {
@@ -276,9 +322,7 @@ public abstract class BaseChart extends View {
                 return false;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                if (mAction == Action.NONE && mHandler.hasMessages(WHAT_LONG_PRESS)) {
-                    mHandler.removeMessages(WHAT_LONG_PRESS);
-                } else if (mAction == Action.TOUCH && mHandler.hasMessages(WHAT_ONE_CLICK)) {
+                if (mAction == Action.TOUCH && mHandler.hasMessages(WHAT_ONE_CLICK)) {
                     mHandler.removeMessages(WHAT_ONE_CLICK);
                     mAction = Action.NONE;
                     if (mTouchIndex != -1) {
@@ -562,7 +606,7 @@ public abstract class BaseChart extends View {
         int height = getBottomPartHeight();
 
         float chartY = (float) ((indexesBaseLines[0] - y) * 1.0f /
-                        (indexesBaseLines[0] - indexesBaseLines[indexesBaseLines.length - 1]) * height);
+                (indexesBaseLines[0] - indexesBaseLines[indexesBaseLines.length - 1]) * height);
 
         return chartY + getPaddingTop() + getTopPartHeight() + mCenterPartHeight;
     }
@@ -659,5 +703,9 @@ public abstract class BaseChart extends View {
         mPreviousTransactionX = 0;
         mStartX = 0;
         mStartPointOffset = 0;
+    }
+
+    public void setOnViewScaleChangedListener(OnViewScaleChangedListener onViewScaleChangedListener) {
+        mOnViewScaleChangedListener = onViewScaleChangedListener;
     }
 }

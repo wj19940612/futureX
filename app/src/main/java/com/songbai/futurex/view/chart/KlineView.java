@@ -99,6 +99,10 @@ public class KlineView extends RelativeLayout {
         mKline.setOnSidesReachedListener(onSidesReachedListener);
     }
 
+    public void setOnViewScaleChangedListener(BaseChart.OnViewScaleChangedListener onViewScaleChangedListener) {
+        mKline.setOnViewScaleChangedListener(onViewScaleChangedListener);
+    }
+
     public void setLastPrice(double lastPrice) {
         mKline.setLastPrice((float) lastPrice);
     }

@@ -11,6 +11,7 @@ public class ChartCfg {
     private boolean mEnableCrossLine;
     private float[] mBaseLineArray;
     private double[] mIndexesBaseLineArray;
+    private float mViewScale;
 
     public void setChartCfg(ChartCfg cfg) {
         setBaseLines(cfg.getBaseLines());
@@ -20,6 +21,7 @@ public class ChartCfg {
         setXAxis(cfg.getXAxis());
         setEnableDrag(cfg.isEnableDrag());
         setEnableCrossLine(cfg.isEnableCrossLine());
+        setViewScale(cfg.getViewScale());
     }
 
     public ChartCfg() {
@@ -29,6 +31,11 @@ public class ChartCfg {
         mXAxis = 0;
         mBaseLineArray = new float[0];
         mIndexesBaseLineArray = new double[0];
+        mViewScale = 1;
+    }
+
+    public void setViewScale(float viewScale) {
+        mViewScale = viewScale;
     }
 
     public void setBaseLines(int baseLines) {
@@ -99,5 +106,9 @@ public class ChartCfg {
 
     public void setEnableCrossLine(boolean enableCrossLine) {
         mEnableCrossLine = enableCrossLine;
+    }
+
+    public float getViewScale() {
+        return mViewScale;
     }
 }

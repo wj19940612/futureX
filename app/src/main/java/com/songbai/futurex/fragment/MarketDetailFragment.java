@@ -1,7 +1,5 @@
 package com.songbai.futurex.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -42,6 +40,7 @@ import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.RealtimeDealView;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.TradeVolumeView;
+import com.songbai.futurex.view.chart.BaseChart;
 import com.songbai.futurex.view.chart.ChartCfg;
 import com.songbai.futurex.view.chart.ChartColor;
 import com.songbai.futurex.view.chart.DeepView;
@@ -655,6 +654,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         klineCfg.setEnableCrossLine(true);
         klineCfg.setEnableDrag(true);
         klineCfg.setIndexesEnable(true);
+        klineCfg.setViewScale(1);
 
         ChartColor klineColor = mKline.getChartColor();
         klineColor.setBaseLineColor(ContextCompat.getColor(getActivity(), R.color.bgF5));
@@ -692,6 +692,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 mKline.flush();
             }
         });
+        mKline.setOnViewScaleChangedListener(new BaseChart.OnViewScaleChangedListener() {
+            @Override
+            public void onViewScaleChanged(float scale) {
+                mTrend.getChartCfg().setViewScale(scale);
+            }
+        });
 
         ChartCfg trendCfg = mTrend.getChartCfg();
         trendCfg.setChartCfg(klineCfg);
@@ -723,6 +729,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             @Override
             public void onEndSideReached(Kline.Data data) {
                 mTrend.flush();
+            }
+        });
+        mTrend.setOnViewScaleChangedListener(new BaseChart.OnViewScaleChangedListener() {
+            @Override
+            public void onViewScaleChanged(float scale) {
+                mKline.getChartCfg().setViewScale(scale);
             }
         });
     }

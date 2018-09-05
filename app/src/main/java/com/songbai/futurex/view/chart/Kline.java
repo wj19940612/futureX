@@ -132,8 +132,9 @@ public class Kline extends BaseChart {
     // visible points index range
     private int mFirstVisibleIndex;
     private int mLastVisibleIndex;
-
-    private float mCandleWidth;
+    private int mCandleNum;
+    
+    private float mCandleGap;
     private float mCandleLineWidth;
     private float mPriceAreaWidth;
     private float mRightPadding;
@@ -158,7 +159,7 @@ public class Kline extends BaseChart {
         mMas = new int[]{5, 10, 30};
         mChartColor = new ChartColor();
         mBaseLineWidth = dp2Px(1);
-        mCandleWidth = dp2Px(7f);
+        mCandleGap = dp2Px(0.5f);
         mCandleLineWidth = dp2Px(1f);
         mMALineWidth = dp2Px(1f);
         mDateFormat = new SimpleDateFormat();
@@ -228,13 +229,13 @@ public class Kline extends BaseChart {
 
     @Override
     protected float calculateOneXAxisWidth() {
-        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
-        return width / mChartCfg.getXAxis();
+        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mRightPadding;
+        return width / mCandleNum;
     }
 
     @Override
     protected float calculateMaxTransactionX() {
-        return Math.max((mDataList.size() - mChartCfg.getXAxis()) * mOneXAxisWidth, 0);
+        return Math.max((mDataList.size() - mCandleNum) * mOneXAxisWidth, 0);
     }
 
     @Override
@@ -307,8 +308,6 @@ public class Kline extends BaseChart {
             }
         }
 
-        // draw ma60 text
-
 
         // draw last price line
 //        float[] baseLines = mChartCfg.getBaseLineArray();
@@ -334,15 +333,17 @@ public class Kline extends BaseChart {
     }
 
     private void drawVolumes(float chartX, Data data, Canvas canvas) {
+        float oneXAxisWidth = calculateOneXAxisWidth();
+        float candleWidth = oneXAxisWidth - mCandleGap * 2;
         int color = mChartColor.getPositiveColor();
         if (data.getClosePrice() < data.getOpenPrice()) {
             color = mChartColor.getNegativeColor();
         }
         setCandleBodyPaint(sPaint, color);
         RectF rectf = getRectF();
-        rectf.left = chartX - mCandleWidth / 2;
+        rectf.left = chartX - candleWidth / 2;
         rectf.top = getIndexesChartY(data.nowVolume);
-        rectf.right = chartX + mCandleWidth / 2;
+        rectf.right = chartX + candleWidth / 2;
         rectf.bottom = getIndexesChartY(0);
         canvas.drawRect(rectf, sPaint);
     }
@@ -377,21 +378,25 @@ public class Kline extends BaseChart {
 
     private void drawTopCandleLine(Float maxPrice, float topPrice, int color, float chartX, Canvas canvas) {
         setCandleLinePaint(sPaint, color);
-        canvas.drawLine(chartX, getChartY(maxPrice), chartX, getChartY(topPrice), sPaint);
+        if (maxPrice != 0 && topPrice != 0) {
+            canvas.drawLine(chartX, getChartY(maxPrice), chartX, getChartY(topPrice), sPaint);
+        }
     }
 
     private void drawCandleBody(float topPrice, float bottomPrice, int color, float chartX, Canvas canvas) {
+        float oneXAxisWidth = calculateOneXAxisWidth();
+        float candleWidth = oneXAxisWidth - mCandleGap * 2;
         if (topPrice == bottomPrice) {
             setCandleLinePaint(sPaint, color);
-            canvas.drawLine(chartX - mCandleWidth / 2, getChartY(topPrice),
-                    chartX + mCandleWidth / 2, getChartY(bottomPrice),
+            canvas.drawLine(chartX - candleWidth / 2, getChartY(topPrice),
+                    chartX + candleWidth / 2, getChartY(bottomPrice),
                     sPaint);
         } else {
             setCandleBodyPaint(sPaint, color);
             RectF rectf = getRectF();
-            rectf.left = chartX - mCandleWidth / 2;
+            rectf.left = chartX - candleWidth / 2;
             rectf.top = getChartY(topPrice);
-            rectf.right = chartX + mCandleWidth / 2;
+            rectf.right = chartX + candleWidth / 2;
             rectf.bottom = getChartY(bottomPrice);
             canvas.drawRect(rectf, sPaint);
         }
@@ -399,18 +404,19 @@ public class Kline extends BaseChart {
 
     private void drawBottomCandleLine(Float minPrice, float bottomPrice, int color, float chartX, Canvas canvas) {
         setCandleLinePaint(sPaint, color);
-        canvas.drawLine(chartX, getChartY(bottomPrice),
-                chartX, getChartY(minPrice),
-                sPaint);
+        if (minPrice != 0 && bottomPrice != 0) {
+            canvas.drawLine(chartX, getChartY(bottomPrice), chartX, getChartY(minPrice), sPaint);
+        }
+
     }
 
     protected float getChartXOfScreen(int index) {
-        index = index - mStart; // visible index 0 ~ (xAxis - 1)
+        index = index - mStart; // visible index 0 ~ getCandleNum() - 1
         return getChartX(index);
     }
 
     protected float getChartXOfScreen(int index, Data data) {
-        index = index - mStart; // visible index 0 ~ (xAxis - 1)
+        index = index - mStart; // visible index 0 ~ getCandleNum() - 1
         updateFirstLastVisibleIndex(index);
         mVisibleList.put(index, data);
         return getChartX(index);
@@ -423,35 +429,42 @@ public class Kline extends BaseChart {
 
     @Override
     protected float getChartX(int index) {
-        float offset = mCandleWidth / 2;
-        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mRightPadding;
-        float chartX = getPaddingLeft() + index * width * 1.0f / mChartCfg.getXAxis();
+        float oneXAxisWidth = calculateOneXAxisWidth();
+        float offset = oneXAxisWidth / 2;
+        float chartX = getPaddingLeft() + index * oneXAxisWidth;
         return chartX + offset;
     }
 
     @Override
     protected int getIndexOfXAxis(float chartX) {
-        float offset = mCandleWidth / 2;
-        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mRightPadding;
+        float oneXAxisWidth = calculateOneXAxisWidth();
+        float offset = oneXAxisWidth / 2;
         chartX = chartX - offset - getPaddingLeft();
-        return (int) (chartX * mChartCfg.getXAxis() / width);
+        return (int) (chartX / oneXAxisWidth);
     }
 
     @Override
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
-        int interval = mChartCfg.getXAxis() / 4;
+        int interval = mCandleNum / 4;
         float textY = top + mTextMargin / 2 + mBigFontHeight / 2 + mOffset4CenterBigText;
+        setBaseTextPaint(sPaint);
         for (int i = mStart; i < mEnd; i += interval) {
             Data data = mDataList.get(i);
             String timestamp = formatTimestamp(data.getTimestamp());
             float textWidth = sPaint.measureText(timestamp);
-            setBaseTextPaint(sPaint);
             float textX = getChartXOfScreen(i) - textWidth / 2;
             if (i == mStart) {
                 textX = left + mTextMargin;
             } else if (i == mEnd - 1) {
-                textX = left + width - textWidth - mTextMargin;
+                break;
             }
+            canvas.drawText(timestamp, textX, textY, sPaint);
+        }
+        if (mEnd > 0 && mEnd - mStart == mCandleNum) { // full width screen
+            Data data = mDataList.get(mEnd - 1);
+            String timestamp = formatTimestamp(data.getTimestamp());
+            float textWidth = sPaint.measureText(timestamp);
+            float textX = left + width - textWidth - mTextMargin;
             canvas.drawText(timestamp, textX, textY, sPaint);
         }
     }
@@ -524,7 +537,7 @@ public class Kline extends BaseChart {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        calculateStartAndEndPosition();
+        calculateCandlesRange();
         calculateMovingAverageValues();
 
         super.onDraw(canvas);
@@ -537,7 +550,7 @@ public class Kline extends BaseChart {
     }
 
     private void onSidesReached() {
-        if (mOnSidesReachedListener != null && mDataList.size() > mChartCfg.getXAxis()) {
+        if (mOnSidesReachedListener != null && mDataList.size() > mCandleNum) {
             if (mStart == 0) {
                 mOnSidesReachedListener.onStartSideReached(mDataList.get(mStart));
             }
@@ -595,10 +608,11 @@ public class Kline extends BaseChart {
         return result / movingAverage;
     }
 
-    private void calculateStartAndEndPosition() {
-        mStart = mDataList.size() - mChartCfg.getXAxis() < 0
-                ? 0 : (mDataList.size() - mChartCfg.getXAxis() - getStartPointOffset());
-        int length = Math.min(mDataList.size(), mChartCfg.getXAxis());
+    private void calculateCandlesRange() {
+        mCandleNum = (int) (mChartCfg.getXAxis() / mChartCfg.getViewScale());
+        mStart = mDataList.size() - mCandleNum < 0
+                ? 0 : (mDataList.size() - mCandleNum - getStartPointOffset());
+        int length = Math.min(mDataList.size(), mCandleNum);
         mEnd = mStart + length;
     }
 

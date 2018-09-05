@@ -94,6 +94,10 @@ public class TrendView extends RelativeLayout {
         mTrendV.setOnSidesReachedListener(onSidesReachedListener);
     }
 
+    public void setOnViewScaleChangedListener(BaseChart.OnViewScaleChangedListener onViewScaleChangedListener) {
+        mTrendV.setOnViewScaleChangedListener(onViewScaleChangedListener);
+    }
+
     public void reset() {
         mTrendV.reset();
     }
