@@ -582,7 +582,7 @@ public class SimpleOTCFragment extends BaseFragment {
                             String id = String.valueOf(data.getId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, id)
-                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_SELL)
                                     .execute();
                         }
                     }

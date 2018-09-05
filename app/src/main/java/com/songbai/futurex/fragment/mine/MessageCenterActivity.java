@@ -165,6 +165,9 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             }
                             break;
                         case 11:
+                        case 16:
+                        case 17:
+                        case 18:
                             direct = 0;
                             msg = sysMessage.getMsg();
                             if (msg.contains("direct")) {
