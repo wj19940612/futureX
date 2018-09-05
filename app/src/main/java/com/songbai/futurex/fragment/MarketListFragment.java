@@ -150,7 +150,6 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                 .callback(new Callback4Resp<Resp<List<CurrencyPair>>, List<CurrencyPair>>() {
                     @Override
                     protected void onRespData(List<CurrencyPair> data) {
-                        data.addAll(data);
                         Collections.sort(data);
                         mCurrencyPairAdapter.setGroupableList(data);
 

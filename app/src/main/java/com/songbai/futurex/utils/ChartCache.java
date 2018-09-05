@@ -1,4 +1,4 @@
-package com.songbai.futurex.fragment;
+package com.songbai.futurex.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Path;
@@ -6,22 +6,22 @@ import android.graphics.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChartBitmapCache {
-    private static ChartBitmapCache sCache;
+public class ChartCache {
+    private static ChartCache sCache;
 
     private Map<String, Bitmap> mBitmaps;
     private Map<String,Path> mPaths;
     private Map<String,Path> mStrokePaths;
 
-    public ChartBitmapCache() {
+    public ChartCache() {
         mBitmaps = new HashMap<>();
         mPaths = new HashMap<>();
         mStrokePaths = new HashMap<>();
     }
 
-    public static ChartBitmapCache getInstance() {
+    public static ChartCache getInstance() {
         if (sCache == null) {
-            sCache = new ChartBitmapCache();
+            sCache = new ChartCache();
         }
         return sCache;
     }
