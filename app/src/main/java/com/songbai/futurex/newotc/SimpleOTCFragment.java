@@ -461,6 +461,13 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void trade() {
+        boolean otc365 = mNewOTCPrice != null &&
+                ((mNewOTCPrice.getBuyOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY)
+                        || (mNewOTCPrice.getSellOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL));
+        if (otc365 && TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getUserPhone())) {
+            showAlertMsgHint(Resp.Code.PHONE_NONE);
+            return;
+        }
         if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
             showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
             return;

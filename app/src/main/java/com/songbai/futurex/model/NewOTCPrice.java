@@ -37,6 +37,8 @@ public class NewOTCPrice {
     private double sellQuotaPrice;
     private double buyQuotaPrice;
     private double sellMaxCount;
+    private int buyOtc365Status;
+    private int sellOtc365Status;
 
     public double getBuyPrice() {
         return buyPrice;
@@ -148,5 +150,21 @@ public class NewOTCPrice {
 
     public void setSellMaxCount(double sellMaxCount) {
         this.sellMaxCount = sellMaxCount;
+    }
+
+    public int getBuyOtc365Status() {
+        return buyOtc365Status;
+    }
+
+    public void setBuyOtc365Status(int buyOtc365Status) {
+        this.buyOtc365Status = buyOtc365Status;
+    }
+
+    public int getSellOtc365Status() {
+        return sellOtc365Status;
+    }
+
+    public void setSellOtc365Status(int sellOtc365Status) {
+        this.sellOtc365Status = sellOtc365Status;
     }
 }
