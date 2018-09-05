@@ -39,6 +39,7 @@ public class UserInfo {
     private String realName; // 真实姓名
     private String registrationIp;
     private int safeGrade; // 安全等级
+    private int otcBankCount; // 是否有本人银行卡
     private int safeSetting; // 安全密码是否设置，yes or no
     private String teleCode; // 国际长途电话区号
     private String userName;  // 用户名
@@ -212,5 +213,13 @@ public class UserInfo {
 
     public void setEntrustPush(int entrustPush) {
         this.entrustPush = entrustPush;
+    }
+
+    public int getOtcBankCount() {
+        return otcBankCount;
+    }
+
+    public void setOtcBankCount(int otcBankCount) {
+        this.otcBankCount = otcBankCount;
     }
 }

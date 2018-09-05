@@ -236,16 +236,16 @@ public class SimpleOTCFragment extends BaseFragment {
         String turnover = mTurnover.getText().toString().trim();
         String tradeAmount = mTradeAmount.getText().toString().trim();
         boolean enabled = !TextUtils.isEmpty(turnover) && !TextUtils.isEmpty(tradeAmount);
-        if (enabled) {
-            enabled = false;
-            if (mNewOTCPrice != null) {
-                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && Double.valueOf(turnover) >= mNewOTCPrice.getBuyMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getBuyMaxPrice()) {
-                    enabled = true;
-                } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && Double.valueOf(turnover) >= mNewOTCPrice.getSellMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getSellMaxPrice()) {
-                    enabled = true;
-                }
-            }
-        }
+//        if (enabled) {
+//            enabled = false;
+//            if (mNewOTCPrice != null) {
+//                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && Double.valueOf(turnover) >= mNewOTCPrice.getBuyMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getBuyMaxPrice()) {
+//                    enabled = true;
+//                } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && Double.valueOf(turnover) >= mNewOTCPrice.getSellMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getSellMaxPrice()) {
+//                    enabled = true;
+//                }
+//            }
+//        }
         if (mNewOTCPrice != null) {
             if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
                 enabled = false;
@@ -325,6 +325,12 @@ public class SimpleOTCFragment extends BaseFragment {
                                 .setDigits(2)
                                 .filterMin(mNewOTCPrice.getBuyMinPrice())
                                 .filterMax(mNewOTCPrice.getBuyMaxPrice())});
+                mTradeAmount.setHint(getString(R.string.limit_range_x,
+                        String.valueOf(mNewOTCPrice.getBuyMinCount()),
+                        String.valueOf(mNewOTCPrice.getBuyMaxCount())));
+                mTurnover.setHint(getString(R.string.limit_range_x,
+                        String.valueOf(mNewOTCPrice.getBuyMinPrice()),
+                        String.valueOf(mNewOTCPrice.getBuyMaxPrice())));
             } else {
                 double sellPrice = mNewOTCPrice.getSellPrice();
                 double sellMinCount = mNewOTCPrice.getSellMinCount();
@@ -353,6 +359,12 @@ public class SimpleOTCFragment extends BaseFragment {
                                 .setDigits(2)
                                 .filterMin(mNewOTCPrice.getSellMinPrice())
                                 .filterMax(mNewOTCPrice.getSellMaxPrice())});
+                mTradeAmount.setHint(getString(R.string.limit_range_x,
+                        String.valueOf(mNewOTCPrice.getSellMinCount()),
+                        String.valueOf(mNewOTCPrice.getSellMaxCount())));
+                mTurnover.setHint(getString(R.string.limit_range_x,
+                        String.valueOf(mNewOTCPrice.getSellMinPrice()),
+                        String.valueOf(mNewOTCPrice.getSellMaxPrice())));
             }
         }
     }
@@ -443,7 +455,7 @@ public class SimpleOTCFragment extends BaseFragment {
                     }
                 }
                 if (LocalUser.getUser().isLogin()) {
-                    trade();
+                    checkTrade();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -460,26 +472,34 @@ public class SimpleOTCFragment extends BaseFragment {
         }
     }
 
-    private void trade() {
+    private void checkTrade() {
         boolean otc365 = mNewOTCPrice != null &&
                 ((mNewOTCPrice.getBuyOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY)
                         || (mNewOTCPrice.getSellOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL));
+        if ((otc365 || mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL) && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+            showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
+            return;
+        }
+        if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
+            showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
+            return;
+        }
         if (otc365 && TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getUserPhone())) {
             showAlertMsgHint(Resp.Code.PHONE_NONE);
             return;
         }
-        if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
-            showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
-            return;
-        }
-        if (LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
-            showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
-            return;
-        }
-        if (LocalUser.getUser().getUserInfo().getPayment() < 1) {
+        if (otc365 && LocalUser.getUser().getUserInfo().getOtcBankCount() < 1) {
             showAlertMsgHint(SHOULD_BIND_PAY);
             return;
         }
+        if (!otc365 && mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && LocalUser.getUser().getUserInfo().getPayment() < 1) {
+            showAlertMsgHint(SHOULD_BIND_PAY);
+            return;
+        }
+        trade();
+    }
+
+    private void trade() {
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
             buy("", mTradeAmount.getText().toString(), mSelectedCoinSymbol);
         } else {

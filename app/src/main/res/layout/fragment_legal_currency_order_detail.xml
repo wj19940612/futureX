@@ -222,13 +222,13 @@
                 android:textSize="17sp"/>
 
             <TextView
+                android:id="@+id/tradeRule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="25dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="18dp"
-                android:text="@string/trade_rules_description"
                 android:textColor="@color/text66"
                 android:textSize="13sp"/>
         </LinearLayout>

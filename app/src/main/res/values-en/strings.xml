@@ -453,7 +453,6 @@
     <string name="trade_count_symbol_x">Amount: %1$s&#160;%2$s</string>
     <string name="pay_info">Payment</string>
     <string name="trade_rules">Instructions</string>
-    <string name="trade_rules_description">Ask the other party how the transaction will be done and compare it with he/she listed on the platform. If inconsistent, be careful to pay. \n\n1. Please note last 4 letters of order number to speed up the confirmation. \n\n2. Please do not fill in any word about cryptocurrency such as Bitcoin, BTC, OTC, etc., in order to prevent the remittance from being intercepted by the bank. \n\n3. The order is valid for 15 minutes. Please pay in time and click the "paid" button, and then the token can be released to you. \n\n4. If you are unable to complete payment within 15 minutes, the order will be cancelled. \n\n5. The cryptocurrency is hosted by the system during the transaction. Please feel free to place an order.</string>
     <string name="order_detail_price_x">Price: %1$s&#160;%2$s/%3$s</string>
     <string name="order_detail_amount_x">Volume: %1$f&#160;%2$s</string>
     <string name="otc_trade_complete_desc">Completed</string>

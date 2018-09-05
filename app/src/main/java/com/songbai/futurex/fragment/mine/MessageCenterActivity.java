@@ -148,6 +148,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         case 7:
                         case 8:
                         case 10:
+                        case 16:
                             if (msg.contains("direct")) {
                                 try {
                                     JSONObject object = new JSONObject(msg);
@@ -165,7 +166,6 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             }
                             break;
                         case 11:
-                        case 16:
                         case 17:
                         case 18:
                             direct = 0;

@@ -111,6 +111,8 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     TextView mAskPayInfo;
     @BindView(R.id.otc365Hint)
     TextView mOtc365Hint;
+    @BindView(R.id.tradeRule)
+    TextView mTradeRule;
     private String mOrderId;
     private int mTradeDirection;
     private Unbinder mBind;
@@ -307,6 +309,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mTitleBar.setTitle(getString(mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY ?
                 R.string.buy_x : R.string.sell_x, coinSymbol.toUpperCase()));
         setBottomButtonStatus(order);
+        setTradeRule(order);
         setOrderInfoCard(order, coinSymbol);
 
         GlideApp
@@ -317,6 +320,14 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mUserName.setText(order.getBuyerName());
         if (mWaresUserInfo != null) {
             setWaresUserInfo(mWaresUserInfo);
+        }
+    }
+
+    private void setTradeRule(OrderBean order) {
+        if (mIsBuyer) {
+            mTradeRule.setText(order.getOrderType() == 1 ? R.string.buy_from_otc365 : R.string.buy_from_platform);
+        } else {
+            mTradeRule.setText(order.getOrderType() == 1 ? R.string.sell_to_otc365 : R.string.sell_to_platform);
         }
     }
 

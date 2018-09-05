@@ -25,7 +25,6 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.BankBindData;
-import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankListBean;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.LanguageUtils;
@@ -110,7 +109,6 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
     }
 
     @Override
@@ -144,6 +142,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
         if (isMainland) {
             mMainlandBankBranch.addTextChangedListener(mMainlandWatcher);
             mMainlandCardNumber.addTextChangedListener(mMainlandWatcher);
+            mRealName.addTextChangedListener(mMainlandWatcher);
             mWithDrawPass.addTextChangedListener(mMainlandWatcher);
             checkMainlandEnableState();
         } else {
@@ -168,7 +167,9 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
         String bankBranch = mMainlandBankBranch.getText().toString().trim();
         String cardNum = mMainlandCardNumber.getText().toString().trim();
         String withDrawPass = mWithDrawPass.getPassword();
-        boolean enabled = !TextUtils.isEmpty(bankBranch) && !TextUtils.isEmpty(cardNum) && !TextUtils.isEmpty(withDrawPass);
+        String realname = mRealName.getText().toString().trim();
+        boolean enabled = !TextUtils.isEmpty(bankBranch) && !TextUtils.isEmpty(cardNum)
+                && !TextUtils.isEmpty(withDrawPass) && !TextUtils.isEmpty(realname);
         mConfirmAdd.setEnabled(enabled);
     }
 
@@ -244,7 +245,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
                             .bankName(mMainlandBankName.getText().toString())
                             .bankBranch(mMainlandBankBranch.getText().toString())
                             .cardNumber(mMainlandCardNumber.getText().toString())
-                            .realName(LocalUser.getUser().getUserInfo().getRealName())
+                            .realName(mRealName.getText().toString())
                             .withDrawPass(md5Encrypt(mWithDrawPass.getPassword()))
                             .build();
                 } else {
