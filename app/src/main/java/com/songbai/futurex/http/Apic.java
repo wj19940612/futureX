@@ -428,14 +428,14 @@ public class Apic {
     }
 
     /**
-     * /api/user/wallet/getUserFinanceFlowDetail.do
+     * /api/user/v1/wallet/getUserFinanceFlowDetail.do
      * GET
-     * 获取资产流水的详细信息
+     * 获取资产流水的详细信息--v1.5
      */
-    public static Api getUserFinanceFlowDetail(int id) {
-        return Api.get("/api/user/wallet/getUserFinanceFlowDetail.do",
+    public static Api getUserFinanceFlowDetail(String wid) {
+        return Api.get("/api/user/v1/wallet/getUserFinanceFlowDetail.do",
                 new ReqParams()
-                        .put("id", id));
+                        .put("wid", wid));
     }
 
     /**
@@ -443,7 +443,7 @@ public class Apic {
      * GET
      * 获取otc流水的详细信息
      */
-    public static Api getUserOtcFinanceFlow(int id) {
+    public static Api getUserOtcFinanceFlow(String id) {
         return Api.get("/api/user/wallet/getUserOtcFinanceFlow.do",
                 new ReqParams()
                         .put("id", id));
@@ -1361,7 +1361,7 @@ public class Apic {
      * @param direction
      * @return
      */
-    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, Integer direction,String wid) {
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, Integer direction, String wid) {
         return Api.get("/api/entrust/v1/orders",
                 new ReqParams()
                         .put("pageSize", DEFAULT_PAGE_SIZE)
@@ -1498,7 +1498,8 @@ public class Apic {
     }
 
 
-    /**  /api/user/dictionary/findDictionaryByCode.do
+    /**
+     * /api/user/dictionary/findDictionaryByCode.do
      * GET
      * 获取google双重验证图片
      */

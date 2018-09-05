@@ -470,7 +470,6 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(getContext()).onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHARE) {
             dismissAllowingStateLoss();
         } else if (requestCode == OPEN_ACCESSIBILITY) {

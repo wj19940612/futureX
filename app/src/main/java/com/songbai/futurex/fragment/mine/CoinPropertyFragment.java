@@ -129,7 +129,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mAdapter.setSingleType(true);
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
-            public void onItemClick(int id) {
+            public void onItemClick(String id) {
                 UniqueActivity.launcher(CoinPropertyFragment.this, PropertyFlowDetailFragment.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mAccountType)

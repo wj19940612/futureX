@@ -55,7 +55,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
     LinearLayout mFeeGroup;
     @BindView(R.id.amount)
     TextView mAmount;
-    private int mId;
+    private String mId;
     private int mAccountType;
 
     @Nullable
@@ -68,7 +68,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-        mId = extras.getInt(ExtraKeys.PROPERTY_FLOW_ID);
+        mId = extras.getString(ExtraKeys.PROPERTY_FLOW_ID);
         mAccountType = extras.getInt(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, 0);
     }
 
@@ -77,7 +77,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
         getPropertyFlowDetail(mId);
     }
 
-    private void getPropertyFlowDetail(int id) {
+    private void getPropertyFlowDetail(String id) {
         if (mAccountType == 0) {
             Apic.getUserFinanceFlowDetail(id).tag(TAG)
                     .callback(new Callback<Resp<PropertyFlowDetail>>() {

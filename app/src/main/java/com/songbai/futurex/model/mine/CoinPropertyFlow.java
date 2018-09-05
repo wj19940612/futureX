@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * @date 2018/6/12
  */
 public class CoinPropertyFlow {
-    private int id;
+    private String id;
     private String coinType;
     private long createTime;
     @SerializedName(value = "flowType", alternate = {"flowCode"})
@@ -17,11 +17,11 @@ public class CoinPropertyFlow {
     private double value;
     private String wid;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

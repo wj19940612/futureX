@@ -142,7 +142,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
         mAdapter.setAccount(mAccountType);
         mAdapter.setOnClickListener(new PropertyFlowAdapter.OnClickListener() {
             @Override
-            public void onItemClick(int id) {
+            public void onItemClick(String id) {
                 UniqueActivity.launcher(PropertyFlowActivity.this, PropertyFlowDetailFragment.class)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_ID, id)
                         .putExtra(ExtraKeys.PROPERTY_FLOW_ACCOUNT_TYPE, mAccountType)

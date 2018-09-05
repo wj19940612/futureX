@@ -31,6 +31,7 @@ import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.ShareFriendsDialogFragment;
+import com.umeng.socialize.UMShareAPI;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -156,6 +157,12 @@ public class InviteActivity extends BaseActivity {
     private void showShareDialog(boolean hasPoster) {
         ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode, mPromotionShare);
         shareFriendsDialogFragment.show(getSupportFragmentManager());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     private void expand(final View view) {

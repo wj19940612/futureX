@@ -77,7 +77,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnClickListener {
-        void onItemClick(int id);
+        void onItemClick(String id);
     }
 
     class PropertyFlowHolder extends RecyclerView.ViewHolder {
@@ -140,7 +140,7 @@ public class PropertyFlowAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickListener != null) {
-                        mOnClickListener.onItemClick(coinPropertyFlow.getId());
+                        mOnClickListener.onItemClick(mAccount == 0 ? coinPropertyFlow.getWid() : coinPropertyFlow.getId());
                     }
                 }
             });
