@@ -202,7 +202,7 @@ public class TimeShareChart extends View {
         canvas.drawPath(strokePath, mPaint);
 
         ChartCache.getInstance().putPath(mPair, path);
-        ChartCache.getInstance().putPath(mPair, strokePath);
+        ChartCache.getInstance().putStrokePath(mPair, strokePath);
         mForceRefresh = false;
     }
 

@@ -115,6 +115,10 @@ public class MessageProcessor implements SimpleConnector.OnConnectListener {
         }
     }
 
+    public List<OnDataRecListener> getDataListener(){
+        return mOnDataRecListeners;
+    }
+
     public void send(Request request) {
         if (!Network.isNetworkAvailable()) {
             Response resp = new Response(Response.NETWORK_ERROR);

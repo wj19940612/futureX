@@ -286,6 +286,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     mTradeDir = TradeDir.DIR_BUY_IN;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    resetTradeAmount();
                     mPercentSelectView.reset();
                     mVolumeInput.reset();
                     mVolumeInput.setBaseCurrency(mCurrencyPair.getSuffixSymbol().toUpperCase());
@@ -293,6 +294,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     mTradeDir = TradeDir.DIR_SELL_OUT;
                     updateTradeDirectionView();
                     updateTradeCurrencyView();
+                    resetTradeAmount();
                     mPercentSelectView.reset();
                     mVolumeInput.reset();
                     mVolumeInput.setBaseCurrency(mCurrencyPair.getPrefixSymbol().toUpperCase());
@@ -616,7 +618,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void updateVolumeInputView(int progress, int max) {
         if (progress > 0) {
-            mVolumeInput.setVolume(mTradeCurrencyVolume * progress / max);
+            mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max, 100));
         }
     }
 
@@ -639,15 +641,28 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         }
     }
 
+    private void resetTradeAmount() {
+        if (mCurrencyPair != null) {
+            String unit = mCurrencyPair.getSuffixSymbol();
+            mTradeAmount.setText("--  " + unit.toUpperCase());
+        }
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (isVisibleToUser && isAdded()) {
             subscribeMarket();
             requestPairDescription();
+            if (mMarketSubscriber != null) {
+                mMarketSubscriber.resume();
+            }
             mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
         } else {
             unsubscribeMarket();
+            if (mMarketSubscriber != null) {
+                mMarketSubscriber.pause();
+            }
         }
     }
 

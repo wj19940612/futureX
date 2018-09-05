@@ -22,7 +22,9 @@ public class MarketSubscriber implements MarketSubscribe {
     }
 
     public void resume() {
-        mMessageProcessor.addOnDataRecListener(mOnDataRecListener);
+        if (!mMessageProcessor.getDataListener().contains(mOnDataRecListener)) {
+            mMessageProcessor.addOnDataRecListener(mOnDataRecListener);
+        }
     }
 
     public void pause() {

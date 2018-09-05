@@ -10,6 +10,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -304,7 +305,7 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                 final Groupable item = getItem(position);
                 if (item instanceof CurrencyPair) {
                     final CurrencyPair pair = (CurrencyPair) item;
-                    ((ViewHolder) holder).bind(pair, mMarketDataList, mContext, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()), mPairsSet);
+                    ((ViewHolder) holder).bind(position,pair, mMarketDataList, mContext, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()), mPairsSet);
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -335,7 +336,7 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends, Set<String> pairsSet) {
+            public void bind(int position,CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends, Set<String> pairsSet) {
                 double upDropSeed;
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
@@ -360,6 +361,7 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                         mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 }
+
 
                 if (!pairsSet.contains(pair.getPairs())) {
                     mTimeShareChart.updateData(pair.getPairs(), mKTrends, upDropSeed);
