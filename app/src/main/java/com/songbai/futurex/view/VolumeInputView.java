@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.utils.CurrencyUtils;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -104,24 +106,39 @@ public class VolumeInputView extends FrameLayout {
                     return;
                 }
                 onVolumeChange();
-                if(!mSetInput){
+                if (!mSetInput) {
                     onVolumeInputChange();
                 }
                 mSetInput = false;
+            }
+        });
+
+        mVolume.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String value = mVolume.getText().toString();
+                    String formatValue = FinanceUtil.subZeroAndDot(value);
+                    if (!value.equals(formatValue)) {
+                        setVolume(mVolume.getText().toString());
+                    }
+                }
             }
         });
     }
 
     public void setVolume(double volume) {
         mSetInput = true;
-        mVolume.setText(formatVolume(String.valueOf(volume)));
+        String formatValue = formatVolume(String.valueOf(volume));
+        mVolume.setText(FinanceUtil.subZeroAndDot(formatValue));
         mVolume.setSelection(mVolume.getText().toString().length());
         onVolumeChange();
     }
 
     public void setVolume(String volume) {
         mSetInput = true;
-        mVolume.setText(formatVolume(String.valueOf(volume)));
+        String formatValue = formatVolume(String.valueOf(volume));
+        mVolume.setText(FinanceUtil.subZeroAndDot(formatValue));
         mVolume.setSelection(mVolume.getText().toString().length());
         onVolumeChange();
     }
