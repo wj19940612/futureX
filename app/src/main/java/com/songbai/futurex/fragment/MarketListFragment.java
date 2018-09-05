@@ -365,12 +365,14 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                     mTimeShareChart.updateData(pair.getPairs(), mKTrends, upDropSeed);
                     pairsSet.add(pair.getPairs());
                 } else {
-                    mTimeShareChart.justDraw(pair.getPairs(), mKTrends,upDropSeed);
+                    mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
                 }
             }
 
             public void bind(CurrencyPair pair, MarketData marketData, Context context) {
+                double upDropSeed;
                 if (marketData != null && marketData != null) {
+                    upDropSeed = marketData.getUpDropSpeed();
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
@@ -382,12 +384,15 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                 } else {
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    upDropSeed = pair.getUpDropSpeed();
                     if (pair.getUpDropSpeed() < 0) {
                         mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
                         mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 }
+
+                mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
             }
         }
 

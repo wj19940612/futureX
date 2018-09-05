@@ -494,15 +494,17 @@ public class OptionalListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                         mTimeShareChart.updateData(pair.getPairs(), mKTrends, upDropSeed);
                         pairsSet.add(pair.getPairs());
                     } else {
-                        mTimeShareChart.justDraw(pair.getPairs(), mKTrends,upDropSeed);
+                        mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
                     }
                 }
             }
 
             public void bind(CurrencyPair pair, MarketData marketData, Context context, boolean editMode) {
+                double upDropSeed;
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketData != null) {
+                    upDropSeed = marketData.getUpDropSpeed();
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
@@ -515,12 +517,15 @@ public class OptionalListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(pair.getLastVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    upDropSeed = pair.getUpDropSpeed();
                     if (pair.getUpDropSpeed() < 0) {
                         mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
                         mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 }
+
+                mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
 
                 if (editMode) {
                     mPriceLine.setVisibility(View.GONE);
@@ -529,6 +534,7 @@ public class OptionalListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                     mPriceLine.setVisibility(View.VISIBLE);
                     mDragIcon.setVisibility(View.GONE);
                 }
+
             }
         }
     }

@@ -107,22 +107,14 @@ public class TimeShareChart extends View {
         mMinClose = Collections.min(mKTrends).getClosePrice();
     }
 
-    public void justDraw(String pair, List<KTrend> data, double upDropSeed) {
+    public void justDraw(String pair, double upDropSeed) {
 //        Log.e("zzz", "justDraw:" + pair);
         if (!TextUtils.isEmpty(pair)) {
             mPair = pair;
         }
 
-        if (data != null && data.size() > 0) {
-            getDrawData(data);
-            initPaintColor(upDropSeed);
-            invalidate(0, 0, getWidth(), getHeight());
-        } else {
-            if (mKTrends != null) {
-                mKTrends.clear();
-            }
-            invalidate(0, 0, getWidth(), getHeight());
-        }
+        initPaintColor(upDropSeed);
+        invalidate(0, 0, getWidth(), getHeight());
     }
 
 
@@ -131,7 +123,7 @@ public class TimeShareChart extends View {
 //        Log.e("zzz", "onDraw");
         super.onDraw(canvas);
 
-        if (mKTrends == null || mKTrends.size() == 0 || TextUtils.isEmpty(mPair)) return;
+        if (TextUtils.isEmpty(mPair)) return;
 
         drawPath(canvas);
     }
@@ -143,6 +135,9 @@ public class TimeShareChart extends View {
         canvas.rotate(180);
         canvas.translate(-getWidth(), -getHeight());
         if (path == null || strokePath == null || mForceRefresh) {
+
+            if (mKTrends == null || mKTrends.size() == 0) return;
+
             if (mMaxClose == mMinClose) {
                 drawHorizontalLine(canvas);
             } else {
@@ -213,14 +208,18 @@ public class TimeShareChart extends View {
 
     /**
      * 用bitmap的方式保存视图，在重复draw时直接绘制保存下来的bitmap(暂时不用这种方法)
+     *
      * @param canvas
      * @param mPath
      * @param mStrokePath
      */
-    private void drawBitmap(Canvas canvas,Path mPath,Path mStrokePath){
+    private void drawBitmap(Canvas canvas, Path mPath, Path mStrokePath) {
         Bitmap pairBitmap = ChartCache.getInstance().getBitmap(mPair);
 
         if (pairBitmap == null || mForceRefresh) {
+
+            if (mKTrends == null || mKTrends.size() == 0) return;
+
 //            Log.e("zzz", "draw bitmap:" + mPair);
             Bitmap mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
             Canvas bitmapCanvas = new Canvas(mBitmap);
