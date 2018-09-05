@@ -416,7 +416,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                 mConfirm.setVisibility(mIsBuyer ? View.VISIBLE : View.GONE);
                 mConfirm.setText(mIsBuyer ? R.string.i_have_paid : R.string.confirm_transfer_coin);
                 mCancelOrder.setVisibility(mIsBuyer ? View.VISIBLE : View.GONE);
-                if (order.getOrderType() == 1) {
+                if (order.getOrderType() == 1 && !mIsBuyer) {
                     mOtc365OptionGroup.setVisibility(View.GONE);
                 }
                 break;

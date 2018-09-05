@@ -98,6 +98,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     boolean isMainland = true;
     private OptionsPickerView mPvOptions;
     private OptionsPickerView mBankPvOptions;
+    private String mBankName;
 
     @Nullable
     @Override
@@ -164,11 +165,10 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     };
 
     public void checkMainlandEnableState() {
-        String bankBranch = mMainlandBankBranch.getText().toString().trim();
         String cardNum = mMainlandCardNumber.getText().toString().trim();
         String withDrawPass = mWithDrawPass.getPassword();
         String realname = mRealName.getText().toString().trim();
-        boolean enabled = !TextUtils.isEmpty(bankBranch) && !TextUtils.isEmpty(cardNum)
+        boolean enabled = !TextUtils.isEmpty(mBankName) && !TextUtils.isEmpty(cardNum)
                 && !TextUtils.isEmpty(withDrawPass) && !TextUtils.isEmpty(realname);
         mConfirmAdd.setEnabled(enabled);
     }
@@ -275,10 +275,12 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
         mBankPvOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                mBankName = bankListBeans.get(options1).getBankName();
                 if (isMainland) {
-                    mMainlandBankName.setText(bankListBeans.get(options1).getBankName());
+                    mMainlandBankName.setText(mBankName);
+                    checkMainlandEnableState();
                 } else {
-                    mTwBankName.setText(bankListBeans.get(options1).getBankName());
+                    mTwBankName.setText(mBankName);
                 }
             }
         }).setLayoutRes(R.layout.pickerview_custom_view, new CustomListener() {

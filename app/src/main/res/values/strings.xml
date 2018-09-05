@@ -800,4 +800,13 @@
     <string name="buy_from_platform">当前卖家为平台认证商家，请按页面提示完成交易\n\n1. 付款前，建议您与卖家核对付款方式，并与平台预留信息对比，如不一致请谨慎付款\n\n2. 转帐时请按页面要求备注「订单编号后4位」，以交易确认速度\n\n3. 请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n4. 订单有效期为20分钟，请您在有效期内及时付款并点击「已转账」按钮，卖家确认收款后对应的数字货币会及时发放到您的账户\n\n5. 如您确认付款后，半小时未收到对应的数字货币，请及时联系平台客服或申请仲裁</string>
     <string name="sell_to_platform">当前卖家为平台认证商家，请按页面提示完成交易\n\n1. 请务必与买家确认收款方式，以免转账错误\n\n2. 买家付款后，请及时确认款项是否到账并进行转币操作\n\n3. 如买家已付款却未收到对应款项，可联系买家核实并取消订单，或申请平台仲裁，通过仲裁后对应的数字货币会返回到您的账户\n\n4. 订单有效期为20分钟，如卖家超时未付款系统将自动取消订单，对应的数字货币会返回到您的账户\n\n5. 如对交易有疑问可联系平台客服或申请仲裁</string>
 
+    <string name="min_buy_num_x">最低买入数量%1$f</string>
+    <string name="max_buy_num_x">最高买入数量%1$f</string>
+    <string name="min_buy_amount_x">最低买入金额%1$f</string>
+    <string name="max_buy_amount_x">最高买入金额%1$f</string>
+
+    <string name="min_sell_num_x">最低卖出数量%1$f</string>
+    <string name="max_sell_num_x">最高卖出数量%1$f</string>
+    <string name="min_sell_amount_x">最低卖出金额%1$f</string>
+    <string name="max_sell_amount_x">最高卖出金额%1$f</string>
 </resources>

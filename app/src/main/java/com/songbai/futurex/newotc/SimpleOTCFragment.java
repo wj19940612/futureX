@@ -43,6 +43,7 @@ import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.Network;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.utils.inputfilter.MoneyValueFilter;
@@ -137,12 +138,14 @@ public class SimpleOTCFragment extends BaseFragment {
                 EditText editText = (EditText) v;
                 editText.addTextChangedListener(mWatcher);
                 editText.setSelection(editText.getText().toString().trim().length());
+                mEditTurnover = v.getId() == R.id.turnover;
             }
             return false;
         }
     };
     private NewOTCYetOrder mNewOTCYetOrder;
     private MsgProcessor mMsgProcessor;
+    private boolean mEditTurnover;
 
     private void setAmountAndTurnover() {
         if (mNewOTCPrice != null) {
@@ -236,16 +239,6 @@ public class SimpleOTCFragment extends BaseFragment {
         String turnover = mTurnover.getText().toString().trim();
         String tradeAmount = mTradeAmount.getText().toString().trim();
         boolean enabled = !TextUtils.isEmpty(turnover) && !TextUtils.isEmpty(tradeAmount);
-//        if (enabled) {
-//            enabled = false;
-//            if (mNewOTCPrice != null) {
-//                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && Double.valueOf(turnover) >= mNewOTCPrice.getBuyMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getBuyMaxPrice()) {
-//                    enabled = true;
-//                } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && Double.valueOf(turnover) >= mNewOTCPrice.getSellMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getSellMaxPrice()) {
-//                    enabled = true;
-//                }
-//            }
-//        }
         if (mNewOTCPrice != null) {
             if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
                 enabled = false;
@@ -317,14 +310,10 @@ public class SimpleOTCFragment extends BaseFragment {
                 }
                 mTradeAmount.setFilters(new InputFilter[]{
                         new MoneyValueFilter(getContext())
-                                .setDigits(2)
-                                .filterMin(mNewOTCPrice.getBuyMinCount())
-                                .filterMax(mNewOTCPrice.getBuyMaxCount())});
+                                .setDigits(2)});
                 mTurnover.setFilters(new InputFilter[]{
                         new MoneyValueFilter(getContext())
-                                .setDigits(2)
-                                .filterMin(mNewOTCPrice.getBuyMinPrice())
-                                .filterMax(mNewOTCPrice.getBuyMaxPrice())});
+                                .setDigits(2)});
                 mTradeAmount.setHint(getString(R.string.limit_range_x,
                         String.valueOf(mNewOTCPrice.getBuyMinCount()),
                         String.valueOf(mNewOTCPrice.getBuyMaxCount())));
@@ -351,14 +340,10 @@ public class SimpleOTCFragment extends BaseFragment {
                 }
                 mTradeAmount.setFilters(new InputFilter[]{
                         new MoneyValueFilter(getContext())
-                                .setDigits(2)
-                                .filterMin(mNewOTCPrice.getSellMinCount())
-                                .filterMax(mNewOTCPrice.getSellMaxCount())});
+                                .setDigits(2)});
                 mTurnover.setFilters(new InputFilter[]{
                         new MoneyValueFilter(getContext())
-                                .setDigits(2)
-                                .filterMin(mNewOTCPrice.getSellMinPrice())
-                                .filterMax(mNewOTCPrice.getSellMaxPrice())});
+                                .setDigits(2)});
                 mTradeAmount.setHint(getString(R.string.limit_range_x,
                         String.valueOf(mNewOTCPrice.getSellMinCount()),
                         String.valueOf(mNewOTCPrice.getSellMaxCount())));
@@ -500,8 +485,28 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void trade() {
+        final String coinCount = mTradeAmount.getText().toString();
+        if (mNewOTCPrice != null) {
+            if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
+                if (Double.valueOf(coinCount) < mNewOTCPrice.getBuyMinPrice()) {
+                    ToastUtil.show(getString(mEditTurnover ? R.string.min_buy_amount_x : R.string.min_buy_num_x, mEditTurnover ? mNewOTCPrice.getBuyMinPrice() : mNewOTCPrice.getBuyMinCount()));
+                    return;
+                } else if (Double.valueOf(coinCount) > mNewOTCPrice.getBuyMaxCount()) {
+                    ToastUtil.show(getString(mEditTurnover ? R.string.max_buy_amount_x : R.string.max_buy_num_x, mEditTurnover ? mNewOTCPrice.getBuyMaxPrice() : mNewOTCPrice.getBuyMaxCount()));
+                    return;
+                }
+            } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL) {
+                if (Double.valueOf(coinCount) < mNewOTCPrice.getSellMinPrice()) {
+                    ToastUtil.show(getString(mEditTurnover ? R.string.min_sell_amount_x : R.string.min_sell_num_x, mEditTurnover ? mNewOTCPrice.getSellMinPrice() : mNewOTCPrice.getSellMinCount()));
+                    return;
+                } else if (Double.valueOf(coinCount) > mNewOTCPrice.getSellMaxPrice()) {
+                    ToastUtil.show(getString(mEditTurnover ? R.string.min_sell_amount_x : R.string.min_sell_num_x, mEditTurnover ? mNewOTCPrice.getSellMaxPrice() : mNewOTCPrice.getSellMaxCount()));
+                    return;
+                }
+            }
+        }
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
-            buy("", mTradeAmount.getText().toString(), mSelectedCoinSymbol);
+            buy("", coinCount, mSelectedCoinSymbol);
         } else {
             WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
                     new WithDrawPsdViewController.OnClickListener() {
@@ -512,7 +517,7 @@ public class SimpleOTCFragment extends BaseFragment {
 
                         @Override
                         public void onConfirmClick(String cashPwd, String googleAuth) {
-                            sell(mTradeAmount.getText().toString(), mSelectedCoinSymbol, cashPwd);
+                            sell(coinCount, mSelectedCoinSymbol, cashPwd);
                         }
                     });
             withDrawPsdViewController.setShowGoogleAuth(false);
