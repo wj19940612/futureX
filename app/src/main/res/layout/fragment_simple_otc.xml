@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <com.songbai.futurex.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clipChildren="false">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawablePadding="4dp"
+                android:textColor="@color/text22"
+                android:textSize="18sp"
+                tools:text="USDT/CNY"/>
+
+            <com.songbai.futurex.view.BadgeTextView
+                android:id="@+id/order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="24dp"
+                android:drawableTop="@drawable/ic_fb_top_order"
+                android:gravity="center"
+                android:text="@string/order"
+                android:textColor="@color/text66"
+                android:textSize="9sp"
+                app:badgeTextSize="9sp"
+                tools:badgeTextNum="1"/>
+
+        </RelativeLayout>
+    </com.songbai.futurex.view.TitleBar>
+
+    <com.songbai.futurex.view.RadioHeader
+        android:id="@+id/radioHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleBar"
+        android:background="@drawable/bg_white_with_under_line"
+        android:gravity="center_vertical"
+        android:minHeight="36dp"
+        android:paddingLeft="12dp"
+        app:layout_constraintTop_toBottomOf="@id/titleBar"
+        app:tabArray="@array/simple_legal_currency_header"
+        app:tabInterval="10dp"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/radioHeader">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="40dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tradePriceText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_weight="1"
+                    android:text="@string/sell_out_amount"
+                    android:textColor="@color/text66"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/text22"
+                    android:textSize="20sp"
+                    tools:text="BTC"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_f5_r4"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tradeAmountText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:text="@string/sell_out_amount"
+                    android:textColor="@color/text66"
+                    android:textSize="15sp"/>
+
+                <EditText
+                    android:id="@+id/tradeAmount"
+                    style="@style/SingleEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:gravity="end|center_vertical"
+                    android:hint="@string/please_input_volume"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/text99"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/coinSymbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:gravity="end"
+                    android:textColor="@color/text22"
+                    android:textSize="15sp"
+                    tools:text="BTC"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_f5_r4"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:text="@string/turnover"
+                    android:textColor="@color/text66"
+                    android:textSize="15sp"/>
+
+                <EditText
+                    android:id="@+id/turnover"
+                    style="@style/SingleEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:gravity="end|center_vertical"
+                    android:hint="@string/please_input_amount"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/text99"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/turnoverSymbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:gravity="end"
+                    android:textColor="@color/text22"
+                    android:textSize="15sp"
+                    tools:text="BTC"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/confirm"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/btn_primary"
+                android:enabled="false"
+                android:gravity="center"
+                android:text="@string/sell_out"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/trade_desc"
+                android:textColor="@color/text99"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/legal_currency_rule"
+                android:textColor="@color/text66"
+                android:textSize="13sp"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/recentOrderHint"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_below="@id/radioHeader"
+        android:background="#99000000"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/have_not_complete_order"
+            android:textColor="@color/white"
+            android:textSize="13sp"/>
+    </LinearLayout>
+</RelativeLayout>

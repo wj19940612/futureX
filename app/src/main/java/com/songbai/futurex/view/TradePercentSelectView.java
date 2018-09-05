@@ -22,7 +22,7 @@ public class TradePercentSelectView extends LinearLayout {
     public static final int THIRD = 75;
     public static final int FOURTH = 100;
 
-    public static final double DIFF = 0.1;
+    public static final double DIFF = 0.0;
 
     @BindView(R.id.firstBtn)
     TextView mFirthBtn;
@@ -35,6 +35,13 @@ public class TradePercentSelectView extends LinearLayout {
 
     private OnPercentSelectListener mOnPercentSelectListener;
     private int mSelectPercent;
+
+    public void reset() {
+        mFirthBtn.setSelected(false);
+        mSecondBtn.setSelected(false);
+        mThirdBtn.setSelected(false);
+        mFourthBtn.setSelected(false);
+    }
 
     public interface OnPercentSelectListener {
         public void onPercentSelect(int percent, int max);

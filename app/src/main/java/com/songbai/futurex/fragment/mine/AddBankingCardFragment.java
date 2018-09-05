@@ -5,12 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
@@ -28,6 +29,7 @@ import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankListBean;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.LanguageUtils;
+import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.PasswordEditText;
 
 import java.util.ArrayList;
@@ -93,7 +95,6 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     private Unbinder mBind;
     private ArrayList<BankListBean> mMainland;
     private ArrayList<BankListBean> mTw;
-    private PopupWindow mPopupWindow;
     private ArrayList<String> option = new ArrayList<>();
     boolean isMainland = true;
     private OptionsPickerView mPvOptions;
@@ -115,7 +116,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         option.add(getString(R.string.cn_mainland));
-//        option.add(getString(R.string.cn_tw));
+        option.add(getString(R.string.cn_tw));
         alignText();
         setViewByArea(isMainland);
         getBankList();
@@ -140,6 +141,54 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
         mBankArea.setText(option.get(isMainland ? 0 : 1));
         mTwGroup.setVisibility(isMainland ? View.GONE : View.VISIBLE);
         mMainlandGroup.setVisibility(isMainland ? View.VISIBLE : View.GONE);
+        if (isMainland) {
+            mMainlandBankBranch.addTextChangedListener(mMainlandWatcher);
+            mMainlandCardNumber.addTextChangedListener(mMainlandWatcher);
+            mWithDrawPass.addTextChangedListener(mMainlandWatcher);
+            checkMainlandEnableState();
+        } else {
+            mTwBankName.addTextChangedListener(mTWWatcher);
+            mBankCode.addTextChangedListener(mTWWatcher);
+            mTwBankBranch.addTextChangedListener(mTWWatcher);
+            mTwCardNumber.addTextChangedListener(mTWWatcher);
+            mRealName.addTextChangedListener(mTWWatcher);
+            mWithDrawPass.addTextChangedListener(mTWWatcher);
+            checkTWEnableState();
+        }
+    }
+
+    private ValidationWatcher mMainlandWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            checkMainlandEnableState();
+        }
+    };
+
+    public void checkMainlandEnableState() {
+        String bankBranch = mMainlandBankBranch.getText().toString().trim();
+        String cardNum = mMainlandCardNumber.getText().toString().trim();
+        String withDrawPass = mWithDrawPass.getPassword();
+        boolean enabled = !TextUtils.isEmpty(bankBranch) && !TextUtils.isEmpty(cardNum) && !TextUtils.isEmpty(withDrawPass);
+        mConfirmAdd.setEnabled(enabled);
+    }
+
+    private ValidationWatcher mTWWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            checkTWEnableState();
+        }
+    };
+
+    public void checkTWEnableState() {
+        String bankName = mTwBankName.getText().toString().trim();
+        String bankCode = mBankCode.getText().toString().trim();
+        String bankBanch = mTwBankBranch.getText().toString().trim();
+        String cardNum = mTwCardNumber.getText().toString().trim();
+        String realname = mRealName.getText().toString().trim();
+        String password = mWithDrawPass.getPassword();
+        boolean enabled = !TextUtils.isEmpty(bankName) && !TextUtils.isEmpty(bankCode) && !TextUtils.isEmpty(bankBanch)
+                && !TextUtils.isEmpty(cardNum) && !TextUtils.isEmpty(realname) && !TextUtils.isEmpty(password);
+        mConfirmAdd.setEnabled(enabled);
     }
 
     private void getBankList() {
@@ -180,7 +229,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bankArea:
-//                showAreaSelect();
+                showAreaSelect();
                 break;
             case R.id.mainlandBankName:
                 showBankSelect(isMainland ? mMainland : mTw);

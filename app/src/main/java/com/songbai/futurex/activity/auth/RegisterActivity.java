@@ -96,6 +96,7 @@ public class RegisterActivity extends BaseActivity {
 
     private SelectAreaCodesViewController mSelectAreaCodesViewController;
     private AuthCodeViewController mAuthCodeViewController;
+    private SmartDialog mSmartDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -376,16 +377,27 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void showAccountExistsDialog(int code) {
-        MsgHintController msgHintController = new MsgHintController(RegisterActivity.this, new MsgHintController.OnClickListener() {
+        final MsgHintController msgHintController = new MsgHintController(RegisterActivity.this, new MsgHintController.OnClickListener() {
             @Override
             public void onConfirmClick() {
                 finish();
             }
         });
-        SmartDialog.solo(RegisterActivity.this).setCustomViewController(msgHintController)
+        mSmartDialog = SmartDialog.solo(RegisterActivity.this);
+        mSmartDialog.setCustomViewController(msgHintController)
                 .show();
         msgHintController.setConfirmText(R.string.go_login);
         msgHintController.setCloseText(R.string.re_enter);
+        msgHintController.setOnColseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSmartDialog != null) {
+                    mSmartDialog.dismiss();
+                }
+                mPhoneNumber.setText("");
+                mEmail.setText("");
+            }
+        });
         msgHintController.setMsg(code == Resp.Code.PHONE_EXIST ? R.string.phone_exists : R.string.mail_exists);
         msgHintController.setImageRes(R.drawable.ic_popup_attention);
     }

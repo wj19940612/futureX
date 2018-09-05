@@ -15,6 +15,7 @@ public class CoinPropertyFlow {
     private int status;
     @SerializedName(value = "value", alternate = {"commission"})
     private double value;
+    private String wid;
 
     public int getId() {
         return id;
@@ -62,5 +63,13 @@ public class CoinPropertyFlow {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public String getWid() {
+        return wid;
+    }
+
+    public void setWid(String wid) {
+        this.wid = wid;
     }
 }

@@ -29,7 +29,6 @@ import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.mine.UnreadMessageCount;
-import com.songbai.futurex.model.status.MessageType;
 import com.songbai.futurex.swipeload.RVSwipeLoadActivity;
 import com.songbai.futurex.utils.DateUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -135,14 +134,14 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         case 3:
                         case 5:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
-                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                    .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 2)
                                     .execute();
                             break;
                         case 2:
                         case 4:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
-                                    .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                    .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
                                     .execute();
                             break;
@@ -160,7 +159,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                     return;
                                 }
                                 Launcher.with(getActivity(), OtcOrderCompletedActivity.class)
-                                        .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                        .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                         .putExtra(ExtraKeys.TRADE_DIRECTION, direct)
                                         .execute();
                             }
@@ -179,7 +178,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                                     return;
                                 }
                                 UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
-                                        .putExtra(ExtraKeys.ORDER_ID, sysMessage.getDataId())
+                                        .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                         .putExtra(ExtraKeys.TRADE_DIRECTION, direct)
                                         .execute();
                             }
@@ -432,70 +431,12 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                     mTimestamp.setText(DateUtil.format(sysMessage.getCreateTime(), DateUtil.FORMAT_SPECIAL_SLASH));
                     mEmptyView.setVisibility(View.GONE);
                     mRootView.setVisibility(View.VISIBLE);
-                    int textId = 0;
-                    switch (sysMessage.getType()) {
-                        case MessageType.PAY_ADDR_CHANGE:
-                            textId = R.string.pay_addr_change;
-                            break;
-                        case MessageType.OTC_BUY_ORDER:
-                            textId = R.string.otc_buy_order;
-                            break;
-                        case MessageType.OTC_SELL_ORDER:
-                            textId = R.string.otc_sell_order;
-                            break;
-                        case MessageType.OTC_BUY_PAY:
-                            textId = R.string.otc_buy_pay;
-                            break;
-                        case MessageType.OTC_SELL_PAY:
-                            textId = R.string.otc_sell_pay;
-                            break;
-                        case MessageType.OTC_ORDER_MSG:
-                            textId = R.string.otc_order_msg;
-                            break;
-                        case MessageType.USER_AUTH_FAIL:
-                            textId = R.string.user_auth_fail;
-                            break;
-                        case MessageType.ARBITRAGE_PASS:
-                            String msg = sysMessage.getMsg();
-                            if (msg.contains("msg")) {
-                                try {
-                                    JSONObject object = new JSONObject(msg);
-                                    String hintMsg = object.getString("msg");
-                                    mContent.setText(context.getString(R.string.arbitrage_pass, hintMsg));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            break;
-                        case MessageType.ARBITRAGE_REJECT:
-                            msg = sysMessage.getMsg();
-                            if (msg.contains("msg")) {
-                                try {
-                                    JSONObject object = new JSONObject(msg);
-                                    String hintMsg = object.getString("msg");
-                                    mContent.setText(context.getString(R.string.arbitrage_reject, hintMsg));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            break;
-                        case MessageType.OFF_SHELVES_WARES:
-                            msg = sysMessage.getMsg();
-                            mContent.setText(context.getString(R.string.off_shelves_wares, msg));
-                            break;
-                        case MessageType.OTC_ORDER_CANCEL:
-                            textId = R.string.otc_order_cancel;
-                            break;
-                        case MessageType.OTC_ORDER_DELAY:
-                            textId = R.string.otc_order_delay;
-                            break;
-                        default:
-                            mEmptyView.setVisibility(View.VISIBLE);
-                            mRootView.setVisibility(View.GONE);
+                    String content = sysMessage.getContent();
+                    if (TextUtils.isEmpty(content)) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mRootView.setVisibility(View.GONE);
                     }
-                    if (textId != 0) {
-                        mContent.setText(textId);
-                    }
+                    mContent.setText(content);
                     mHint.setVisibility(View.GONE);
                 }
 

@@ -35,9 +35,12 @@ public class VolumeInputView extends FrameLayout {
     private int mVolumeScale;
     private boolean mTextWatcherDisable;
     private OnVolumeChangeListener mOnVolumeChangeListener;
+    private boolean mSetInput;
 
     public interface OnVolumeChangeListener {
         void onVolumeChange(double volume);
+
+        void onVolumeInputChange(double volume);
     }
 
     public VolumeInputView(@NonNull Context context) {
@@ -65,6 +68,17 @@ public class VolumeInputView extends FrameLayout {
         }
     }
 
+    private void onVolumeInputChange() {
+        if (mOnVolumeChangeListener != null) {
+            try {
+                double v = Double.parseDouble(mVolume.getText().toString());
+                mOnVolumeChangeListener.onVolumeInputChange(v);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public double getVolume() {
         return CurrencyUtils.getDouble(mVolume.getText().toString());
     }
@@ -86,14 +100,27 @@ public class VolumeInputView extends FrameLayout {
                     mVolume.setSelection(mVolume.getText().toString().length());
                     mTextWatcherDisable = false;
                     onVolumeChange();
+                    mSetInput = false;
                     return;
                 }
                 onVolumeChange();
+                if(!mSetInput){
+                    onVolumeInputChange();
+                }
+                mSetInput = false;
             }
         });
     }
 
     public void setVolume(double volume) {
+        mSetInput = true;
+        mVolume.setText(formatVolume(String.valueOf(volume)));
+        mVolume.setSelection(mVolume.getText().toString().length());
+        onVolumeChange();
+    }
+
+    public void setVolume(String volume) {
+        mSetInput = true;
         mVolume.setText(formatVolume(String.valueOf(volume)));
         mVolume.setSelection(mVolume.getText().toString().length());
         onVolumeChange();

@@ -47,6 +47,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -118,6 +119,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     };
     private File mTemp;
     private boolean mSharing;
+    private String mShareText;
 
     public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionShare) {
         Bundle args = new Bundle();
@@ -144,8 +146,8 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         if (arguments != null) {
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
-            String shareText = arguments.getString(SHARE_CONTENT);
-            textString = (TextUtils.isEmpty(shareText) ? "" : shareText) + "https://bitfutu.re/pro/" + mQcCode;
+            mShareText = arguments.getString(SHARE_CONTENT);
+            textString = (TextUtils.isEmpty(mShareText) ? "" : mShareText) + "https://bitfutu.re/pro/" + mQcCode;
             int[] posters = new int[]{R.drawable.ic_poster1, R.drawable.ic_poster2};
             for (int i = 0; i < posters.length; i++) {
                 mList.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
@@ -165,13 +167,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             public void onItemClick(View view, int position, Object obj) {
                 switch (((int) obj)) {
                     case R.string.wechat_friends:
-//                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
                         if (!mSharing) {
                             share(SHARE_MEDIA.WEIXIN);
                         }
                         break;
                     case R.string.wechat_moments:
-//                        shareWithPackageName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");/**/
                         if (!mSharing) {
                             share(SHARE_MEDIA.WEIXIN_CIRCLE);
                         }
@@ -180,7 +180,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                         shareWithPackageName("com.twitter.android", "");
                         break;
                     case R.string.facebook:
-                        shareWithPackageName("com.facebook.katana", "");
+                        shareFacebook();
                         break;
                     case R.string.telegram:
                         shareWithPackageName("org.telegram.messenger", "");
@@ -216,6 +216,38 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
         });
     }
 
+    public void shareFacebook() {
+//        if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.FACEBOOK)) {
+//            mSharing = true;
+//            if (mHasPoster) {
+//                if (mSelectedPosition < 0) {
+//                    ToastUtil.show(R.string.select_a_poster);
+//                    return;
+//                }
+//                Bitmap shareBitmap = mList.get(mSelectedPosition).getShareBitmap();
+//                deleteTempImage();
+//                UMImage umImage = new UMImage(getContext(), shareBitmap);
+//                mTemp = umImage.asFileImage();
+//                new ShareAction(getActivity())
+//                        .setPlatform(SHARE_MEDIA.FACEBOOK)
+//                        .withText(textString)
+//                        .withMedia(umImage)
+//                        .setCallback(mUmShareListener)
+//                        .share();
+//            } else {
+//                new ShareAction(getActivity())
+//                        .setPlatform(SHARE_MEDIA.FACEBOOK)
+//                        .withMedia(new UMWeb("https://bitfutu.re/pro/" + mQcCode, mShareText, "",
+//                                new UMImage(getContext(), textString)))
+//                        .setCallback(mUmShareListener)
+//                        .share();
+//            }
+//        } else {
+//            ToastUtil.show(R.string.app_not_installed);
+//        }
+        shareWithPackageName("com.facebook.katana", "");
+    }
+
     private void shareWithPackageName(final String packageName, final String className) {
         if (AppInfo.isAPPInstalled(getContext(), packageName)) {
             final String title = "";
@@ -229,30 +261,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                 shareStream(packageName, className, title, textString, mTemp);
             } else {
                 if ("com.tencent.mm.ui.tools.ShareToTimeLineUI".equals(className)) {
-//                    if (!AccessibilityUtils.isAccessibilitySettingsOn(AssistantService.class.getName(), getContext())) {
-//                        MsgHintController msgHintController = new MsgHintController(getContext(), new MsgHintController.OnClickListener() {
-//                            @Override
-//                            public void onConfirmClick() {
-//                                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-//                                startActivityForResult(intent, OPEN_ACCESSIBILITY);
-//                            }
-//                        });
-//                        SmartDialog smartDialog = SmartDialog.solo(getActivity());
-//                        smartDialog.setCustomViewController(msgHintController)
-//                                .show();
-//                        msgHintController.setConfirmText(R.string.go_to_set);
-//                        msgHintController.setCloseText(R.string.share);
-//                        msgHintController.setOnColseClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                shareWechat();
-//                            }
-//                        });
-//                        msgHintController.setMsg(R.string.can_open_accessibility_service);
-//                        msgHintController.setImageRes(R.drawable.ic_popup_attention);
-//                    } else {
-                        shareWechat();
-//                    }
+                    shareWechat();
                 } else {
                     shareText(packageName, className, mQcCode, textString);
                 }
@@ -282,9 +291,14 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     }
 
     private void shareWithText(SHARE_MEDIA platform) {
+        UMImage umImage = new UMImage(getContext(), ZXingUtils.createQRImage(mQcCode, 100, 100));
+        mTemp = umImage.asFileImage();
         new ShareAction(getActivity())
                 .setPlatform(platform)
-                .withText(textString)
+//                .withText(textString)
+//                .withText("https://bitfutu.re/pro/" + mQcCode)
+                .withMedia(new UMWeb("https://bitfutu.re/pro/" + mQcCode, mShareText, "",
+                        umImage))
                 .setCallback(mUmShareListener)
                 .share();
     }
@@ -295,10 +309,12 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             return;
         }
         Bitmap shareBitmap = mList.get(mSelectedPosition).getShareBitmap();
+        UMImage umImage = new UMImage(getContext(), shareBitmap);
+        mTemp = umImage.asFileImage();
         new ShareAction(getActivity())
                 .setPlatform(platform)
                 .withText(textString)
-                .withMedia(new UMImage(getContext(), shareBitmap))
+                .withMedia(umImage)
                 .setCallback(mUmShareListener)
                 .share();
     }
@@ -454,13 +470,24 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(getContext()).onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHARE) {
             dismissAllowingStateLoss();
-            if (mTemp != null) {
-                mTemp.delete();
-            }
         } else if (requestCode == OPEN_ACCESSIBILITY) {
             shareWechat();
+        }
+    }
+
+    @Override
+    public void dismissAllowingStateLoss() {
+        deleteTempImage();
+        super.dismissAllowingStateLoss();
+    }
+
+    public void deleteTempImage() {
+        if (mTemp != null) {
+            mTemp.delete();
+            getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mTemp)));
         }
     }
 

@@ -27,7 +27,7 @@
     <string name="revoked">已撤单</string>
     <string name="part_deal_with_arrow">部分成交></string>
     <string name="system_revoked">系统撤单</string>
-    <string name="part_deal_part_revoked_with_arrow">部分成交已撤></string>
+    <string name="part_deal_part_revoked_with_arrow">部分成交已撤单></string>
     <string name="unknown_status">未知状态</string>
 
     <!--委托单-->
@@ -576,6 +576,9 @@
     <string name="password_inputs_is_not_same">密码输入不一致</string>
 
     <!--Market&Trade-->
+    <string name="main_index">主图：</string>
+    <string name="hide">隐藏</string>
+    <string name="sub_index">副图：</string>
     <string-array name="market_radio_header">
         <item>USDT</item>
         <item>BTC</item>
@@ -610,6 +613,7 @@
     <string name="high">高</string>
     <string name="low">低</string>
     <string name="more">更多</string>
+    <string name="index">指标</string>
     <string-array name="trade_detail_radio">
         <item>深度</item>
         <item>成交</item>
@@ -770,4 +774,28 @@
     <string name="option_one">方案一</string>
     <string name="option_two">方案二</string>
     <string name="option_two_desc">微信小程序搜索“双重验证”</string>
+    <string name="facebook_app_id">752006301820152</string>
+
+    <!--LEGAL_CURRENCY-->
+    <string-array name="simple_legal_currency_header">
+        <item>@string/buy_in</item>
+        <item>@string/sell_out</item>
+    </string-array>
+    <string name="have_not_complete_order">您有未完成订单，请前往处理&#8195;►</string>
+    <string name="buy_in_amount">买入数量</string>
+    <string name="sell_out_amount">卖出数量</string>
+    <string name="buy_in_price">买入估价</string>
+    <string name="sell_out_price">卖出估价</string>
+    <string name="trade_desc">交易说明</string>
+    <string name="legal_currency_rule">1.买卖USDT由平台统一担保，可放心兑换。\n\n\n2.请下单后15分钟内完成交易，否则该笔订单将被取消。\n\n\n3.禁止使用他人支付宝、微信代付、ATM及柜台转账等第三方转账，请使用本人绑定的银行卡通过手机银行或网银进行汇款。\n\n\n4.如果你的交易1小时内没有处理，请联系在线客服登记。会有专人24小时内与您联系，请保持手机畅通\n\n\n5.请切记备注【订单后4位】作为转账附言，否则将会出现延迟到账等情况。\n\n\n6.超过3笔取消订单将禁止当天法币交易\n\n\n7.有1个买单或者卖单未完成，暂停继续下单，完成交易后恢复</string>
+    <string name="should_bind_phone">需要先绑定手机</string>
+    <string name="otc365_buy_hint">请在OTC365页面完成交易</string>
+    <string name="otc365_sell_hint">请确认收款后转币</string>
+    <string name="please_input_volume">请输入数量</string>
+    <string name="please_input_amount">请输入金额</string>
+    <string name="select_base_coin_type">选择基础币种</string>
+    <string name="trading_closed">交易关闭</string>
+    <string name="please_input_right_amount">请填写正确的数量</string>
+
+
 </resources>

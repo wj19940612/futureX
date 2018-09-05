@@ -52,6 +52,7 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     private int mPageSize = 20;
     private InviteAwardHistoryAdapter mAdapter;
     private boolean mPrepared;
+    private String mWid;
 
     public static InviteAwardHistoryFragment newInstance() {
         Bundle bundle = new Bundle();
@@ -80,20 +81,27 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     }
 
     private void getAwardHistory() {
-        Apic.inviteAward(mPage, mPageSize).tag(TAG)
+        Apic.inviteAward(mPage, mPageSize, mWid).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<InviteAwardHistory>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<InviteAwardHistory>> resp) {
                         if (mRecyclerView != null) {
-                            mAdapter.setList(resp.getData());
+                            PagingWrap<InviteAwardHistory> pagingWrap = resp.getData();
+                            List<InviteAwardHistory> data = pagingWrap.getData();
+                            if (data.size() > 0) {
+                                InviteAwardHistory inviteAwardHistory = data.get(data.size() - 1);
+                                mWid = inviteAwardHistory.getWid();
+                            }
+                            pagingWrap.setStart(mPage);
+                            mAdapter.setList(pagingWrap);
                             mAdapter.notifyDataSetChanged();
                             stopFreshOrLoadAnimation();
                             mRecyclerView.hideAll(false);
-                            if (resp.getData().getTotal() - 1 > mPage) {
+                            if (pagingWrap.isLast()) {
+                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                            } else {
                                 mPage++;
                                 mSwipeToLoadLayout.setLoadMoreEnabled(true);
-                            } else {
-                                mSwipeToLoadLayout.setLoadMoreEnabled(false);
                             }
                         }
                     }
@@ -121,6 +129,7 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     @Override
     public void onRefresh() {
         mPage = 0;
+        mWid = "";
         getAwardHistory();
     }
 

@@ -23,13 +23,13 @@ public class OtcProcessor {
         mMessageProcessor.removeOnDataRecListener(mOnDataRecListener);
     }
 
-    public void registerMsg(int id) {
+    public void registerMsg(String id) {
         OtcParam param = new OtcParam(OtcParam.OTC_CHAT + id);
         Request request = Utils.getRequest(RequestCode.SUBSCRIBE_BUSINESS, param);
         mMessageProcessor.send(request);
     }
 
-    public void unregisterMsg(int id) {
+    public void unregisterMsg(String id) {
         OtcParam param = new OtcParam(OtcParam.OTC_CHAT + id);
         Request request = Utils.getRequest(RequestCode.UNSUBSCRIBE_BUSINESS, param);
         mMessageProcessor.send(request);

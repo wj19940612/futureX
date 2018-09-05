@@ -20,16 +20,21 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.CustomServiceActivity;
 import com.songbai.futurex.activity.OtcTradeChatActivity;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.WebActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.OTC365Data;
+import com.songbai.futurex.model.OrderBean;
 import com.songbai.futurex.model.OtcOrderDetail;
+import com.songbai.futurex.model.ParamBean;
 import com.songbai.futurex.model.WaresUserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.BankCardBean;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
+import com.songbai.futurex.newotc.Otc365FilterWebActivity;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
@@ -45,6 +50,9 @@ import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.msg.MsgProcessor;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +99,19 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     TextView mCancelOrder;
     @BindView(R.id.confirm)
     TextView mConfirm;
-    private int mOrderId;
+    @BindView(R.id.originOptionGroup)
+    LinearLayout mOriginOptionGroup;
+    @BindView(R.id.goTo365)
+    TextView mGoTo365;
+    @BindView(R.id.otc365OptionGroup)
+    LinearLayout mOtc365OptionGroup;
+    @BindView(R.id.askPayInfoGroup)
+    LinearLayout mAskPayInfoGroup;
+    @BindView(R.id.askPayInfo)
+    TextView mAskPayInfo;
+    @BindView(R.id.otc365Hint)
+    TextView mOtc365Hint;
+    private String mOrderId;
     private int mTradeDirection;
     private Unbinder mBind;
     private int mStatus;
@@ -111,7 +131,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-        mOrderId = extras.getInt(ExtraKeys.ORDER_ID);
+        mOrderId = extras.getString(ExtraKeys.ORDER_ID);
         mTradeDirection = extras.getInt(ExtraKeys.TRADE_DIRECTION);
     }
 
@@ -134,7 +154,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
                         @Override
                         public void onSuccess(Response<SysMessage> resp) {
-                            if (resp.getContent().getDataId() == mOrderId) {
+                            if (String.valueOf(resp.getContent().getDataId()).equals(mOrderId)) {
                                 otcOrderDetail();
                                 Intent data = new Intent();
                                 data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
@@ -174,7 +194,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void otcWaresMine() {
-        Apic.otcWaresMine("", String.valueOf(mOrderId), 1).tag(TAG)
+        Apic.otcWaresMine("", mOrderId, 1).tag(TAG)
                 .callback(new Callback<Resp<WaresUserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
@@ -212,7 +232,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     }
 
     private void needGoogle() {
-        Apic.needGoogle("DRAW").tag(TAG)
+        Apic.needGoogle("CNY_TRADE").tag(TAG)
                 .callback(new Callback<Resp<Boolean>>() {
                     @Override
                     protected void onRespSuccess(Resp<Boolean> resp) {
@@ -224,6 +244,23 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     private void otcOrderConfirm(int status, String drawPass, String googleCode) {
         Apic.otcOrderConfirm(mOrderId, status, drawPass, googleCode).tag(TAG)
+                .callback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (mOtcOrderDetail != null) {
+                            mOtcOrderDetail.getOrder().setStatus(mIsBuyer ? OTCOrderStatus.ORDER_PAIED : OTCOrderStatus.ORDER_COMPLATED);
+                            setView(mOtcOrderDetail);
+                        }
+                        otcOrderDetail();
+                        Intent data = new Intent();
+                        data.putExtra(ExtraKeys.MODIFIED_SHOULD_REFRESH, true);
+                        setResult(LEGAL_CURRENCY_ORDER_RESULT, data);
+                    }
+                }).fire();
+    }
+
+    private void otc365OrderConfirm(int status, String drawPass, String googleCode) {
+        Apic.otc365OrderConfirm(mOrderId, status, drawPass, googleCode).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -265,7 +302,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
     private void setView(OtcOrderDetail otcOrderDetail) {
         mOtcOrderDetail = otcOrderDetail;
-        OtcOrderDetail.OrderBean order = otcOrderDetail.getOrder();
+        OrderBean order = otcOrderDetail.getOrder();
         String coinSymbol = order.getCoinSymbol();
         mTitleBar.setTitle(getString(mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY ?
                 R.string.buy_x : R.string.sell_x, coinSymbol.toUpperCase()));
@@ -283,7 +320,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         }
     }
 
-    private void setOrderInfoCard(OtcOrderDetail.OrderBean order, String coinSymbol) {
+    private void setOrderInfoCard(OrderBean order, String coinSymbol) {
         mTurnover.setText(getString(R.string.x_space_x,
                 FinanceUtil.formatWithScale(order.getOrderAmount()),
                 order.getPayCurrency().toUpperCase()));
@@ -332,19 +369,35 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         }
     }
 
-    private void setBottomButtonStatus(OtcOrderDetail.OrderBean order) {
+    private void setBottomButtonStatus(OrderBean order) {
         mStatus = order.getStatus();
+        mOriginOptionGroup.setVisibility(order.getOrderType() != 1 ? View.VISIBLE : View.GONE);
+        mOtc365OptionGroup.setVisibility(order.getOrderType() == 1 ? View.VISIBLE : View.GONE);
+        if (order.getOrderType() != 1) {
+            mAskPayInfoGroup.setVisibility(View.VISIBLE);
+            mPayInfo.setVisibility(View.VISIBLE);
+            mAskPayInfo.setVisibility(View.VISIBLE);
+        } else {
+            mAskPayInfo.setVisibility(View.GONE);
+            if (mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY) {
+                mAskPayInfoGroup.setVisibility(View.GONE);
+                mPayInfo.setVisibility(View.GONE);
+            }
+        }
         LocalUser user = LocalUser.getUser();
         if (user.isLogin()) {
             int id = user.getUserInfo().getId();
             mIsBuyer = id == order.getBuyerId();
         }
+        mOtc365Hint.setText(mIsBuyer ? R.string.otc365_buy_hint : R.string.otc365_sell_hint);
+        mGoTo365.setText(mIsBuyer ? R.string.go_to : R.string.confirm_transfer_coin);
         switch (mStatus) {
             case OTCOrderStatus.ORDER_CANCLED:
             case OTCOrderStatus.ORDER_COMPLATED:
                 mAppeal.setVisibility(View.GONE);
                 mCancelOrder.setVisibility(View.GONE);
                 mConfirm.setVisibility(View.GONE);
+                mOtc365OptionGroup.setVisibility(View.GONE);
                 break;
             case OTCOrderStatus.ORDER_UNPAIED:
                 mAppeal.setVisibility(View.GONE);
@@ -380,6 +433,15 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mPayInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mPayInfo.hideAll(false);
+        if (mOtcOrderDetail != null) {
+            if (mOtcOrderDetail.getOrder().getOrderType() == 1) {
+                mAskPayInfo.setVisibility(View.GONE);
+                if (mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY) {
+                    mAskPayInfoGroup.setVisibility(View.GONE);
+                    mPayInfo.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     @Override
@@ -389,7 +451,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
         mMsgProcessor.unregisterMsg();
     }
 
-    @OnClick({R.id.sellerInfo, R.id.askPayInfo, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm})
+    @OnClick({R.id.sellerInfo, R.id.askPayInfo, R.id.contractEachOther, R.id.cancelOrder, R.id.appeal, R.id.confirm, R.id.goTo365})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.sellerInfo:
@@ -430,8 +492,74 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                     showTransferConfirm();
                 }
                 break;
+            case R.id.goTo365:
+                if (mTradeDirection == OTCOrderStatus.ORDER_DIRECT_BUY) {
+                    openOtc365();
+                } else {
+                    showTransferConfirm();
+                }
+                break;
             default:
         }
+    }
+
+    private void openOtc365() {
+        Apic.otc365buy(mOrderId, "").tag(TAG)
+                .callback(new Callback<Resp<OTC365Data>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<OTC365Data> resp) {
+                        OTC365Data data = resp.getData();
+                        ParamBean param = data.getParam();
+                        if (param != null) {
+                            Launcher.with(getActivity(), Otc365FilterWebActivity.class)
+                                    .putExtra(WebActivity.EX_URL, data.getTargetUrl())
+                                    .putExtra(WebActivity.EX_POST_DATA, createPostData(param))
+                                    .execute();
+                        }
+
+                    }
+                }).fire();
+    }
+
+    public String createPostData(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        String[] types1 = {"int", "java.lang.String", "boolean", "char", "float", "double", "long", "short", "byte"};
+        String[] types2 = {"Integer", "java.lang.String", "java.lang.Boolean", "java.lang.Character", "java.lang.Float", "java.lang.Double", "java.lang.Long", "java.lang.Short", "java.lang.Byte"};
+        for (Field field : fields) {
+            field.setAccessible(true);
+            // 字段名
+            String key = field.getName();
+            if ("$change".equals(key) || "serialVersionUID".equals(key)) {
+                continue;
+            }
+            builder.append(key).append("=");
+            // 字段值
+            for (int i = 0; i < types1.length; i++) {
+                if (field.getType().getName()
+                        .equalsIgnoreCase(types1[i]) || field.getType().getName().equalsIgnoreCase(types2[i])) {
+                    try {
+                        Object value = field.get(obj);
+                        builder.append(getEncode(String.valueOf(value))).append("&");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return builder.toString();
+    }
+
+    private String getEncode(String value) {
+        try {
+            return URLEncoder.encode(value, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private void showCancelConfirmView() {
@@ -456,7 +584,13 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
 
                     @Override
                     public void onConfirmClick(String cashPwd, String googleAuth) {
-                        otcOrderConfirm(mStatus, md5Encrypt(cashPwd), mNeedGoogle ? googleAuth : "");
+                        if (mOtcOrderDetail != null) {
+                            if (mOtcOrderDetail.getOrder().getOrderType() == 1) {
+                                otc365OrderConfirm(mStatus, md5Encrypt(cashPwd), mNeedGoogle ? googleAuth : "");
+                            } else {
+                                otcOrderConfirm(mStatus, md5Encrypt(cashPwd), mNeedGoogle ? googleAuth : "");
+                            }
+                        }
                     }
                 });
         withDrawPsdViewController.setShowGoogleAuth(mNeedGoogle);

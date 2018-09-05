@@ -82,6 +82,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     private PropertyFlowAdapter mAdapter;
     private GetUserFinanceFlowData mGetUserFinanceFlowData;
     private int mAccountType;
+    private String mWid;
 
     @Nullable
     @Override
@@ -202,11 +203,16 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     }
 
     private void getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData) {
-        Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5).tag(TAG)
+        Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5, mWid).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
-                        mAdapter.setList(resp.getData());
+                        PagingWrap<CoinPropertyFlow> pagingWrap = resp.getData();
+                        List<CoinPropertyFlow> data = pagingWrap.getData();
+                        if (data.size() > 0) {
+                            mWid = data.get(data.size() - 1).getWid();
+                        }
+                        mAdapter.setList(pagingWrap);
                         mAdapter.setAccount(mAccountType);
                         mAdapter.notifyDataSetChanged();
                         mRecyclerView.hideAll(false);
