@@ -58,6 +58,10 @@ import com.songbai.futurex.websocket.PushDestUtils;
 import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.msg.MsgProcessor;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -193,6 +197,7 @@ public class SimpleOTCFragment extends BaseFragment {
                 setView();
                 setPrice();
                 setLimit();
+                checkConfirmEnable();
             }
         });
         setView();
@@ -233,10 +238,21 @@ public class SimpleOTCFragment extends BaseFragment {
         boolean enabled = !TextUtils.isEmpty(turnover) && !TextUtils.isEmpty(tradeAmount);
         if (enabled) {
             enabled = false;
-            if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && Double.valueOf(turnover) >= mNewOTCPrice.getBuyMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getBuyMaxPrice()) {
-                enabled = true;
-            } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && Double.valueOf(turnover) >= mNewOTCPrice.getSellMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getSellMaxPrice()) {
-                enabled = true;
+            if (mNewOTCPrice != null) {
+                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && Double.valueOf(turnover) >= mNewOTCPrice.getBuyMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getBuyMaxPrice()) {
+                    enabled = true;
+                } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && Double.valueOf(turnover) >= mNewOTCPrice.getSellMinPrice() && Double.valueOf(turnover) <= mNewOTCPrice.getSellMaxPrice()) {
+                    enabled = true;
+                }
+            }
+        }
+        if (mNewOTCPrice != null) {
+            if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
+                enabled = false;
+                mConfirm.setText(R.string.trading_closed);
+            } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
+                enabled = false;
+                mConfirm.setText(R.string.trading_closed);
             }
         }
         mConfirm.setEnabled(enabled);
@@ -418,11 +434,13 @@ public class SimpleOTCFragment extends BaseFragment {
                 lunchOrder();
                 break;
             case R.id.confirm:
-                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
-                    return;
-                }
-                if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
-                    return;
+                if (mNewOTCPrice != null) {
+                    if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY && mNewOTCPrice.getBuyWaresCount() < 1) {
+                        return;
+                    }
+                    if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && mNewOTCPrice.getSellWaresCount() < 1) {
+                        return;
+                    }
                 }
                 if (LocalUser.getUser().isLogin()) {
                     trade();
@@ -443,6 +461,13 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void trade() {
+        boolean otc365 = mNewOTCPrice != null &&
+                ((mNewOTCPrice.getBuyOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY)
+                        || (mNewOTCPrice.getSellOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL));
+        if (otc365 && TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getUserPhone())) {
+            showAlertMsgHint(Resp.Code.PHONE_NONE);
+            return;
+        }
         if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
             showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
             return;
@@ -561,10 +586,10 @@ public class SimpleOTCFragment extends BaseFragment {
                         if (data.getOrderType() == 1 && data.getParam() != null) {
                             openOtc365(data);
                         } else {
-                            String id = String.valueOf(data.getOrderId());
+                            String id = String.valueOf(data.getId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, id)
-                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_SELL)
                                     .execute();
                         }
                     }
@@ -585,27 +610,52 @@ public class SimpleOTCFragment extends BaseFragment {
     private void openOtc365(NewOrderData data) {
         ParamBean param = data.getParam();
         if (param != null) {
-            StringBuilder builder = new StringBuilder();
-            //拼接post提交参数
-            builder.append("coin_amount=").append(param.getCoin_amount()).append("&")
-                    .append("sync_url=").append(param.getSync_url()).append("&")
-                    .append("coin_sign=").append(param.getCoin_sign()).append("&")
-                    .append("sign=").append(param.getSign()).append("&")
-                    .append("order_time=").append(param.getOrder_time()).append("&")
-                    .append("pay_card_num=").append(param.getPay_card_num()).append("&")
-                    .append("async_url=").append(param.getAsync_url()).append("&")
-                    .append("id_card_num=").append(param.getId_card_num()).append("&")
-                    .append("kyc=").append(param.getKyc()).append("&")
-                    .append("phone=").append(param.getPhone()).append("&")
-                    .append("company_order_num=").append(param.getCompany_order_num()).append("&")
-                    .append("appkey=").append(param.getAppkey()).append("&")
-                    .append("id_card_type=").append(param.getId_card_type()).append("&")
-                    .append("username=").append(param.getUsername());
             Launcher.with(getActivity(), Otc365FilterWebActivity.class)
                     .putExtra(WebActivity.EX_URL, data.getTargetUrl())
-                    .putExtra(WebActivity.EX_POST_DATA, builder.toString())
+                    .putExtra(WebActivity.EX_POST_DATA, createPostData(param))
                     .execute();
         }
+    }
+
+    public String createPostData(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        String[] types1 = {"int", "java.lang.String", "boolean", "char", "float", "double", "long", "short", "byte"};
+        String[] types2 = {"Integer", "java.lang.String", "java.lang.Boolean", "java.lang.Character", "java.lang.Float", "java.lang.Double", "java.lang.Long", "java.lang.Short", "java.lang.Byte"};
+        for (Field field : fields) {
+            field.setAccessible(true);
+            // 字段名
+            String key = field.getName();
+            if ("$change".equals(key) || "serialVersionUID".equals(key)) {
+                continue;
+            }
+            builder.append(key).append("=");
+            // 字段值
+            for (int i = 0; i < types1.length; i++) {
+                if (field.getType().getName()
+                        .equalsIgnoreCase(types1[i]) || field.getType().getName().equalsIgnoreCase(types2[i])) {
+                    try {
+                        Object value = field.get(obj);
+                        builder.append(getEncode(String.valueOf(value))).append("&");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return builder.toString();
+    }
+
+    private String getEncode(String value) {
+        try {
+            return URLEncoder.encode(value, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private void buy(String cost, String coinCount, String coinSymbol) {
@@ -621,7 +671,7 @@ public class SimpleOTCFragment extends BaseFragment {
                             String id = String.valueOf(data.getId());
                             UniqueActivity.launcher(SimpleOTCFragment.this, LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, id)
-                                    .putExtra(ExtraKeys.TRADE_DIRECTION, mNewOTCYetOrder.getDirect())
+                                    .putExtra(ExtraKeys.TRADE_DIRECTION, OTCOrderStatus.ORDER_DIRECT_BUY)
                                     .execute();
                         }
                     }

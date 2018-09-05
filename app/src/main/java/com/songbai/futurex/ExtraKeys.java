@@ -61,4 +61,5 @@ public interface ExtraKeys {
     String ENTER_TAB = "enter_tab";
 
     String NOT_MAIN = "not_main";
+    String MARKET_DATA = "market_data";
 }

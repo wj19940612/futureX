@@ -133,6 +133,12 @@ public class ChangePriceView extends FrameLayout {
         onPriceChange();
     }
 
+    public void setPrice(String price) {
+        mPrice.setText(price);
+        mPrice.setSelection(mPrice.getText().toString().length());
+        onPriceChange();
+    }
+
     public void reset() {
         mTextWatcherDisable = true;
         mPrice.setText("");
@@ -159,10 +165,16 @@ public class ChangePriceView extends FrameLayout {
         return formatPrice(String.valueOf(price));
     }
 
+    //根据scale来做位数显示处理
     private String formatPrice(String price) {
         int pointIndex = price.indexOf('.');
         if (pointIndex > -1) {
-            int endIndex = Math.min(price.length(), pointIndex + mScale + 1);
+//            int endIndex = Math.min(price.length(), pointIndex + mScale + 1);
+            int endIndex;
+            while (price.length() < pointIndex + mScale + 1) {
+                price = price + "0";
+            }
+            endIndex = pointIndex + mScale + 1;
             return price.substring(0, endIndex);
         }
         return price;
@@ -196,8 +208,19 @@ public class ChangePriceView extends FrameLayout {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        value += mChangeSize;
-        mPrice.setText(CurrencyUtils.getPrice(value, mScale));
+        int scale;
+        double changeSize;
+        int bitPos=text.indexOf(".");
+        if(bitPos < 0){
+            scale = 0;
+            changeSize = 1;
+        }else{
+            int numOfBits=text.length()-bitPos-1;
+            scale = numOfBits;
+            changeSize = Math.pow(10,-numOfBits);
+        }
+        value += changeSize;
+        mPrice.setText(CurrencyUtils.getPrice(value, scale));
         mPrice.setSelection(mPrice.getText().toString().length());
     }
 
@@ -209,9 +232,21 @@ public class ChangePriceView extends FrameLayout {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        value -= mChangeSize;
+
+        int scale;
+        double changeSize;
+        int bitPos=text.indexOf(".");
+        if(bitPos < 0){
+            scale = 0;
+            changeSize = 1;
+        }else{
+            int numOfBits=text.length()-bitPos-1;
+            scale = numOfBits;
+            changeSize = Math.pow(10,-numOfBits);
+        }
+        value -= changeSize;
         value = Math.max(0, value);
-        mPrice.setText(CurrencyUtils.getPrice(value, mScale));
+        mPrice.setText(CurrencyUtils.getPrice(value, scale));
         mPrice.setSelection(mPrice.getText().toString().length());
     }
 

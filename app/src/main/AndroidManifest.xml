@@ -48,11 +48,22 @@
             android:name="com.umeng.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"/>
+        </activity>
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.NoTitleBar"
+            />
+        <activity
+            android:name="com.umeng.socialize.handler.TwitterWebActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -123,9 +134,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.PropertyFlowActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".fragment.mine.RechargeHistoryActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.SetGesturePwdActivity"

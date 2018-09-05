@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.utils.CurrencyUtils;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -35,9 +37,12 @@ public class VolumeInputView extends FrameLayout {
     private int mVolumeScale;
     private boolean mTextWatcherDisable;
     private OnVolumeChangeListener mOnVolumeChangeListener;
+    private boolean mSetInput;
 
     public interface OnVolumeChangeListener {
         void onVolumeChange(double volume);
+
+        void onVolumeInputChange(double volume);
     }
 
     public VolumeInputView(@NonNull Context context) {
@@ -65,6 +70,17 @@ public class VolumeInputView extends FrameLayout {
         }
     }
 
+    private void onVolumeInputChange() {
+        if (mOnVolumeChangeListener != null) {
+            try {
+                double v = Double.parseDouble(mVolume.getText().toString());
+                mOnVolumeChangeListener.onVolumeInputChange(v);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public double getVolume() {
         return CurrencyUtils.getDouble(mVolume.getText().toString());
     }
@@ -86,21 +102,43 @@ public class VolumeInputView extends FrameLayout {
                     mVolume.setSelection(mVolume.getText().toString().length());
                     mTextWatcherDisable = false;
                     onVolumeChange();
+                    mSetInput = false;
                     return;
                 }
                 onVolumeChange();
+                if (!mSetInput) {
+                    onVolumeInputChange();
+                }
+                mSetInput = false;
+            }
+        });
+
+        mVolume.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String value = mVolume.getText().toString();
+                    String formatValue = FinanceUtil.subZeroAndDot(value);
+                    if (!value.equals(formatValue)) {
+                        setVolume(mVolume.getText().toString());
+                    }
+                }
             }
         });
     }
 
     public void setVolume(double volume) {
-        mVolume.setText(formatVolume(String.valueOf(volume)));
+        mSetInput = true;
+        String formatValue = formatVolume(String.valueOf(volume));
+        mVolume.setText(FinanceUtil.subZeroAndDot(formatValue));
         mVolume.setSelection(mVolume.getText().toString().length());
         onVolumeChange();
     }
 
     public void setVolume(String volume) {
-        mVolume.setText(formatVolume(String.valueOf(volume)));
+        mSetInput = true;
+        String formatValue = formatVolume(String.valueOf(volume));
+        mVolume.setText(FinanceUtil.subZeroAndDot(formatValue));
         mVolume.setSelection(mVolume.getText().toString().length());
         onVolumeChange();
     }

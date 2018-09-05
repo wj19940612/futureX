@@ -14,6 +14,7 @@ public class PagingWrap<T> {
     private int resultCount;//总共多少行
     private int start;
     private int total;//总共多少页
+    private boolean last;
 
     public List<T> getData() {
         return data;
@@ -53,6 +54,14 @@ public class PagingWrap<T> {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
     }
 
     @Override

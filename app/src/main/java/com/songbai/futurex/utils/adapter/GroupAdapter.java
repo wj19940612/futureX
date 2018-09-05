@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class GroupAdapter<T extends GroupAdapter.Groupable> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Group<T>> mGroupList;
+    private List<T> mOriginList;
 
     protected static final int HEAD = 0;
     protected static final int ITEM = 1;
@@ -28,8 +29,17 @@ public abstract class GroupAdapter<T extends GroupAdapter.Groupable> extends Rec
         notifyDataSetChanged();
     }
 
+    public List<Group<T>> getGroupList(){
+        return mGroupList;
+    }
+
+    public List<T> getOriginList(){
+        return mOriginList;
+    }
+
     protected List<Group<T>> group(List<T> list) {
         List<Group<T>> result = new ArrayList<>();
+        mOriginList = list;
         if (list == null || list.size() == 0) {
             return result;
         }
@@ -100,7 +110,7 @@ public abstract class GroupAdapter<T extends GroupAdapter.Groupable> extends Rec
         int getGroupId();
     }
 
-    static class Group<T extends Groupable> implements Groupable {
+    public static class Group<T extends Groupable> implements Groupable {
 
         private int mGroupNameRes;
         private int mGroupId;

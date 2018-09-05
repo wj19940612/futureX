@@ -61,6 +61,7 @@ public class Order implements OrderStatus, Parcelable {
     private String poundage;
     private int status;
     private long updateTime;
+    private String wid;
 
     public String getAmount() {
         return amount;
@@ -148,6 +149,14 @@ public class Order implements OrderStatus, Parcelable {
         return updateTime;
     }
 
+    public String getWid() {
+        return wid;
+    }
+
+    public void setWid(String wid) {
+        this.wid = wid;
+    }
+
     public void setPairs(String pairs) {
         this.pairs = pairs;
     }
@@ -214,6 +223,9 @@ public class Order implements OrderStatus, Parcelable {
                 '}';
     }
 
+    public Order() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -239,9 +251,7 @@ public class Order implements OrderStatus, Parcelable {
         dest.writeString(this.poundage);
         dest.writeInt(this.status);
         dest.writeLong(this.updateTime);
-    }
-
-    public Order() {
+        dest.writeString(this.wid);
     }
 
     protected Order(Parcel in) {
@@ -263,9 +273,10 @@ public class Order implements OrderStatus, Parcelable {
         this.poundage = in.readString();
         this.status = in.readInt();
         this.updateTime = in.readLong();
+        this.wid = in.readString();
     }
 
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
         @Override
         public Order createFromParcel(Parcel source) {
             return new Order(source);

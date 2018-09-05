@@ -73,8 +73,8 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private PropertyFlowAdapter mAdapter;
     private final int[] currencyFlowType = new int[]{TYPE_ALL,
             CurrencyFlowType.DRAW, CurrencyFlowType.DEPOSITE, CurrencyFlowType.ENTRUST_BUY,
-            CurrencyFlowType.ENTRUST_SELL,  CurrencyFlowType.DRAW_FEE,
-            CurrencyFlowType.TRADE_FEE,  CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT,
+            CurrencyFlowType.ENTRUST_SELL, CurrencyFlowType.DRAW_FEE,
+            CurrencyFlowType.TRADE_FEE, CurrencyFlowType.LEGAL_ACCOUNT_IN, CurrencyFlowType.COIN_ACCOUNT_OUT,
             CurrencyFlowType.PERIODIC_RELEASE, CurrencyFlowType.SPECIAL_TRADE, CurrencyFlowType.CASHBACK,
             CurrencyFlowType.INVT_REWARD, CurrencyFlowType.DISTRIBUTED_REV, CurrencyFlowType.RELEASED_BFB,
             CurrencyFlowType.MINERS_REWAR, CurrencyFlowType.SHARED_FEE, CurrencyFlowType.SUBSCRIPTION,
@@ -88,7 +88,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
             R.string.periodic_release, R.string.special_trade, R.string.cashback,
             R.string.invt_reward, R.string.distributed_rev, R.string.release_bfb,
             R.string.miners_rewar, R.string.shared_fee, R.string.subscription,
-            R.string.event_grant,R.string.event_award
+            R.string.event_grant, R.string.event_award
     };
 
     private final int[] otcFlowType = new int[]{TYPE_ALL,
@@ -105,6 +105,7 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     private ArrayList<Integer> mFlowType;
     private PropertyFlowFilter mPropertyFlowFilter;
     private int mAccountType;
+    private String mWid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -253,27 +254,34 @@ public class PropertyFlowActivity extends BaseSwipeLoadActivity {
     @Override
     public void onRefresh() {
         mPage = 0;
+        mWid = "";
         getUserFinanceFlow();
     }
 
     private void getUserFinanceFlow() {
         switch (mAccountType) {
             case 0:
-                Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize).tag(TAG)
+                Apic.getUserFinanceFlow(mGetUserFinanceFlowData, mPage, mPageSize, mWid).tag(TAG)
                         .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                             @Override
                             protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
-                                mAdapter.setList(resp.getData());
+                                PagingWrap<CoinPropertyFlow> pagingWrap = resp.getData();
+                                List<CoinPropertyFlow> data = pagingWrap.getData();
+                                if (data.size() > 0) {
+                                    mWid = data.get(data.size() - 1).getWid();
+                                }
+                                pagingWrap.setStart(mPage);
+                                mAdapter.setList(pagingWrap);
                                 mAdapter.notifyDataSetChanged();
                                 stopFreshOrLoadAnimation();
                                 if (mPage == 0) {
                                     mSwipeTarget.hideAll(false);
                                     mSwipeToLoadLayout.setRefreshEnabled(mEmptyView.getVisibility() != View.VISIBLE);
                                 }
-                                if (mPage < resp.getData().getTotal() - 1) {
-                                    mPage++;
-                                } else {
+                                if (pagingWrap.isLast()) {
                                     mSwipeToLoadLayout.setLoadMoreEnabled(false);
+                                } else {
+                                    mPage++;
                                 }
                             }
                         })

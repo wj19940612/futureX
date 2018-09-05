@@ -189,6 +189,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private CurrencyPairsPopup mPairsPopup;
 
     private boolean mNotMain;
+    private String mWid;
 
     public static TradeFragment newsInstance(CurrencyPair currencyPair, int direction, boolean notMain) {
         TradeFragment tradeFragment = new TradeFragment();
@@ -208,6 +209,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     @Override
     public void onRefresh() {
+        mWid = "";
+        mPage = 0;
         requestUserAccount();
     }
 
@@ -276,7 +279,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
-                Log.e("zzz","onTabSelected:"+mCurrencyPair==null?"true":"false");
+//                Log.e("zzz", "onTabSelected:" + mCurrencyPair == null ? "true" : "false");
                 if (mCurrencyPair == null) return;
 
                 if (position == 0) { // buy in
@@ -299,7 +302,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
         mTradeVolumeView.setOnItemClickListener(new TradeVolumeView.OnItemClickListener() {
             @Override
-            public void onItemClick(double price, double volume) {
+            public void onItemClick(String price, String volume) {
                 if (mChangePriceView.getVisibility() == View.GONE) return;
                 mChangePriceView.setPrice(price);
                 mChangePriceView.startScaleAnim();
@@ -312,7 +315,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             public void onPriceChange(double price) {
                 updateTradeCurrencyView();
                 updateTradeAmount();
-                updateVolumeSeekBar();
+                updateSelectPercentView();
+//                updateVolumeSeekBar();
             }
         });
 
@@ -320,11 +324,17 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             @Override
             public void onVolumeChange(double volume) {
                 updateTradeAmount();
-                updateVolumeSeekBar();
+//                updateVolumeSeekBar();
 
                 if (LocalUser.getUser().isLogin() && volume > mTradeCurrencyVolume) {
                     ToastUtil.show(R.string.no_enough_balance);
                 }
+            }
+
+            @Override
+            public void onVolumeInputChange(double volume) {
+//                Log.e("zzz","onVolumeInputChange:"+volume);
+                updateVolumeSeekBar();
             }
         });
 
@@ -345,6 +355,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 }
                 mOrderListFloatRadio.selectTab(position);
                 mPage = 0;
+                mWid = "";
                 requestOrderList();
             }
         });
@@ -599,10 +610,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mPercentSelectView.updatePercent(progress);
     }
 
+    private void updateSelectPercentView() {
+        mPercentSelectView.updateSelectPercent();
+    }
+
     private void updateVolumeInputView(int progress, int max) {
-//        int progress = mTradeVolumeSeekBar.getProgress();
-//        int max = mTradeVolumeSeekBar.getMax();
-        mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max, 20));
+        if (progress > 0) {
+            mVolumeInput.setVolume(mTradeCurrencyVolume * progress / max);
+        }
     }
 
     private void updateTradeAmount() {
@@ -611,6 +626,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             double volume = mVolumeInput.getVolume();
             int scale = mPairDesc.getSuffixSymbol().getBalancePoint();
             String unit = mCurrencyPair.getSuffixSymbol();
+            if (volume == 0) {
+                mTradeAmount.setText("--  " + unit.toUpperCase());
+                return;
+            }
             double amt = price * volume;
             String tradeAmt = "0";
             if (amt != 0) {
@@ -659,6 +678,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mChangePriceView.reset();
         mVolumeInput.reset();
         mPage = 0;
+        mWid = "";
         mOrderAdapter.setOrderList(new ArrayList<Order>());
         mLastPrice.setText("--.--");
         mPriceChange.setText("--.--");
@@ -666,6 +686,10 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
 
 //        mTradeCurrencyRange.setText("");
+    }
+
+    private void resetMakeOrder() {
+        mVolumeInput.reset();
     }
 
     private void updateMarketView(PairMarket pairMarket) {
@@ -782,6 +806,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private double getTradePrice() {
+        if (mChangePriceView == null) return 0;
+
         double price = mChangePriceView.getPrice();
         if (mTradeTypeValue == MARKET_TRADE) {
             if (mTradeDir == TradeDir.DIR_BUY_IN) {
@@ -808,7 +834,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.buy_in);
             mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
-            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+//            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
         } else {
             int tradeTypeRes;
             if (mTradeTypeValue == LIMIT_TRADE) {
@@ -823,7 +849,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.sell_out);
             mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);
-            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
+//            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
         }
     }
 
@@ -871,6 +897,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
+        mVolumeInput.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mChangePriceView.setPriceScale(mPairDesc.getPairs().getPricePoint());
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mOrderAdapter.setScale(mPairDesc.getPrefixSymbol().getBalancePoint(),
@@ -881,7 +908,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeTypeValue = LIMIT_TRADE;
         updateTradeDirectionView();
 
-        mVolumeInput.setBaseCurrency(mTradeDir == TradeDir.DIR_BUY_IN ?mCurrencyPair.getSuffixSymbol().toUpperCase():mCurrencyPair.getPrefixSymbol().toUpperCase());
+        mVolumeInput.setBaseCurrency(mTradeDir == TradeDir.DIR_BUY_IN ? mCurrencyPair.getSuffixSymbol().toUpperCase() : mCurrencyPair.getPrefixSymbol().toUpperCase());
     }
 
     private void updateOptionalStatus() {
@@ -982,6 +1009,11 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void makeOrder() {
         if (mCurrencyPair == null) return;
+
+        if (mVolumeInput.getVolume() == 0) {
+            ToastUtil.show(R.string.please_input_right_amount);
+            return;
+        }
         final MakeOrder makeOrder = new MakeOrder();
         int direction = mTradeDir == TradeDir.DIR_BUY_IN ? Order.DIR_BUY : Order.DIR_SELL;
         makeOrder.setDirection(direction);
@@ -991,6 +1023,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         makeOrder.setEntrustPrice(getTradePrice());
 
         requestMakeOrder(makeOrder);
+        resetMakeOrder();
     }
 
     private void requestMakeOrder(final MakeOrder makeOrder) {
@@ -999,6 +1032,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     @Override
                     protected void onRespSuccess(Resp resp) {
                         mPage = 0;
+                        mWid = "";
                         requestOrderList();
                         ToastUtil.show(R.string.entrust_success);
                     }
@@ -1039,21 +1073,25 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (!LocalUser.getUser().isLogin()) return;
         int type = mOrderListRadio.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime, null, null)
+        Apic.getEntrustOrderList(mPage, type, endTime, null, null, mWid)
                 .id(mOrderListRadio.getSelectTab())
                 .tag(TAG)
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {
                     @Override
                     protected void onRespData(PagingWrap<Order> data) {
                         if (getId().equals(mOrderListRadio.getSelectTab())) {
+                            List<Order> orderList = data.getData();
+                            if (orderList.size() > 0) {
+                                mWid = orderList.get(orderList.size() - 1).getWid();
+                            }
                             if (mPage == 0) {
-                                mOrderAdapter.setOrderList(data.getData());
+                                mOrderAdapter.setOrderList(orderList);
                             } else {
-                                mOrderAdapter.appendOrderList(data.getData());
+                                mOrderAdapter.appendOrderList(orderList);
                             }
                             stopLoadMoreAnimation();
 
-                            if (data.getData().size() < Apic.DEFAULT_PAGE_SIZE) {
+                            if (orderList.size() < Apic.DEFAULT_PAGE_SIZE) {
                                 mSwipeToLoadLayout.setLoadMoreEnabled(false);
                             } else {
                                 mSwipeToLoadLayout.setLoadMoreEnabled(true);

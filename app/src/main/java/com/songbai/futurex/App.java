@@ -52,20 +52,15 @@ public class App extends Application {
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, BuildConfig.PUSH_SECRET);
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setPushIntentServiceClass(UmengNotificationService.class);
-        //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
-            public void onSuccess(String deviceToken) {
-                //注册成功会返回device token
-                Log.e("wtf", "onSuccess: " + deviceToken);
+            public void onSuccess(String deviceToken) {//注册成功会返回device token
             }
 
             @Override
             public void onFailure(String s, String s1) {
-                Log.e("wtf", "onSuccess: " + s + "======" + s1);
             }
         });
-        PlatformConfig.setWeixin("wx67b9d8f3d487db59", "ee2af090c92bb425e1bc9867780babfb");
         processCaughtException();
     }
 
@@ -121,7 +116,6 @@ public class App extends Application {
 
     static {
         // 注意：测试用 appId & secret
-//        PlatformConfig.setWeixin("wx7576ec9bb65aea1a", "d640a05c70ec272f56557bd7e9c15dc4");
-//        PlatformConfig.setQQZone("1106465763", "qYrMZDFn2dn5KQhP");
+        PlatformConfig.setWeixin("wxc9e47f8de7a045c6", "d7184597d4c0c4e537cbbecef61cf548");
     }
 }

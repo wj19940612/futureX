@@ -91,6 +91,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     private boolean mKeyboardVisible;
 
     private int mIndexTab;
+    private String mWid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -167,8 +168,8 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
         mMarketSubscriber.pause();
     }
 
-    private void initData(){
-        mIndexTab = getIntent().getIntExtra(ExtraKeys.ENTER_TAB,TAB_ENTRUST);
+    private void initData() {
+        mIndexTab = getIntent().getIntExtra(ExtraKeys.ENTER_TAB, TAB_ENTRUST);
     }
 
     private void initTitleBar() {
@@ -186,6 +187,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                     mOrderAdapter.setOrderType(Order.TYPE_HIS_ENTRUST);
                 }
                 mPage = 0;
+                mWid = "";
                 requestOrderList();
             }
         });
@@ -207,6 +209,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             @Override
             public void onFilter(HistoryFilter.FilterResult filterResult) {
                 mPage = 0;
+                mWid = "";
                 requestOrderList();
                 mHistoryFilter.dismiss();
             }
@@ -241,21 +244,25 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     private void requestOrderList(String prefixSymbol, String suffixSymbol, Integer direction) {
         int type = mRadioHeader.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
-        Apic.getEntrustOrderList(mPage, type, endTime, prefixSymbol, suffixSymbol, direction).tag(TAG)
+        Apic.getEntrustOrderList(mPage, type, endTime, prefixSymbol, suffixSymbol, direction, mWid).tag(TAG)
                 .id(mRadioHeader.getSelectTab())
                 .callback(new Callback4Resp<Resp<PagingWrap<Order>>, PagingWrap<Order>>() {
                     @Override
                     protected void onRespData(PagingWrap<Order> data) {
                         if (getId().equals(mRadioHeader.getSelectTab())) {
+                            List<Order> orderList = data.getData();
+                            if (orderList.size() > 0) {
+                                mWid = orderList.get(orderList.size() - 1).getWid();
+                            }
                             if (mPage == 0) {
-                                mOrderAdapter.setOrderList(data.getData());
+                                mOrderAdapter.setOrderList(orderList);
                             } else {
-                                mOrderAdapter.appendOrderList(data.getData());
+                                mOrderAdapter.appendOrderList(orderList);
                             }
 
                             stopLoadMoreAnimation();
 
-                            if (data.getData().size() < Apic.DEFAULT_PAGE_SIZE) {
+                            if (orderList.size() < Apic.DEFAULT_PAGE_SIZE) {
                                 mSwipeToLoadLayout.setLoadMoreEnabled(false);
                             } else {
                                 mSwipeToLoadLayout.setLoadMoreEnabled(true);
@@ -285,6 +292,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
     @Override
     public void onRefresh() {
         mPage = 0;
+        mWid = "";
         requestOrderList();
     }
 

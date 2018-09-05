@@ -390,15 +390,17 @@ public class Apic {
     }
 
     /**
-     * /api/user/wallet/getUserFinanceFlow.do
+     * /api/user/v1/wallet/financeFlow.do
      * GET
-     * 资产明细（叶海啸）
+     * 币币账户-资产明细(V1.5)
      */
-    public static Api getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize) {
-        return Api.get("/api/user/wallet/getUserFinanceFlow.do",
+    public static Api getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData, int page, int pageSize, String wid) {
+        return Api.get("/api/user/v1/wallet/financeFlow.do",
                 new ReqParams(GetUserFinanceFlowData.class, getUserFinanceFlowData)
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("scrollType", 1)
+                        .put("wid", wid));
     }
 
     /**
@@ -620,15 +622,17 @@ public class Apic {
     }
 
     /**
-     * /api/user/user/inviteAward
+     * /api/user/v1/user/inviteAward.do
      * GET
-     * 奖励记录
+     * 奖励记录--v1.5
      */
-    public static Api inviteAward(int page, int pageSize) {
-        return Api.get("/api/user/user/inviteAward",
+    public static Api inviteAward(int page, int pageSize, String wid) {
+        return Api.get("/api/user/v1/user/inviteAward.do",
                 new ReqParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("scrollType", 1)
+                        .put("wid", wid));
     }
 
     /**
@@ -1322,7 +1326,9 @@ public class Apic {
 
 
     /**
-     * 请求委托订单列表
+     * /entrust/v1/orders
+     * GET
+     * 当前/历史委托/成交---v1.5
      *
      * @param page
      * @param type
@@ -1331,15 +1337,17 @@ public class Apic {
      * @param suffixSymbol
      * @return
      */
-    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol) {
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, String wid) {
         ReqParams reqParams = new ReqParams();
         reqParams.put("pageSize", DEFAULT_PAGE_SIZE)
                 .put("page", page)
                 .put("current", type)
                 .put("endDate", endDate)
                 .put("suffixSymbol", suffixSymbol)
-                .put("prefixSymbol", prefixSymbol);
-        return Api.get("/api/entrust/entrust/mine", reqParams);
+                .put("prefixSymbol", prefixSymbol)
+                .put("scrollType", 1)
+                .put("wid", wid);
+        return Api.get("/api/entrust/v1/orders", reqParams);
     }
 
     /**
@@ -1353,8 +1361,8 @@ public class Apic {
      * @param direction
      * @return
      */
-    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, Integer direction) {
-        return Api.get("/api/entrust/entrust/mine",
+    public static Api getEntrustOrderList(int page, int type, String endDate, String prefixSymbol, String suffixSymbol, Integer direction,String wid) {
+        return Api.get("/api/entrust/v1/orders",
                 new ReqParams()
                         .put("pageSize", DEFAULT_PAGE_SIZE)
                         .put("page", page)
@@ -1362,7 +1370,9 @@ public class Apic {
                         .put("endDate", endDate)
                         .put("prefixSymbol", prefixSymbol)
                         .put("suffixSymbol", suffixSymbol)
-                        .put("direction", direction));
+                        .put("direction", direction)
+                        .put("scrollType", 1)
+                        .put("wid", wid));
     }
 
     /**
@@ -1481,7 +1491,14 @@ public class Apic {
     }
 
     /**
-     * /api/user/dictionary/findDictionaryByCode.do
+     * 获取多个交易对的趋势行情
+     */
+    public static Api requestKTrendPairs(String pairs) {
+        return Api.get("/api/quota/quota/list/kTrend", new ReqParams().put("pairs", pairs));
+    }
+
+
+    /**  /api/user/dictionary/findDictionaryByCode.do
      * GET
      * 获取google双重验证图片
      */

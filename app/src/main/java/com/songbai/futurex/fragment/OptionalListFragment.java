@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.google.gson.Gson;
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.auth.LoginActivity;
@@ -26,18 +30,26 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback4Resp;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
+import com.songbai.futurex.model.KTrend;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.UmengCountEventId;
+import com.songbai.futurex.view.chart.TimeShareChart;
 import com.songbai.futurex.view.recycler.DividerItemDecor;
 import com.songbai.futurex.websocket.model.MarketData;
+import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
+import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,18 +63,27 @@ import butterknife.Unbinder;
  * <p>
  * APIs:
  */
-public class OptionalListFragment extends BaseFragment {
+public class OptionalListFragment extends BaseSwipeLoadFragment<RecyclerView> {
 
     private static final int REQ_CODE_LOGIN = 91;
 
-    @BindView(R.id.optionalList)
+    @BindView(R.id.swipe_target)
     RecyclerView mOptionalList;
     @BindView(R.id.optionalEmptyView)
     LinearLayout mOptionalEmptyView;
     Unbinder unbinder;
+    @BindView(R.id.swipe_refresh_header)
+    RefreshHeaderView mSwipeRefreshHeader;
+    @BindView(R.id.swipe_load_more_footer)
+    LoadMoreFooterView mSwipeLoadMoreFooter;
+    @BindView(R.id.swipeToLoadLayout)
+    SwipeToLoadLayout mSwipeToLoadLayout;
+    @BindView(R.id.addOptional)
+    TextView mAddOptional;
 
     private OptionalAdapter mOptionalAdapter;
     private Map<String, MarketData> mMarketDataList;
+    private MarketDiffCallback mMarketDiffCallback;
 
     @Nullable
     @Override
@@ -75,6 +96,8 @@ public class OptionalListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mSwipeToLoadLayout.setLoadMoreEnabled(false);
+        mMarketDiffCallback = new MarketDiffCallback();
         mOptionalList.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecor dividerItemDecor = new DividerItemDecor(getActivity(), DividerItemDecoration.VERTICAL);
         mOptionalList.addItemDecoration(dividerItemDecor);
@@ -110,7 +133,8 @@ public class OptionalListFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && mOptionalAdapter != null) {
-            mOptionalAdapter.setMarketDataList(mMarketDataList);
+            mOptionalAdapter.setMarketDataListData(mMarketDataList);
+            requestOptionalList();
         }
     }
 
@@ -123,6 +147,18 @@ public class OptionalListFragment extends BaseFragment {
     }
 
     public void setMarketDataList(Map<String, MarketData> marketDataList) {
+
+        if (mOptionalAdapter != null && getUserVisibleHint()) {
+            mMarketDiffCallback.setOldList(mOptionalAdapter.getPairList());
+            mMarketDiffCallback.setNewList(mOptionalAdapter.getPairList());
+            mMarketDiffCallback.setMarketMap(marketDataList);
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mMarketDiffCallback);
+            mOptionalAdapter.setMarketDataListData(mMarketDataList);
+            diffResult.dispatchUpdatesTo(mOptionalAdapter);
+        }
+
+        mMarketDataList = marketDataList;
+
         mMarketDataList = marketDataList;
         if (getUserVisibleHint() && mOptionalAdapter != null) {
             mOptionalAdapter.setMarketDataList(mMarketDataList);
@@ -136,8 +172,43 @@ public class OptionalListFragment extends BaseFragment {
                     protected void onRespData(List<CurrencyPair> data) {
                         mOptionalAdapter.setPairList(data);
                         showOptionalEmptyView(data);
+                        getKTrendData(data);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopFreshOrLoadAnimation();
                     }
                 }).fireFreely();
+    }
+
+    private void getKTrendData(List<CurrencyPair> data) {
+        if (data == null || data.size() == 0) return;
+
+        String paris = getParis(data);
+        Apic.requestKTrendPairs(paris).tag(TAG).callback(new Callback4Resp<Resp<HashMap<String, List<KTrend>>>, HashMap<String, List<KTrend>>>() {
+            @Override
+            protected void onRespData(HashMap<String, List<KTrend>> data) {
+                updateKTrendData(data);
+            }
+        }).fireFreely();
+    }
+
+    private void updateKTrendData(HashMap<String, List<KTrend>> data) {
+        if (mOptionalAdapter != null) {
+            mOptionalAdapter.setKTrendListMap(data);
+            mOptionalAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private String getParis(List<CurrencyPair> data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (CurrencyPair currencyPair : data) {
+            stringBuilder.append(currencyPair.getPairs());
+            stringBuilder.append(",");
+        }
+        return stringBuilder.toString();
     }
 
     private void showOptionalEmptyView(List<CurrencyPair> data) {
@@ -172,6 +243,40 @@ public class OptionalListFragment extends BaseFragment {
         }
         String jsonArray = new Gson().toJson(mOptionalAdapter.mPairList);
         Apic.updateOptionalList(jsonArray).tag(TAG).fireFreely();
+    }
+
+    @Override
+    public void onLoadMore() {
+
+    }
+
+    @Override
+    public void onRefresh() {
+        requestOptionalList();
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView getSwipeTargetView() {
+        return mOptionalList;
+    }
+
+    @NonNull
+    @Override
+    public SwipeToLoadLayout getSwipeToLoadLayout() {
+        return mSwipeToLoadLayout;
+    }
+
+    @NonNull
+    @Override
+    public RefreshHeaderView getRefreshHeaderView() {
+        return mRefreshHeaderView;
+    }
+
+    @NonNull
+    @Override
+    public LoadMoreFooterView getLoadMoreFooterView() {
+        return mLoadMoreFooterView;
     }
 
     interface ItemTouchHelperAdapter {
@@ -222,11 +327,23 @@ public class OptionalListFragment extends BaseFragment {
         private Context mContext;
         private boolean mEditMode;
         private ItemTouchHelper mItemTouchHelper;
+        private Map<String, List<KTrend>> mKTrendListMap;
+        private Set<String> mPairsSet;
 
         public OptionalAdapter(Context context, OnRVItemClickListener onRVItemClickListener) {
             mOnRVItemClickListener = onRVItemClickListener;
             mPairList = new ArrayList<>();
             mContext = context;
+            mPairsSet = new HashSet<>();
+        }
+
+        public void setKTrendListMap(HashMap<String, List<KTrend>> KTrendListMap) {
+            mKTrendListMap = KTrendListMap;
+            mPairsSet.clear();
+        }
+
+        public List<CurrencyPair> getPairList() {
+            return mPairList;
         }
 
         public void setItemTouchHelper(ItemTouchHelper itemTouchHelper) {
@@ -252,6 +369,10 @@ public class OptionalListFragment extends BaseFragment {
             }
         }
 
+        public void setMarketDataListData(Map<String, MarketData> marketDataListData) {
+            mMarketDataList = marketDataListData;
+        }
+
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -260,9 +381,21 @@ public class OptionalListFragment extends BaseFragment {
         }
 
         @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (payloads.isEmpty()) {
+                onBindViewHolder(holder, position);
+            } else if (holder instanceof ViewHolder) {
+                Bundle bundle = (Bundle) payloads.get(0);
+                MarketData marketData = bundle.getParcelable(ExtraKeys.MARKET_DATA);
+                CurrencyPair currencyPair = bundle.getParcelable(ExtraKeys.CURRENCY_PAIR);
+                holder.bind(currencyPair, marketData, mContext, mEditMode);
+            }
+        }
+
+        @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
             final CurrencyPair pair = mPairList.get(position);
-            holder.bind(pair, mMarketDataList, mContext, mEditMode);
+            holder.bind(mPairsSet, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()), pair, mMarketDataList, mContext, mEditMode);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -308,33 +441,40 @@ public class OptionalListFragment extends BaseFragment {
             LinearLayout mPriceLine;
             @BindView(R.id.dragIcon)
             ImageView mDragIcon;
+            @BindView(R.id.chart)
+            TimeShareChart mTimeShareChart;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, final boolean editMode) {
+            public void bind(Set<String> pairsSet, List<KTrend> mKTrends, CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, final boolean editMode) {
+
+                double upDropSeed;
+
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
                 if (marketDataList != null && marketDataList.get(pair.getPairs()) != null) {
                     MarketData marketData = marketDataList.get(pair.getPairs());
+                    upDropSeed = marketData.getUpDropSpeed();
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
                     if (marketData.getUpDropSpeed() < 0) {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 } else {
                     mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(pair.getLastVolume())));
                     mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
                     mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    upDropSeed = pair.getUpDropSpeed();
                     if (pair.getUpDropSpeed() < 0) {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_red_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
                     } else {
-                        mPriceChange.setBackgroundResource(R.drawable.bg_green_r2);
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 }
 
@@ -345,7 +485,124 @@ public class OptionalListFragment extends BaseFragment {
                     mPriceLine.setVisibility(View.VISIBLE);
                     mDragIcon.setVisibility(View.GONE);
                 }
+
+                if (editMode) {
+                    mTimeShareChart.setVisibility(View.GONE);
+                } else {
+                    mTimeShareChart.setVisibility(View.VISIBLE);
+                    if (!pairsSet.contains(pair.getPairs())) {
+                        mTimeShareChart.updateData(pair.getPairs(), mKTrends, upDropSeed);
+                        pairsSet.add(pair.getPairs());
+                    } else {
+                        mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
+                    }
+                }
             }
+
+            public void bind(CurrencyPair pair, MarketData marketData, Context context, boolean editMode) {
+                double upDropSeed;
+                mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
+                mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
+                if (marketData != null) {
+                    upDropSeed = marketData.getUpDropSpeed();
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(marketData.getVolume())));
+                    mLastPrice.setText(CurrencyUtils.getPrice(marketData.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(marketData.getUpDropSpeed()));
+                    if (marketData.getUpDropSpeed() < 0) {
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
+                    } else {
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
+                    }
+                } else {
+                    mTradeVolume.setText(context.getString(R.string.volume_24h_x, CurrencyUtils.get24HourVolume(pair.getLastVolume())));
+                    mLastPrice.setText(CurrencyUtils.getPrice(pair.getLastPrice(), pair.getPricePoint()));
+                    mPriceChange.setText(CurrencyUtils.getPrefixPercent(pair.getUpDropSpeed()));
+                    upDropSeed = pair.getUpDropSpeed();
+                    if (pair.getUpDropSpeed() < 0) {
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
+                    } else {
+                        mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
+                    }
+                }
+
+                mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
+
+                if (editMode) {
+                    mPriceLine.setVisibility(View.GONE);
+                    mDragIcon.setVisibility(View.VISIBLE);
+                } else {
+                    mPriceLine.setVisibility(View.VISIBLE);
+                    mDragIcon.setVisibility(View.GONE);
+                }
+
+            }
+        }
+    }
+
+    public static class MarketDiffCallback extends DiffUtil.Callback {
+        private Map<String, MarketData> mMarketMap;
+        private List<CurrencyPair> mOldList;
+        private List<CurrencyPair> mNewList;
+
+        public void setOldList(List<CurrencyPair> oldList) {
+            mOldList = oldList;
+        }
+
+        public void setNewList(List<CurrencyPair> newList) {
+            mNewList = newList;
+        }
+
+        public void setMarketMap(Map<String, MarketData> marketMap) {
+            mMarketMap = marketMap;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return mOldList == null ? 0 : mOldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return mNewList == null ? 0 : mNewList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            if (oldItemPosition != newItemPosition || mOldList == null || mNewList == null) {
+                return false;
+            }
+            if (mOldList.size() != mNewList.size()) {
+                return false;
+            }
+            CurrencyPair oldItem = mOldList.get(oldItemPosition);
+            CurrencyPair newItem = mNewList.get(newItemPosition);
+            if (oldItem == null || newItem == null) {
+                return false;
+            }
+            return oldItem.getPairs().equals(newItem.getPairs());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+            // 定向刷新中的部分更新
+            // 效率最高
+
+
+            CurrencyPair newItem = mNewList.get(newItemPosition);
+            if (newItem == null) {
+                return null;
+            }
+
+            Bundle payload = new Bundle();
+            payload.putParcelable(ExtraKeys.MARKET_DATA, mMarketMap.get(newItem.getPairs()));
+            payload.putParcelable(ExtraKeys.CURRENCY_PAIR, newItem);
+            return payload;
         }
     }
 
