@@ -488,7 +488,7 @@ public class SimpleOTCFragment extends BaseFragment {
         final String coinCount = mTradeAmount.getText().toString();
         if (mNewOTCPrice != null) {
             if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
-                if (Double.valueOf(coinCount) < mNewOTCPrice.getBuyMinPrice()) {
+                if (Double.valueOf(coinCount) < mNewOTCPrice.getBuyMinCount()) {
                     ToastUtil.show(getString(mEditTurnover ? R.string.min_buy_amount_x : R.string.min_buy_num_x, mEditTurnover ? mNewOTCPrice.getBuyMinPrice() : mNewOTCPrice.getBuyMinCount()));
                     return;
                 } else if (Double.valueOf(coinCount) > mNewOTCPrice.getBuyMaxCount()) {
@@ -496,10 +496,10 @@ public class SimpleOTCFragment extends BaseFragment {
                     return;
                 }
             } else if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL) {
-                if (Double.valueOf(coinCount) < mNewOTCPrice.getSellMinPrice()) {
+                if (Double.valueOf(coinCount) < mNewOTCPrice.getSellMinCount()) {
                     ToastUtil.show(getString(mEditTurnover ? R.string.min_sell_amount_x : R.string.min_sell_num_x, mEditTurnover ? mNewOTCPrice.getSellMinPrice() : mNewOTCPrice.getSellMinCount()));
                     return;
-                } else if (Double.valueOf(coinCount) > mNewOTCPrice.getSellMaxPrice()) {
+                } else if (Double.valueOf(coinCount) > mNewOTCPrice.getSellMaxCount()) {
                     ToastUtil.show(getString(mEditTurnover ? R.string.min_sell_amount_x : R.string.min_sell_num_x, mEditTurnover ? mNewOTCPrice.getSellMaxPrice() : mNewOTCPrice.getSellMaxCount()));
                     return;
                 }
