@@ -808,4 +808,5 @@
     <string name="bind_mainland_bank_card">綁定個人銀行卡(限中國大陸)</string>
     <string name="bind_pay">綁定支付方式</string>
     <string name="cause_trade">暫停交易</string>
+    <string name="receipt_method">收款方式</string>
 </resources>
