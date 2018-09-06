@@ -818,4 +818,5 @@
     <string name="bind_pay">绑定支付方式</string>
     <string name="cause_trade">暂停交易</string>
     <string name="receipt_method">收款方式</string>
+    <string name="pause_trade">暂停交易</string>
 </resources>

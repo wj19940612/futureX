@@ -808,4 +808,5 @@
     <string name="bind_pay">Set payment</string>
     <string name="cause_trade">suspend</string>
     <string name="receipt_method">Receipt method</string>
+    <string name="pause_trade">suspend</string>
 </resources>
