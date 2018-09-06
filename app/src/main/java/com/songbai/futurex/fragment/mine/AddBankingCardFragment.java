@@ -25,6 +25,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.local.BankBindData;
+import com.songbai.futurex.model.mine.AuthenticationName;
 import com.songbai.futurex.model.mine.BankListBean;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.LanguageUtils;
@@ -99,6 +100,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     private OptionsPickerView mPvOptions;
     private OptionsPickerView mBankPvOptions;
     private String mBankName;
+    private String mName;
 
     @Nullable
     @Override
@@ -114,6 +116,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        authenticationName();
         option.add(getString(R.string.cn_mainland));
         option.add(getString(R.string.cn_tw));
         alignText();
@@ -141,6 +144,10 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
         mTwGroup.setVisibility(isMainland ? View.GONE : View.VISIBLE);
         mMainlandGroup.setVisibility(isMainland ? View.VISIBLE : View.GONE);
         if (isMainland) {
+            if (!TextUtils.isEmpty(mName)) {
+                mRealName.setText(mName);
+                setUnEditable(mRealName);
+            }
             mMainlandBankBranch.addTextChangedListener(mMainlandWatcher);
             mMainlandCardNumber.addTextChangedListener(mMainlandWatcher);
             mRealName.addTextChangedListener(mMainlandWatcher);
@@ -155,6 +162,25 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
             mWithDrawPass.addTextChangedListener(mTWWatcher);
             checkTWEnableState();
         }
+    }
+
+    private void authenticationName() {
+        Apic.authenticationName().tag(TAG)
+                .callback(new Callback<Resp<AuthenticationName>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<AuthenticationName> resp) {
+                        mName = resp.getData().getName();
+                        mRealName.setText(mName);
+                        setUnEditable(mRealName);
+                    }
+                })
+                .fire();
+    }
+
+    private void setUnEditable(EditText editText) {
+        editText.setFocusable(false);
+        editText.setFocusableInTouchMode(false);
+        editText.setClickable(false);
     }
 
     private ValidationWatcher mMainlandWatcher = new ValidationWatcher() {
