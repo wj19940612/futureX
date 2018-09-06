@@ -1,6 +1,7 @@
 package com.songbai.futurex.newotc;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ import com.songbai.futurex.model.NewOTCPrice;
 import com.songbai.futurex.model.NewOTCYetOrder;
 import com.songbai.futurex.model.NewOrderData;
 import com.songbai.futurex.model.ParamBean;
+import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.SysMessage;
 import com.songbai.futurex.model.status.OTCOrderStatus;
@@ -52,6 +54,7 @@ import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.dialog.MsgHintController;
+import com.songbai.futurex.view.dialog.SimpleOTCLimitController;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
@@ -107,6 +110,7 @@ public class SimpleOTCFragment extends BaseFragment {
     private String mSelectedLegalSymbol = "cny";
     private NewOTCPrice mNewOTCPrice;
     private boolean mPrepared;
+    boolean setAuth, setCashPwd, setPhone, bindMainland, bindPay = false;
 
     private Network.NetworkChangeReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
         @Override
@@ -146,6 +150,9 @@ public class SimpleOTCFragment extends BaseFragment {
     private NewOTCYetOrder mNewOTCYetOrder;
     private MsgProcessor mMsgProcessor;
     private boolean mEditTurnover;
+    private SimpleOTCLimitController mSimpleOTCLimitController;
+    private static final int REQUEST_SET = 12343;
+    private SmartDialog mSmartDialog;
 
     private void setAmountAndTurnover() {
         if (mNewOTCPrice != null) {
@@ -458,30 +465,95 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void checkTrade() {
-        boolean otc365 = mNewOTCPrice != null &&
-                ((mNewOTCPrice.getBuyOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY)
-                        || (mNewOTCPrice.getSellOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL));
-        if ((otc365 || mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL) && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
-            showAlertMsgHint(Resp.Code.NEEDS_PRIMARY_CERTIFICATION);
-            return;
+        boolean shouldShowAlert = shouldAlert();
+        if (shouldShowAlert) {
+            showAlert();
+        } else {
+            trade();
         }
-        if (mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && LocalUser.getUser().getUserInfo().getSafeSetting() != 1) {
-            showAlertMsgHint(Resp.Code.CASH_PWD_NONE);
-            return;
+    }
+
+    private boolean shouldAlert() {
+        boolean ret = false;
+        setAuth = setCashPwd = setPhone = bindMainland = bindPay = false;
+        boolean otc365 = isOtc365();
+        if ((mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL || otc365) && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+            setAuth = true;
+            ret = true;
+        }
+        if ((mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL || otc365) && LocalUser.getUser().getUserInfo().getSafeSetting() < 1) {
+            ret = true;
+            setCashPwd = true;
         }
         if (otc365 && TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getUserPhone())) {
-            showAlertMsgHint(Resp.Code.PHONE_NONE);
-            return;
+            ret = true;
+            setPhone = true;
         }
         if (otc365 && LocalUser.getUser().getUserInfo().getOtcBankCount() < 1) {
-            showAlertMsgHint(SHOULD_BIND_PAY);
-            return;
+            bindMainland = true;
+            ret = true;
         }
         if (!otc365 && mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL && LocalUser.getUser().getUserInfo().getPayment() < 1) {
-            showAlertMsgHint(SHOULD_BIND_PAY);
-            return;
+            ret = true;
+            bindPay = true;
         }
-        trade();
+        return ret;
+    }
+
+    private boolean isOtc365() {
+        return mNewOTCPrice != null &&
+                ((mNewOTCPrice.getBuyOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY)
+                        || (mNewOTCPrice.getSellOtc365Status() == 1 && mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL));
+    }
+
+    private void showAlert() {
+        if (mSimpleOTCLimitController == null) {
+            mSimpleOTCLimitController = new SimpleOTCLimitController(getContext(), new SimpleOTCLimitController.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view) {
+                    switch (view.getId()) {
+                        case R.id.setAuth:
+                            UniqueActivity.launcher(SimpleOTCFragment.this, PrimaryCertificationFragment.class)
+                                    .execute(SimpleOTCFragment.this, REQUEST_SET);
+                            break;
+                        case R.id.setCashPwd:
+                            UniqueActivity.launcher(SimpleOTCFragment.this, CashPwdFragment.class)
+                                    .putExtra(ExtraKeys.HAS_WITH_DRAW_PASS, false)
+                                    .execute(SimpleOTCFragment.this, REQUEST_SET);
+                            break;
+                        case R.id.bindPhone:
+                            UniqueActivity.launcher(SimpleOTCFragment.this, BindPhoneFragment.class)
+                                    .execute(SimpleOTCFragment.this, REQUEST_SET);
+                            break;
+                        case R.id.bindBankCard:
+                            UniqueActivity.launcher(SimpleOTCFragment.this, AddBankingCardFragment.class)
+                                    .execute(SimpleOTCFragment.this, REQUEST_SET);
+                            break;
+                        case R.id.bindPay:
+                            UniqueActivity.launcher(SimpleOTCFragment.this, SelectPayTypeFragment.class)
+                                    .execute(SimpleOTCFragment.this, REQUEST_SET);
+                            break;
+                        default:
+                    }
+                }
+            });
+        }
+        mSmartDialog = SmartDialog.solo(getActivity());
+        mSmartDialog.setCustomViewController(mSimpleOTCLimitController)
+                .show();
+        setAlertView();
+    }
+
+    private void setAlertView() {
+        if (mSimpleOTCLimitController != null) {
+            shouldAlert();
+            mSimpleOTCLimitController.setState(isOtc365(), mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY);
+            mSimpleOTCLimitController.setAuth(setAuth);
+            mSimpleOTCLimitController.setCashPwd(setCashPwd);
+            mSimpleOTCLimitController.setPhone(setPhone);
+            mSimpleOTCLimitController.bindMainland(bindMainland);
+            mSimpleOTCLimitController.bindPay(bindPay);
+        }
     }
 
     private void trade() {
@@ -717,5 +789,25 @@ public class SimpleOTCFragment extends BaseFragment {
     private void clearData() {
         mTradeAmount.setText("");
         mTurnover.setText("");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mSmartDialog != null) {
+            getUserInfo();
+        }
+    }
+
+    private void getUserInfo() {
+        Apic.findUserInfo().tag(TAG)
+                .callback(new Callback<Resp<UserInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        LocalUser.getUser().setUserInfo(resp.getData());
+                        setAlertView();
+                    }
+                })
+                .fire();
     }
 }

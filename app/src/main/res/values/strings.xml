@@ -793,12 +793,11 @@
     <string name="please_input_volume">请输入数量</string>
     <string name="please_input_amount">请输入金额</string>
     <string name="select_base_coin_type">选择基础币种</string>
-    <string name="trading_closed">交易关闭</string>
     <string name="please_input_right_amount">请填写正确的数量</string>
     <string name="buy_from_otc365">OTC365为平台合作交易方，请放心按页面提示完成交易\n\n1. 请务必使用与平台认证信息一致的本人银行卡付款，即付款银行卡的姓名需与认证姓名一致，否则交易将做失败处理\n\n2. 转帐时请按页面要求备注「4位数字附言」，以加快交易确认速度\n\n3. 请勿在转账备注内填写USDT等任何数字币有关字眼，防止您的转账被银行拦截\n\n4. 订单有效期为20分钟，请您在有效期内及时付款并在OTC365交易页面点击「我已付款」，对方确认收款后对应的数字货币会及时发放到您的账户\n\n5. 如对交易有疑问可在OTC365页面联系客服处理或联系平台客服</string>
-    <string name="sell_to_otc365">OTC365为平台合作交易方，请放心按页面提示完成交易\n\n1. 下单后，买家会及时付款到您设置的银行账户中，请确认页面中显示的银行卡是否为您本人，且姓名与卡号是否一致（若您的支付信息有误，平台将不承担相关责任）\n\n2. 买家付款后，请及时确认款项是否到账并进行转币操作\n\n3. 如买家已付款却未收到对应款项，请及时联系平台客服，核实订单信息后对应的数字货币会返回到您的账户\n\n4. 订单有效期为20分钟，如卖家超时未付款系统将自动取消订单，对应的数字货币会返回到您的账户\n\n5. 如对交易有疑问可联系平台客服</string>
+    <string name="sell_to_otc365">OTC365为平台合作交易方，请放心按页面提示完成交易\n\n1. 下单后，买家会及时付款到您设置的银行账户中，请确认页面中显示的银行卡是否为您本人，且姓名与卡号是否一致（若您的支付信息有误，平台将不承担相关责任）\n\n2. 买家付款后，请及时确认款项是否到账并进行转币操作\n\n3. 如买家已付款却未收到对应款项，请及时联系平台客服，核实订单信息后对应的数字货币会返回到您的账户\n\n4. 订单有效期为20分钟，如买家超时未付款系统将自动取消订单，对应的数字货币会返回到您的账户\n\n5. 如对交易有疑问可联系平台客服</string>
     <string name="buy_from_platform">当前卖家为平台认证商家，请按页面提示完成交易\n\n1. 付款前，建议您与卖家核对付款方式，并与平台预留信息对比，如不一致请谨慎付款\n\n2. 转帐时请按页面要求备注「订单编号后4位」，以交易确认速度\n\n3. 请勿在汇款备注内填写比特币、BTC、OTC等任何数字币有关字眼，防止您的汇款被银行拦截\n\n4. 订单有效期为20分钟，请您在有效期内及时付款并点击「已转账」按钮，卖家确认收款后对应的数字货币会及时发放到您的账户\n\n5. 如您确认付款后，半小时未收到对应的数字货币，请及时联系平台客服或申请仲裁</string>
-    <string name="sell_to_platform">当前卖家为平台认证商家，请按页面提示完成交易\n\n1. 请务必与买家确认收款方式，以免转账错误\n\n2. 买家付款后，请及时确认款项是否到账并进行转币操作\n\n3. 如买家已付款却未收到对应款项，可联系买家核实并取消订单，或申请平台仲裁，通过仲裁后对应的数字货币会返回到您的账户\n\n4. 订单有效期为20分钟，如卖家超时未付款系统将自动取消订单，对应的数字货币会返回到您的账户\n\n5. 如对交易有疑问可联系平台客服或申请仲裁</string>
+    <string name="sell_to_platform">当前买家为平台认证商家，请按页面提示完成交易\n\n1. 请务必与买家确认收款方式，以免转账错误\n\n2. 买家付款后，请及时确认款项是否到账并进行转币操作\n\n3. 如买家已付款却未收到对应款项，可联系买家核实并取消订单，或申请平台仲裁，通过仲裁后对应的数字货币会返回到您的账户\n\n4. 订单有效期为20分钟，如买家超时未付款系统将自动取消订单，对应的数字货币会返回到您的账户\n\n5. 如对交易有疑问可联系平台客服或申请仲裁</string>
 
     <string name="min_buy_num_x">最低买入数量%1$f</string>
     <string name="max_buy_num_x">最高买入数量%1$f</string>
@@ -809,4 +808,12 @@
     <string name="max_sell_num_x">最高卖出数量%1$f</string>
     <string name="min_sell_amount_x">最低卖出金额%1$f</string>
     <string name="max_sell_amount_x">最高卖出金额%1$f</string>
+
+    <string name="trading_closed">交易关闭</string>
+    <string name="please_complete_this_settings">请完成以下设置后进行交易</string>
+    <string name="primary_auth">初级身份认证</string>
+    <string name="go_set">去完成</string>
+    <string name="bind_phone_num">绑定手机号</string>
+    <string name="bind_mainland_bank_card">绑定个人银行卡(限中国大陆)</string>
+    <string name="bind_pay">绑定支付方式</string>
 </resources>

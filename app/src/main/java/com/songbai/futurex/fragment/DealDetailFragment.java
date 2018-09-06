@@ -69,7 +69,7 @@ public class DealDetailFragment extends UniqueActivity.UniFragment {
         mDealDetailAdapter = new DealDetailAdapter();
         mRecyclerView.setAdapter(mDealDetailAdapter);
 
-        Apic.getOrderDealDetail(mOrder.getId()).tag(TAG)
+        Apic.getOrderDealDetail(mOrder.getWid()).tag(TAG)
                 .callback(new Callback<Resp<List<DealDetail>>>() {
                     @Override
                     protected void onRespSuccess(Resp<List<DealDetail>> resp) {

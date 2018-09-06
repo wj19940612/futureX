@@ -784,9 +784,27 @@
     <string name="please_input_volume">請輸入數量</string>
     <string name="please_input_amount">請輸入金額</string>
     <string name="select_base_coin_type">選擇基礎幣種</string>
+    <string name="trading_closed">交易關閉</string>
     <string name="please_input_right_amount">請填寫正確的數量</string>
     <string name="buy_from_otc365">OTC365為平台合作交易方，請放心按頁面提示完成交易\n\n1. 請務必使用與平台認證信息一致的本人銀行卡付款，即付款銀行卡的姓名需與認證姓名一致，否則交易將做失敗處理\n\n2. 轉帳時請按頁面要求備註「4位數字附言」，以加快交易確認速度\n\n3. 請勿在轉賬備註內填寫USDT等任何數字幣有關字眼，防止您的轉賬被銀行攔截\n\n4. 訂單有效期為20分鐘，請您在有效期內及時付款並在OTC365交易頁面點擊「我已付款」，對方確認收款後對應的數字貨幣會及時發放到您的賬戶\n\n5. 如對交易有疑問可在OTC365頁面聯繫客服處理或聯繫平台客服</string>
-    <string name="sell_to_otc365">OTC365為平台合作交易方，請放心按頁面提示完成交易\n\n1. 下單後，買家會及時付款到您設置的銀行賬戶中，請確認頁面中顯示的銀行卡是否為您本人，且姓名與卡號是否一致（若您的支付信息有誤，平台將不承擔相關責任）\n\n2. 買家付款後，請及時確認款項是否到賬並進行轉幣操作\n\n3. 如買家已付款卻未收到對應款項，請及時聯繫平台客服，核實訂單信息後對應的數字貨幣會返回到您的賬戶\n\n4. 訂單有效期為20分鐘，如賣家超時未付款系統將自動取消訂單，對應的數字貨幣會返回到您的賬戶\n\n5. 如對交易有疑問可聯繫平台客服</string>
+    <string name="sell_to_otc365">OTC365為平台合作交易方，請放心按頁面提示完成交易\n\n1. 下單後，買家會及時付款到您設置的銀行賬戶中，請確認頁面中顯示的銀行卡是否為您本人，且姓名與卡號是否一致（若您的支付信息有誤，平台將不承擔相關責任）\n\n2. 買家付款後，請及時確認款項是否到賬並進行轉幣操作\n\n3. 如買家已付款卻未收到對應款項，請及時聯繫平台客服，核實訂單信息後對應的數字貨幣會返回到您的賬戶\n\n4. 訂單有效期為20分鐘，如買家超時未付款系統將自動取消訂單，對應的數字貨幣會返回到您的賬戶\n\n5. 如對交易有疑問可聯繫平台客服</string>
     <string name="buy_from_platform">當前賣家為平台認證商家，請按頁面提示完成交易\n\n1. 付款前，建議您與賣家核對付款方式，並與平台預留信息對比，如不一致請謹慎付款\n\n2. 轉帳時請按頁面要求備註「訂單編號後4位」，以交易確認速度\n\n3. 請勿在匯款備註內填寫比特幣、BTC、OTC等任何數字幣有關字眼，防止您的匯款被銀行攔截\n\n4. 訂單有效期為20分鐘，請您在有效期內及時付款並點擊「已轉賬」按鈕，賣家確認收款後對應的數字貨幣會及時發放到您的賬戶\n\n5. 如您確認付款後，半小時未收到對應的數字貨幣，請及時聯繫平台客服或申請仲裁</string>
-    <string name="sell_to_platform">當前賣家為平台認證商家，請按頁面提示完成交易\n\n1. 請務必與買家確認收款方式，以免轉賬錯誤\n\n2. 買家付款後，請及時確認款項是否到賬並進行轉幣操作\n\n3. 如買家已付款卻未收到對應款項，可聯繫買家核實並取消訂單，或申請平台仲裁，通過仲裁後對應的數字貨幣會返回到您的賬戶\n\n4. 訂單有效期為20分鐘，如賣家超時未付款系統將自動取消訂單，對應的數字貨幣會返回到您的賬戶\n\n5. 如對交易有疑問可聯繫平台客服或申請仲裁</string>
+    <string name="sell_to_platform">當前買家為平台認證商家，請按頁面提示完成交易\n\n1. 請務必與買家確認收款方式，以免轉賬錯誤\n\n2. 買家付款後，請及時確認款項是否到賬並進行轉幣操作\n\n3. 如買家已付款卻未收到對應款項，可聯繫買家核實並取消訂單，或申請平台仲裁，通過仲裁後對應的數字貨幣會返回到您的賬戶\n\n4. 訂單有效期為20分鐘，如買家超時未付款系統將自動取消訂單，對應的數字貨幣會返回到您的賬戶\n\n5. 如對交易有疑問可聯繫平台客服或申請仲裁</string>
+
+    <string name="min_buy_num_x">最低買入數量%1$f</string>
+    <string name="max_buy_num_x">最高買入數量%1$f</string>
+    <string name="min_buy_amount_x">最低買入金額%1$f</string>
+    <string name="max_buy_amount_x">最高買入金額%1$f</string>
+
+    <string name="min_sell_num_x">最低賣出數量%1$f</string>
+    <string name="max_sell_num_x">最高賣出數量%1$f</string>
+    <string name="min_sell_amount_x">最低賣出金額%1$f</string>
+    <string name="max_sell_amount_x">最高賣出金額%1$f</string>
+
+    <string name="please_complete_this_settings">請完成以下設置後進行交易</string>
+    <string name="primary_auth">初級身份認證</string>
+    <string name="go_set">去完成</string>
+    <string name="bind_phone_num">綁定手機號</string>
+    <string name="bind_mainland_bank_card">綁定個人銀行卡(限中國大陸)</string>
+    <string name="bind_pay">綁定支付方式</string>
 </resources>

@@ -119,7 +119,7 @@ public class MsgHintController extends SmartDialog.CustomViewController {
         }
     }
 
-    public void setCroseVisibility(int visibility) {
+    public void setCrossVisibility(int visibility) {
         if (isViewInitialized()) {
             mClose.setVisibility(visibility);
         }

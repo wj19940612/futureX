@@ -268,6 +268,9 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
     }
 
     private void showBankSelect(final ArrayList<BankListBean> bankListBeans) {
+        if (bankListBeans == null || bankListBeans.size() < 1) {
+            return;
+        }
         ArrayList<String> banks = new ArrayList<>();
         for (BankListBean bankListBean : bankListBeans) {
             banks.add(bankListBean.getBankName());
@@ -339,7 +342,7 @@ public class AddBankingCardFragment extends UniqueActivity.UniFragment {
         mPvOptions.show();
     }
 
-    private void bankBand(BankBindData bankBindData) {
+    private void bankBand(final BankBindData bankBindData) {
         Apic.bankBind(bankBindData).tag(TAG)
                 .callback(new Callback<Resp<Object>>() {
                     @Override
