@@ -131,6 +131,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.indexDropMenu)
     ConstraintLayout mIndexDropMenu;
 
+    @BindView(R.id.tradeButtons)
+    LinearLayout mTradeButtons;
+    @BindView(R.id.tradePause)
+    TextView mTradePause;
+
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
     private PairDesc mPairDesc;
@@ -188,7 +193,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     mTradeVolumeView.setVisibility(View.GONE);
                     mTradeDealView.setVisibility(View.VISIBLE);
                     mIntroduceView.setVisibility(View.GONE);
-                }else{
+                } else {
                     mDeepView.setVisibility(View.GONE);
                     mTradeVolumeView.setVisibility(View.GONE);
                     mTradeDealView.setVisibility(View.GONE);
@@ -377,11 +382,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         }
     }
 
-    private void clickBuySell(int direction){
+    private void clickBuySell(int direction) {
         Launcher.with(MarketDetailFragment.this, SingleTradeActivity.class)
                 .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair)
-                .putExtra(ExtraKeys.TRADE_DIRECTION,direction)
-                .putExtra(ExtraKeys.NOT_MAIN,true)
+                .putExtra(ExtraKeys.TRADE_DIRECTION, direction)
+                .putExtra(ExtraKeys.NOT_MAIN, true)
                 .execute();
     }
 
@@ -468,6 +473,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         requestDealList();
                         requestTrendData();
                         requestIntroduceData();
+                        updateTradeButtons();
                         updateOptionalStatus();
                         mChartRadio.performChildClick(0);
                         mTradeDetailRadio.selectTab(0);
@@ -508,6 +514,16 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     private void updateIntroduce(CoinIntroduce data) {
         if (mIntroduceView != null) {
             mIntroduceView.updateData(data);
+        }
+    }
+
+    private void updateTradeButtons() {
+        if (mPairDesc.getPairs().getStatus() != CurrencyPair.STATUS_START) {
+            mTradePause.setVisibility(View.VISIBLE);
+            mTradeButtons.setVisibility(View.GONE);
+        } else {
+            mTradePause.setVisibility(View.GONE);
+            mTradeButtons.setVisibility(View.VISIBLE);
         }
     }
 

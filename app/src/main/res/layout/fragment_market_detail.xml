@@ -223,27 +223,46 @@
         android:paddingBottom="8dp"
         android:paddingTop="12dp">
 
-        <TextView
-            android:id="@+id/buyIn"
-            android:layout_width="110dp"
-            android:layout_height="36dp"
+        <LinearLayout
+            android:id="@+id/tradeButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/btn_green_r16"
-            android:gravity="center"
-            android:text="@string/buy_in"
-            android:textColor="@color/white"
-            android:textSize="15sp"/>
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/buyIn"
+                android:layout_width="110dp"
+                android:layout_height="36dp"
+                android:background="@drawable/btn_green_r16"
+                android:gravity="center"
+                android:text="@string/buy_in"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/sellOut"
+                android:layout_width="110dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/btn_red_r16"
+                android:gravity="center"
+                android:text="@string/sell_out"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/sellOut"
-            android:layout_width="110dp"
+            android:id="@+id/tradePause"
+            android:layout_width="240dp"
             android:layout_height="36dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/btn_red_r16"
+            android:enabled="false"
             android:gravity="center"
-            android:text="@string/sell_out"
-            android:textColor="@color/white"
-            android:textSize="15sp"/>
+            android:text="@string/cause_trade"
+            android:textColor="@color/enabled_buy_sell"/>
 
         <TextView
             android:id="@+id/optional"
