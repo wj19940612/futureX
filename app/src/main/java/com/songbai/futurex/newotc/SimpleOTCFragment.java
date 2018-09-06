@@ -291,6 +291,7 @@ public class SimpleOTCFragment extends BaseFragment {
                         mNewOTCPrice = resp.getData();
                         setPrice();
                         setLimit();
+                        checkConfirmEnable();
                     }
                 }).fireFreely();
     }
