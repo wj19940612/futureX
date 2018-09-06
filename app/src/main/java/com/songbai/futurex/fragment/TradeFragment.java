@@ -335,7 +335,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
             @Override
             public void onVolumeInputChange(double volume) {
-//                Log.e("zzz","onVolumeInputChange:"+volume);
                 updateVolumeSeekBar();
             }
         });
@@ -923,12 +922,12 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private void initViews() {
         mPairName.setText(mCurrencyPair.getPrefixSymbol().toUpperCase() +
                 "/" + mCurrencyPair.getSuffixSymbol().toUpperCase());
-        mDecimalScale.setText(getString(R.string.x_scale_decimal, String.valueOf(mPairDesc.getPairs().getPricePoint())));
-        mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
-        mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
+        mDecimalScale.setText(getString(R.string.x_scale_decimal, String.valueOf(mCurrencyPair.getMaxPoint())));
+        mTradeVolumeView.setPriceScale(mCurrencyPair.getMaxPoint());
+        mTradeVolumeView.setMergeScale(mCurrencyPair.getMaxPoint());
         mTradeVolumeView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mVolumeInput.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
-        mChangePriceView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mChangePriceView.setPriceScale(mCurrencyPair.getMaxPoint());
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mOrderAdapter.setScale(mPairDesc.getPrefixSymbol().getBalancePoint(),
                 mPairDesc.getSuffixSymbol().getBalancePoint());

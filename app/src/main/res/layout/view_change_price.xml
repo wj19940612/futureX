@@ -11,10 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <EditText
+        <com.songbai.futurex.view.autofit.AutoAdjustSizeEditText
             android:id="@+id/price"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:background="@null"
             android:inputType="numberDecimal"
@@ -40,8 +41,8 @@
         android:id="@+id/plus"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
         android:background="@drawable/btn_change_price">
 
         <View

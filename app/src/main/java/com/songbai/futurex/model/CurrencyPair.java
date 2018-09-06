@@ -54,6 +54,7 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
     private double upDropPrice;
     private double upDropSpeed;
     private int status;
+    private int maxPoint;
 
     public int getCategory() {
         return category;
@@ -171,6 +172,14 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         this.status = status;
     }
 
+    public int getMaxPoint() {
+        return maxPoint;
+    }
+
+    public void setMaxPoint(int maxPoint) {
+        this.maxPoint = maxPoint;
+    }
+
     @Override
     public int getGroupNameRes() {
         if (category == CATE_MAIN) {
@@ -228,6 +237,8 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         dest.writeString(this.prefixSymbol);
         dest.writeInt(this.sort);
         dest.writeString(this.suffixSymbol);
+        dest.writeInt(this.status);
+        dest.writeInt(this.maxPoint);
     }
 
     public CurrencyPair() {
@@ -244,6 +255,8 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         this.prefixSymbol = in.readString();
         this.sort = in.readInt();
         this.suffixSymbol = in.readString();
+        this.status = in.readInt();
+        this.maxPoint = in.readInt();
     }
 
     public static final Parcelable.Creator<CurrencyPair> CREATOR = new Parcelable.Creator<CurrencyPair>() {
