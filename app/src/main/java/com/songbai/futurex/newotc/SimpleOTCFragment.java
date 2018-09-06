@@ -296,31 +296,14 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void setLimit() {
+        mTradeAmount.setFilters(new InputFilter[]{
+                new MoneyValueFilter(getContext())
+                        .setDigits(2)});
+        mTurnover.setFilters(new InputFilter[]{
+                new MoneyValueFilter(getContext())
+                        .setDigits(2)});
         if (mNewOTCPrice != null) {
             if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
-                double buyPrice = mNewOTCPrice.getBuyPrice();
-                double buyMinCount = mNewOTCPrice.getBuyMinCount();
-                double buyMinPrice = mNewOTCPrice.getBuyMinPrice();
-                double buyMaxCount = mNewOTCPrice.getBuyMaxCount();
-                double buyMaxPrice = mNewOTCPrice.getBuyMaxPrice();
-                double minCount = buyMinPrice / buyPrice;
-                double maxCount = buyMaxPrice / buyPrice;
-                if (minCount < buyMinCount) {
-                    mNewOTCPrice.setBuyMinPrice(Double.parseDouble(FinanceUtil.formatWithScale(buyMinCount * buyPrice)));
-                } else {
-                    mNewOTCPrice.setBuyMinCount(Double.parseDouble(FinanceUtil.formatWithScale(buyMinPrice / buyPrice)));
-                }
-                if (maxCount > buyMaxCount) {
-                    mNewOTCPrice.setBuyMaxPrice(Double.parseDouble(FinanceUtil.formatWithScale(buyMaxCount * buyPrice)));
-                } else {
-                    mNewOTCPrice.setBuyMaxCount(Double.parseDouble(FinanceUtil.formatWithScale(buyMaxPrice / buyPrice)));
-                }
-                mTradeAmount.setFilters(new InputFilter[]{
-                        new MoneyValueFilter(getContext())
-                                .setDigits(2)});
-                mTurnover.setFilters(new InputFilter[]{
-                        new MoneyValueFilter(getContext())
-                                .setDigits(2)});
                 mTradeAmount.setHint(getString(R.string.limit_range_x,
                         String.valueOf(mNewOTCPrice.getBuyMinCount()),
                         String.valueOf(mNewOTCPrice.getBuyMaxCount())));
@@ -328,29 +311,6 @@ public class SimpleOTCFragment extends BaseFragment {
                         String.valueOf(mNewOTCPrice.getBuyMinPrice()),
                         String.valueOf(mNewOTCPrice.getBuyMaxPrice())));
             } else {
-                double sellPrice = mNewOTCPrice.getSellPrice();
-                double sellMinCount = mNewOTCPrice.getSellMinCount();
-                double sellMinPrice = mNewOTCPrice.getSellMinPrice();
-                double sellMaxCount = mNewOTCPrice.getSellMaxCount();
-                double sellMaxPrice = mNewOTCPrice.getSellMaxPrice();
-                double minCount = sellMinPrice / sellPrice;
-                double maxCount = sellMaxPrice / sellPrice;
-                if (minCount < sellMinCount) {
-                    mNewOTCPrice.setSellMinPrice(Double.parseDouble(FinanceUtil.formatWithScale(sellMinCount * sellPrice)));
-                } else {
-                    mNewOTCPrice.setSellMinCount(Double.parseDouble(FinanceUtil.formatWithScale(sellMinPrice / sellPrice)));
-                }
-                if (maxCount > sellMaxCount) {
-                    mNewOTCPrice.setSellMaxPrice(Double.parseDouble(FinanceUtil.formatWithScale(sellMaxCount * sellPrice)));
-                } else {
-                    mNewOTCPrice.setSellMaxCount(Double.parseDouble(FinanceUtil.formatWithScale(sellMaxPrice / sellPrice)));
-                }
-                mTradeAmount.setFilters(new InputFilter[]{
-                        new MoneyValueFilter(getContext())
-                                .setDigits(2)});
-                mTurnover.setFilters(new InputFilter[]{
-                        new MoneyValueFilter(getContext())
-                                .setDigits(2)});
                 mTradeAmount.setHint(getString(R.string.limit_range_x,
                         String.valueOf(mNewOTCPrice.getSellMinCount()),
                         String.valueOf(mNewOTCPrice.getSellMaxCount())));
