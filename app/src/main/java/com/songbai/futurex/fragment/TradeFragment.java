@@ -670,7 +670,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         super.onResume();
         mMarketSubscriber.resume();
 
-        if (getUserVisibleHint()) {
+        if (getUserVisibleHint() && isAdded()) {
             subscribeMarket();
             requestPairDescription();
             mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
@@ -727,7 +727,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void requestUserAccount() {
         if (LocalUser.getUser().isLogin()) {
-            Apic.getAccountByUserForMuti(mCurrencyPair.getPrefixSymbol() + "," + mCurrencyPair.getSuffixSymbol())
+            Apic.getAccountByUserForMuti(mCurrencyPair.getPrefixSymbol() + "," + mCurrencyPair.getSuffixSymbol()).tag(TAG)
                     .callback(new Callback<Resp<List<CoinAbleAmount>>>() {
                         @Override
                         protected void onRespSuccess(Resp<List<CoinAbleAmount>> resp) {
@@ -750,7 +750,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     }
 
     private void updateTradeCurrencyView() {
-        if (mCurrencyPair == null) return;
+        if (mCurrencyPair == null || mPairDesc == null) return;
 
         if (LocalUser.getUser().isLogin() && mAvailableCurrencyList != null) {
             // 默认买入
@@ -849,7 +849,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
                 mTradeButton.setEnabled(false);
                 mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
-                mTradeButton.setText(R.string.cause_trade);
+                mTradeButton.setText(R.string.pause_trade);
             } else {
                 mTradeButton.setEnabled(true);
                 mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
@@ -872,7 +872,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
                 mTradeButton.setEnabled(false);
                 mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);
-                mTradeButton.setText(R.string.cause_trade);
+                mTradeButton.setText(R.string.pause_trade);
             } else {
                 mTradeButton.setEnabled(true);
                 mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);

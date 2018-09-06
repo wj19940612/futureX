@@ -61,7 +61,7 @@ public class App extends Application {
             public void onFailure(String s, String s1) {
             }
         });
-        processCaughtException();
+//        processCaughtException();
     }
 
     @Override
