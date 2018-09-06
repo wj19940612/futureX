@@ -1452,15 +1452,14 @@ public class Apic {
     }
 
     /**
-     * 获取订单交易详情
-     *
-     * @param orderId
-     * @return
+     * http://ex.esongbai.abc/api/entrust/v1/dealLog
+     * GET
+     * 委托成交详情---v1.5
      */
-    public static Api getOrderDealDetail(String orderId) {
-        return Api.get("/api/entrust/entrust/dealLog",
+    public static Api getOrderDealDetail(String wid) {
+        return Api.get("/api/entrust/v1/dealLog",
                 new ReqParams()
-                        .put("entrustId", orderId));
+                        .put("wid", wid));
     }
 
     /**

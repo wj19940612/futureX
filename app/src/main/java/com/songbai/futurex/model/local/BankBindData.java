@@ -22,6 +22,14 @@ public class BankBindData {
     private String payPic;//账户名
     private String withDrawPass;//资金密码 必填
 
+    public String getBankArea() {
+        return bankArea;
+    }
+
+    public void setBankArea(String bankArea) {
+        this.bankArea = bankArea;
+    }
+
     public static final class Builder {
         private String cardNumber;
         private String payType;

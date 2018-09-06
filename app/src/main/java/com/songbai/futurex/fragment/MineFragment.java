@@ -95,6 +95,7 @@ public class MineFragment extends BaseFragment {
     IconTextRow mSettings;
     private Unbinder mBind;
     private OnNavigationListener mOnNavigationListener;
+    private boolean mPrepared;
 
     @Override
     public void onAttach(Context context) {
@@ -110,6 +111,7 @@ public class MineFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
         mBind = ButterKnife.bind(this, view);
         ((BaseActivity) getActivity()).addStatusBarHeightPaddingTop(mHeadLayout);
+        mPrepared = true;
         return view;
     }
 
@@ -135,8 +137,8 @@ public class MineFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            setUserInfo();
+        if (isVisibleToUser && mPrepared) {
+            getUserInfo();
         }
     }
 
@@ -294,7 +296,7 @@ public class MineFragment extends BaseFragment {
                         return;
                     }
                     Launcher.with(this, InviteActivity.class).execute();
-                }else{
+                } else {
                     login();
                 }
                 break;

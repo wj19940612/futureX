@@ -113,6 +113,8 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     TextView mOtc365Hint;
     @BindView(R.id.tradeRule)
     TextView mTradeRule;
+    @BindView(R.id.payInfoText)
+    TextView mPayInfoText;
     private String mOrderId;
     private int mTradeDirection;
     private Unbinder mBind;
@@ -400,6 +402,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
             int id = user.getUserInfo().getId();
             mIsBuyer = id == order.getBuyerId();
         }
+        mPayInfoText.setText(mIsBuyer ? R.string.pay_info : R.string.receipt_method);
         mOtc365Hint.setText(mIsBuyer ? R.string.otc365_buy_hint : R.string.otc365_sell_hint);
         mGoTo365.setText(mIsBuyer ? R.string.go_to : R.string.confirm_transfer_coin);
         switch (mStatus) {

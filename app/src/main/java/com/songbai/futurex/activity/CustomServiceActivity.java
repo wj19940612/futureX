@@ -153,7 +153,7 @@ public class CustomServiceActivity extends BaseActivity {
         });
         withDrawPsdViewController.setMsg(R.string.long_time_not_contract_need_reconnect);
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
-        withDrawPsdViewController.setCroseVisibility(View.GONE);
+        withDrawPsdViewController.setCrossVisibility(View.GONE);
         mHasShowReconnectDialog = true;
     }
 
@@ -263,7 +263,7 @@ public class CustomServiceActivity extends BaseActivity {
             }
         });
         withDrawPsdViewController.setMsg(R.string.current_service_is_offline_change_service);
-        withDrawPsdViewController.setCroseVisibility(View.GONE);
+        withDrawPsdViewController.setCrossVisibility(View.GONE);
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
