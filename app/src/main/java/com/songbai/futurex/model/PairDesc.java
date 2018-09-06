@@ -155,7 +155,7 @@ public class PairDesc {
         private String prefixSymbol;
         private int pricePoint;
         private int sort;
-        private int status;
+        public int status;
         private String suffixSymbol;
         private long updateTime;
 
@@ -167,6 +167,7 @@ public class PairDesc {
             currencyPair.setPrefixSymbol(prefixSymbol);
             currencyPair.setSort(sort);
             currencyPair.setSuffixSymbol(suffixSymbol);
+            currencyPair.setStatus(status);
             return currencyPair;
         }
 
