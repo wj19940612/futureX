@@ -819,4 +819,7 @@
     <string name="cause_trade">暂停交易</string>
     <string name="receipt_method">收款方式</string>
     <string name="pause_trade">暂停交易</string>
+
+    <string name="require_primary_auth">需要完成初级身份认证</string>
+    <string name="require_cash_pwd">需要设置资金密码</string>
 </resources>

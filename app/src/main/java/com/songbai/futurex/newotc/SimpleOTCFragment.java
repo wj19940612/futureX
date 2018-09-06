@@ -487,10 +487,26 @@ public class SimpleOTCFragment extends BaseFragment {
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;
                         case R.id.bindBankCard:
+                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+                                ToastUtil.show(R.string.require_primary_auth);
+                                return;
+                            }
+                            if (LocalUser.getUser().getUserInfo().getSafeSetting() < 1) {
+                                ToastUtil.show(R.string.require_cash_pwd);
+                                return;
+                            }
                             UniqueActivity.launcher(SimpleOTCFragment.this, AddBankingCardFragment.class)
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;
                         case R.id.bindPay:
+                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+                                ToastUtil.show(R.string.require_primary_auth);
+                                return;
+                            }
+                            if (LocalUser.getUser().getUserInfo().getSafeSetting() < 1) {
+                                ToastUtil.show(R.string.require_cash_pwd);
+                                return;
+                            }
                             UniqueActivity.launcher(SimpleOTCFragment.this, SelectPayTypeFragment.class)
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;

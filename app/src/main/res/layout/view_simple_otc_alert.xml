@@ -74,14 +74,11 @@
 
                 <TextView
                     android:id="@+id/setAuth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="28dp"
                     android:background="@color/colorPrimary"
+                    android:gravity="center"
                     android:includeFontPadding="false"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
                     android:text="@string/go_set"
                     android:textColor="@color/white"
                     android:textSize="15sp"/>
@@ -119,14 +116,11 @@
 
                 <TextView
                     android:id="@+id/setCashPwd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="28dp"
                     android:background="@color/colorPrimary"
+                    android:gravity="center"
                     android:includeFontPadding="false"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
                     android:text="@string/go_set"
                     android:textColor="@color/white"
                     android:textSize="15sp"/>
@@ -164,14 +158,11 @@
 
                 <TextView
                     android:id="@+id/bindPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="28dp"
                     android:background="@color/colorPrimary"
+                    android:gravity="center"
                     android:includeFontPadding="false"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
                     android:text="@string/go_set"
                     android:textColor="@color/white"
                     android:textSize="15sp"/>
@@ -209,14 +200,11 @@
 
                 <TextView
                     android:id="@+id/bindBankCard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="28dp"
                     android:background="@color/colorPrimary"
+                    android:gravity="center"
                     android:includeFontPadding="false"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
                     android:text="@string/go_set"
                     android:textColor="@color/white"
                     android:textSize="15sp"/>
@@ -254,14 +242,11 @@
 
                 <TextView
                     android:id="@+id/bindPay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="28dp"
                     android:background="@color/colorPrimary"
+                    android:gravity="center"
                     android:includeFontPadding="false"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
                     android:text="@string/go_set"
                     android:textColor="@color/white"
                     android:textSize="15sp"/>

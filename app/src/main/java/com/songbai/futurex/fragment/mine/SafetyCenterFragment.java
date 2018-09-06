@@ -71,8 +71,10 @@ public class SafetyCenterFragment extends UniqueActivity.UniFragment {
             UserInfo userInfo = user.getUserInfo();
             if (userInfo.getSafeSetting() == 0) {
                 hasWithDrawPass = false;
+                mSetCashPwd.setText(R.string.set_cash_pwd);
                 mSetCashPwd.setSubText(R.string.not_set);
             } else {
+                mSetCashPwd.setText(R.string.change_cash_pwd);
                 mSetCashPwd.setSubText("");
             }
             mGoogleAuthenticator.setSubText(userInfo.getGoogleAuth() == AUTH ? R.string.certificated : R.string.uncertificated);

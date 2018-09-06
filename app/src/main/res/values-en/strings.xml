@@ -809,4 +809,6 @@
     <string name="cause_trade">suspend</string>
     <string name="receipt_method">Receipt method</string>
     <string name="pause_trade">suspend</string>
+    <string name="require_primary_auth">Require primary auth</string>
+    <string name="require_cash_pwd">Require fund pass</string>
 </resources>
