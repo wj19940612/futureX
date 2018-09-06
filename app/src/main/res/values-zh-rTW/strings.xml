@@ -811,6 +811,5 @@
     <string name="receipt_method">收款方式</string>
     <string name="pause_trade">暫停交易</string>
 
-    <string name="require_primary_auth">需要完成初級身份認證</string>
     <string name="require_cash_pwd">需要設置資金密碼</string>
 </resources>

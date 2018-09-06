@@ -41,6 +41,7 @@ import com.songbai.futurex.model.ParamBean;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.SysMessage;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -438,7 +439,7 @@ public class SimpleOTCFragment extends BaseFragment {
         boolean ret = false;
         setAuth = setCashPwd = setPhone = bindMainland = bindPay = false;
         boolean otc365 = isOtc365();
-        if ((mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL || otc365) && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+        if ((mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL || otc365) && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
             setAuth = true;
             ret = true;
         }
@@ -487,8 +488,8 @@ public class SimpleOTCFragment extends BaseFragment {
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;
                         case R.id.bindBankCard:
-                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
-                                ToastUtil.show(R.string.require_primary_auth);
+                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
+                                ToastUtil.show(R.string.passed_primary_certification);
                                 return;
                             }
                             if (LocalUser.getUser().getUserInfo().getSafeSetting() < 1) {
@@ -499,8 +500,8 @@ public class SimpleOTCFragment extends BaseFragment {
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;
                         case R.id.bindPay:
-                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
-                                ToastUtil.show(R.string.require_primary_auth);
+                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
+                                ToastUtil.show(R.string.passed_primary_certification);
                                 return;
                             }
                             if (LocalUser.getUser().getUserInfo().getSafeSetting() < 1) {
