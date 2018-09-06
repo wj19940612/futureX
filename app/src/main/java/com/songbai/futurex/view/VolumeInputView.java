@@ -149,7 +149,7 @@ public class VolumeInputView extends FrameLayout {
         mVolume.setText("");
         mTextWatcherDisable = false;
         onVolumeChange();
-        mBaseCurrency.setText("");
+//        mBaseCurrency.setText("");
     }
 
     private String formatVolume(String number) {

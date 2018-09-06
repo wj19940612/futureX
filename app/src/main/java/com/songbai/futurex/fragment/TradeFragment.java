@@ -335,7 +335,6 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
             @Override
             public void onVolumeInputChange(double volume) {
-//                Log.e("zzz","onVolumeInputChange:"+volume);
                 updateVolumeSeekBar();
             }
         });
@@ -847,8 +846,15 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mMarketPriceView.setVisibility(View.VISIBLE);
             }
             mTradeType.setText(tradeTypeRes);
-            mTradeButton.setText(R.string.buy_in);
-            mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
+            if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
+                mTradeButton.setEnabled(false);
+                mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
+                mTradeButton.setText(R.string.cause_trade);
+            } else {
+                mTradeButton.setEnabled(true);
+                mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
+                mTradeButton.setText(R.string.buy_in);
+            }
 //            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
         } else {
             int tradeTypeRes;
@@ -863,7 +869,15 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             }
             mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.sell_out);
-            mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);
+            if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
+                mTradeButton.setEnabled(false);
+                mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);
+                mTradeButton.setText(R.string.cause_trade);
+            } else {
+                mTradeButton.setEnabled(true);
+                mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);
+                mTradeButton.setText(R.string.sell_out);
+            }
 //            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
         }
     }
@@ -908,12 +922,12 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     private void initViews() {
         mPairName.setText(mCurrencyPair.getPrefixSymbol().toUpperCase() +
                 "/" + mCurrencyPair.getSuffixSymbol().toUpperCase());
-        mDecimalScale.setText(getString(R.string.x_scale_decimal, String.valueOf(mPairDesc.getPairs().getPricePoint())));
-        mTradeVolumeView.setPriceScale(mPairDesc.getPairs().getPricePoint());
-        mTradeVolumeView.setMergeScale(mPairDesc.getPairs().getPricePoint());
+        mDecimalScale.setText(getString(R.string.x_scale_decimal, String.valueOf(mCurrencyPair.getMaxPoint())));
+        mTradeVolumeView.setPriceScale(mCurrencyPair.getMaxPoint());
+        mTradeVolumeView.setMergeScale(mCurrencyPair.getMaxPoint());
         mTradeVolumeView.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
         mVolumeInput.setVolumeScale(mPairDesc.getPrefixSymbol().getBalancePoint());
-        mChangePriceView.setPriceScale(mPairDesc.getPairs().getPricePoint());
+        mChangePriceView.setPriceScale(mCurrencyPair.getMaxPoint());
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mOrderAdapter.setScale(mPairDesc.getPrefixSymbol().getBalancePoint(),
                 mPairDesc.getSuffixSymbol().getBalancePoint());

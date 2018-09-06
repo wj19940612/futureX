@@ -225,7 +225,8 @@
                             android:background="@drawable/btn_green_r18"
                             android:gravity="center"
                             android:text="@string/buy_in"
-                            android:textColor="@color/white"
+                            android:textColor="@color/enabled_buy_sell"
+                            android:enabled="true"
                             android:textSize="15sp"/>
                     </LinearLayout>
                 </LinearLayout>

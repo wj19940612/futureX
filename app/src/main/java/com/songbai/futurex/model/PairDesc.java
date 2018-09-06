@@ -1,5 +1,12 @@
 package com.songbai.futurex.model;
 
+import android.text.TextUtils;
+
+import com.songbai.futurex.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Modified by john on 2018/6/20
  * <p>
@@ -155,7 +162,7 @@ public class PairDesc {
         private String prefixSymbol;
         private int pricePoint;
         private int sort;
-        private int status;
+        public int status;
         private String suffixSymbol;
         private long updateTime;
 
@@ -167,7 +174,22 @@ public class PairDesc {
             currencyPair.setPrefixSymbol(prefixSymbol);
             currencyPair.setSort(sort);
             currencyPair.setSuffixSymbol(suffixSymbol);
+            currencyPair.setStatus(status);
+            currencyPair.setMaxPoint(getMaxPoint(deep));
             return currencyPair;
+        }
+
+        private int getMaxPoint(String deep){
+            if (deep == null ||
+                    TextUtils.isEmpty(deep)) {
+                return pricePoint;
+            }
+
+            final String[] deeps = deep.split(",");
+            if(deeps[0] == null || TextUtils.isEmpty(deeps[0])){
+                return pricePoint;
+            }
+            return Integer.parseInt(deeps[0]);
         }
 
         @Override

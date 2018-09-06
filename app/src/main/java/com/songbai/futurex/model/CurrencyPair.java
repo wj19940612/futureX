@@ -15,6 +15,10 @@ import com.songbai.futurex.utils.adapter.GroupAdapter;
  */
 public class CurrencyPair implements GroupAdapter.Groupable, Comparable<CurrencyPair>, Parcelable {
 
+    public static final int STATUS_CEASE = 0;  //状态-停用
+    public static final int STATUS_START = 1;  //状态-启用
+    public static final int STATUS_PAUSE = 2;  //状态-暂停使用
+
     public static final int CATE_MAIN = 1; // 主区
     public static final int CATE_CREATIVE = 2; // 创新
     public static final int CATE_NEW = 3; // 新币种
@@ -49,6 +53,8 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
     private String suffixSymbol;
     private double upDropPrice;
     private double upDropSpeed;
+    private int status;
+    private int maxPoint;
 
     public int getCategory() {
         return category;
@@ -158,6 +164,22 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         return upDropSpeed;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getMaxPoint() {
+        return maxPoint;
+    }
+
+    public void setMaxPoint(int maxPoint) {
+        this.maxPoint = maxPoint;
+    }
+
     @Override
     public int getGroupNameRes() {
         if (category == CATE_MAIN) {
@@ -215,6 +237,8 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         dest.writeString(this.prefixSymbol);
         dest.writeInt(this.sort);
         dest.writeString(this.suffixSymbol);
+        dest.writeInt(this.status);
+        dest.writeInt(this.maxPoint);
     }
 
     public CurrencyPair() {
@@ -231,6 +255,8 @@ public class CurrencyPair implements GroupAdapter.Groupable, Comparable<Currency
         this.prefixSymbol = in.readString();
         this.sort = in.readInt();
         this.suffixSymbol = in.readString();
+        this.status = in.readInt();
+        this.maxPoint = in.readInt();
     }
 
     public static final Parcelable.Creator<CurrencyPair> CREATOR = new Parcelable.Creator<CurrencyPair>() {

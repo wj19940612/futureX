@@ -806,4 +806,5 @@
     <string name="bind_phone_num">Bind phone num</string>
     <string name="bind_mainland_bank_card">Bind bankcard(China mainland only)</string>
     <string name="bind_pay">Set payment</string>
+    <string name="cause_trade">suspend</string>
 </resources>
