@@ -289,7 +289,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     resetTradeAmount();
                     mPercentSelectView.reset();
                     mVolumeInput.reset();
-                    mVolumeInput.setBaseCurrency(mCurrencyPair.getSuffixSymbol().toUpperCase());
+                    mVolumeInput.setBaseCurrency(mCurrencyPair.getPrefixSymbol().toUpperCase());
                 } else {
                     mTradeDir = TradeDir.DIR_SELL_OUT;
                     updateTradeDirectionView();
@@ -937,7 +937,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mTradeTypeValue = LIMIT_TRADE;
         updateTradeDirectionView();
 
-        mVolumeInput.setBaseCurrency(mTradeDir == TradeDir.DIR_BUY_IN ? mCurrencyPair.getSuffixSymbol().toUpperCase() : mCurrencyPair.getPrefixSymbol().toUpperCase());
+        mVolumeInput.setBaseCurrency(mCurrencyPair.getPrefixSymbol().toUpperCase());
     }
 
     private void updateOptionalStatus() {
