@@ -586,6 +586,7 @@ public class SimpleOTCFragment extends BaseFragment {
         int confirmText = R.string.ok;
         switch (code) {
             case Resp.Code.BANK_CADR_NONE:
+            case Resp.Code.PAYMENT_NONE:
             case SHOULD_BIND_PAY:
                 msg = R.string.have_not_bind_pay;
                 confirmText = R.string.go_to_bind;
@@ -625,6 +626,7 @@ public class SimpleOTCFragment extends BaseFragment {
                                 .execute();
                         break;
                     case SHOULD_BIND_PAY:
+                    case Resp.Code.PAYMENT_NONE:
                         UniqueActivity.launcher(SimpleOTCFragment.this, SelectPayTypeFragment.class)
                                 .execute();
                         break;
@@ -675,8 +677,10 @@ public class SimpleOTCFragment extends BaseFragment {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         int code = failedResp.getCode();
-                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
-                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.BANK_CADR_NONE) {
+                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE
+                                || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION
+                                || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.PAYMENT_NONE
+                                || code == Resp.Code.BANK_CADR_NONE) {
                             showAlertMsgHint(code);
                         } else {
                             super.onRespFailure(failedResp);
@@ -757,8 +761,10 @@ public class SimpleOTCFragment extends BaseFragment {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         int code = failedResp.getCode();
-                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
-                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.BANK_CADR_NONE) {
+                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE
+                                || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION
+                                || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.PAYMENT_NONE
+                                || code == Resp.Code.BANK_CADR_NONE) {
                             showAlertMsgHint(code);
                         } else {
                             super.onRespFailure(failedResp);
