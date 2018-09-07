@@ -524,13 +524,16 @@ public class SimpleOTCFragment extends BaseFragment {
 
     private void setAlertView() {
         if (mSimpleOTCLimitController != null) {
-            shouldAlert();
-            mSimpleOTCLimitController.setState(isOtc365(), mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY);
-            mSimpleOTCLimitController.setAuth(setAuth);
-            mSimpleOTCLimitController.setCashPwd(setCashPwd);
-            mSimpleOTCLimitController.setPhone(setPhone);
-            mSimpleOTCLimitController.bindMainland(bindMainland);
-            mSimpleOTCLimitController.bindPay(bindPay);
+            if (shouldAlert()) {
+                mSimpleOTCLimitController.setState(isOtc365(), mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY);
+                mSimpleOTCLimitController.setAuth(setAuth);
+                mSimpleOTCLimitController.setCashPwd(setCashPwd);
+                mSimpleOTCLimitController.setPhone(setPhone);
+                mSimpleOTCLimitController.bindMainland(bindMainland);
+                mSimpleOTCLimitController.bindPay(bindPay);
+            } else {
+                mSmartDialog.dismiss();
+            }
         }
     }
 
