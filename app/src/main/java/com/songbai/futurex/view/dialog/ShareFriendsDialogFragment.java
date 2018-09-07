@@ -91,6 +91,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private String mQcCode;
     private ArrayList<SharePosterFragment> mList = new ArrayList<>();
     private int mSelectedPosition = -1;
+    private static final String SHARE_PREFIX = "https://bitfutu.re/pro/";
     private UMShareListener mUmShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA shareMedia) {
@@ -147,7 +148,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
             mShareText = arguments.getString(SHARE_CONTENT);
-            textString = (TextUtils.isEmpty(mShareText) ? "" : mShareText) + "https://bitfutu.re/pro/" + mQcCode;
+            textString = (TextUtils.isEmpty(mShareText) ? "" : mShareText) + SHARE_PREFIX + mQcCode;
             int[] posters = new int[]{R.drawable.ic_poster1, R.drawable.ic_poster2};
             for (int i = 0; i < posters.length; i++) {
                 mList.add(SharePosterFragment.newInstance(mQcCode, i, posters[i], this));
@@ -188,7 +189,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
                     case R.string.copy_link:
                         ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                         // 将文本内容放到系统剪贴板里。
-                        cm.setPrimaryClip(ClipData.newPlainText(null, "https://bitfutu.re/pro/" + mQcCode));
+                        cm.setPrimaryClip(ClipData.newPlainText(null, SHARE_PREFIX + mQcCode));
                         ToastUtil.show(R.string.copy_success);
                         break;
                     default:

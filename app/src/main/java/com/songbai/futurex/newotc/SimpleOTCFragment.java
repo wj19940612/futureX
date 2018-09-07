@@ -41,6 +41,7 @@ import com.songbai.futurex.model.ParamBean;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.SysMessage;
+import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
@@ -438,7 +439,7 @@ public class SimpleOTCFragment extends BaseFragment {
         boolean ret = false;
         setAuth = setCashPwd = setPhone = bindMainland = bindPay = false;
         boolean otc365 = isOtc365();
-        if ((mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL || otc365) && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < 1) {
+        if ((mTradeType == OTCOrderStatus.ORDER_DIRECT_SELL || otc365) && LocalUser.getUser().getUserInfo().getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
             setAuth = true;
             ret = true;
         }
@@ -487,10 +488,26 @@ public class SimpleOTCFragment extends BaseFragment {
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;
                         case R.id.bindBankCard:
+                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
+                                ToastUtil.show(R.string.passed_primary_certification);
+                                return;
+                            }
+                            if (LocalUser.getUser().getUserInfo().getSafeSetting() < 1) {
+                                ToastUtil.show(R.string.require_cash_pwd);
+                                return;
+                            }
                             UniqueActivity.launcher(SimpleOTCFragment.this, AddBankingCardFragment.class)
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;
                         case R.id.bindPay:
+                            if (LocalUser.getUser().getUserInfo().getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
+                                ToastUtil.show(R.string.passed_primary_certification);
+                                return;
+                            }
+                            if (LocalUser.getUser().getUserInfo().getSafeSetting() < 1) {
+                                ToastUtil.show(R.string.require_cash_pwd);
+                                return;
+                            }
                             UniqueActivity.launcher(SimpleOTCFragment.this, SelectPayTypeFragment.class)
                                     .execute(SimpleOTCFragment.this, REQUEST_SET);
                             break;
@@ -507,13 +524,16 @@ public class SimpleOTCFragment extends BaseFragment {
 
     private void setAlertView() {
         if (mSimpleOTCLimitController != null) {
-            shouldAlert();
-            mSimpleOTCLimitController.setState(isOtc365(), mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY);
-            mSimpleOTCLimitController.setAuth(setAuth);
-            mSimpleOTCLimitController.setCashPwd(setCashPwd);
-            mSimpleOTCLimitController.setPhone(setPhone);
-            mSimpleOTCLimitController.bindMainland(bindMainland);
-            mSimpleOTCLimitController.bindPay(bindPay);
+            if (shouldAlert()) {
+                mSimpleOTCLimitController.setState(isOtc365(), mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY);
+                mSimpleOTCLimitController.setAuth(setAuth);
+                mSimpleOTCLimitController.setCashPwd(setCashPwd);
+                mSimpleOTCLimitController.setPhone(setPhone);
+                mSimpleOTCLimitController.bindMainland(bindMainland);
+                mSimpleOTCLimitController.bindPay(bindPay);
+            } else {
+                mSmartDialog.dismiss();
+            }
         }
     }
 
@@ -566,6 +586,7 @@ public class SimpleOTCFragment extends BaseFragment {
         int confirmText = R.string.ok;
         switch (code) {
             case Resp.Code.BANK_CADR_NONE:
+            case Resp.Code.PAYMENT_NONE:
             case SHOULD_BIND_PAY:
                 msg = R.string.have_not_bind_pay;
                 confirmText = R.string.go_to_bind;
@@ -605,6 +626,7 @@ public class SimpleOTCFragment extends BaseFragment {
                                 .execute();
                         break;
                     case SHOULD_BIND_PAY:
+                    case Resp.Code.PAYMENT_NONE:
                         UniqueActivity.launcher(SimpleOTCFragment.this, SelectPayTypeFragment.class)
                                 .execute();
                         break;
@@ -655,8 +677,10 @@ public class SimpleOTCFragment extends BaseFragment {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         int code = failedResp.getCode();
-                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
-                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.BANK_CADR_NONE) {
+                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE
+                                || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION
+                                || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.PAYMENT_NONE
+                                || code == Resp.Code.BANK_CADR_NONE) {
                             showAlertMsgHint(code);
                         } else {
                             super.onRespFailure(failedResp);
@@ -737,8 +761,10 @@ public class SimpleOTCFragment extends BaseFragment {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         int code = failedResp.getCode();
-                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION
-                                || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.BANK_CADR_NONE) {
+                        if (code == Resp.Code.PHONE_NONE || code == Resp.Code.CASH_PWD_NONE
+                                || code == Resp.Code.NEEDS_PRIMARY_CERTIFICATION || code == Resp.Code.NEEDS_SENIOR_CERTIFICATION
+                                || code == Resp.Code.NEEDS_MORE_DEAL_COUNT || code == Resp.Code.PAYMENT_NONE
+                                || code == Resp.Code.BANK_CADR_NONE) {
                             showAlertMsgHint(code);
                         } else {
                             super.onRespFailure(failedResp);

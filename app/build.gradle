@@ -70,7 +70,7 @@ android {
 
     productFlavors {
         dev {
-//            applicationIdSuffix '.dev'
+            applicationIdSuffix '.dev'
             versionName "1.0"
             buildConfigField('String', 'HOST', '\"ex.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
