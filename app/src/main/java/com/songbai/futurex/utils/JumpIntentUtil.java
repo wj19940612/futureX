@@ -189,6 +189,8 @@ public class JumpIntentUtil {
         }.getType();
         Order order = sGson.fromJson(modelJsonStr, type);
         if (order == null) return null;
+
+        order.setWid(order.getId());
         clickIntent.putExtra(ExtraKeys.ORDER, order);
         return clickIntent;
     }
@@ -207,6 +209,7 @@ public class JumpIntentUtil {
         }.getType();
         Order order = sGson.fromJson(modelJsonStr, type);
         if (order == null) return null;
+
         clickIntent.putExtra(ExtraKeys.ORDER, order);
         return clickIntent;
     }
