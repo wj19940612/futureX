@@ -13,7 +13,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1357,7 +1356,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                 mEntrustVolume.setText(order.getEntrustCount());
                 mActualDealVolume.setText(order.getDealCount());
                 mRevoke.setText(getStatusTextRes(order.getStatus()));
-                if (order.getStatus() == OrderStatus.PENDING_DEAL) {
+                if (order.getStatus() == OrderStatus.PENDING_DEAL ||
+                        order.getStatus() == OrderStatus.PART_DEAL) {
                     mRevoke.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1377,6 +1377,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             private int getStatusTextRes(int status) {
                 switch (status) {
                     case OrderStatus.PENDING_DEAL:
+                    case OrderStatus.PART_DEAL:
                         return R.string.revoke_order;
                     case OrderStatus.REVOKING:
                         return R.string.revoking;

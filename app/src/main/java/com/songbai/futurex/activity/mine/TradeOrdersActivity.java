@@ -428,7 +428,8 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
                 mEntrustVolume.setText(order.getEntrustCount());
                 mActualDealVolume.setText(order.getDealCount());
                 mRevoke.setText(getStatusTextRes(order.getStatus()));
-                if (order.getStatus() == OrderStatus.PENDING_DEAL) {
+                if (order.getStatus() == OrderStatus.PENDING_DEAL ||
+                        order.getStatus() == OrderStatus.PART_DEAL) {
                     mRevoke.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -449,6 +450,7 @@ public class TradeOrdersActivity extends RVSwipeLoadActivity {
             private int getStatusTextRes(int status) {
                 switch (status) {
                     case OrderStatus.PENDING_DEAL:
+                    case OrderStatus.PART_DEAL:
                         return R.string.revoke_order;
                     case OrderStatus.REVOKING:
                         return R.string.revoking;
