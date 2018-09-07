@@ -5,5 +5,5 @@
         android:centerColor="@color/bgF5"
         android:endColor="@color/bgF5"
         android:startColor="@color/bgF5"/>
-    <size android:height="0.5dp"/>
+    <size android:height="1dp"/>
 </shape>
