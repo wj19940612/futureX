@@ -657,7 +657,7 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void sell(String coinCount, String coinSymbol, String drawPwd) {
-        Apic.newOtcSell(coinCount, coinSymbol, md5Encrypt(drawPwd)).tag(TAG)
+        Apic.newOtcSell(coinCount, coinSymbol, md5Encrypt(drawPwd)).tag(TAG).indeterminate(this)
                 .callback(new Callback<Resp<NewOrderData>>() {
                     @Override
                     protected void onRespSuccess(Resp<NewOrderData> resp) {
@@ -741,7 +741,7 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void buy(String cost, String coinCount, String coinSymbol) {
-        Apic.newOtcDestineOrder(cost, coinCount, coinSymbol).tag(TAG)
+        Apic.newOtcDestineOrder(cost, coinCount, coinSymbol).tag(TAG).indeterminate(this)
                 .callback(new Callback<Resp<NewOrderData>>() {
                     @Override
                     protected void onRespSuccess(Resp<NewOrderData> resp) {

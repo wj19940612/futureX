@@ -198,6 +198,9 @@ public class MineFragment extends BaseFragment {
     }
 
     private void getUserInfo() {
+        if (!LocalUser.getUser().isLogin()) {
+            return;
+        }
         Apic.findUserInfo().tag(TAG)
                 .callback(new Callback<Resp<UserInfo>>() {
                     @Override
