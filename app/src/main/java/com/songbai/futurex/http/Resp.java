@@ -16,6 +16,7 @@ public class Resp<T> {
         int NEEDS_PRIMARY_CERTIFICATION = 3660;  // 需要初级认证
         int NEEDS_SENIOR_CERTIFICATION = 3661;  // 需要高级认证
         int NEEDS_MORE_DEAL_COUNT = 3662;  // 您的历史交易笔数未达到对方要求
+        int PAYMENT_NONE = 3673;  // 请绑定支付方式后进行交易
         int NEEDS_FUND_PASSWORD = 3018; // 需要资金密码
         int BANK_CADR_NONE = 3801; // 银行卡号不能为空
     }
