@@ -124,6 +124,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     private boolean mNeedGoogle;
     private WaresUserInfo mWaresUserInfo;
     private MsgProcessor mMsgProcessor;
+    private boolean mFirstLoad = true;
 
     @Nullable
     @Override
@@ -179,6 +180,9 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
     public void onResume() {
         super.onResume();
         mMsgProcessor.resume();
+        if (!mFirstLoad) {
+            otcOrderDetail();
+        }
     }
 
     @Override
@@ -204,6 +208,7 @@ public class LegalCurrencyOrderDetailFragment extends UniqueActivity.UniFragment
                     protected void onRespSuccess(Resp<WaresUserInfo> resp) {
                         mWaresUserInfo = resp.getData();
                         setWaresUserInfo(mWaresUserInfo);
+                        mFirstLoad = false;
                     }
                 }).fire();
     }
