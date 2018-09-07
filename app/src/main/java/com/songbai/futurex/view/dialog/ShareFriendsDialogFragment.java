@@ -36,6 +36,7 @@ import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.dialog.BottomDialogFragment;
 import com.songbai.futurex.fragment.mine.SharePosterFragment;
+import com.songbai.futurex.model.mine.PromotionInfos;
 import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.OnRVItemClickListener;
@@ -64,6 +65,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private static final String HAS_POSTER = "has_poster";
     private static final String QC_CODE = "qc_code";
     private static final String SHARE_CONTENT = "share_content";
+    private static final String SHARE_CONTENT_DETAIL = "share_content_detail";
     private static final int SHARE = 12312;
     private static final int OPEN_ACCESSIBILITY = 12313;
     public static String textString;
@@ -91,7 +93,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private String mQcCode;
     private ArrayList<SharePosterFragment> mList = new ArrayList<>();
     private int mSelectedPosition = -1;
-    private static final String SHARE_PREFIX = "https://bitfutu.re/pro/";
+    private static String SHARE_PREFIX = "";
     private UMShareListener mUmShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA shareMedia) {
@@ -121,12 +123,14 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private File mTemp;
     private boolean mSharing;
     private String mShareText;
+    private PromotionInfos.ShareContentBean mShareContentBean;
 
-    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionShare) {
+    public static ShareFriendsDialogFragment newInstance(boolean hasPoster, String code, String promotionShare, PromotionInfos.ShareContentBean shareContent) {
         Bundle args = new Bundle();
         args.putBoolean(HAS_POSTER, hasPoster);
         args.putString(QC_CODE, code);
         args.putString(SHARE_CONTENT, promotionShare);
+        args.putParcelable(SHARE_CONTENT_DETAIL, shareContent);
         ShareFriendsDialogFragment fragment = new ShareFriendsDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -148,6 +152,11 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
             mHasPoster = arguments.getBoolean(HAS_POSTER);
             mQcCode = arguments.getString(QC_CODE);
             mShareText = arguments.getString(SHARE_CONTENT);
+            mShareContentBean = arguments.getParcelable(SHARE_CONTENT_DETAIL);
+            if (mShareContentBean == null) {
+                mShareContentBean = new PromotionInfos.ShareContentBean();
+            }
+            SHARE_PREFIX = mShareContentBean.getHost();
             textString = (TextUtils.isEmpty(mShareText) ? "" : mShareText) + SHARE_PREFIX + mQcCode;
             int[] posters = new int[]{R.drawable.ic_poster1, R.drawable.ic_poster2};
             for (int i = 0; i < posters.length; i++) {
@@ -275,7 +284,7 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     private void shareWechat() {
         Bitmap shareBitmap = ZXingUtils.createQRImage(mQcCode, 100, 100);
         File temp = ImageUtils.getUtil().saveBitmap(shareBitmap, "temp.jpeg");
-        shareStream("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI", "", textString.toString(), temp);
+        shareStream("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI", "", textString, temp);
     }
 
     private void share(SHARE_MEDIA platform) {
@@ -292,14 +301,13 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     }
 
     private void shareWithText(SHARE_MEDIA platform) {
-        UMImage umImage = new UMImage(getContext(), ZXingUtils.createQRImage(mQcCode, 100, 100));
+        String pic = mShareContentBean.getPic();
+        UMImage umImage = new UMImage(getContext(), pic);
         mTemp = umImage.asFileImage();
+        String host = mShareContentBean.getHost();
         new ShareAction(getActivity())
                 .setPlatform(platform)
-//                .withText(textString)
-//                .withText("https://bitfutu.re/pro/" + mQcCode)
-                .withMedia(new UMWeb("https://bitfutu.re/pro/" + mQcCode, mShareText, "",
-                        umImage))
+                .withMedia(new UMWeb(host + mQcCode, mShareContentBean.getTitle(), mShareContentBean.getBody(), umImage))
                 .setCallback(mUmShareListener)
                 .share();
     }

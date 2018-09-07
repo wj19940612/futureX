@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -56,6 +57,7 @@ public class InviteActivity extends BaseActivity {
     private String mPromotionGroup;
     private String mCode;
     private String mPromotionShare;
+    private PromotionInfos.ShareContentBean mShareContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,13 +102,14 @@ public class InviteActivity extends BaseActivity {
                                     .load(promotionInfos.getPromotionPic())
                                     .into(mEventPic);
                             Spanned html;
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 html = Html.fromHtml(promotionInfos.getPromotionRule(), Html.FROM_HTML_MODE_COMPACT);
                             } else {
                                 html = Html.fromHtml(promotionInfos.getPromotionRule());
                             }
                             mRules.setText(html);
                             mPromotionShare = promotionInfos.getPromotionShare();
+                            mShareContent = promotionInfos.getShareContent();
                             mPromotionGroup = promotionInfos.getPromotionGroup();
                         }
                     }
@@ -155,7 +158,7 @@ public class InviteActivity extends BaseActivity {
     }
 
     private void showShareDialog(boolean hasPoster) {
-        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode, mPromotionShare);
+        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode, mPromotionShare,mShareContent);
         shareFriendsDialogFragment.show(getSupportFragmentManager());
     }
 
