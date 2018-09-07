@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text49"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 tools:text="BTC"/>
 
             <TextView
@@ -71,6 +72,7 @@
             android:textSize="16sp"
             tools:text="1103733333.13"
             android:layout_gravity="right"
+            android:textStyle="bold"
             android:includeFontPadding="false"/>
 
         <TextView
@@ -84,6 +86,7 @@
             android:textColor="@color/green"
             android:textSize="14sp"
             android:includeFontPadding="false"
+            android:textStyle="bold"
             tools:text="+13.38%"/>
     </LinearLayout>
 

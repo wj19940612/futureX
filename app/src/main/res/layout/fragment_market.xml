@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/background"
+    android:paddingBottom="20dp">
 
     <com.songbai.futurex.view.TitleBar
         android:id="@+id/titleBar"
@@ -17,9 +18,10 @@
         android:id="@+id/radioHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:paddingLeft="12dp"
         android:gravity="center_vertical"
         android:minHeight="36dp"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/titleBar"
         app:tabArray="@array/market_radio_header"
         app:tabInterval="10dp"/>
