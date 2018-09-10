@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -50,6 +51,7 @@ import com.songbai.futurex.model.order.OrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.DateUtil;
+import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
@@ -103,6 +105,7 @@ import static com.songbai.futurex.model.order.Order.MARKET_TRADE;
 public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private static final int REQ_CODE_SEARCH = 99;
+    private static final int OPTION_MARGIN = 20;
 
     @BindView(R.id.tradeDirRadio)
     BuySellSwitcher mTradeDirRadio;
@@ -211,6 +214,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mWid = "";
         mPage = 0;
         requestUserAccount();
+        requestOrderList();
     }
 
     @NonNull
@@ -461,7 +465,12 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (mNotMain) {
             mBackView.setVisibility(View.VISIBLE);
             mPairArrow.setVisibility(View.GONE);
-            mSwitchToMarketPage.setVisibility(View.INVISIBLE);
+            mSwitchToMarketPage.setVisibility(View.GONE);
+
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mOptionalStatus.getLayoutParams();
+            lp.setMargins(0, 0, (int) Display.dp2Px(OPTION_MARGIN, getResources()), 0);
+            mOptionalStatus.setLayoutParams(lp);
+
             mBackView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -600,6 +609,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                     @Override
                     protected void onRespSuccess(Resp resp) {
                         requestOrderList();
+                        requestUserAccount();
                     }
                 }).fire();
     }
@@ -703,6 +713,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private void resetMakeOrder() {
         mVolumeInput.reset();
+        mPercentSelectView.reset();
     }
 
     private void updateMarketView(PairMarket pairMarket) {
@@ -1051,6 +1062,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         makeOrder.setEntrustPrice(getTradePrice());
 
         requestMakeOrder(makeOrder);
+        requestUserAccount();
         resetMakeOrder();
     }
 
@@ -1101,6 +1113,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         if (!LocalUser.getUser().isLogin()) return;
         int type = mOrderListRadio.getSelectedPosition() == 0 ? Order.TYPE_CUR_ENTRUST : Order.TYPE_HIS_ENTRUST;
         String endTime = Uri.encode(DateUtil.format(SysTime.getSysTime().getSystemTimestamp()));
+        if (mPage == 0) {
+            mWid = "";
+        }
         Apic.getEntrustOrderList(mPage, type, endTime, null, null, mWid)
                 .id(mOrderListRadio.getSelectTab())
                 .tag(TAG)
