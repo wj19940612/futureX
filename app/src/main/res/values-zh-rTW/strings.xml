@@ -771,7 +771,7 @@
     <string name="option_one">方案一</string>
     <string name="option_two">方案二</string>
     <string name="option_two_desc">微信小程序搜索「雙重驗證」</string>
-    <string name="have_not_complete_order">您有未完成訂單，請前往處理&#8195;►</string>
+    <string name="have_not_complete_order">您有未完成訂單，請前往處理</string>
     <string name="buy_in_amount">買入數量</string>
     <string name="sell_out_amount">賣出數量</string>
     <string name="buy_in_price">買入估價</string>

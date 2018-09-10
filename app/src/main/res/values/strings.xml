@@ -780,7 +780,7 @@
         <item>@string/buy_in</item>
         <item>@string/sell_out</item>
     </string-array>
-    <string name="have_not_complete_order">您有未完成订单，请前往处理&#8195;►</string>
+    <string name="have_not_complete_order">您有未完成订单，请前往处理</string>
     <string name="buy_in_amount">买入数量</string>
     <string name="sell_out_amount">卖出数量</string>
     <string name="buy_in_price">买入估价</string>

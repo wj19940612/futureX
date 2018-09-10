@@ -114,7 +114,6 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
             public void onItemClick(View view, int position, Object obj) {
                 SysMessage sysMessage = (SysMessage) obj;
                 if (mPageType == PAGE_TYPE_NOTICE) {
-                    String url = String.format(Apic.url.NOTICE_DETAIL_PAGE, sysMessage.getId());
                     if (sysMessage.getFormat() == 1) {
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, sysMessage.getTitle())
