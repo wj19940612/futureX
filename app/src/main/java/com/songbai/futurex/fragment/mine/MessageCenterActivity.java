@@ -133,6 +133,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                         case 1:
                         case 3:
                         case 5:
+                        case 18:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 2)
@@ -140,6 +141,7 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             break;
                         case 2:
                         case 4:
+                        case 17:
                             UniqueActivity.launcher(getActivity(), LegalCurrencyOrderDetailFragment.class)
                                     .putExtra(ExtraKeys.ORDER_ID, String.valueOf(sysMessage.getDataId()))
                                     .putExtra(ExtraKeys.TRADE_DIRECTION, 1)
@@ -166,8 +168,6 @@ public class MessageCenterActivity extends RVSwipeLoadActivity {
                             }
                             break;
                         case 11:
-                        case 17:
-                        case 18:
                             direct = 0;
                             msg = sysMessage.getMsg();
                             if (msg.contains("direct")) {
