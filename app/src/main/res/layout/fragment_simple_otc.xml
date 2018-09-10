@@ -230,6 +230,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawablePadding="6dp"
+            android:drawableRight="@drawable/ic_otc_arraw"
             android:text="@string/have_not_complete_order"
             android:textColor="@color/white"
             android:textSize="13sp"/>
