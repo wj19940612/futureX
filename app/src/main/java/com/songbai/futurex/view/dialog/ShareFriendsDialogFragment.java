@@ -80,12 +80,10 @@ public class ShareFriendsDialogFragment extends BottomDialogFragment implements 
     @BindView(R.id.cancel)
     TextView mCancel;
     private int[] shareIcons = new int[]{
-            R.drawable.ic_share_wechat, R.drawable.ic_share_moment,
             R.drawable.ic_share_twitter, R.drawable.ic_share_facebook,
             R.drawable.ic_share_telegram, R.drawable.ic_invitation_link};
 
     private int[] shareTexts = new int[]{
-            R.string.wechat_friends, R.string.wechat_moments,
             R.string.twitter, R.string.facebook,
             R.string.telegram, R.string.copy_link};
     private boolean mHasPoster;
