@@ -28,7 +28,7 @@
     <string name="revoked">Cancelled</string>
     <string name="part_deal_with_arrow">Partially filled></string>
     <string name="system_revoked">System Cancelled</string>
-    <string name="part_deal_part_revoked_with_arrow">Partially cancelled></string>
+    <string name="part_deal_part_revoked_with_arrow">Cancelled with partially filled></string>
     <string name="unknown_status">Unknown status</string>
 
     <!--委托单-->
