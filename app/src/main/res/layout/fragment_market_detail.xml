@@ -175,7 +175,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingBottom="52dp">
+                android:paddingBottom="52dp"
+                android:descendantFocusability="blocksDescendants" >
 
                 <com.songbai.futurex.view.RadioHeader
                     android:id="@+id/tradeDetailRadio"
