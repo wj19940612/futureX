@@ -17,4 +17,9 @@ public class Otc365FilterWebActivity extends WebActivity {
         }
         return contains;
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
