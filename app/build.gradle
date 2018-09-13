@@ -108,7 +108,6 @@ android {
         ali {}
         lenovo {}
         pro {
-            buildConfigField('boolean', 'IS_PROD', 'false')
         }
     }
 
