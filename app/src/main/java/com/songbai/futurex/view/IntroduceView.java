@@ -75,10 +75,9 @@ public class IntroduceView extends LinearLayout {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setUserAgentString(webSettings.getUserAgentString()
-                + " ###" + getContext().getString(R.string.android_web_agent) + "/2.0");
-        //mWebView.getSettings().setAppCacheEnabled(true);l
-        //webSettings.setAppCachePath(getExternalCacheDir().getPath());
+        String userAgentString = webSettings.getUserAgentString();
+        userAgentString = getContext().getString(R.string.android_web_agent) + " " + userAgentString;
+        webSettings.setUserAgentString(userAgentString);
         webSettings.setAllowFileAccess(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
