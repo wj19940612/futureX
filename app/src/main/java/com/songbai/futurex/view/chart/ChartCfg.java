@@ -3,8 +3,8 @@ package com.songbai.futurex.view.chart;
 public class ChartCfg {
 
     private int mBaseLines;
-    private int mIndexesBaseLines;
-    private boolean mIndexesEnable;
+    private int mVolBaseLines;
+    private boolean mVolEnable;
     private int mNumberScale;
     private int mXAxis;
     private boolean mEnableDrag;
@@ -12,11 +12,12 @@ public class ChartCfg {
     private float[] mBaseLineArray;
     private double[] mIndexesBaseLineArray;
     private float mViewScale;
+    private boolean mIndexEnable;
 
     public void setChartCfg(ChartCfg cfg) {
         setBaseLines(cfg.getBaseLines());
-        setIndexesBaseLines(cfg.getIndexesBaseLines());
-        setIndexesEnable(cfg.isIndexesEnable());
+        setVolBaseLines(cfg.getVolBaseLines());
+        setVolEnable(cfg.isVolEnable());
         setNumberScale(cfg.getNumberScale());
         setXAxis(cfg.getXAxis());
         setEnableDrag(cfg.isEnableDrag());
@@ -26,7 +27,7 @@ public class ChartCfg {
 
     public ChartCfg() {
         mBaseLines = 2;
-        mIndexesBaseLines = 2;
+        mVolBaseLines = 2;
         mNumberScale = 2;
         mXAxis = 0;
         mBaseLineArray = new float[0];
@@ -45,10 +46,10 @@ public class ChartCfg {
         }
     }
 
-    public void setIndexesBaseLines(int indexesBaseLines) {
-        mIndexesBaseLines = indexesBaseLines;
-        if (mIndexesBaseLineArray.length != indexesBaseLines) {
-            mIndexesBaseLineArray = new double[indexesBaseLines];
+    public void setVolBaseLines(int volBaseLines) {
+        mVolBaseLines = volBaseLines;
+        if (mIndexesBaseLineArray.length != volBaseLines) {
+            mIndexesBaseLineArray = new double[volBaseLines];
         }
     }
 
@@ -56,24 +57,32 @@ public class ChartCfg {
         return mBaseLines;
     }
 
-    public int getIndexesBaseLines() {
-        return mIndexesBaseLines;
+    public int getVolBaseLines() {
+        return mVolBaseLines;
     }
 
     public float[] getBaseLineArray() {
         return mBaseLineArray;
     }
 
-    public double[] getIndexesBaseLineArray() {
+    public double[] getVolBaseLineArray() {
         return mIndexesBaseLineArray;
     }
 
-    public boolean isIndexesEnable() {
-        return mIndexesEnable;
+    public boolean isVolEnable() {
+        return mVolEnable;
     }
 
-    public void setIndexesEnable(boolean indexesEnable) {
-        mIndexesEnable = indexesEnable;
+    public void setVolEnable(boolean volEnable) {
+        mVolEnable = volEnable;
+    }
+
+    public boolean isIndexEnable() {
+        return mIndexEnable;
+    }
+
+    public void setIndexEnable(boolean indexEnable) {
+        mIndexEnable = indexEnable;
     }
 
     public int getNumberScale() {

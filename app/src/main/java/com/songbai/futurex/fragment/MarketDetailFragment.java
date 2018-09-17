@@ -47,9 +47,7 @@ import com.songbai.futurex.view.chart.DeepView;
 import com.songbai.futurex.view.chart.Kline;
 import com.songbai.futurex.view.chart.KlineDataDetailView;
 import com.songbai.futurex.view.chart.KlineUtils;
-import com.songbai.futurex.view.chart.KlineView;
 import com.songbai.futurex.view.chart.TrendV;
-import com.songbai.futurex.view.chart.TrendView;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
@@ -102,13 +100,13 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.chartRadio)
     ChartsRadio mChartRadio;
     @BindView(R.id.kline)
-    KlineView mKline;
+    Kline mKline;
     @BindView(R.id.tradeDetailRadio)
     RadioHeader mTradeDetailRadio;
     @BindView(R.id.klineDataDetailView)
     KlineDataDetailView mKlineDataDetailView;
     @BindView(R.id.trend)
-    TrendView mTrend;
+    TrendV mTrend;
     @BindView(R.id.deepView)
     DeepView mDeepView;
     @BindView(R.id.optional)
@@ -180,6 +178,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         });
         mChartRadio.setChartsRadioDropMenu(mChartRadioDropMenu);
         mChartRadio.setIndexesDropMenu(mIndexDropMenu);
+        mChartRadio.setOnIndexSelectedListener(new ChartsRadio.OnIndexSelectedListener() {
+            @Override
+            public void onIndexSelected(int indexes) {
+                
+            }
+        });
         mTradeDetailRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
@@ -664,12 +668,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         // kline
         ChartCfg klineCfg = mKline.getChartCfg();
         klineCfg.setBaseLines(6);
-        klineCfg.setIndexesBaseLines(2);
+        klineCfg.setVolBaseLines(2);
         klineCfg.setXAxis(45);
         klineCfg.setNumberScale(mPairDesc.getPairs().getPricePoint());
         klineCfg.setEnableCrossLine(true);
         klineCfg.setEnableDrag(true);
-        klineCfg.setIndexesEnable(true);
+        klineCfg.setVolEnable(true);
         klineCfg.setViewScale(1);
 
         ChartColor klineColor = mKline.getChartColor();
@@ -720,7 +724,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         ChartColor trendColor = mTrend.getChartColor();
         trendColor.setChartColor(klineColor);
         trendColor.setClosePriceColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-
+        trendColor.setMaColor(60, Color.parseColor("#FFB405"));
         mTrend.setDateFormatStr("HH:mm");
         mTrend.setOnCrossLineAppearListener(new Kline.OnCrossLineAppearListener() {
             @Override

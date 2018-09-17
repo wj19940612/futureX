@@ -141,21 +141,21 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
                 android:background="@color/white">
 
-                <com.songbai.futurex.view.chart.KlineView
+                <com.songbai.futurex.view.chart.Kline
                     android:id="@+id/kline"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:visibility="gone"/>
 
-                <com.songbai.futurex.view.chart.TrendView
+                <com.songbai.futurex.view.chart.TrendV
                     android:id="@+id/trend"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="wrap_content"/>
 
                 <include
                     layout="@layout/view_charts_radio_dropmenu"

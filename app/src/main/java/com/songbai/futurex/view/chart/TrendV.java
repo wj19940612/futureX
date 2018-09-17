@@ -38,9 +38,8 @@ public class TrendV extends Kline {
     }
 
     @Override
-    protected void drawData(boolean indexesEnable,
-                            int left, int top, int width, int height,
-                            int left2, int top2, int width2, int height2, Canvas canvas) {
+    protected void drawData(int left, int top, int width, int height,
+                            boolean volEnable, int volTop, int VolHeight, Canvas canvas) {
         Path path = getPath();
         float chartX = 0;
         float chartY = 0;
@@ -68,10 +67,10 @@ public class TrendV extends Kline {
         canvas.drawPath(path, sPaint);
         sPaint.setShader(null);
 
-        if (indexesEnable) {
+        if (volEnable) {
             for (int i = mStart; i < mEnd; i++) {
                 chartX = getChartXOfScreen(i);
-                drawIndexes(chartX, mDataList.get(i), canvas);
+                drawVol(chartX, mDataList.get(i), canvas);
             }
         }
 

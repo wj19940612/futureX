@@ -104,17 +104,12 @@ public class Kline extends BaseChart {
         void onDisappear();
     }
 
-    public interface OnMADataChangedListener {
-        void onMADataChanged(Data data);
-    }
-
     public interface OnSidesReachedListener {
         void onStartSideReached(Data data);
 
         void onEndSideReached(Data data);
     }
 
-    private OnMADataChangedListener mOnMADataChangedListener;
     private OnCrossLineAppearListener mOnCrossLineAppearListener;
     private OnSidesReachedListener mOnSidesReachedListener;
     private float mBaseLineWidth;
@@ -133,7 +128,7 @@ public class Kline extends BaseChart {
     private int mFirstVisibleIndex;
     private int mLastVisibleIndex;
     private int mCandleNum;
-    
+
     private float mCandleGap;
     private float mCandleLineWidth;
     private float mPriceAreaWidth;
@@ -210,7 +205,7 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void calculateIndexesBaseLines(double[] indexesBaseLines) {
+    protected void calculateVolBaseLines(double[] indexesBaseLines) {
         if (mDataList != null && mDataList.size() > 0) {
             double maxVolume = mDataList.get(mStart).getNowVolume();
             for (int i = mStart; i < mEnd; i++) {
@@ -239,10 +234,7 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawBaseLines(boolean indexesEnable,
-                                 float[] baselines, int left, int top, int width, int height,
-                                 double[] indexesBaseLines, int left2, int top2, int width2, int height2,
-                                 Canvas canvas) {
+    protected void drawBaseLines(float[] baselines, int left, int top, int width, int height, Canvas canvas) {
         if (baselines.length == 0) return;
 
         float verticalInterval = height * 1.0f / (baselines.length - 1);
@@ -270,9 +262,8 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawData(boolean indexesEnable,
-                            int left, int top, int width, int height,
-                            int left2, int top2, int width2, int height2, Canvas canvas) {
+    protected void drawData(int left, int top, int width, int height,
+                            boolean volEnable, int volTop, int volHeight, Canvas canvas) {
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
             float chartX = getChartXOfScreen(i, data);
@@ -282,8 +273,8 @@ public class Kline extends BaseChart {
                 drawCandle(chartX, data, canvas);
             }
 
-            if (indexesEnable) {
-                drawIndexes(chartX, data, canvas);
+            if (volEnable) {
+                drawVol(chartX, data, canvas);
             }
         }
 
@@ -328,7 +319,7 @@ public class Kline extends BaseChart {
 //        }
     }
 
-    protected void drawIndexes(float chartX, Data data, Canvas canvas) {
+    protected void drawVol(float chartX, Data data, Canvas canvas) {
         drawVolumes(chartX, data, canvas);
     }
 
@@ -342,9 +333,9 @@ public class Kline extends BaseChart {
         setCandleBodyPaint(sPaint, color);
         RectF rectf = getRectF();
         rectf.left = chartX - candleWidth / 2;
-        rectf.top = getIndexesChartY(data.nowVolume);
+        rectf.top = getVolChartY(data.nowVolume);
         rectf.right = chartX + candleWidth / 2;
-        rectf.bottom = getIndexesChartY(0);
+        rectf.bottom = getVolChartY(0);
         canvas.drawRect(rectf, sPaint);
     }
 
@@ -444,7 +435,7 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
+    protected void drawTimeLine(int left, int top, int width, int timeLineHeight, Canvas canvas) {
         int interval = mCandleNum / 4;
         float textY = top + mTextMargin / 2 + mBigFontHeight / 2 + mOffset4CenterBigText;
         setBaseTextPaint(sPaint);
@@ -469,6 +460,43 @@ public class Kline extends BaseChart {
         }
     }
 
+    @Override
+    protected void drawHints(int left, int top, int width,
+                             int mainChartHeight, int timeLineHeight, int volChartHeight, int subChartHeight,
+                             Canvas canvas) {
+        Data maData = null;
+        if (mVisibleList.size() > 0) {
+            maData = mVisibleList.get(mVisibleList.size() - 1);
+        }
+        if (mTouchIndex >= 0) {
+            maData = mVisibleList.get(mTouchIndex);
+        }
+
+        float textX = left + width - mTextMargin;
+        int textY = (int) (top + mTextMargin * 3 + mOffset4CenterText);
+        for (int ma : mMas) {
+            String maText = formatMaStr(ma, maData);
+            setMovingAveragesTextPaint(sPaint, ma);
+            float maTextLength = sPaint.measureText(maText);
+            textX -= maTextLength;
+            canvas.drawText(maText, textX, textY, sPaint);
+            textX -= mTextMargin * 1.5;
+        }
+    }
+
+    private String formatMaStr(int ma, Data maData) {
+        if (maData != null) {
+            Float maValue = maData.getMas(ma);
+            if (maValue != null) {
+                return "MA" + ma + ": " + formatNumber(maValue);
+            } else {
+                return "MA" + ma + ": --";
+            }
+        } else {
+            return "MA" + ma + ": --";
+        }
+    }
+
     private String formatTimestamp(long timestamp) {
         mDate.setTime(timestamp);
         return mDateFormat.format(mDate);
@@ -477,7 +505,7 @@ public class Kline extends BaseChart {
     @Override
     protected void drawCrossLines(boolean indexesEnable, int touchIndex,
                                   int left, int top, int width, int height,
-                                  int left2, int top2, int width2, int height2, Canvas canvas) {
+                                  int left2, int volTop, int width2, int volHeight, Canvas canvas) {
         if (!checkTouchIndexValid(touchIndex)) return;
 
         Data data = mVisibleList.get(touchIndex);
@@ -542,8 +570,6 @@ public class Kline extends BaseChart {
 
         super.onDraw(canvas);
 
-        onMADataChanged();
-
         if (isDragging()) {
             onSidesReached();
         }
@@ -560,19 +586,6 @@ public class Kline extends BaseChart {
         }
     }
 
-    private void onMADataChanged() {
-        Data maData = null;
-        if (mVisibleList.size() > 0) {
-            maData = mVisibleList.get(mVisibleList.size() - 1);
-        }
-        if (mTouchIndex >= 0) {
-            maData = mVisibleList.get(mTouchIndex);
-        }
-        if (mOnMADataChangedListener != null) {
-            mOnMADataChangedListener.onMADataChanged(maData);
-        }
-    }
-
     @Override
     protected float getChartY(float y) {
         float[] baseLines = mChartCfg.getBaseLineArray();
@@ -582,7 +595,7 @@ public class Kline extends BaseChart {
             return -1;
         }
 
-        int height = getTopPartHeight() - 2 * mTextMargin; //
+        int height = getMainChartHeight() - 2 * mTextMargin; //
         y = (baseLines[0] - y) / (baseLines[0] - baseLines[baseLines.length - 1]) * height;
         return y + getPaddingTop() + mTextMargin;
     }
@@ -679,10 +692,6 @@ public class Kline extends BaseChart {
         mOnCrossLineAppearListener = onCrossLineAppearListener;
     }
 
-    public void setOnMADataChangedListener(OnMADataChangedListener onMADataChangedListener) {
-        mOnMADataChangedListener = onMADataChangedListener;
-    }
-
     public void setOnSidesReachedListener(OnSidesReachedListener onSidesReachedListener) {
         mOnSidesReachedListener = onSidesReachedListener;
     }
@@ -730,6 +739,13 @@ public class Kline extends BaseChart {
 
     private void setPriceTextPaint(Paint paint) {
         paint.setColor(mChartColor.getCrossLineColor());
+        paint.setTextSize(mFontSize);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+    }
+
+    private void setMovingAveragesTextPaint(Paint paint, int ma) {
+        paint.setColor(mChartColor.getMaColor(ma));
         paint.setTextSize(mFontSize);
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);

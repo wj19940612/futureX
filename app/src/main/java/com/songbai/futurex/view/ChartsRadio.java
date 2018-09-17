@@ -104,6 +104,10 @@ public class ChartsRadio extends LinearLayout {
         mOnTabSelectedListener = onTabSelectedListener;
     }
 
+    public void setOnIndexSelectedListener(OnIndexSelectedListener onIndexSelectedListener) {
+        mOnIndexSelectedListener = onIndexSelectedListener;
+    }
+
     public void setIndexesDropMenu(ViewGroup indexesDropMenu) {
         mIndexesDropMenu = indexesDropMenu;
         if (mIndexesDropMenu == null) return;

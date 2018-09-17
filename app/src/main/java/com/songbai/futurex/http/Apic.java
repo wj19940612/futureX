@@ -1276,7 +1276,7 @@ public class Apic {
                         .put("code", code)
                         .put("type", type)
                         .put("endTime", endTime)
-                        .put("limit", 400));
+                        .put("limit", 200));
     }
 
     /**
@@ -1294,7 +1294,7 @@ public class Apic {
                         .put("code", code)
                         .put("type", 1)
                         .put("endTime", endTime)
-                        .put("limit", 400));
+                        .put("limit", 200));
     }
 
     /**
