@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <com.songbai.futurex.view.TitleBar
         android:id="@+id/titleBar"
@@ -211,12 +213,18 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"/>
             </LinearLayout>
+
+            <View
+                android:id="@+id/viewStub"
+                android:layout_width="match_parent"
+                android:layout_height="174dp"
+                android:visibility="gone" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_white_with_top_shadow"
         android:gravity="center"
@@ -276,6 +284,16 @@
             android:textColor="@color/text66"
             android:textSize="10sp"/>
     </LinearLayout>
+
+    <com.songbai.futurex.view.FastTradingView
+        android:id="@+id/tradeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-230dp"
+        android:background="@color/white"
+        android:clickable="true">
+    </com.songbai.futurex.view.FastTradingView>
 
     <View
         android:id="@+id/dimView"

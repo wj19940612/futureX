@@ -1,5 +1,7 @@
 package com.songbai.futurex.fragment;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,10 +14,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -30,14 +35,19 @@ import com.songbai.futurex.model.CoinIntroduce;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.local.MakeOrder;
+import com.songbai.futurex.model.mine.CoinAbleAmount;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.ChartsRadio;
+import com.songbai.futurex.view.FastTradingView;
 import com.songbai.futurex.view.IntroduceView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.RealtimeDealView;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.TradeVolumeView;
 import com.songbai.futurex.view.chart.BaseChart;
@@ -50,6 +60,7 @@ import com.songbai.futurex.view.chart.KlineUtils;
 import com.songbai.futurex.view.chart.KlineView;
 import com.songbai.futurex.view.chart.TrendV;
 import com.songbai.futurex.view.chart.TrendView;
+import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
@@ -135,6 +146,10 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     LinearLayout mTradeButtons;
     @BindView(R.id.tradePause)
     TextView mTradePause;
+    @BindView(R.id.tradeLayout)
+    FastTradingView mTradeLayout;
+    @BindView(R.id.viewStub)
+    View mViewStub;
 
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
@@ -202,6 +217,16 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             }
         });
 
+        mTradeVolumeView.setOnItemClickListener(new TradeVolumeView.OnItemClickListener() {
+            @Override
+            public void onItemClick(String price, String volume) {
+                if (mTradeLayout.getHeight() == ((RelativeLayout.LayoutParams) mTradeLayout.getLayoutParams()).bottomMargin) {
+                    return;
+                }
+                mTradeLayout.updatePrice(price);
+            }
+        });
+
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
@@ -218,6 +243,14 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         }
                     }.parse();
                 }
+            }
+        });
+
+        mTradeLayout.setonFastTradeClickListener(new FastTradingView.onFastTradeClickListener() {
+            @Override
+            public void onMakeOrder(MakeOrder makeOrder) {
+                requestMakeOrder(makeOrder);
+                requestUserAccount();
             }
         });
 
@@ -305,7 +338,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mTradeDealView.setCurrencyPair(mCurrencyPair);
         mPairName.setText(mCurrencyPair.getUpperCasePairName());
 
+        mTradeLayout.resetView();
         requestPairDescription();
+        mTradeLayout.updateDirection();
     }
 
     private void openSearchPage() {
@@ -383,11 +418,44 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     }
 
     private void clickBuySell(int direction) {
-        Launcher.with(MarketDetailFragment.this, SingleTradeActivity.class)
-                .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair)
-                .putExtra(ExtraKeys.TRADE_DIRECTION, direction)
-                .putExtra(ExtraKeys.NOT_MAIN, true)
-                .execute();
+//        Launcher.with(MarketDetailFragment.this, SingleTradeActivity.class)
+//                .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair)
+//                .putExtra(ExtraKeys.TRADE_DIRECTION, direction)
+//                .putExtra(ExtraKeys.NOT_MAIN, true)
+//                .execute();
+        if (mPairDesc == null) return;
+
+        mTradeLayout.updateData(mCurrencyPair, mPairDesc, mTradeVolumeView);
+        doAnimView();
+    }
+
+
+    private void doAnimView() {
+        if(mViewStub.getVisibility() == View.GONE) {
+            AnimatorUtil.flowView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
+                @Override
+                public void onStart(Animator animation) {
+                    mViewStub.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onEnd(Animator animation) {
+
+                }
+            });
+        }else{
+            AnimatorUtil.sinkView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
+                @Override
+                public void onStart(Animator animation) {
+                    mViewStub.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onEnd(Animator animation) {
+
+                }
+            });
+        }
     }
 
     private void toggleOptionalStatus() {
@@ -467,6 +535,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespData(PairDesc data) {
                         mPairDesc = data;
+                        mCurrencyPair = mPairDesc.getPairs().getCurrencyPair();
+
                         initCharts();
                         initMarketViews();
                         requestDeepList();
@@ -475,8 +545,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         requestIntroduceData();
                         updateTradeButtons();
                         updateOptionalStatus();
+                        requestUserAccount();
                         mChartRadio.performChildClick(0);
                         mTradeDetailRadio.selectTab(0);
+
+                        mTradeLayout.updateData(mCurrencyPair,mPairDesc,mTradeVolumeView);
                     }
                 }).fireFreely();
     }
@@ -509,6 +582,65 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         updateIntroduce(data);
                     }
                 }).fireFreely();
+    }
+
+    private void requestMakeOrder(final MakeOrder makeOrder){
+        Apic.makeOrder(makeOrder).tag(TAG)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        ToastUtil.show(R.string.entrust_success);
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.Code.NEEDS_FUND_PASSWORD) {
+                            showFundPasswordDialog(makeOrder);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
+                    }
+                }).fire();
+    }
+
+    private void showFundPasswordDialog(final MakeOrder makeOrder) {
+        WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
+                new WithDrawPsdViewController.OnClickListener() {
+                    @Override
+                    public void onForgetClick() {
+                        umengEventCount(UmengCountEventId.TRADE0004);
+                    }
+
+                    @Override
+                    public void onConfirmClick(String cashPwd, String googleAuth) {
+                        makeOrder.setDrawPass(md5Encrypt(cashPwd));
+                        requestMakeOrder(makeOrder);
+                    }
+                });
+        withDrawPsdViewController.setShowGoogleAuth(false);
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setTitle(R.string.fund_password_verification);
+    }
+
+    private void requestUserAccount() {
+        if (LocalUser.getUser().isLogin()) {
+            Apic.getAccountByUserForMuti(mCurrencyPair.getPrefixSymbol() + "," + mCurrencyPair.getSuffixSymbol()).tag(TAG)
+                    .callback(new Callback<Resp<List<CoinAbleAmount>>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<List<CoinAbleAmount>> resp) {
+                            mTradeLayout.updateCoinAbleAmount(resp);
+                        }
+
+                        @Override
+                        public void onFailure(ReqError reqError) {
+                            super.onFailure(reqError);
+                        }
+                    }).fireFreely();
+        } else {
+            mTradeLayout.updateNoLoginUserAccount();
+        }
     }
 
     private void updateIntroduce(CoinIntroduce data) {
@@ -565,6 +697,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
         }
         mTradeVolume.setText(CurrencyUtils.get24HourVolume(marketData.getVolume()));
+
+        mTradeLayout.updatePriceView(marketData);
     }
 
     @Override
