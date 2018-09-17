@@ -1516,29 +1516,56 @@ public class Apic {
     }
 
     /**
-     * /api/otc/newOtc/v1/destineOrder.do
+     * /api/otc/v2/newOtc/preBuy.do
      * POST
-     * 用户购买usdt--v1.5
+     * 法币交易预购买
      */
-    public static Api newOtcDestineOrder(String cost, String coinCount, String coinSymbol) {
-        return Api.post("/api/otc/newOtc/v1/destineOrder.do",
+    public static Api newOtcPreBuy(String coinCount, String coinSymbol) {
+        return Api.post("/api/otc/v2/newOtc/preBuy.do",
                 new ReqParams()
-                        .put("cost", cost)
                         .put("coinCount", coinCount)
                         .put("coinSymbol", coinSymbol));
     }
 
     /**
-     * /api/otc/newOtc/v1/sell.do
+     * /api/otc/v2/newOtc/destineOrder.do
      * POST
-     * 用户出售usdt
+     * 法币购买
      */
-    public static Api newOtcSell(String coinCount, String coinSymbol, String drawPass) {
-        return Api.post("/api/otc/newOtc/v1/sell.do",
+    public static Api newOtcDestineOrder(String coinCount, String coinSymbol, int waresType, int waresId) {
+        return Api.post("/api/otc/v2/newOtc/destineOrder.do",
                 new ReqParams()
                         .put("coinCount", coinCount)
                         .put("coinSymbol", coinSymbol)
-                        .put("drawPass", drawPass));
+                        .put("waresType", waresType)
+                        .put("waresId", waresId));
+    }
+
+    /**
+     * /api/otc/v2/newOtc/preSell.do
+     * POST
+     * 法币交易预出售
+     */
+    public static Api newOtcPreSell(String coinCount, String coinSymbol) {
+        return Api.post("/api/otc/v2/newOtc/preSell.do",
+                new ReqParams()
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol));
+    }
+
+    /**
+     * /api/otc/v2/newOtc/sell.do
+     * POST
+     * 法币出售
+     */
+    public static Api newOtcSell(String coinCount, String coinSymbol, String drawPass, int waresType, int waresId) {
+        return Api.post("/api/otc/v2/newOtc/sell.do",
+                new ReqParams()
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol)
+                        .put("drawPass", drawPass)
+                        .put("waresType", waresType)
+                        .put("waresId", waresId));
     }
 
     /**

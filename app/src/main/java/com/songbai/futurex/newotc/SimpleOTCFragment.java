@@ -39,6 +39,7 @@ import com.songbai.futurex.model.NewOTCPrice;
 import com.songbai.futurex.model.NewOTCYetOrder;
 import com.songbai.futurex.model.NewOrderData;
 import com.songbai.futurex.model.ParamBean;
+import com.songbai.futurex.model.PreTradeBean;
 import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.SysMessage;
@@ -595,25 +596,9 @@ public class SimpleOTCFragment extends BaseFragment {
             }
         }
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
-            buy("", coinCount, mSelectedCoinSymbol);
+            newOtcPreBuy(coinCount, mSelectedCoinSymbol);
         } else {
-            WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
-                    new WithDrawPsdViewController.OnClickListener() {
-                        @Override
-                        public void onForgetClick() {
-                            umengEventCount(UmengCountEventId.TRADE0004);
-                        }
-
-                        @Override
-                        public void onConfirmClick(String cashPwd, String googleAuth) {
-                            sell(coinCount, mSelectedCoinSymbol, cashPwd);
-                        }
-                    });
-            withDrawPsdViewController.setShowGoogleAuth(false);
-            SmartDialog smartDialog = SmartDialog.solo(getActivity());
-            smartDialog.setCustomViewController(withDrawPsdViewController)
-                    .show();
-            withDrawPsdViewController.setTitle(R.string.fund_password_verification);
+            preSell(coinCount, mSelectedCoinSymbol);
         }
     }
 
@@ -692,8 +677,43 @@ public class SimpleOTCFragment extends BaseFragment {
         withDrawPsdViewController.setImageRes(R.drawable.ic_popup_attention);
     }
 
-    private void sell(String coinCount, String coinSymbol, String drawPwd) {
-        Apic.newOtcSell(coinCount, coinSymbol, md5Encrypt(drawPwd)).tag(TAG).indeterminate(this)
+    private void preSell(final String coinCount, String coinSymbol) {
+        Apic.newOtcPreSell(coinCount, coinSymbol).tag(TAG).indeterminate(this)
+                .callback(new Callback<Resp<PreTradeBean>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<PreTradeBean> resp) {
+                        showConfirmAlert(resp.getData());
+                    }
+                }).fire();
+    }
+
+    private void showConfirmAlert(final PreTradeBean preBuyBean) {
+        // TODO: 2018/9/17 确认弹窗
+        if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
+            buy(String.valueOf(preBuyBean.getCoinCount()), mSelectedCoinSymbol, preBuyBean.getWaresType(), preBuyBean.getWaresId());
+        } else {
+            WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
+                    new WithDrawPsdViewController.OnClickListener() {
+                        @Override
+                        public void onForgetClick() {
+                            umengEventCount(UmengCountEventId.TRADE0004);
+                        }
+
+                        @Override
+                        public void onConfirmClick(String cashPwd, String googleAuth) {
+                            sell(String.valueOf(preBuyBean.getCoinCount()), mSelectedCoinSymbol, cashPwd, preBuyBean.getWaresType(), preBuyBean.getWaresId());
+                        }
+                    });
+            withDrawPsdViewController.setShowGoogleAuth(false);
+            SmartDialog smartDialog = SmartDialog.solo(getActivity());
+            smartDialog.setCustomViewController(withDrawPsdViewController)
+                    .show();
+            withDrawPsdViewController.setTitle(R.string.fund_password_verification);
+        }
+    }
+
+    private void sell(String coinCount, String coinSymbol, String drawPwd, int waresType, int waresId) {
+        Apic.newOtcSell(coinCount, coinSymbol, md5Encrypt(drawPwd), waresType, waresId).tag(TAG).indeterminate(this)
                 .callback(new Callback<Resp<NewOrderData>>() {
                     @Override
                     protected void onRespSuccess(Resp<NewOrderData> resp) {
@@ -776,8 +796,18 @@ public class SimpleOTCFragment extends BaseFragment {
         return "";
     }
 
-    private void buy(String cost, String coinCount, String coinSymbol) {
-        Apic.newOtcDestineOrder(cost, coinCount, coinSymbol).tag(TAG).indeterminate(this)
+    private void newOtcPreBuy(final String coinCount, String coinSymbol) {
+        Apic.newOtcPreBuy(coinCount, coinSymbol).tag(TAG).indeterminate(this)
+                .callback(new Callback<Resp<PreTradeBean>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<PreTradeBean> resp) {
+                        showConfirmAlert(resp.getData());
+                    }
+                }).fire();
+    }
+
+    private void buy(String coinCount, String coinSymbol, int waresType, int waresId) {
+        Apic.newOtcDestineOrder(coinCount, coinSymbol, waresType, waresId).tag(TAG).indeterminate(this)
                 .callback(new Callback<Resp<NewOrderData>>() {
                     @Override
                     protected void onRespSuccess(Resp<NewOrderData> resp) {
