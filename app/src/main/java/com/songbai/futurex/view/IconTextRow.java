@@ -23,7 +23,7 @@ import com.songbai.futurex.utils.Display;
 
 public class IconTextRow extends LinearLayout {
 
-    private static final float HEIGHT_SPLIT_LINE_DP = 0.5f;
+    private static final float HEIGHT_SPLIT_LINE_DP = 1f;
 
     private Drawable mLeftIcon;
     private Drawable mRightIcon;

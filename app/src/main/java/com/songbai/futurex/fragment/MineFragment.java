@@ -28,6 +28,8 @@ import com.songbai.futurex.activity.mine.InviteActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.activity.mine.PersonalDataActivity;
 import com.songbai.futurex.activity.mine.TradeOrdersActivity;
+import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
+import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
 import com.songbai.futurex.fragment.mine.MessageCenterActivity;
 import com.songbai.futurex.fragment.mine.SafetyCenterFragment;
 import com.songbai.futurex.fragment.mine.SettingsFragment;
@@ -40,6 +42,7 @@ import com.songbai.futurex.model.mine.UnreadMessageCount;
 import com.songbai.futurex.model.status.AuthenticationStatus;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnNavigationListener;
+import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.IconTextRow;
 
@@ -258,7 +261,8 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.headLayout, R.id.property, R.id.tradeOrderLog, R.id.legalCurrencyTradeOrder, R.id.invite,
-            R.id.msgCenter, R.id.safetyCenter, R.id.noticeCenter, R.id.customService, R.id.settings})
+            R.id.msgCenter, R.id.legalCurrencyPayManagement, R.id.addressManagement, R.id.safetyCenter,
+            R.id.noticeCenter, R.id.customService, R.id.settings})
     public void onViewClicked(View view) {
         LocalUser user = LocalUser.getUser();
         switch (view.getId()) {
@@ -306,6 +310,26 @@ public class MineFragment extends BaseFragment {
             case R.id.msgCenter:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), MessageCenterActivity.class).execute(this, REQUEST_MESSAGE_CENTER);
+                } else {
+                    login();
+                }
+                break;
+            case R.id.legalCurrencyPayManagement:
+                if (LocalUser.getUser().isLogin()) {
+                    if (user.getUserInfo().getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
+                        ToastUtil.show(R.string.passed_primary_certification);
+                    } else {
+                        UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
+                                .execute();
+                    }
+                } else {
+                    login();
+                }
+                break;
+            case R.id.addressManagement:
+                if (LocalUser.getUser().isLogin()) {
+                    UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class)
+                            .execute();
                 } else {
                     login();
                 }

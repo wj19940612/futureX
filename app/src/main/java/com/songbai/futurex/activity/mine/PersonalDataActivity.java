@@ -16,8 +16,6 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.fragment.mine.BindMailFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
-import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
-import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
 import com.songbai.futurex.http.Apic;
@@ -163,7 +161,7 @@ public class PersonalDataActivity extends BaseActivity {
 
     @OnClick({R.id.headImageLayout, R.id.nickName, R.id.realName, R.id.phoneCertification,
             R.id.mailCertification, R.id.primaryCertification, R.id.seniorCertification,
-            R.id.legalCurrencyPayManagement, R.id.addressManagement, R.id.pushBtn})
+            R.id.pushBtn})
     public void onViewClicked(View view) {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
@@ -203,18 +201,6 @@ public class PersonalDataActivity extends BaseActivity {
                 }
                 UniqueActivity.launcher(this, SeniorCertificationFragment.class)
                         .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus)
-                        .execute(MODIFY_PERSONAL_DATA);
-                break;
-            case R.id.legalCurrencyPayManagement:
-                if (userInfo.getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
-                    ToastUtil.show(R.string.passed_primary_certification);
-                } else {
-                    UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
-                            .execute(MODIFY_PERSONAL_DATA);
-                }
-                break;
-            case R.id.addressManagement:
-                UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class)
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
             case R.id.pushBtn:
