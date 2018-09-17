@@ -821,4 +821,7 @@
     <string name="pause_trade">暂停交易</string>
 
     <string name="require_cash_pwd">需要设置资金密码</string>
+
+    <string name="transfer_coin">转币</string>
+    <string name="legal_currency_balance">法币账户余额(%1$s)：%2$s</string>
 </resources>

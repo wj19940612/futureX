@@ -28,6 +28,7 @@ import com.songbai.futurex.fragment.legalcurrency.LegalCurrencyOrderDetailFragme
 import com.songbai.futurex.fragment.mine.AddBankingCardFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
 import com.songbai.futurex.fragment.mine.CashPwdFragment;
+import com.songbai.futurex.fragment.mine.FundsTransferFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.fragment.mine.SelectPayTypeFragment;
 import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
@@ -106,6 +107,10 @@ public class SimpleOTCFragment extends BaseFragment {
     TitleBar mTitleBar;
     @BindView(R.id.recentOrderHint)
     LinearLayout mRecentOrderHint;
+    @BindView(R.id.tvBalance)
+    TextView mTvBalance;
+    @BindView(R.id.balanceGroup)
+    LinearLayout mBalanceGroup;
     private int mTradeType = OTCOrderStatus.ORDER_DIRECT_BUY;
     private String mSelectedCoinSymbol = "usdt";
     private String mSelectedLegalSymbol = "cny";
@@ -117,6 +122,7 @@ public class SimpleOTCFragment extends BaseFragment {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
             getPrice();
+            accountBalance();
             getYetOrder();
         }
     };
@@ -154,6 +160,7 @@ public class SimpleOTCFragment extends BaseFragment {
     private SimpleOTCLimitController mSimpleOTCLimitController;
     private static final int REQUEST_SET = 12343;
     private SmartDialog mSmartDialog;
+    private String mBalance;
 
     private void setAmountAndTurnover() {
         if (mNewOTCPrice != null) {
@@ -202,8 +209,10 @@ public class SimpleOTCFragment extends BaseFragment {
                 clearData();
                 if (position == 0) {
                     mTradeType = OTCOrderStatus.ORDER_DIRECT_BUY;
+                    mBalanceGroup.setVisibility(View.GONE);
                 } else {
                     mTradeType = OTCOrderStatus.ORDER_DIRECT_SELL;
+                    mBalanceGroup.setVisibility(View.VISIBLE);
                 }
                 setView();
                 setPrice();
@@ -213,6 +222,7 @@ public class SimpleOTCFragment extends BaseFragment {
         });
         setView();
         getPrice();
+        accountBalance();
         initSocketListener();
         initMsgPush();
     }
@@ -264,6 +274,7 @@ public class SimpleOTCFragment extends BaseFragment {
         super.onResume();
         if (getUserVisibleHint()) {
             getPrice();
+            accountBalance();
             getYetOrder();
         }
         mMsgProcessor.resume();
@@ -280,6 +291,7 @@ public class SimpleOTCFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && mPrepared) {
             getPrice();
+            accountBalance();
             getYetOrder();
         }
     }
@@ -295,6 +307,24 @@ public class SimpleOTCFragment extends BaseFragment {
                         checkConfirmEnable();
                     }
                 }).fireFreely();
+    }
+
+    private void accountBalance() {
+        if (!LocalUser.getUser().isLogin()) {
+            return;
+        }
+        Apic.accountBalance(mSelectedCoinSymbol).tag(TAG)
+                .callback(new Callback<Resp<String>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<String> resp) {
+                        mBalance = resp.getData();
+                        setBalance(mBalance);
+                    }
+                }).fireFreely();
+    }
+
+    private void setBalance(String balance) {
+        mTvBalance.setText(getString(R.string.legal_currency_balance, mSelectedCoinSymbol.toUpperCase(), balance));
     }
 
     private void setLimit() {
@@ -381,7 +411,7 @@ public class SimpleOTCFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.recentOrderHint, R.id.order, R.id.confirm})
+    @OnClick({R.id.recentOrderHint, R.id.order, R.id.transfer, R.id.confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recentOrderHint:
@@ -398,6 +428,12 @@ public class SimpleOTCFragment extends BaseFragment {
                 break;
             case R.id.order:
                 lunchOrder();
+                break;
+            case R.id.transfer:
+                UniqueActivity.launcher(this, FundsTransferFragment.class)
+                        .putExtra(ExtraKeys.TRANSFER_TYPE, 0)
+                        .putExtra(ExtraKeys.SELECTED_COIN_SYMBOL, mSelectedCoinSymbol)
+                        .execute();
                 break;
             case R.id.confirm:
                 if (mNewOTCPrice != null) {
