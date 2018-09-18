@@ -2,6 +2,14 @@ package com.songbai.futurex.view.chart;
 
 public class ChartCfg {
 
+    public static final int INDEX_NONE = -1;
+    public static final int INDEX_MA = 1;
+    public static final int INDEX_BOLL = 2;
+    public static final int INDEX_MACD = 3;
+    public static final int INDEX_KDJ = 4;
+    public static final int INDEX_RSI = 5;
+    public static final int INDEX_WR = 6;
+
     private int mBaseLines;
     private int mVolBaseLines;
     private boolean mVolEnable;
@@ -12,7 +20,8 @@ public class ChartCfg {
     private float[] mBaseLineArray;
     private double[] mIndexesBaseLineArray;
     private float mViewScale;
-    private boolean mIndexEnable;
+    private int mMainIndex;
+    private int mSubIndex;
 
     public void setChartCfg(ChartCfg cfg) {
         setBaseLines(cfg.getBaseLines());
@@ -33,6 +42,8 @@ public class ChartCfg {
         mBaseLineArray = new float[0];
         mIndexesBaseLineArray = new double[0];
         mViewScale = 1;
+        mMainIndex = INDEX_MA;
+        mSubIndex = INDEX_NONE;
     }
 
     public void setViewScale(float viewScale) {
@@ -77,12 +88,12 @@ public class ChartCfg {
         mVolEnable = volEnable;
     }
 
-    public boolean isIndexEnable() {
-        return mIndexEnable;
+    public boolean isSubIndexEnable() {
+        return mSubIndex > 0;
     }
 
-    public void setIndexEnable(boolean indexEnable) {
-        mIndexEnable = indexEnable;
+    public boolean isMainIndexEnable() {
+        return mMainIndex > 0;
     }
 
     public int getNumberScale() {
@@ -119,5 +130,21 @@ public class ChartCfg {
 
     public float getViewScale() {
         return mViewScale;
+    }
+
+    public int getMainIndex() {
+        return mMainIndex;
+    }
+
+    public void setMainIndex(int mainIndex) {
+        mMainIndex = mainIndex;
+    }
+
+    public int getSubIndex() {
+        return mSubIndex;
+    }
+
+    public void setSubIndex(int subIndex) {
+        mSubIndex = subIndex;
     }
 }

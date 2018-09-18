@@ -44,6 +44,7 @@ import com.songbai.futurex.view.chart.BaseChart;
 import com.songbai.futurex.view.chart.ChartCfg;
 import com.songbai.futurex.view.chart.ChartColor;
 import com.songbai.futurex.view.chart.DeepView;
+import com.songbai.futurex.view.chart.IndexMenuController;
 import com.songbai.futurex.view.chart.Kline;
 import com.songbai.futurex.view.chart.KlineDataDetailView;
 import com.songbai.futurex.view.chart.KlineUtils;
@@ -138,8 +139,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     private MarketSubscriber mMarketSubscriber;
     private PairDesc mPairDesc;
     private CurrencyPairsPopup mPairsPopup;
-    TextView mPairName;
-    ImageView mPairArrow;
+    private TextView mPairName;
+    private ImageView mPairArrow;
+    private IndexMenuController mIndexMenuController;
 
     private List<DeepData> mBuyDeepList;
     private List<DeepData> mSellDeepList;
@@ -176,14 +178,17 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 }
             }
         });
-        mChartRadio.setChartsRadioDropMenu(mChartRadioDropMenu);
-        mChartRadio.setIndexesDropMenu(mIndexDropMenu);
-        mChartRadio.setOnIndexSelectedListener(new ChartsRadio.OnIndexSelectedListener() {
+        mChartRadio.setMoreDropMenu(mChartRadioDropMenu);
+        mIndexMenuController = new IndexMenuController(mIndexDropMenu);
+        mChartRadio.setIndexMenuController(mIndexMenuController);
+        mIndexMenuController.setOnIndexSelectedListener(new IndexMenuController.OnIndexSelectedListener() {
             @Override
             public void onIndexSelected(int indexes) {
-                
+                mChartRadio.closeIndexDropMenu();
+                switchChartIndex(indexes);
             }
         });
+
         mTradeDetailRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
@@ -226,6 +231,47 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         });
 
         requestPairDescription();
+    }
+
+    private void switchChartIndex(int indexes) {
+        ChartCfg trendChartCfg = mTrend.getChartCfg();
+        ChartCfg klineChartCfg = mKline.getChartCfg();
+        switch (indexes) {
+            case IndexMenuController.Indexes.MAIN_HIDE:
+                trendChartCfg.setMainIndex(ChartCfg.INDEX_NONE);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_NONE);
+                break;
+            case IndexMenuController.Indexes.SUB_HIDE:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
+                break;
+            case IndexMenuController.Indexes.MA:
+                trendChartCfg.setMainIndex(ChartCfg.INDEX_MA);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_MA);
+                break;
+            case IndexMenuController.Indexes.BOLL:
+                trendChartCfg.setMainIndex(ChartCfg.INDEX_BOLL);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_BOLL);
+                break;
+            case IndexMenuController.Indexes.MACD:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_MACD);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_MACD);
+                break;
+            case IndexMenuController.Indexes.KDJ:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_KDJ);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_KDJ);
+                break;
+            case IndexMenuController.Indexes.RSI:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_RSI);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_RSI);
+                break;
+            case IndexMenuController.Indexes.WR:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_WR);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_WR);
+                break;
+        }
+        mTrend.notifyCfgChanged();
+        mKline.notifyCfgChanged();
     }
 
     private void initTitleBar() {

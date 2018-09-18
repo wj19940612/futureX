@@ -279,22 +279,24 @@ public class Kline extends BaseChart {
         }
 
         // draw MAs
-        for (int ma : mMas) {
-            setMovingAveragesPaint(sPaint, ma);
-            float startX = -1;
-            float startY = -1;
-            for (int i = mStart; i < mEnd; i++) {
-                Float movingAverageValue = mDataList.get(i).getMas(ma);
-                if (movingAverageValue == null) continue;
-                float chartX = getChartXOfScreen(i);
-                float chartY = getChartY(movingAverageValue.floatValue());
-                if (startX == -1 && startY == -1) { // start
-                    startX = chartX;
-                    startY = chartY;
-                } else {
-                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
-                    startX = chartX;
-                    startY = chartY;
+        if (mChartCfg.getMainIndex() == ChartCfg.INDEX_MA) {
+            for (int ma : mMas) {
+                setMovingAveragesPaint(sPaint, ma);
+                float startX = -1;
+                float startY = -1;
+                for (int i = mStart; i < mEnd; i++) {
+                    Float movingAverageValue = mDataList.get(i).getMas(ma);
+                    if (movingAverageValue == null) continue;
+                    float chartX = getChartXOfScreen(i);
+                    float chartY = getChartY(movingAverageValue.floatValue());
+                    if (startX == -1 && startY == -1) { // start
+                        startX = chartX;
+                        startY = chartY;
+                    } else {
+                        canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+                        startX = chartX;
+                        startY = chartY;
+                    }
                 }
             }
         }

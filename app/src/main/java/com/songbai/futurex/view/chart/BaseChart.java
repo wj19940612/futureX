@@ -175,7 +175,7 @@ public abstract class BaseChart extends View {
             height += mVolChartHeight;
         }
 
-        if (mChartCfg.isIndexEnable()) {
+        if (mChartCfg.isSubIndexEnable()) {
             height += mSubChartHeight;
         }
         return height;
