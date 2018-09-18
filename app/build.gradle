@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     def verName = System.getProperties().getProperty("verName")
     def verCode = System.getProperties().getProperty("verCode")
@@ -149,4 +148,7 @@ android {
         implementation project(path: ':swipeloadlayout')
         implementation project(path: ':wrapres')
     }
+}
+
+dependencies {
 }

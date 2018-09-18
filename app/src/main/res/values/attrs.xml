@@ -88,8 +88,7 @@
 
     <!--BuySellSwitcher-->
     <declare-styleable name="BuySellSwitcher">
-        <attr name="viewWidth" format="dimension" />
-        <attr name="viewHeight" format="dimension" />
+        <attr name="tabStrings" format="reference" />
     </declare-styleable>
 
     <!--密码输入控件-->

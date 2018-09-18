@@ -810,4 +810,14 @@
     <string name="receipt_method">Receipt method</string>
     <string name="pause_trade">suspend</string>
     <string name="require_cash_pwd">Require fund pass</string>
+
+    <string-array name="buy_sell">
+        <item>@string/buy_in</item>
+        <item>@string/sell_out</item>
+    </string-array>
+
+    <string-array name="check_market">
+        <item>@string/limit_price</item>
+        <item>@string/market_price</item>
+    </string-array>
 </resources>

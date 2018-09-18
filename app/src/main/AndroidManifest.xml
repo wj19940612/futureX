@@ -241,5 +241,13 @@
         <activity
             android:name=".newotc.Otc365FilterWebActivity"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".zxing.activity.CaptureActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".zxing.activity.ResultActivity"
+            android:screenOrientation="portrait"/>
     </application>
 </manifest>

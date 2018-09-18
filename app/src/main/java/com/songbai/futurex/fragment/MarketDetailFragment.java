@@ -431,7 +431,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
 
     private void doAnimView() {
-        if(mViewStub.getVisibility() == View.GONE) {
+        if (mViewStub.getVisibility() == View.GONE) {
             AnimatorUtil.flowView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
                 @Override
                 public void onStart(Animator animation) {
@@ -443,7 +443,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
                 }
             });
-        }else{
+        } else {
             AnimatorUtil.sinkView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
                 @Override
                 public void onStart(Animator animation) {
@@ -549,7 +549,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         mChartRadio.performChildClick(0);
                         mTradeDetailRadio.selectTab(0);
 
-                        mTradeLayout.updateData(mCurrencyPair,mPairDesc,mTradeVolumeView);
+                        mTradeLayout.updateData(mCurrencyPair, mPairDesc, mTradeVolumeView);
                     }
                 }).fireFreely();
     }
@@ -584,7 +584,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 }).fireFreely();
     }
 
-    private void requestMakeOrder(final MakeOrder makeOrder){
+    private void requestMakeOrder(final MakeOrder makeOrder) {
         Apic.makeOrder(makeOrder).tag(TAG)
                 .callback(new Callback<Resp>() {
                     @Override

@@ -821,4 +821,14 @@
     <string name="pause_trade">暂停交易</string>
 
     <string name="require_cash_pwd">需要设置资金密码</string>
+
+    <string-array name="buy_sell">
+        <item>@string/buy_in</item>
+        <item>@string/sell_out</item>
+    </string-array>
+
+    <string-array name="check_market">
+        <item>@string/limit_price</item>
+        <item>@string/market_price</item>
+    </string-array>
 </resources>

@@ -183,7 +183,7 @@
                             android:layout_width="97dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center_horizontal"
-                            app:layout_constraintTop_toBottomOf="@+id/titleBar"/>
+                            app:tabStrings="@array/buy_sell"/>
 
                         <com.songbai.futurex.view.autofit.AutofitTextView
                             android:id="@+id/availableCurrency"
