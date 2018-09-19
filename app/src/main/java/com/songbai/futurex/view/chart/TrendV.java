@@ -73,34 +73,6 @@ public class TrendV extends Kline {
                 drawVol(chartX, mDataList.get(i), canvas);
             }
         }
-
-        // draw MAs
-        for (int ma : mMas) {
-            setMovingAveragesPaint(sPaint);
-            float startX = -1;
-            float startY = -1;
-            for (int i = mStart; i < mEnd; i++) {
-                Float movingAverageValue = mDataList.get(i).getMas(ma);
-                if (movingAverageValue == null) continue;
-                chartX = getChartXOfScreen(i);
-                chartY = getChartY(movingAverageValue.floatValue());
-                if (startX == -1 && startY == -1) { // start
-                    startX = chartX;
-                    startY = chartY;
-                } else {
-                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
-                    startX = chartX;
-                    startY = chartY;
-                }
-            }
-        }
-    }
-
-    private void setMovingAveragesPaint(Paint paint) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(mMALineWidth);
-        paint.setPathEffect(null);
-        paint.setColor(Color.parseColor("#FFB405"));
     }
 
     private void setTrendLinePaint(Paint paint) {

@@ -223,7 +223,7 @@ public abstract class BaseChart extends View {
 
         drawTimeLine(left, top + mMainChartHeight, width, mTimeLineHeight, canvas);
 
-        drawHints(left, top, width, mMainChartHeight, mTimeLineHeight, mVolChartHeight, mSubChartHeight, canvas);
+        drawIndex(left, top, width, mMainChartHeight, mTimeLineHeight, mVolChartHeight, mSubChartHeight, canvas);
 
         if (mTouchIndex >= 0) {
             if (mChartCfg.isEnableCrossLine()) {
@@ -516,7 +516,7 @@ public abstract class BaseChart extends View {
      * @param subChartHeight
      * @param canvas
      */
-    protected abstract void drawHints(int left, int top, int width,
+    protected abstract void drawIndex(int left, int top, int width,
                                       int mainChartHeight, int timeLineHeight, int volChartHeight, int subChartHeight,
                                       Canvas canvas);
 
