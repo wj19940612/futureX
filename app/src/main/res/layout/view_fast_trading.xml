@@ -3,73 +3,90 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="230dp"
-    android:paddingBottom="20dp"
-    android:paddingTop="16dp">
+    android:layout_height="270dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="20dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingLeft="12dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tradeType"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/fullTrade"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="6dp"
+            android:src="@drawable/btn_full_trade" />
+
+        <com.songbai.futurex.view.BuySellSwitcher
+            android:id="@+id/marketSwitcher"
+            android:layout_width="97dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:drawableRight="@drawable/ic_triangle_downward"
-            android:textColor="@color/text49"
-            android:textSize="15sp"
-            android:includeFontPadding="false"
-            tools:text="@string/buy_limit" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="2dp"
+            app:tabStrings="@array/check_market" />
 
         <TextView
             android:id="@+id/marketPriceView"
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_f5_r4"
             android:gravity="center"
             android:text="@string/trade_with_market_price"
             android:textColor="@color/text99"
             android:textSize="15sp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <com.songbai.futurex.view.ChangePriceView
             android:id="@+id/changePriceView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
             android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tipPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="4dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/text99"
+            android:textSize="12sp" />
 
         <com.songbai.futurex.view.VolumeInputView
             android:id="@+id/volumeInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
             android:layout_marginTop="18dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:includeFontPadding="false"
                 android:text="@string/trade_amt"
                 android:textColor="@color/text49"
-                android:textSize="13sp"
-                android:includeFontPadding="false"/>
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/recharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="@string/recharge_coin"
                 android:includeFontPadding="false"
+                android:text="@string/recharge_coin"
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -78,13 +95,14 @@
             android:id="@+id/tradeAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
             android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:singleLine="true"
             android:textColor="@color/text49"
             android:textSize="13sp"
-            tools:text="-- USDT"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:includeFontPadding="false"/>
+            tools:text="-- USDT" />
     </LinearLayout>
 
     <LinearLayout
@@ -93,12 +111,22 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/closeTrade"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="6dp"
+            android:layout_gravity="right"
+            android:src="@drawable/btn_close_trade" />
+
         <com.songbai.futurex.view.BuySellSwitcher
             android:id="@+id/tradeDirRadio"
             android:layout_width="97dp"
             android:layout_height="24dp"
+            android:layout_marginTop="2dp"
             android:layout_gravity="center_horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/titleBar" />
+            app:layout_constraintTop_toBottomOf="@+id/titleBar"
+            app:tabStrings="@array/buy_sell" />
 
         <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/availableCurrency"
@@ -106,11 +134,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
+            android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@color/text99"
             android:textSize="12sp"
             app:minTextSize="1sp"
-            android:includeFontPadding="false"
             tools:text="@string/available_currency_x_x" />
 
         <com.songbai.futurex.view.autofit.AutofitTextView
@@ -119,11 +147,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="8dp"
+            android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@color/text99"
             android:textSize="12sp"
             app:minTextSize="1sp"
-            android:includeFontPadding="false"
             tools:text="@string/obtainable_currency_x_x" />
 
         <com.songbai.futurex.view.TradePercentSelectView
@@ -131,7 +159,7 @@
             android:layout_width="140dp"
             android:layout_height="56dp"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:id="@+id/tradeButton"

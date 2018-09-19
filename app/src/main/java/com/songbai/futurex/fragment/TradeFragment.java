@@ -744,6 +744,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                             mAvailableCurrencyList = resp.getData();
                             if (mAvailableCurrencyList.size() > 0) {
                                 updateTradeCurrencyView();
+                                updateSelectPercentView();
                             }
                             stopFreshOrLoadAnimation();
                         }

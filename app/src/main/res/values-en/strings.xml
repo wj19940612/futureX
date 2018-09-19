@@ -820,4 +820,7 @@
         <item>@string/limit_price</item>
         <item>@string/market_price</item>
     </string-array>
+
+    <string name="quick_exchange">Quick Exchange</string>
+    <string name="invalid_qr_code">Invalid QR code</string>
 </resources>

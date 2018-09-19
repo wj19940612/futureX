@@ -822,4 +822,7 @@
         <item>@string/limit_price</item>
         <item>@string/market_price</item>
     </string-array>
+
+    <string name="quick_exchange">快捷幣幣交易</string>
+    <string name="invalid_qr_code">二維碼無效</string>
 </resources>

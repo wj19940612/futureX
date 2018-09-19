@@ -27,6 +27,8 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.SingleTradeActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
+import com.songbai.futurex.activity.mine.MyPropertyActivity;
+import com.songbai.futurex.fragment.mine.ReChargeCoinFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -151,6 +153,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.viewStub)
     View mViewStub;
 
+    private ValueAnimator mValueAnimator;
+
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
     private PairDesc mPairDesc;
@@ -251,6 +255,33 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             public void onMakeOrder(MakeOrder makeOrder) {
                 requestMakeOrder(makeOrder);
                 requestUserAccount();
+            }
+
+            @Override
+            public void onFullTradeClick(int direction) {
+                jumpFullTrade(direction);
+                sinkAnim();
+            }
+
+            @Override
+            public void onCloseTradeClick() {
+                sinkAnim();
+            }
+
+            @Override
+            public void onRecharge() {
+                umengEventCount(UmengCountEventId.COIN0005);
+                if (LocalUser.getUser().isLogin()) {
+                    if (mCurrencyPair != null) {
+                        UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
+                                .putExtra(ExtraKeys.COIN_TYPE, mCurrencyPair.getSuffixSymbol())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), MyPropertyActivity.class).execute();
+                    }
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
 
@@ -417,44 +448,73 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         }
     }
 
-    private void clickBuySell(int direction) {
-//        Launcher.with(MarketDetailFragment.this, SingleTradeActivity.class)
-//                .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair)
-//                .putExtra(ExtraKeys.TRADE_DIRECTION, direction)
-//                .putExtra(ExtraKeys.NOT_MAIN, true)
-//                .execute();
-        if (mPairDesc == null) return;
+    public boolean onBackPressed() {
+        if (mTradeLayout.isVisible()) {
+            sinkAnim();
+            return true;
+        }
 
-        mTradeLayout.updateData(mCurrencyPair, mPairDesc, mTradeVolumeView);
-        doAnimView();
+        if (mValueAnimator != null) {
+            mValueAnimator.cancel();
+        }
+        return false;
     }
 
+    private void clickBuySell(int direction) {
+        if (!Preference.get().isQuickExchange()) {
+            jumpFullTrade(direction);
+        } else {
+            if (mPairDesc == null) return;
 
-    private void doAnimView() {
-        if (mViewStub.getVisibility() == View.GONE) {
-            AnimatorUtil.flowView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
+            if (!mTradeLayout.isFlowing()) {
+                mTradeLayout.setDirection(direction);
+            }
+            flowAnim();
+        }
+
+    }
+
+    private void jumpFullTrade(int direction) {
+        Launcher.with(MarketDetailFragment.this, SingleTradeActivity.class)
+                .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair)
+                .putExtra(ExtraKeys.TRADE_DIRECTION, direction)
+                .putExtra(ExtraKeys.NOT_MAIN, true)
+                .execute();
+    }
+
+    private void flowAnim() {
+        if (mTradeLayout.isGone()) {
+            mValueAnimator = AnimatorUtil.flowView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
                 @Override
                 public void onStart(Animator animation) {
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_FLOWING);
                     mViewStub.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onEnd(Animator animation) {
-
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_VISIBLE);
                 }
             });
-        } else {
-            AnimatorUtil.sinkView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
+            mValueAnimator.start();
+        }
+    }
+
+    private void sinkAnim() {
+        if (!mTradeLayout.isSinking()) {
+            mValueAnimator = AnimatorUtil.sinkView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
                 @Override
                 public void onStart(Animator animation) {
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_SINKING);
                     mViewStub.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onEnd(Animator animation) {
-
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_GONE);
                 }
             });
+            mValueAnimator.start();
         }
     }
 
@@ -590,6 +650,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp resp) {
                         ToastUtil.show(R.string.entrust_success);
+                        if (mTradeLayout.getViewStatus() != FastTradingView.VIEW_SINKING) {
+                            sinkAnim();
+                        }
                     }
 
                     @Override
@@ -631,6 +694,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         @Override
                         protected void onRespSuccess(Resp<List<CoinAbleAmount>> resp) {
                             mTradeLayout.updateCoinAbleAmount(resp);
+                            mTradeLayout.updateSelectPercentView();
                         }
 
                         @Override
@@ -715,6 +779,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         super.onResume();
         mMarketSubscriber.resume();
         mMarketSubscriber.subscribe(mCurrencyPair.getPairs());
+        if (getUserVisibleHint() && isAdded()) {
+            requestPairDescription();
+        }
     }
 
     @Override

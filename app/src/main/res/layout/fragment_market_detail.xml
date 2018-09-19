@@ -288,10 +288,10 @@
     <com.songbai.futurex.view.FastTradingView
         android:id="@+id/tradeLayout"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="270dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-230dp"
-        android:background="@color/white"
+        android:layout_marginBottom="-270dp"
+        android:background="@drawable/bg_white_with_top_shadow"
         android:clickable="true">
     </com.songbai.futurex.view.FastTradingView>
 

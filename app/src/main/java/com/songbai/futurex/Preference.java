@@ -149,11 +149,11 @@ public class Preference {
         return mPrefs.getString(Key.SYS_MODEL, "");
     }
 
-    public boolean getFastTrade() {
+    public boolean isQuickExchange() {
         return mPrefs.getBoolean(Key.FAST_TRADE, false);
     }
 
-    public void setFastTrade(boolean fastTrade) {
+    public void setQuickExchange(boolean fastTrade) {
         apply(Key.FAST_TRADE, fastTrade);
     }
 }

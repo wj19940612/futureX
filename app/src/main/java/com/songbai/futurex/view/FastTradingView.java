@@ -1,5 +1,6 @@
 package com.songbai.futurex.view;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -8,8 +9,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
+import com.songbai.futurex.activity.mine.MyPropertyActivity;
+import com.songbai.futurex.fragment.mine.ReChargeCoinFragment;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
@@ -21,6 +26,7 @@ import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.ToastUtil;
+import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.autofit.AutofitTextView;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.TradeDir;
@@ -36,8 +42,15 @@ import static com.songbai.futurex.model.order.Order.LIMIT_TRADE;
 import static com.songbai.futurex.model.order.Order.MARKET_TRADE;
 
 public class FastTradingView extends LinearLayout {
-    @BindView(R.id.tradeType)
-    TextView mTradeType;
+
+    public static final int VIEW_FLOWING = 1;
+    public static final int VIEW_SINKING = 2;
+    public static final int VIEW_GONE = 3;
+    public static final int VIEW_VISIBLE = 4;
+
+
+    @BindView(R.id.marketSwitcher)
+    BuySellSwitcher mMarketSwitcher;
     @BindView(R.id.marketPriceView)
     TextView mMarketPriceView;
     @BindView(R.id.changePriceView)
@@ -70,11 +83,19 @@ public class FastTradingView extends LinearLayout {
     private List<CoinAbleAmount> mAvailableCurrencyList;
     private onFastTradeClickListener mOnFastTradeClickListener;
 
-    public interface onFastTradeClickListener{
-        public void onMakeOrder(MakeOrder makeOrder);
+    private int mViewStatus = VIEW_GONE;
+
+    public interface onFastTradeClickListener {
+        void onMakeOrder(MakeOrder makeOrder);
+
+        void onFullTradeClick(int direction);
+
+        void onCloseTradeClick();
+
+        void onRecharge();
     }
 
-    public void setonFastTradeClickListener(onFastTradeClickListener onFastTradeClickListener){
+    public void setonFastTradeClickListener(onFastTradeClickListener onFastTradeClickListener) {
         mOnFastTradeClickListener = onFastTradeClickListener;
     }
 
@@ -161,6 +182,20 @@ public class FastTradingView extends LinearLayout {
                 updateVolumeInputView(percent, max);
             }
         });
+
+        mMarketSwitcher.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position, String content) {
+                if (mCurrencyPair == null) return;
+
+                if (position == 0) {
+                    mTradeTypeValue = LIMIT_TRADE;
+                } else {
+                    mTradeTypeValue = MARKET_TRADE;
+                }
+                updateTradeDirectionView();
+            }
+        });
     }
 
     private void updateVolumeSeekBar() {
@@ -175,16 +210,29 @@ public class FastTradingView extends LinearLayout {
         }
     }
 
-    @OnClick({R.id.recharge, R.id.tradeButton})
+    @OnClick({R.id.recharge, R.id.tradeButton, R.id.fullTrade, R.id.closeTrade})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recharge:
+                if (mOnFastTradeClickListener != null) {
+                    mOnFastTradeClickListener.onRecharge();
+                }
                 break;
             case R.id.tradeButton:
                 if (LocalUser.getUser().isLogin()) {
                     makeOrder();
                 } else {
                     Launcher.with(getContext(), LoginActivity.class).execute();
+                }
+                break;
+            case R.id.fullTrade:
+                if (mOnFastTradeClickListener != null) {
+                    mOnFastTradeClickListener.onFullTradeClick(mTradeDir);
+                }
+                break;
+            case R.id.closeTrade:
+                if (mOnFastTradeClickListener != null) {
+                    mOnFastTradeClickListener.onCloseTradeClick();
                 }
                 break;
         }
@@ -216,7 +264,6 @@ public class FastTradingView extends LinearLayout {
                 mChangePriceView.setVisibility(View.GONE);
                 mMarketPriceView.setVisibility(View.VISIBLE);
             }
-            mTradeType.setText(tradeTypeRes);
             if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
                 mTradeButton.setEnabled(false);
                 mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
@@ -238,7 +285,6 @@ public class FastTradingView extends LinearLayout {
                 mChangePriceView.setVisibility(View.GONE);
                 mMarketPriceView.setVisibility(View.VISIBLE);
             }
-            mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.sell_out);
             if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
                 mTradeButton.setEnabled(false);
@@ -355,7 +401,7 @@ public class FastTradingView extends LinearLayout {
         }
     }
 
-    private void updateSelectPercentView() {
+    public void updateSelectPercentView() {
         mPercentSelectView.updateSelectPercent();
     }
 
@@ -398,7 +444,13 @@ public class FastTradingView extends LinearLayout {
         mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
     }
 
-    public void updateDirection(){
+    public void setDirection(int direction) {
+        mTradeDir = direction;
+        mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
+        updateTradeDirectionView();
+    }
+
+    public void updateDirection() {
         updateTradeDirectionView();
     }
 
@@ -417,7 +469,7 @@ public class FastTradingView extends LinearLayout {
         makeOrder.setEntrustType(mTradeTypeValue);
         makeOrder.setEntrustPrice(getTradePrice());
 
-        if(mOnFastTradeClickListener!=null){
+        if (mOnFastTradeClickListener != null) {
             mOnFastTradeClickListener.onMakeOrder(makeOrder);
         }
         resetMakeOrder();
@@ -426,5 +478,29 @@ public class FastTradingView extends LinearLayout {
     private void resetMakeOrder() {
         mVolumeInput.reset();
         mPercentSelectView.reset();
+    }
+
+    public int getViewStatus() {
+        return mViewStatus;
+    }
+
+    public void setViewStatus(int status) {
+        mViewStatus = status;
+    }
+
+    public boolean isSinking() {
+        return mViewStatus == VIEW_SINKING;
+    }
+
+    public boolean isFlowing() {
+        return mViewStatus == VIEW_FLOWING;
+    }
+
+    public boolean isGone() {
+        return mViewStatus == VIEW_GONE;
+    }
+
+    public boolean isVisible() {
+        return mViewStatus == VIEW_VISIBLE;
     }
 }

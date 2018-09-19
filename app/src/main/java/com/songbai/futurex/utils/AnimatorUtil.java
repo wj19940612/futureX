@@ -177,7 +177,7 @@ public class AnimatorUtil {
     }
 
     //从底部上浮，并非展开(开始动画前控件的marginBottom使得它在底部)
-    public static void flowView(final View view, final OnStartAndListener onStartAndListener) {
+    public static ValueAnimator flowView(final View view, final OnStartAndListener onStartAndListener) {
         int height = view.getMeasuredHeight();
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(height, 0);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -217,11 +217,11 @@ public class AnimatorUtil {
             }
         });
         valueAnimator.setDuration(200);
-        valueAnimator.start();
+        return valueAnimator;
     }
 
     //下沉到底部，并非收缩(最后动画前控件的marginBottom使得它在底部)
-    public static void sinkView(final View view, final OnStartAndListener onStartAndListener) {
+    public static ValueAnimator sinkView(final View view, final OnStartAndListener onStartAndListener) {
         int height = view.getMeasuredHeight();
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, height);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -261,7 +261,7 @@ public class AnimatorUtil {
             }
         });
         valueAnimator.setDuration(200);
-        valueAnimator.start();
+        return valueAnimator;
     }
 
     private static void setHeight(View view, int height) {
