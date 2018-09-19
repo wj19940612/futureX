@@ -27,6 +27,7 @@ public class LegalCurrencyOrder {
     private String changePortrait;
     private String coinSymbol;
     private int direct;
+    private double fixedPrice;
     private String id;
     private double orderAmount;
     private double orderCount;
@@ -68,6 +69,14 @@ public class LegalCurrencyOrder {
 
     public void setDirect(int direct) {
         this.direct = direct;
+    }
+
+    public double getFixedPrice() {
+        return fixedPrice;
+    }
+
+    public void setFixedPrice(double fixedPrice) {
+        this.fixedPrice = fixedPrice;
     }
 
     public String getId() {

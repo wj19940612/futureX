@@ -56,9 +56,10 @@ import com.songbai.futurex.view.BadgeTextView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
+import com.songbai.futurex.view.dialog.BalanceNotEnoughController;
 import com.songbai.futurex.view.dialog.MsgHintController;
+import com.songbai.futurex.view.dialog.OTCConfirmViewController;
 import com.songbai.futurex.view.dialog.SimpleOTCLimitController;
-import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
 import com.songbai.futurex.websocket.PushDestUtils;
@@ -431,10 +432,7 @@ public class SimpleOTCFragment extends BaseFragment {
                 lunchOrder();
                 break;
             case R.id.transfer:
-                UniqueActivity.launcher(this, FundsTransferFragment.class)
-                        .putExtra(ExtraKeys.TRANSFER_TYPE, 0)
-                        .putExtra(ExtraKeys.SELECTED_COIN_SYMBOL, mSelectedCoinSymbol)
-                        .execute();
+                openTransfer();
                 break;
             case R.id.confirm:
                 if (mNewOTCPrice != null) {
@@ -453,6 +451,13 @@ public class SimpleOTCFragment extends BaseFragment {
                 break;
             default:
         }
+    }
+
+    public void openTransfer() {
+        UniqueActivity.launcher(this, FundsTransferFragment.class)
+                .putExtra(ExtraKeys.TRANSFER_TYPE, 0)
+                .putExtra(ExtraKeys.SELECTED_COIN_SYMBOL, mSelectedCoinSymbol)
+                .execute();
     }
 
     private void lunchOrder() {
@@ -598,6 +603,10 @@ public class SimpleOTCFragment extends BaseFragment {
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
             newOtcPreBuy(coinCount, mSelectedCoinSymbol);
         } else {
+            if (Double.valueOf(coinCount)>Double.valueOf(0)) {
+                showTransferAlert();
+                return;
+            }
             preSell(coinCount, mSelectedCoinSymbol);
         }
     }
@@ -688,28 +697,38 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     private void showConfirmAlert(final PreTradeBean preBuyBean) {
-        // TODO: 2018/9/17 确认弹窗
-        if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
-            buy(String.valueOf(preBuyBean.getCoinCount()), mSelectedCoinSymbol, preBuyBean.getWaresType(), preBuyBean.getWaresId());
-        } else {
-            WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
-                    new WithDrawPsdViewController.OnClickListener() {
-                        @Override
-                        public void onForgetClick() {
-                            umengEventCount(UmengCountEventId.TRADE0004);
-                        }
+        OTCConfirmViewController withDrawPsdViewController = new OTCConfirmViewController(getActivity(),
+                new OTCConfirmViewController.OnClickListener() {
+                    @Override
+                    public void onForgetClick() {
+                        umengEventCount(UmengCountEventId.TRADE0004);
+                    }
 
-                        @Override
-                        public void onConfirmClick(String cashPwd, String googleAuth) {
+                    @Override
+                    public void onConfirmClick(String cashPwd) {
+                        if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
+                            buy(String.valueOf(preBuyBean.getCoinCount()), mSelectedCoinSymbol, preBuyBean.getWaresType(), preBuyBean.getWaresId());
+                        } else {
                             sell(String.valueOf(preBuyBean.getCoinCount()), mSelectedCoinSymbol, cashPwd, preBuyBean.getWaresType(), preBuyBean.getWaresId());
                         }
-                    });
-            withDrawPsdViewController.setShowGoogleAuth(false);
-            SmartDialog smartDialog = SmartDialog.solo(getActivity());
-            smartDialog.setCustomViewController(withDrawPsdViewController)
-                    .show();
-            withDrawPsdViewController.setTitle(R.string.fund_password_verification);
-        }
+                    }
+                });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setData(preBuyBean, mSelectedLegalSymbol, mSelectedCoinSymbol, mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY);
+    }
+
+    private void showTransferAlert() {
+        BalanceNotEnoughController balanceNotEnoughController = new BalanceNotEnoughController(getActivity(), new BalanceNotEnoughController.OnClickListener() {
+            @Override
+            public void onConfirmClick() {
+                openTransfer();
+            }
+        });
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(balanceNotEnoughController).show();
+        balanceNotEnoughController.setMsg(getString(R.string.otc_balance_not_enough_hint_x, mSelectedCoinSymbol.toUpperCase()));
     }
 
     private void sell(String coinCount, String coinSymbol, String drawPwd, int waresType, int waresId) {

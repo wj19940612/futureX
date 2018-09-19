@@ -232,7 +232,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof LegalCurrencyOrderHolder) {
-                ((LegalCurrencyOrderHolder) holder).bindData(mContext,position, mList.get(position));
+                ((LegalCurrencyOrderHolder) holder).bindData(mContext, position, mList.get(position));
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -269,8 +269,6 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
             TextView mUserName;
             @BindView(R.id.status)
             TextView mStatus;
-            @BindView(R.id.statusContainer)
-            FrameLayout mStatusContainer;
             @BindView(R.id.dealType)
             TextView mDealType;
             @BindView(R.id.tradeCount)
@@ -323,22 +321,23 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
 //                }
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
+                mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(),8));
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
-                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.text99));
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.text99));
                         break;
                     case OTCOrderStatus.ORDER_UNPAIED:
                         mStatus.setText(R.string.unpaid);
-                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.red));
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
                         break;
                     case OTCOrderStatus.ORDER_PAIED:
                         mStatus.setText(R.string.paid);
-                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.text99));
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.text99));
                         break;
                     case OTCOrderStatus.ORDER_COMPLATED:
                         mStatus.setText(R.string.completed);
-                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.green));
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.green));
                         break;
                     default:
                 }

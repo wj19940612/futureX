@@ -13,9 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:textColor="@color/text22"
         android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="买入 USDT"/>
@@ -25,10 +26,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="12dp"
-        android:layout_marginTop="20dp"
-        android:drawableRight="@drawable/ic_common_right_arrow"
+        android:layout_marginTop="12dp"
         android:textColor="@color/text99"
         android:textSize="13sp"
+        android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/completed"/>
@@ -54,11 +55,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
+        android:gravity="end"
         android:text="@string/single_price"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tradeCountText"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintHorizontal_weight="0.6"
         app:layout_constraintLeft_toRightOf="@id/tradeCountText"
         app:layout_constraintRight_toLeftOf="@id/buyText"/>
 
@@ -66,6 +68,7 @@
         android:id="@+id/price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="end"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tradeCount"
@@ -80,10 +83,11 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="10dp"
+        android:gravity="end"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tradeCountText"
-        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toRightOf="@id/priceText"
         app:layout_constraintRight_toRightOf="parent"
         tools:text="买家"/>
@@ -94,7 +98,8 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="@id/buyText"
         app:layout_constraintLeft_toRightOf="@id/userName"
         app:layout_constraintRight_toLeftOf="@id/userName"
@@ -113,7 +118,7 @@
 
     <TextView
         android:id="@+id/userName"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:textColor="@color/text22"
@@ -126,20 +131,9 @@
         app:layout_constraintTop_toTopOf="@id/headPortrait"
         tools:text="用户306"/>
 
-    <FrameLayout
-        android:id="@+id/statusContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintBottom_toBottomOf="@id/headPortrait"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/headPortrait">
-
-    </FrameLayout>
-
     <TextView
         android:id="@+id/tradeCount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@color/text66"
@@ -147,6 +141,7 @@
         app:layout_constraintBottom_toTopOf="@id/timestamp"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintLeft_toLeftOf="@id/tradeCountText"
+        app:layout_constraintRight_toRightOf="@+id/tradeCountText"
         app:layout_constraintTop_toBottomOf="@id/tradeCountText"
         tools:text="3225.00 CNY"/>
 
@@ -154,10 +149,10 @@
         android:id="@+id/timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/text22"
+        android:layout_marginTop="18dp"
+        android:textColor="@color/text99"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -177,6 +172,5 @@
         android:textSize="9dp"
         android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusContainer"
         tools:text="9+"/>
 </android.support.constraint.ConstraintLayout>
