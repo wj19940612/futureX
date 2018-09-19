@@ -121,6 +121,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 Rect r = new Rect();
                 mHistory.getGlobalVisibleRect(r);
                 mEmptyView.setMinimumHeight((int) (Display.getScreenHeight() - r.bottom - Display.dp2Px(49, getResources())));
+                mEmptyView.setMinimumHeight((int) (Display.getScreenHeight() - r.bottom - Display.dp2Px(49, getResources())));
             }
         });
         mRecyclerView.setEmptyView(mEmptyView);

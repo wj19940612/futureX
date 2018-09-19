@@ -77,15 +77,15 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.msgCenter)
     IconTextRow mMsgCenter;
     @BindView(R.id.property)
-    IconTextRow mProperty;
+    TextView mProperty;
     @BindView(R.id.tradeOrderLog)
-    IconTextRow mTradeOrderLog;
+    TextView mTradeOrderLog;
     @BindView(R.id.userInfoContainer)
     FrameLayout mUserInfoContainer;
     @BindView(R.id.imageView2)
     ImageView mImageView2;
     @BindView(R.id.legalCurrencyTradeOrder)
-    IconTextRow mLegalCurrencyTradeOrder;
+    TextView mLegalCurrencyTradeOrder;
     @BindView(R.id.invite)
     IconTextRow mInvite;
     @BindView(R.id.noticeCenter)
@@ -96,6 +96,10 @@ public class MineFragment extends BaseFragment {
     IconTextRow mCustomService;
     @BindView(R.id.settings)
     IconTextRow mSettings;
+    @BindView(R.id.blank)
+    View mBlank;
+    @BindView(R.id.card)
+    LinearLayout mCard;
     private Unbinder mBind;
     private OnNavigationListener mOnNavigationListener;
     private boolean mPrepared;
@@ -123,6 +127,15 @@ public class MineFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         updateUserLoginStatus();
         mMsgCenter.getSubTextView().setVisibility(View.INVISIBLE);
+        mCard.post(new Runnable() {
+            @Override
+            public void run() {
+                int measuredHeight = mCard.getMeasuredHeight();
+                ViewGroup.LayoutParams layoutParams = mBlank.getLayoutParams();
+                layoutParams.height = measuredHeight / 2;
+                mBlank.setLayoutParams(layoutParams);
+            }
+        });
     }
 
     private void updateUserLoginStatus() {

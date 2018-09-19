@@ -63,7 +63,7 @@
                 android:layout_marginLeft="45dp"
                 android:layout_marginRight="25dp"
                 android:includeFontPadding="false"
-                android:text="@string/gained_bfb_award"
+                android:text="@string/gained_award_x"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/inviteNumText"

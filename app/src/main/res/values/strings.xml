@@ -705,7 +705,7 @@
     <string name="clear">清除</string>
     <string name="my_invite">我的邀请</string>
     <string name="my_invite_num">共邀请用户</string>
-    <string name="gained_bfb_award">获得奖励(BFB)</string>
+    <string name="gained_award_x">获得奖励(%1$s)</string>
     <string name="x_bfb">%1$s&#160;BFB</string>
     <string name="x_btc">%1$s&#160;BTC</string>
     <string-array name="invite_header">
@@ -824,4 +824,10 @@
 
     <string name="transfer_coin">转币</string>
     <string name="legal_currency_balance">法币账户余额(%1$s)：%2$s</string>
+    <string name="buyer">买家</string>
+    <string name="seller">卖家</string>
+    <string name="otc">法币交易</string>
+    <string name="equivalent">折合(%1$s)</string>
+    <string name="order_info">订单信息</string>
+    <string name="trader_x">交易对象：%1$s</string>
 </resources>

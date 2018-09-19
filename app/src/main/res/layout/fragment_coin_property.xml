@@ -14,6 +14,8 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:hasBottomSplitLine="true"
+        app:rightText="@string/otc"
+        app:rightVisible="false"
         tools:titleText="USDT"/>
 
     <android.support.v4.widget.NestedScrollView
@@ -58,6 +60,21 @@
                     android:textColor="@color/text22"
                     android:textSize="14sp"
                     tools:text="冻结   0.00000001"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:background="@color/bgDD"/>
+
+                <TextView
+                    android:id="@+id/equivalent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/text22"
+                    android:textSize="14sp"
+                    tools:text="折合   0.00000001"/>
             </LinearLayout>
 
             <LinearLayout

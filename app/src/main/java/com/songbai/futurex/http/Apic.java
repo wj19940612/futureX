@@ -604,12 +604,12 @@ public class Apic {
     }
 
     /**
-     * /api/user/user/getCurrentPromoterMsg.do
-     * GET
-     * 获取推广员信息
+     * /api/user/v1/findPromoterInfo
+     * POST
+     * 获取推广员信息--v1.5.1
      */
     public static Api getCurrentPromoterMsg() {
-        return Api.get("/api/user/user/getCurrentPromoterMsg.do");
+        return Api.get("/api/user/v1/findPromoterInfo");
     }
 
     /**
@@ -1587,5 +1587,14 @@ public class Apic {
                 new ReqParams()
                         .put("waresOrderId", waresOrderId)
                         .put("syncUrl", syncUrl));
+    }
+
+    /**
+     * /api/quota/match/pairsMoney.do
+     * POST
+     * 获取交易对计价货币的汇率
+     */
+    public static Api pairsMoney() {
+        return Api.post("/api/quota/match/pairsMoney.do");
     }
 }

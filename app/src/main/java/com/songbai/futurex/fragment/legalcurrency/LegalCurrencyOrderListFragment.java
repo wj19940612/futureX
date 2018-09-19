@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -231,7 +232,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof LegalCurrencyOrderHolder) {
-                ((LegalCurrencyOrderHolder) holder).bindData(position, mList.get(position));
+                ((LegalCurrencyOrderHolder) holder).bindData(mContext,position, mList.get(position));
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -276,15 +277,17 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
             TextView mTradeCount;
             @BindView(R.id.timestamp)
             TextView mTimestamp;
-            @BindView(R.id.desc)
-            TextView mDesc;
+            @BindView(R.id.price)
+            TextView mPrice;
+            @BindView(R.id.buyText)
+            TextView mBuyText;
 
             public LegalCurrencyOrderHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindData(final int position, final LegalCurrencyOrder legalCurrencyOrder) {
+            public void bindData(Context context, final int position, final LegalCurrencyOrder legalCurrencyOrder) {
                 GlideApp
                         .with(mContext)
                         .load(legalCurrencyOrder.getChangePortrait())
@@ -295,14 +298,16 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                     case OTCOrderStatus.ORDER_DIRECT_BUY:
                         mDealType.setText(mContext.getString(R.string.buy_x,
                                 legalCurrencyOrder.getCoinSymbol().toUpperCase()));
+                        mBuyText.setText(R.string.seller);
                         break;
                     case OTCOrderStatus.ORDER_DIRECT_SELL:
                         mDealType.setText(mContext.getString(R.string.sell_x,
                                 legalCurrencyOrder.getCoinSymbol().toUpperCase()));
+                        mBuyText.setText(R.string.buyer);
                         break;
                     default:
                 }
-                mTradeCount.setText(getString(R.string.trade_count_symbol_x,
+                mTradeCount.setText(getString(R.string.x_space_x,
                         FinanceUtil.formatWithScale(legalCurrencyOrder.getOrderAmount())
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
                 // TODO: 2018/6/29 缺少用户认证状态 字段
@@ -321,19 +326,19 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
-                        mDesc.setText(R.string.canceled);
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.text99));
                         break;
                     case OTCOrderStatus.ORDER_UNPAIED:
                         mStatus.setText(R.string.unpaid);
-                        mDesc.setText(R.string.unpaid);
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.red));
                         break;
                     case OTCOrderStatus.ORDER_PAIED:
                         mStatus.setText(R.string.paid);
-                        mDesc.setText(R.string.paid);
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.text99));
                         break;
                     case OTCOrderStatus.ORDER_COMPLATED:
                         mStatus.setText(R.string.completed);
-                        mDesc.setText(R.string.otc_trade_complete_desc);
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.green));
                         break;
                     default:
                 }

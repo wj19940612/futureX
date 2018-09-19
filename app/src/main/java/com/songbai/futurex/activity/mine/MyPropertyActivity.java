@@ -9,15 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.SparseArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,16 +26,12 @@ import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.mine.FundsTransferFragment;
 import com.songbai.futurex.fragment.mine.PropertyListFragment;
-import com.songbai.futurex.http.Apic;
-import com.songbai.futurex.http.Callback;
-import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -77,7 +67,6 @@ public class MyPropertyActivity extends BaseActivity {
     private int mScrollWidth;
     private SparseArray<AccountList> mAccountLists = new SparseArray<>(3);
     private ArrayList<PropertyListFragment> mFragments;
-    private SmartDialog mSmartDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +74,6 @@ public class MyPropertyActivity extends BaseActivity {
         setContentView(R.layout.activity_my_property);
         mBind = ButterKnife.bind(this);
         initView();
-//        findCommissionOfSubordinate();
     }
 
     private void initView() {
@@ -236,7 +224,6 @@ public class MyPropertyActivity extends BaseActivity {
         @BindView(R.id.transfer)
         TextView mTransfer;
         private SparseArray<AccountList> mData;
-        private int mInviteCount;
 
         PropertyCardAdapter(Context context) {
             mContext = context;
@@ -281,13 +268,6 @@ public class MyPropertyActivity extends BaseActivity {
                     mTransfer.setText(R.string.transfer);
                     mInviteNum.setVisibility(View.GONE);
                     break;
-                case 2:
-                    view.setBackgroundResource(R.drawable.property_bg_green);
-                    mAccountType.setText(R.string.promoted_account);
-                    mTotalPropertyType.setText(R.string.promoted_property_equivalent);
-                    mInviteNum.setVisibility(View.VISIBLE);
-                    mTransfer.setText(R.string.fast_transfer);
-                    break;
                 default:
             }
             setData(position, context, view);
@@ -297,21 +277,11 @@ public class MyPropertyActivity extends BaseActivity {
 
         private void setData(final int position, final Context context, View view) {
             TextView mPropertyAmount = view.findViewById(R.id.propertyAmount);
-            TextView mInviteNum = view.findViewById(R.id.inviteNum);
             TextView mTransfer = view.findViewById(R.id.transfer);
             final AccountList accountList = mData.get(position);
             if (accountList != null) {
                 double balance = accountList.getBalance();
                 mPropertyAmount.setText(FinanceUtil.formatWithScale(balance, 8));
-            }
-            if (position == 2) {
-                String string = context.getString(R.string.invite_num_x, mInviteCount);
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(string);
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.sixtyPercentWhite)),
-                        0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(new AbsoluteSizeSpan(11, true),
-                        0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mInviteNum.setText(spannableStringBuilder);
             }
             mTransfer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -338,9 +308,6 @@ public class MyPropertyActivity extends BaseActivity {
                             umengEventCount(UmengCountEventId.LEGALACT0001);
                             openTransfer((ArrayList<? extends Parcelable>) accountBeans, context, position);
                             break;
-                        case 2:
-                            showTransferPop();
-                            break;
                         default:
                     }
                 }
@@ -355,38 +322,6 @@ public class MyPropertyActivity extends BaseActivity {
         public void setData(SparseArray<AccountList> data) {
             mData = data;
         }
-
-        public void setInviteCount(int inviteCount) {
-            mInviteCount = inviteCount;
-        }
-    }
-
-    private void showTransferPop() {
-        TransferController transferController = new TransferController(this, new TransferController.OnClickListener() {
-            @Override
-            public void onConfirmClick() {
-                userTransfer();
-            }
-        });
-        mSmartDialog = SmartDialog.solo(this);
-        mSmartDialog
-                .setWidthScale(0.8f)
-                .setWindowGravity(Gravity.CENTER)
-                .setWindowAnim(R.style.BottomDialogAnimation)
-                .setCustomViewController(transferController)
-                .show();
-    }
-
-    private void userTransfer() {
-        Apic.userTransfer("").tag(TAG).callback(new Callback<Resp>() {
-            @Override
-            protected void onRespSuccess(Resp resp) {
-                ToastUtil.show(R.string.transfer_success);
-                if (mSmartDialog != null) {
-                    mSmartDialog.dismiss();
-                }
-            }
-        }).fire();
     }
 
     static class TransferController extends SmartDialog.CustomViewController {

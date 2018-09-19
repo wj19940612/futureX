@@ -11,129 +11,161 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/headLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_mine_top_bg"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/headPortrait"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
-                android:layout_marginBottom="65dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="45dp"
-                android:background="@drawable/ic_default_avatar_big"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <FrameLayout
-                android:id="@+id/userInfoContainer"
-                android:layout_width="0dp"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/headLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                app:layout_constraintBottom_toBottomOf="@+id/headPortrait"
-                app:layout_constraintEnd_toStartOf="@+id/imageView2"
-                app:layout_constraintStart_toEndOf="@+id/headPortrait"
-                app:layout_constraintTop_toTopOf="@+id/headPortrait">
+                android:background="@drawable/ic_mine_top_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
-                    android:id="@+id/userInfoGroup"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/headPortrait"
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:layout_marginBottom="65dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="45dp"
+                    android:background="@drawable/ic_default_avatar_big"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <FrameLayout
+                    android:id="@+id/userInfoContainer"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/headPortrait"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                    app:layout_constraintStart_toEndOf="@+id/headPortrait"
+                    app:layout_constraintTop_toTopOf="@+id/headPortrait">
+
+                    <LinearLayout
+                        android:id="@+id/userInfoGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/userName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="2"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            tools:text="昵称"/>
+
+                        <TextView
+                            android:id="@+id/authenticationStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/bg_white_r100"
+                            android:drawablePadding="5dp"
+                            android:paddingBottom="3dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="15dp"
+                            android:paddingTop="3dp"
+                            android:textSize="10sp"/>
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/userName"
+                        android:id="@+id/login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/click_login"
                         android:textColor="@color/white"
                         android:textSize="20sp"
-                        tools:text="昵称"/>
+                        android:visibility="gone"/>
+                </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/authenticationStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/bg_white_r100"
-                        android:drawablePadding="5dp"
-                        android:paddingBottom="3dp"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="15dp"
-                        android:paddingTop="3dp"
-                        android:textSize="10sp"/>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/login"
+                <ImageView
+                    android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/click_login"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:visibility="gone"/>
-            </FrameLayout>
+                    android:layout_marginRight="12dp"
+                    android:src="@drawable/ic_common_right_arrow"
+                    app:layout_constraintBottom_toBottomOf="@+id/headPortrait"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/headPortrait"/>
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/blank"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:layout_below="@id/headLayout"
+                android:background="@color/white"/>
+
+            <LinearLayout
+                android:id="@+id/card"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/ic_common_right_arrow"
-                app:layout_constraintBottom_toBottomOf="@+id/headPortrait"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/headPortrait"/>
-        </android.support.constraint.ConstraintLayout>
+                android:background="@drawable/bg_white_card_r8">
 
-        <com.songbai.futurex.view.IconTextRow
-            android:id="@+id/property"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_white_pressed_f5"
-            app:hasBottomSplitLine="true"
-            app:leftIcon="@drawable/ic_mine_property"
-            app:rightIcon="@drawable/ic_common_right_arrow"
-            app:rowText="@string/property"
-            app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5"/>
+                <TextView
+                    android:id="@+id/property"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/ic_mine_property"
+                    android:gravity="center"
+                    android:paddingBottom="13dp"
+                    android:paddingTop="15dp"
+                    android:text="@string/property"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
 
-        <com.songbai.futurex.view.IconTextRow
-            android:id="@+id/tradeOrderLog"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_white_pressed_f5"
-            app:hasBottomSplitLine="true"
-            app:leftIcon="@drawable/ic_mine_history"
-            app:rightIcon="@drawable/ic_common_right_arrow"
-            app:rowText="@string/trade_order_log"
-            app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5"/>
+                <TextView
+                    android:id="@+id/tradeOrderLog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/ic_mine_history"
+                    android:gravity="center"
+                    android:paddingBottom="13dp"
+                    android:paddingTop="15dp"
+                    android:text="@string/trade_order_log"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
 
-        <com.songbai.futurex.view.IconTextRow
-            android:id="@+id/legalCurrencyTradeOrder"
+                <TextView
+                    android:id="@+id/legalCurrencyTradeOrder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/ic_mine_file"
+                    android:gravity="center"
+                    android:paddingBottom="13dp"
+                    android:paddingTop="15dp"
+                    android:text="@string/legal_currency_trade_order"
+                    android:textColor="@color/text66"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_white_pressed_f5"
-            app:hasBottomSplitLine="true"
-            app:leftIcon="@drawable/ic_mine_file"
-            app:rightIcon="@drawable/ic_common_right_arrow"
-            app:rowText="@string/legal_currency_trade_order"
-            app:rowTextSize="16sp"
-            app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/bgF5"/>
+            android:layout_height="7dp"
+            android:background="@color/white"/>
 
         <com.songbai.futurex.view.IconTextRow
             android:id="@+id/invite"
@@ -201,7 +233,7 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/bg_white_pressed_f5"
             app:hasBottomSplitLine="true"
-            app:leftIcon="@drawable/ic_mine_umbrella"
+            app:leftIcon="@drawable/ic_pay_management"
             app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/legal_currency_pay_management"
             app:rowTextSize="16sp"
@@ -214,7 +246,7 @@
             android:layout_height="50dp"
             android:background="@drawable/bg_white_pressed_f5"
             app:hasBottomSplitLine="true"
-            app:leftIcon="@drawable/ic_mine_umbrella"
+            app:leftIcon="@drawable/ic_addr_management"
             app:rightIcon="@drawable/ic_common_right_arrow"
             app:rowText="@string/draw_coin_address_management"
             app:rowTextSize="16sp"

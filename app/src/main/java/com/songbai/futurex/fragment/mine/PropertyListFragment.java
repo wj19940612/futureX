@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -103,8 +102,8 @@ public class PropertyListFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position, Object obj) {
                 AccountBean accountBean = (AccountBean) obj;
-                if (view.getId() == R.id.transfer) {
-                    showTransferDialog(accountBean);
+                if (view.getId() == R.id.trade) {
+                    // TODO: 2018/9/18 法币交易
                 } else {
                     UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class)
                             .putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean)
@@ -213,18 +212,6 @@ public class PropertyListFragment extends BaseFragment {
                 .fireFreely();
     }
 
-    private void userAccount() {
-        Apic.userAccount().tag(TAG)
-                .callback(new Callback<Resp<AccountList>>() {
-
-                    @Override
-                    protected void onRespSuccess(Resp<AccountList> resp) {
-                        setAdapter(2, resp.getData());
-                    }
-                })
-                .fireFreely();
-    }
-
     private void setAdapter(int position, AccountList accountList) {
         ((MyPropertyActivity) getActivity()).setAccountAmount(position, accountList);
         mAccountBeans = accountList.getAccount();
@@ -242,8 +229,6 @@ public class PropertyListFragment extends BaseFragment {
         }
         if (mPropertyType == 1) {
             accountList();
-        } else if (mPropertyType == 2) {
-            userAccount();
         }
     }
 
@@ -304,6 +289,7 @@ public class PropertyListFragment extends BaseFragment {
     }
 
     class PropertyListAdapter extends RecyclerView.Adapter {
+
         private OnRVItemClickListener mOnRVItemClickListener;
         private List<AccountBean> mList;
         private Context mContext;
@@ -352,10 +338,8 @@ public class PropertyListFragment extends BaseFragment {
             TextView mAvailableAmount;
             @BindView(R.id.freezeAmount)
             TextView mFreezeAmount;
-            @BindView(R.id.transfer)
-            RelativeLayout mTransfer;
-            @BindView(R.id.freezeAmountGroup)
-            LinearLayout mFreezeAmountGroup;
+            @BindView(R.id.trade)
+            TextView mTrade;
 
             PropertyListHolder(View itemView) {
                 super(itemView);
@@ -367,9 +351,7 @@ public class PropertyListFragment extends BaseFragment {
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
                 mAvailableAmount.setText(FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
                 mFreezeAmount.setText(FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));
-                mTransfer.setVisibility(type < 2 ? View.GONE : View.VISIBLE);
-                mFreezeAmountGroup.setVisibility(type < 2 ? View.VISIBLE : View.GONE);
-                mRootView.setOnClickListener(new View.OnClickListener() {
+                mTrade.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mOnRVItemClickListener != null) {
@@ -377,11 +359,11 @@ public class PropertyListFragment extends BaseFragment {
                         }
                     }
                 });
-                mTransfer.setOnClickListener(new View.OnClickListener() {
+                mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mOnRVItemClickListener != null) {
-                            mOnRVItemClickListener.onItemClick(mTransfer, position, accountBean);
+                            mOnRVItemClickListener.onItemClick(mRootView, position, accountBean);
                         }
                     }
                 });
