@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,10 +80,12 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     }
 
     private void getAwardHistory() {
+        Log.e("wtf", "getAwardHistory: ");
         Apic.inviteAward(mPage, mPageSize, mWid).tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<InviteAwardHistory>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<InviteAwardHistory>> resp) {
+                        Log.e("wtf", "getAwardHistory: 111");
                         if (mRecyclerView != null) {
                             PagingWrap<InviteAwardHistory> pagingWrap = resp.getData();
                             List<InviteAwardHistory> data = pagingWrap.getData();
@@ -201,8 +204,8 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
 
             public void bindData(InviteAwardHistory inviteAwardHistory) {
                 mTimestamp.setText(DateUtil.format(inviteAwardHistory.getCreateTime(), "yyyy/MM/dd"));
-                mCoinType.setText(String.valueOf(inviteAwardHistory.getCoinType().toUpperCase()));
-                mVolume.setText(String.valueOf(inviteAwardHistory.getValue()));
+                mCoinType.setText(inviteAwardHistory.getCoinType().toUpperCase());
+                mVolume.setText(inviteAwardHistory.getValue());
             }
         }
     }

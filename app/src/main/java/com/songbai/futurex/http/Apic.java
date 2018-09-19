@@ -622,12 +622,12 @@ public class Apic {
     }
 
     /**
-     * /api/user/v1/user/inviteAward.do
+     * /api/user/v1//awardDetail
      * GET
-     * 奖励记录--v1.5
+     * 奖励记录--v1.5.1
      */
     public static Api inviteAward(int page, int pageSize, String wid) {
-        return Api.get("/api/user/v1/user/inviteAward.do",
+        return Api.get("/api/user/v1//awardDetail",
                 new ReqParams()
                         .put("page", page)
                         .put("pageSize", pageSize)

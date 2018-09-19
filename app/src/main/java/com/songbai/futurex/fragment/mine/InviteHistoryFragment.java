@@ -198,7 +198,7 @@ public class InviteHistoryFragment extends BaseSwipeLoadFragment {
                 mInvitees.setText(dataBean.getUsername());
                 mRegisterTime.setText(DateUtil.format(dataBean.getRegisterTime(), "yyyy/MM/dd"));
                 mDealCount.setText( String.valueOf(dataBean.getDealCount()));
-                mTotalContribution.setText(getString(R.string.x_space_x,String.valueOf(dataBean.getCommission()), dataBean.getCoinType().toUpperCase()));
+                mTotalContribution.setText(getString(R.string.x_space_x,dataBean.getCommission(), dataBean.getCoinType().toUpperCase()));
             }
         }
     }
