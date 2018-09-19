@@ -51,7 +51,6 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     private int mPage = 0;
     private int mPageSize = 20;
     private InviteAwardHistoryAdapter mAdapter;
-    private boolean mPrepared;
     private String mWid;
 
     public static InviteAwardHistoryFragment newInstance() {
@@ -66,7 +65,6 @@ public class InviteAwardHistoryFragment extends BaseSwipeLoadFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_invite_award_hisotory, container, false);
         mBind = ButterKnife.bind(this, view);
-        mPrepared = true;
         return view;
     }
 

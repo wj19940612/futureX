@@ -704,7 +704,7 @@
     <string name="alipay_payment_code">支付寶收款碼（選填）</string>
     <string name="my_invite">我的邀請</string>
     <string name="my_invite_num">共邀請用戶</string>
-    <string name="gained_bfb_award">獲得獎勵(BFB)</string>
+    <string name="gained_award_x">獲得獎勵(%1$s)</string>
     <string name="x_bfb">%1$s&#160;BFB</string>
     <string name="x_btc">%1$s&#160;BTC</string>
     <string-array name="invite_header">

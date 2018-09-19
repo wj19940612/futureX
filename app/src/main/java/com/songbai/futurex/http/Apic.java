@@ -303,12 +303,12 @@ public class Apic {
     }
 
     /**
-     * /api/user/user/findCommissionOfSubordinate
+     * /api/user/v1/findInviteRecord
      * GET
-     * 最近/全部 邀请用户
+     * 邀请记录---v1.5
      */
     public static Api findCommissionOfSubordinate(int page, int pageSize) {
-        return Api.get("/api/user/user/findCommissionOfSubordinate",
+        return Api.get("/api/user/v1/findInviteRecord",
                 new ReqParams()
                         .put("page", page)
                         .put("pageSize", pageSize));
@@ -604,12 +604,12 @@ public class Apic {
     }
 
     /**
-     * /api/user/user/getCurrentPromoterMsg.do
-     * GET
-     * 获取推广员信息
+     * /api/user/v1/findPromoterInfo
+     * POST
+     * 获取推广员信息--v1.5.1
      */
     public static Api getCurrentPromoterMsg() {
-        return Api.get("/api/user/user/getCurrentPromoterMsg.do");
+        return Api.get("/api/user/v1/findPromoterInfo");
     }
 
     /**
