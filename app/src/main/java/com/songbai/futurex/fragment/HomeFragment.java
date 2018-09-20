@@ -99,6 +99,8 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
     AutofitTextView mTodayAmount;
     @BindView(R.id.bfbTotal)
     AutofitTextView mBfbTotal;
+    @BindView(R.id.miningGroup)
+    LinearLayout mMiningGroup;
 
     private Unbinder mBind;
     private EntrustPairAdapter mAdapter;
@@ -320,9 +322,12 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     @Override
                     protected void onRespSuccess(Resp<BFBInfo> resp) {
                         BFBInfo bfbInfo = resp.getData();
-                        mYesterdayAmount.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getFrontProduce())));
-                        mTodayAmount.setText(getString(R.string.x_btc, String.valueOf(bfbInfo.getNowProduce())));
-                        mBfbTotal.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getVolume())));
+                        if (bfbInfo != null) {
+                            mMiningGroup.setVisibility(bfbInfo.getDisplay() == 1 ? View.VISIBLE : View.GONE);
+                            mYesterdayAmount.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getFrontProduce())));
+                            mTodayAmount.setText(getString(R.string.x_btc, String.valueOf(bfbInfo.getNowProduce())));
+                            mBfbTotal.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getVolume())));
+                        }
                     }
                 })
                 .fire();

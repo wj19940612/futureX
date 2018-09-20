@@ -705,7 +705,7 @@
     <string name="clear">Clear</string>
     <string name="my_invite">My INVT</string>
     <string name="my_invite_num">Total</string>
-    <string name="gained_bfb_award">Rewards(BFB)</string>
+    <string name="gained_award_x">Rewards(%1$s)</string>
     <string name="x_bfb">%1$s BFB</string>
     <string name="x_btc">%1$s BTC</string>
     <string-array name="invite_header">
