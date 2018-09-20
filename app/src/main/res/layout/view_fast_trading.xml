@@ -38,7 +38,7 @@
             android:text="@string/trade_with_market_price"
             android:textColor="@color/text99"
             android:textSize="15sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.songbai.futurex.view.ChangePriceView
             android:id="@+id/changePriceView"
@@ -48,13 +48,15 @@
             android:layout_marginTop="10dp"
             android:visibility="visible" />
 
-        <TextView
+        <com.songbai.futurex.view.autofit.AutofitTextView
             android:id="@+id/tipPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
             android:layout_marginTop="4dp"
+            android:layout_marginLeft="12dp"
             android:includeFontPadding="false"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@color/text99"
             android:textSize="12sp" />
 

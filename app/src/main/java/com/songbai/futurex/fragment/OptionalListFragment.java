@@ -55,6 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import sbai.com.glide.GlideApp;
 
 /**
  * Modified by john on 2018/8/22
@@ -443,6 +444,8 @@ public class OptionalListFragment extends BaseSwipeLoadFragment<RecyclerView> {
             ImageView mDragIcon;
             @BindView(R.id.chart)
             TimeShareChart mTimeShareChart;
+            @BindView(R.id.coinIcon)
+            ImageView mCoinIcon;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -477,6 +480,9 @@ public class OptionalListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                         mPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
                     }
                 }
+
+                GlideApp.with(context).load(pair.getImage()).placeholder(R.drawable.ic_default_head_portrait).into(mCoinIcon);
+
 
                 if (editMode) {
                     mPriceLine.setVisibility(View.GONE);

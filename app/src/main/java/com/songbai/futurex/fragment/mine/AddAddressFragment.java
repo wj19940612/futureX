@@ -147,10 +147,11 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
     }
 
     private void checkWithDrawResult(final String result) {
-        Apic.judgeAddress(mCoinAddressCount.getCoinType(), result).tag(TAG).callback(new Callback4Resp<Resp<Boolean>, Boolean>() {
+        Apic.judgeAddress(mCoinAddressCount.getCoinType(), result).tag(TAG).callback(new Callback<Resp<Boolean>>() {
+
             @Override
-            protected void onRespData(Boolean data) {
-                if (data != null && data) {
+            protected void onRespSuccess(Resp resp) {
+                if ((resp.getData() != null) && (Boolean) resp.getData()) {
                     mAddress.setText(result);
                 } else {
                     showErrorAddress();

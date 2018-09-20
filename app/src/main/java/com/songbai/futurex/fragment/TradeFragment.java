@@ -165,6 +165,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     TitleBar mTitleBar;
     @BindView(R.id.dimView)
     View mDimView;
+    @BindView(R.id.tipPrice)
+    TextView mTipPrice;
 
     Unbinder unbinder;
 

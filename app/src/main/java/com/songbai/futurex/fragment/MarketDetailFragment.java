@@ -464,6 +464,10 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         if (!Preference.get().isQuickExchange()) {
             jumpFullTrade(direction);
         } else {
+            if (!LocalUser.getUser().isLogin()) {
+                Launcher.with(getContext(), LoginActivity.class).execute();
+                return;
+            }
             if (mPairDesc == null) return;
 
             if (!mTradeLayout.isFlowing()) {

@@ -96,8 +96,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="25dp">
+                    android:paddingTop="16dp"
+                    android:layout_marginBottom="20dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -109,9 +109,11 @@
                         <TextView
                             android:id="@+id/tradeType"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="14dp"
+                            android:layout_height="24dp"
+                            android:layout_marginBottom="10dp"
                             android:drawableRight="@drawable/ic_triangle_downward"
+                            android:includeFontPadding="false"
+                            android:gravity="center"
                             android:textColor="@color/text49"
                             android:textSize="15sp"
                             tools:text="@string/buy_limit"/>
@@ -133,11 +135,21 @@
                             android:layout_height="wrap_content"
                             android:visibility="visible"/>
 
+                        <com.songbai.futurex.view.autofit.AutofitTextView
+                            android:id="@+id/tipPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:includeFontPadding="false"
+                            android:gravity="center_vertical"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:textColor="@color/text99"
+                            android:textSize="12sp" />
+
                         <com.songbai.futurex.view.VolumeInputView
                             android:id="@+id/volumeInput"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"/>
+                            android:layout_height="wrap_content"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -148,6 +160,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:includeFontPadding="false"
                                 android:text="@string/trade_amt"
                                 android:textColor="@color/text49"
                                 android:textSize="13sp"/>
@@ -156,6 +169,7 @@
                                 android:id="@+id/recharge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:includeFontPadding="false"
                                 android:layout_marginLeft="10dp"
                                 android:text="@string/recharge_coin"
                                 android:textColor="@color/colorPrimary"
@@ -168,6 +182,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:textColor="@color/text49"
+                            android:includeFontPadding="false"
                             android:textSize="13sp"
                             tools:text="-- USDT"/>
                     </LinearLayout>
@@ -214,14 +229,14 @@
                             android:layout_width="140dp"
                             android:layout_height="56dp"
                             android:layout_marginLeft="25dp"
-                            android:layout_marginTop="10dp"/>
+                            android:layout_marginTop="20dp"/>
 
                         <TextView
                             android:id="@+id/tradeButton"
                             android:layout_width="140dp"
                             android:layout_height="36dp"
                             android:layout_marginLeft="25dp"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="20dp"
                             android:background="@drawable/btn_green_r18"
                             android:gravity="center"
                             android:text="@string/buy_in"
