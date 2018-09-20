@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.BaseFragment;
+import com.songbai.futurex.fragment.MarketDetailFragment;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
 
@@ -51,6 +52,18 @@ public class UniqueActivity extends BaseActivity {
             return super.dispatchTouchEvent(ev);
         }
         return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (fragment != null && fragment instanceof MarketDetailFragment) {
+            boolean notClosePage = ((MarketDetailFragment) fragment).onBackPressed();
+            if (notClosePage) {
+                return;
+            }
+        }
+        super.onBackPressed();
     }
 
     private void initData(Intent intent) {

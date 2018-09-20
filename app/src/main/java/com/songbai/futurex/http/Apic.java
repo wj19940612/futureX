@@ -1561,4 +1561,14 @@ public class Apic {
                         .put("waresOrderId", waresOrderId)
                         .put("syncUrl", syncUrl));
     }
+
+    /**
+     * 判断二维码扫出来的地址是否有效
+     */
+    public static Api judgeAddress(String coinType,String toAddr){
+        return Api.get("/api/user/wallet/checkAddrCoinType.do",
+                new ReqParams()
+                        .put("coinType", coinType)
+                        .put("toAddr", toAddr));
+    }
 }
