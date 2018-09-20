@@ -62,12 +62,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="5dp"
-        android:text="≈8898.1234USD"
         android:textColor="#B8DAF5"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/propertyAmount"
-        app:layout_constraintTop_toBottomOf="@id/propertyAmount"/>
+        app:layout_constraintTop_toBottomOf="@id/propertyAmount"
+        tools:text="≈8898.1234USD"/>
 
     <TextView
         android:id="@+id/inviteNum"

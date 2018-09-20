@@ -27,12 +27,17 @@ import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.mine.FundsTransferFragment;
 import com.songbai.futurex.fragment.mine.PropertyListFragment;
+import com.songbai.futurex.http.Apic;
+import com.songbai.futurex.http.Callback;
+import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.PairsMoney;
 import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.KeyBoardUtils;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.PairMoneyUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
@@ -68,6 +73,7 @@ public class MyPropertyActivity extends BaseActivity {
     private int mScrollWidth;
     private SparseArray<AccountList> mAccountLists = new SparseArray<>(3);
     private ArrayList<PropertyListFragment> mFragments;
+    private double mPrice;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +84,18 @@ public class MyPropertyActivity extends BaseActivity {
     }
 
     private void initView() {
+        Apic.pairsMoney().tag(TAG).callback(new Callback<Resp<PairsMoney>>() {
+            @Override
+            protected void onRespSuccess(Resp<PairsMoney> resp) {
+                PairsMoney data = resp.getData();
+                mPrice = PairMoneyUtil.getCoinPrice("btc", data);
+                mPropertyCardAdapter.setPrice(mPrice);
+                mPropertyCardAdapter.notifyDataSetChanged();
+                for (PropertyListFragment fragment : mFragments) {
+                    fragment.setPrice(mPrice);
+                }
+            }
+        }).fire();
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,8 +242,6 @@ public class MyPropertyActivity extends BaseActivity {
         TextView mInviteNum;
         @BindView(R.id.transfer)
         TextView mTransfer;
-        @BindView(R.id.equivalent)
-        TextView mEquivalent;
         private SparseArray<AccountList> mData;
 
         PropertyCardAdapter(Context context) {
@@ -281,11 +297,14 @@ public class MyPropertyActivity extends BaseActivity {
         private void setData(final int position, final Context context, View view) {
             TextView mPropertyAmount = view.findViewById(R.id.propertyAmount);
             TextView mTransfer = view.findViewById(R.id.transfer);
+            TextView equivalent = view.findViewById(R.id.equivalent);
             final AccountList accountList = mData.get(position);
             if (accountList != null) {
                 double balance = accountList.getBalance();
                 mPropertyAmount.setText(FinanceUtil.formatWithScale(balance, 8));
-//                mEquivalent.setText(context.getString(R.string.equivalent_x_x,));
+                equivalent.setText(context.getString(R.string.equivalent_x_x,
+                        FinanceUtil.formatWithScale(balance * mPrice),
+                        Preference.get().getPricingMethod().toUpperCase()));
             }
             mTransfer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -325,6 +344,10 @@ public class MyPropertyActivity extends BaseActivity {
 
         public void setData(SparseArray<AccountList> data) {
             mData = data;
+        }
+
+        public void setPrice(double price) {
+            mPrice = price;
         }
     }
 

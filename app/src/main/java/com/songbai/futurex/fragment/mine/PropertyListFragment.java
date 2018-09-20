@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
@@ -66,6 +67,7 @@ public class PropertyListFragment extends BaseFragment {
     private PropertyListAdapter mAdapter;
     private List<AccountBean> mAccountBeans;
     private SmartDialog mSmartDialog;
+    private double mPrice;
 
     public static PropertyListFragment newInstance(int position) {
         Bundle bundle = new Bundle();
@@ -98,6 +100,7 @@ public class PropertyListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyListAdapter();
         mRecyclerView.setEmptyView(mEmptyView);
+        mAdapter.setPrice(mPrice);
         mAdapter.setOnRVItemClickListener(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
@@ -245,6 +248,14 @@ public class PropertyListFragment extends BaseFragment {
         }
     }
 
+    public void setPrice(double price) {
+        mPrice = price;
+        if (mAdapter != null) {
+            mAdapter.setPrice(price);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     static class TransferController extends SmartDialog.CustomViewController {
         @BindView(R.id.close)
         ImageView mClose;
@@ -294,6 +305,7 @@ public class PropertyListFragment extends BaseFragment {
         private List<AccountBean> mList;
         private Context mContext;
         private int mType;
+        private double mPrice;
 
         @NonNull
         @Override
@@ -306,7 +318,7 @@ public class PropertyListFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof PropertyListHolder) {
-                ((PropertyListHolder) holder).bindData(mType, position, mList.get(position));
+                ((PropertyListHolder) holder).bindData(mContext, position, mList.get(position));
             }
         }
 
@@ -330,6 +342,10 @@ public class PropertyListFragment extends BaseFragment {
             mType = type;
         }
 
+        public void setPrice(double price) {
+            mPrice = price;
+        }
+
         class PropertyListHolder extends RecyclerView.ViewHolder {
             private final View mRootView;
             @BindView(R.id.coinType)
@@ -340,6 +356,10 @@ public class PropertyListFragment extends BaseFragment {
             TextView mFreezeAmount;
             @BindView(R.id.trade)
             TextView mTrade;
+            @BindView(R.id.equivalentText)
+            TextView mEquivalentText;
+            @BindView(R.id.equivalent)
+            TextView mEquivalent;
 
             PropertyListHolder(View itemView) {
                 super(itemView);
@@ -347,11 +367,13 @@ public class PropertyListFragment extends BaseFragment {
                 mRootView = itemView;
             }
 
-            private void bindData(int type, final int position, final AccountBean accountBean) {
+            private void bindData(Context context, final int position, final AccountBean accountBean) {
                 mTrade.setVisibility(accountBean.getLegal() == 1 ? View.VISIBLE : View.GONE);
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
                 mAvailableAmount.setText(FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
                 mFreezeAmount.setText(FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));
+                mEquivalentText.setText(context.getString(R.string.equivalent_x, Preference.get().getPricingMethod().toUpperCase()));
+                mEquivalent.setText(FinanceUtil.formatWithScale(accountBean.getEstimateBtc() * mPrice));
                 mTrade.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

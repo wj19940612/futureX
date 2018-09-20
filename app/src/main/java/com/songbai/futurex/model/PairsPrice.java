@@ -13,7 +13,7 @@ public class PairsPrice {
      */
 
     private double TWD;
-    private int USD;
+    private double USD;
     private double CNY;
 
     public double getTWD() {
@@ -24,11 +24,11 @@ public class PairsPrice {
         this.TWD = TWD;
     }
 
-    public int getUSD() {
+    public double getUSD() {
         return USD;
     }
 
-    public void setUSD(int USD) {
+    public void setUSD(double USD) {
         this.USD = USD;
     }
 
