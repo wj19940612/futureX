@@ -18,6 +18,7 @@ public class Preference {
         String REFRESH_LANGUAGE = "refresh_language";
         String LANGUAGE_STR = "language_str";
         String SYS_MODEL = "sys_model";
+        String PRICING_METHOD = "pricing_method";
     }
 
     private static Preference sInstance;
@@ -146,5 +147,13 @@ public class Preference {
 
     public String getSysModel() {
         return mPrefs.getString(Key.SYS_MODEL, "");
+    }
+
+    public void setPricingMethod(String pricingMethod) {
+        apply(Key.PRICING_METHOD, pricingMethod);
+    }
+
+    public String getPricingMethod() {
+        return mPrefs.getString(Key.PRICING_METHOD, "cny");
     }
 }

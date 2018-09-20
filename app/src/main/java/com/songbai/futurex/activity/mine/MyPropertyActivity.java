@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -223,6 +224,8 @@ public class MyPropertyActivity extends BaseActivity {
         TextView mInviteNum;
         @BindView(R.id.transfer)
         TextView mTransfer;
+        @BindView(R.id.equivalent)
+        TextView mEquivalent;
         private SparseArray<AccountList> mData;
 
         PropertyCardAdapter(Context context) {
@@ -282,6 +285,7 @@ public class MyPropertyActivity extends BaseActivity {
             if (accountList != null) {
                 double balance = accountList.getBalance();
                 mPropertyAmount.setText(FinanceUtil.formatWithScale(balance, 8));
+//                mEquivalent.setText(context.getString(R.string.equivalent_x_x,));
             }
             mTransfer.setOnClickListener(new View.OnClickListener() {
                 @Override

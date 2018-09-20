@@ -348,6 +348,7 @@ public class PropertyListFragment extends BaseFragment {
             }
 
             private void bindData(int type, final int position, final AccountBean accountBean) {
+                mTrade.setVisibility(accountBean.getLegal() == 1 ? View.VISIBLE : View.GONE);
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
                 mAvailableAmount.setText(FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
                 mFreezeAmount.setText(FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));

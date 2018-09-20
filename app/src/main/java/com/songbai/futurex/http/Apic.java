@@ -1595,6 +1595,6 @@ public class Apic {
      * 获取交易对计价货币的汇率
      */
     public static Api pairsMoney() {
-        return Api.post("/api/quota/match/pairsMoney.do");
+        return Api.get("/api/quota/match/pairsMoney.do");
     }
 }

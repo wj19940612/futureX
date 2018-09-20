@@ -24,7 +24,6 @@ import com.songbai.futurex.view.IconTextRow;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
 import com.songbai.futurex.websocket.MessageProcessor;
-import com.songbai.futurex.websocket.notification.NotificationProcessor;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -44,6 +43,8 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     IconTextRow mLanguage;
     @BindView(R.id.logout)
     TextView mLogout;
+    @BindView(R.id.pricingMethod)
+    IconTextRow mPricingMethod;
     private Unbinder mBind;
 
     @Nullable
@@ -66,6 +67,19 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
             mLanguage.setSubText(currentLangageStr);
         } else {
             getSupportLocal();
+        }
+        String pricingMethod = Preference.get().getPricingMethod();
+        switch (pricingMethod) {
+            case "cny":
+                mPricingMethod.setSubText(R.string.cny);
+                break;
+            case "usd":
+                mPricingMethod.setSubText(R.string.usd);
+                break;
+            case "twd":
+                mPricingMethod.setSubText(R.string.twd);
+                break;
+            default:
         }
     }
 
@@ -104,11 +118,14 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.language, R.id.aboutUs, R.id.feedback, R.id.logout})
+    @OnClick({R.id.language, R.id.pricingMethod, R.id.aboutUs, R.id.feedback, R.id.logout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.language:
                 UniqueActivity.launcher(getActivity(), SettingLanguageFragment.class).execute();
+                break;
+            case R.id.pricingMethod:
+                UniqueActivity.launcher(getActivity(), SelectPricingFragment.class).execute();
                 break;
             case R.id.aboutUs:
                 UniqueActivity.launcher(getActivity(), AboutUsFragment.class).execute();
