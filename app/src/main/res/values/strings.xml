@@ -827,7 +827,7 @@
     <string name="buyer">买家</string>
     <string name="seller">卖家</string>
     <string name="otc">法币交易</string>
-    <string name="equivalent_x">折合(%1$s)</string>
+    <string name="equivalent_x">折合%1$s</string>
     <string name="order_info">订单信息</string>
     <string name="trader_x">交易对象：%1$s</string>
     <string name="buy_price_x">买入单价：%1$s</string>
@@ -842,4 +842,5 @@
     <string name="otc_balance_not_enough">法币账户余额不足</string>
     <string name="transfer_now">立即划转</string>
     <string name="otc_balance_not_enough_hint_x">请先将币币账户%1$s余额划转至法币账户后继续卖出。</string>
+    <string name="equivalent">≈%1$f%2$s</string>
 </resources>

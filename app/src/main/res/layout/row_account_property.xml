@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/property_bg_blue">
+    android:background="@drawable/property_bg_purple">
 
     <TextView
         android:id="@+id/accountType"
@@ -28,7 +28,7 @@
         android:id="@+id/totalPropertyType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="8dp"
         android:includeFontPadding="false"
         android:textColor="@color/sixtyPercentWhite"
         android:textSize="11sp"
@@ -47,7 +47,7 @@
         android:includeFontPadding="false"
         android:singleLine="true"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"
@@ -55,6 +55,18 @@
         app:layout_constraintRight_toLeftOf="@id/transfer"
         app:layout_constraintTop_toBottomOf="@+id/totalPropertyType"
         tools:text="0.13429464"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp"
+        android:text="≈8898.1234USD"
+        android:textColor="#B8DAF5"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/propertyAmount"
+        app:layout_constraintTop_toBottomOf="@id/propertyAmount"/>
 
     <TextView
         android:id="@+id/inviteNum"
