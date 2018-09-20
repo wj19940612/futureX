@@ -91,6 +91,11 @@
         <attr name="tabStrings" format="reference" />
     </declare-styleable>
 
+    <!--BuySellSwitcher-->
+    <declare-styleable name="FastTradingView">
+        <attr name="isQuickTrade" format="boolean" />
+    </declare-styleable>
+
     <!--密码输入控件-->
     <declare-styleable name="PasswordEditText">
         <attr name="textHint" format="reference|string" />

@@ -291,8 +291,11 @@
         android:layout_height="270dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="-270dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="4dp"
         android:background="@drawable/bg_white_with_top_shadow"
-        android:clickable="true">
+        android:clickable="true"
+        app:isQuickTrade="true">
     </com.songbai.futurex.view.FastTradingView>
 
     <View

@@ -1,20 +1,18 @@
 package com.songbai.futurex.view;
 
-import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
-import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
-import com.songbai.futurex.activity.mine.MyPropertyActivity;
-import com.songbai.futurex.fragment.mine.ReChargeCoinFragment;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
@@ -25,9 +23,11 @@ import com.songbai.futurex.model.order.Order;
 import com.songbai.futurex.utils.CurrencyUtils;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
-import com.songbai.futurex.utils.UmengCountEventId;
+import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
 import com.songbai.futurex.view.autofit.AutofitTextView;
+import com.songbai.futurex.view.dialog.ItemSelectController;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.TradeDir;
 
@@ -71,6 +71,16 @@ public class FastTradingView extends LinearLayout {
     TradePercentSelectView mPercentSelectView;
     @BindView(R.id.tradeButton)
     TextView mTradeButton;
+    @BindView(R.id.quickBtnLayout)
+    LinearLayout mQuickBtnLayout;
+    @BindView(R.id.quickStub)
+    View mQuickStub;
+    @BindView(R.id.normalStub)
+    View mNormalStub;
+    @BindView(R.id.tradeType)
+    TextView mTradeType;
+    @BindView(R.id.tipPrice)
+    AutofitTextView mTipPrice;
 
     private int mTradeTypeValue;
 
@@ -84,6 +94,8 @@ public class FastTradingView extends LinearLayout {
     private onFastTradeClickListener mOnFastTradeClickListener;
 
     private int mViewStatus = VIEW_GONE;
+
+    private boolean isQuickExchange;
 
     public interface onFastTradeClickListener {
         void onMakeOrder(MakeOrder makeOrder);
@@ -110,7 +122,18 @@ public class FastTradingView extends LinearLayout {
 
     public FastTradingView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        processAttrs(attrs);
         init();
+    }
+
+    private void processAttrs(AttributeSet attrs) {
+        if (attrs == null) {
+            return;
+        }
+
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FastTradingView);
+        isQuickExchange = typedArray.getBoolean(R.styleable.FastTradingView_isQuickTrade, false);
+        typedArray.recycle();
     }
 
     private void init() {
@@ -118,10 +141,27 @@ public class FastTradingView extends LinearLayout {
         ButterKnife.bind(this);
 
         mTradeDir = TradeDir.DIR_BUY_IN;
+        mTradeTypeValue = LIMIT_TRADE;
+
+        if (isQuickExchange) {
+            mTradeType.setVisibility(View.GONE);
+            mMarketSwitcher.setVisibility(View.VISIBLE);
+            mQuickStub.setVisibility(View.VISIBLE);
+            mNormalStub.setVisibility(View.GONE);
+            mQuickBtnLayout.setVisibility(View.VISIBLE);
+        } else {
+            mTradeType.setVisibility(View.VISIBLE);
+            mMarketSwitcher.setVisibility(View.GONE);
+            mQuickStub.setVisibility(View.GONE);
+            mNormalStub.setVisibility(View.VISIBLE);
+            mQuickBtnLayout.setVisibility(View.GONE);
+        }
+
         initView();
     }
 
     private void initView() {
+
         mTradeDirRadio.setOnTabSelectedListener(new BuySellSwitcher.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
@@ -210,7 +250,7 @@ public class FastTradingView extends LinearLayout {
         }
     }
 
-    @OnClick({R.id.recharge, R.id.tradeButton, R.id.fullTrade, R.id.closeTrade})
+    @OnClick({R.id.recharge, R.id.tradeButton, R.id.fullTrade, R.id.closeTrade,R.id.tradeType})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recharge:
@@ -234,6 +274,9 @@ public class FastTradingView extends LinearLayout {
                 if (mOnFastTradeClickListener != null) {
                     mOnFastTradeClickListener.onCloseTradeClick();
                 }
+                break;
+            case R.id.tradeType:
+                showTradeTypeSelector();
                 break;
         }
     }
@@ -264,6 +307,7 @@ public class FastTradingView extends LinearLayout {
                 mChangePriceView.setVisibility(View.GONE);
                 mMarketPriceView.setVisibility(View.VISIBLE);
             }
+            mTradeType.setText(tradeTypeRes);
             if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
                 mTradeButton.setEnabled(false);
                 mTradeButton.setBackgroundResource(R.drawable.btn_green_r18);
@@ -285,6 +329,7 @@ public class FastTradingView extends LinearLayout {
                 mChangePriceView.setVisibility(View.GONE);
                 mMarketPriceView.setVisibility(View.VISIBLE);
             }
+            mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.sell_out);
             if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
                 mTradeButton.setEnabled(false);
@@ -295,6 +340,7 @@ public class FastTradingView extends LinearLayout {
                 mTradeButton.setBackgroundResource(R.drawable.btn_red_r18);
                 mTradeButton.setText(R.string.sell_out);
             }
+//            mTradeDirSplitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
         }
     }
 
@@ -413,6 +459,8 @@ public class FastTradingView extends LinearLayout {
     }
 
     public void updatePrice(String price) {
+        if (mChangePriceView.getVisibility() == View.GONE) return;
+
         mChangePriceView.setPrice(price);
         mChangePriceView.startScaleAnim();
         mChangePriceView.setModifiedManually(true);
@@ -442,12 +490,18 @@ public class FastTradingView extends LinearLayout {
         mVolumeInput.reset();
         mPercentSelectView.updatePercent(0);
         mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
+
+//        mTradeCurrencyRange.setText("");
     }
 
     public void setDirection(int direction) {
         mTradeDir = direction;
         mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
         updateTradeDirectionView();
+    }
+
+    public void updateDirectionTab() {
+        mTradeDirRadio.selectTab(mTradeDir == TradeDir.DIR_BUY_IN ? 0 : 1);
     }
 
     public void updateDirection() {
@@ -478,6 +532,40 @@ public class FastTradingView extends LinearLayout {
     private void resetMakeOrder() {
         mVolumeInput.reset();
         mPercentSelectView.reset();
+    }
+
+    private void showTradeTypeSelector() {
+        if (!(getContext() instanceof Activity)) {
+            return;
+        }
+
+        final SmartDialog dialog = SmartDialog.solo((Activity) getContext());
+
+        SimpleRVAdapter simpleRVAdapter = new SimpleRVAdapter(
+                new int[]{R.string.limit_price, R.string.market_price},
+                R.layout.row_select_text,
+                new OnRVItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, Object obj) {
+                        dialog.dismiss();
+                        if (position == 0) {
+                            mTradeTypeValue = LIMIT_TRADE;
+                        } else {
+                            mTradeTypeValue = MARKET_TRADE;
+                        }
+                        updateTradeDirectionView();
+                    }
+                });
+
+        ItemSelectController itemSelectController = new ItemSelectController(getContext());
+        itemSelectController.setHintText(getContext().getString(R.string.please_choose_limited_condition));
+        itemSelectController.setAdapter(simpleRVAdapter);
+
+        dialog.setCustomViewController(itemSelectController)
+                .setWindowGravity(Gravity.BOTTOM)
+                .setWindowAnim(R.style.BottomDialogAnimation)
+                .setWidthScale(1)
+                .show();
     }
 
     public int getViewStatus() {
