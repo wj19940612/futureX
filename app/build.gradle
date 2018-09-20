@@ -15,8 +15,8 @@ android {
         applicationId "com.songbai.futurex"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 43
-        versionName "1.5.1"
+        versionCode 32
+        versionName "1.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"m.bitfutu.re\"')
@@ -108,7 +108,6 @@ android {
         ali {}
         lenovo {}
         pro {
-            buildConfigField('boolean', 'IS_PROD', 'false')
         }
     }
 

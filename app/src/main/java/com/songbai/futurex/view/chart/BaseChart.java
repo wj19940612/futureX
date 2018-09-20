@@ -40,7 +40,6 @@ public abstract class BaseChart extends View {
 
     private static final int WHAT_LONG_PRESS = 1;
     private static final int WHAT_ONE_CLICK = 2;
-    private static final int DELAY_LONG_PRESS = 500;
     private static final int DELAY_ONE_CLICK = 100;
     private static final float CLICK_PIXELS = 1;
 
