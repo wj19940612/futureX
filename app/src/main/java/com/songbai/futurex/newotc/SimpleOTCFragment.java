@@ -603,7 +603,7 @@ public class SimpleOTCFragment extends BaseFragment {
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
             newOtcPreBuy(coinCount, mSelectedCoinSymbol);
         } else {
-            if (Double.valueOf(coinCount)>Double.valueOf(0)) {
+            if (Double.valueOf(coinCount)>Double.valueOf(mBalance)) {
                 showTransferAlert();
                 return;
             }

@@ -2,7 +2,7 @@ package com.songbai.futurex.utils;
 
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.model.PairsMoney;
-import com.songbai.futurex.model.PairsPrice;
+import com.songbai.futurex.websocket.model.PairsPrice;
 
 /**
  * @author yangguangda
@@ -22,7 +22,7 @@ public class PairMoneyUtil {
         return 0;
     }
 
-    private static double getPrice(PairsPrice btc) {
+    public static double getPrice(PairsPrice btc) {
         String pricingMethod = Preference.get().getPricingMethod();
         switch (pricingMethod) {
             case "cny":

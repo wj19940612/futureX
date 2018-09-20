@@ -10,7 +10,7 @@ import android.os.Parcelable;
  * <p>
  * APIs:
  */
-public class MarketData implements Parcelable{
+public class MarketData implements Parcelable {
 
 
     /**
@@ -48,62 +48,7 @@ public class MarketData implements Parcelable{
     private double turnover;
     private double lastPrice;
     private int status;
-
-    protected MarketData(Parcel in) {
-        highestPrice = in.readDouble();
-        lowestPrice = in.readDouble();
-        preSetPrice = in.readDouble();
-        code = in.readString();
-        lastVolume = in.readDouble();
-        openPrice = in.readDouble();
-        preClsPrice = in.readDouble();
-        upDropSpeed = in.readDouble();
-        volume = in.readDouble();
-        upTime = in.readLong();
-        upDropPrice = in.readDouble();
-        tradeDay = in.readString();
-        upTimeFormat = in.readString();
-        turnover = in.readDouble();
-        lastPrice = in.readDouble();
-        status = in.readInt();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeDouble(highestPrice);
-        dest.writeDouble(lowestPrice);
-        dest.writeDouble(preSetPrice);
-        dest.writeString(code);
-        dest.writeDouble(lastVolume);
-        dest.writeDouble(openPrice);
-        dest.writeDouble(preClsPrice);
-        dest.writeDouble(upDropSpeed);
-        dest.writeDouble(volume);
-        dest.writeLong(upTime);
-        dest.writeDouble(upDropPrice);
-        dest.writeString(tradeDay);
-        dest.writeString(upTimeFormat);
-        dest.writeDouble(turnover);
-        dest.writeDouble(lastPrice);
-        dest.writeInt(status);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<MarketData> CREATOR = new Creator<MarketData>() {
-        @Override
-        public MarketData createFromParcel(Parcel in) {
-            return new MarketData(in);
-        }
-
-        @Override
-        public MarketData[] newArray(int size) {
-            return new MarketData[size];
-        }
-    };
+    private PairsPrice conversion;
 
     public double getHighestPrice() {
         return highestPrice;
@@ -217,6 +162,14 @@ public class MarketData implements Parcelable{
         this.turnover = turnover;
     }
 
+    public PairsPrice getConversion() {
+        return conversion;
+    }
+
+    public void setConversion(PairsPrice conversion) {
+        this.conversion = conversion;
+    }
+
     public double getLastPrice() {
         return lastPrice;
     }
@@ -232,4 +185,65 @@ public class MarketData implements Parcelable{
     public void setStatus(int status) {
         this.status = status;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(this.highestPrice);
+        dest.writeDouble(this.lowestPrice);
+        dest.writeDouble(this.preSetPrice);
+        dest.writeString(this.code);
+        dest.writeDouble(this.lastVolume);
+        dest.writeDouble(this.openPrice);
+        dest.writeDouble(this.preClsPrice);
+        dest.writeDouble(this.upDropSpeed);
+        dest.writeDouble(this.volume);
+        dest.writeLong(this.upTime);
+        dest.writeDouble(this.upDropPrice);
+        dest.writeString(this.tradeDay);
+        dest.writeString(this.upTimeFormat);
+        dest.writeDouble(this.turnover);
+        dest.writeDouble(this.lastPrice);
+        dest.writeInt(this.status);
+        dest.writeParcelable(this.conversion, flags);
+    }
+
+    public MarketData() {
+    }
+
+    protected MarketData(Parcel in) {
+        this.highestPrice = in.readDouble();
+        this.lowestPrice = in.readDouble();
+        this.preSetPrice = in.readDouble();
+        this.code = in.readString();
+        this.lastVolume = in.readDouble();
+        this.openPrice = in.readDouble();
+        this.preClsPrice = in.readDouble();
+        this.upDropSpeed = in.readDouble();
+        this.volume = in.readDouble();
+        this.upTime = in.readLong();
+        this.upDropPrice = in.readDouble();
+        this.tradeDay = in.readString();
+        this.upTimeFormat = in.readString();
+        this.turnover = in.readDouble();
+        this.lastPrice = in.readDouble();
+        this.status = in.readInt();
+        this.conversion = in.readParcelable(PairsPrice.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MarketData> CREATOR = new Parcelable.Creator<MarketData>() {
+        @Override
+        public MarketData createFromParcel(Parcel source) {
+            return new MarketData(source);
+        }
+
+        @Override
+        public MarketData[] newArray(int size) {
+            return new MarketData[size];
+        }
+    };
 }

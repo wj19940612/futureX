@@ -13,7 +13,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,20 +54,15 @@ import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
+import com.songbai.futurex.utils.PairMoneyUtil;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
-import com.songbai.futurex.utils.adapter.SimpleRVAdapter;
-import com.songbai.futurex.view.BuySellSwitcher;
-import com.songbai.futurex.view.ChangePriceView;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.FastTradingView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
-import com.songbai.futurex.view.TradePercentSelectView;
 import com.songbai.futurex.view.TradeVolumeView;
-import com.songbai.futurex.view.VolumeInputView;
-import com.songbai.futurex.view.dialog.ItemSelectController;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
@@ -78,6 +72,7 @@ import com.songbai.futurex.websocket.Response;
 import com.songbai.futurex.websocket.market.MarketSubscriber;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.PairMarket;
+import com.songbai.futurex.websocket.model.PairsPrice;
 import com.songbai.futurex.websocket.model.TradeDir;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
@@ -92,9 +87,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
-import static com.songbai.futurex.model.order.Order.LIMIT_TRADE;
-import static com.songbai.futurex.model.order.Order.MARKET_TRADE;
 
 /**
  * Modified by john on 2018/5/30
@@ -118,6 +110,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     View mTradeDirSplitLine;
     @BindView(R.id.lastPrice)
     TextView mLastPrice;
+    @BindView(R.id.equivalent)
+    TextView mEquivalent;
     @BindView(R.id.priceChange)
     TextView mPriceChange;
     //    @BindView(R.id.tradeCurrencyRange)
@@ -617,6 +611,12 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         MarketData quota = pairMarket.getQuota();
         if (mPairDesc != null && quota != null) {
             mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
+            PairsPrice conversion = quota.getConversion();
+            double price = PairMoneyUtil.getPrice(conversion);
+            mTradeLayout.setPrice(price/quota.getLastPrice());
+            mEquivalent.setText(getString(R.string.equivalent_x_x,
+                    FinanceUtil.formatWithScale(price),
+                    Preference.get().getPricingMethod().toUpperCase()));
             mPriceChange.setText(CurrencyUtils.getPrefixPercent(quota.getUpDropSpeed()));
             if (quota.getUpDropSpeed() >= 0) {
                 mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.green));

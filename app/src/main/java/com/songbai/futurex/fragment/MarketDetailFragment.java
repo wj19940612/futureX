@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,7 +40,9 @@ import com.songbai.futurex.model.local.MakeOrder;
 import com.songbai.futurex.model.mine.CoinAbleAmount;
 import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.CurrencyUtils;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.PairMoneyUtil;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.ChartsRadio;
@@ -73,6 +74,7 @@ import com.songbai.futurex.websocket.model.DealData;
 import com.songbai.futurex.websocket.model.DeepData;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.PairMarket;
+import com.songbai.futurex.websocket.model.PairsPrice;
 import com.songbai.futurex.websocket.model.TradeDir;
 
 import java.lang.ref.WeakReference;
@@ -152,6 +154,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     FastTradingView mTradeLayout;
     @BindView(R.id.viewStub)
     View mViewStub;
+    @BindView(R.id.equivalent)
+    TextView mEquivalent;
 
     private ValueAnimator mValueAnimator;
 
@@ -765,7 +769,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
         }
         mTradeVolume.setText(CurrencyUtils.get24HourVolume(marketData.getVolume()));
-
+        PairsPrice conversion = marketData.getConversion();
+        double price = PairMoneyUtil.getPrice(conversion);
+        mTradeLayout.setPrice(price / marketData.getLastPrice());
+        mEquivalent.setText(getString(R.string.equivalent_x_x,
+                FinanceUtil.formatWithScale(price),
+                Preference.get().getPricingMethod().toUpperCase()));
         mTradeLayout.updatePriceView(marketData);
     }
 

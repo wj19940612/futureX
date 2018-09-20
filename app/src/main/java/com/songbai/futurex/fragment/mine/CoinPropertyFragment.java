@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.PropertyFlowActivity;
 import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
@@ -146,6 +147,14 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
         mTitleBar.setRightVisible(mAccountBean.getLegal() == 1);
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getContext(), MainActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX,2)
+                        .execute();
+            }
+        });
         Apic.pairsMoney().tag(TAG).callback(new Callback<Resp<PairsMoney>>() {
             @Override
             protected void onRespSuccess(Resp<PairsMoney> resp) {

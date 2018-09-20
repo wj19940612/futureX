@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.fragment.BaseFragment;
@@ -30,6 +31,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
@@ -106,7 +108,9 @@ public class PropertyListFragment extends BaseFragment {
             public void onItemClick(View view, int position, Object obj) {
                 AccountBean accountBean = (AccountBean) obj;
                 if (view.getId() == R.id.trade) {
-                    // TODO: 2018/9/18 法币交易
+                    Launcher.with(getContext(), MainActivity.class)
+                            .putExtra(ExtraKeys.PAGE_INDEX,2)
+                            .execute();
                 } else {
                     UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class)
                             .putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean)
@@ -378,7 +382,7 @@ public class PropertyListFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         if (mOnRVItemClickListener != null) {
-                            mOnRVItemClickListener.onItemClick(mRootView, position, accountBean);
+                            mOnRVItemClickListener.onItemClick(mTrade, position, accountBean);
                         }
                     }
                 });

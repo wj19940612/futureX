@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Resp;
@@ -31,7 +32,6 @@ import com.songbai.futurex.view.dialog.ItemSelectController;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.TradeDir;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -96,6 +96,11 @@ public class FastTradingView extends LinearLayout {
     private int mViewStatus = VIEW_GONE;
 
     private boolean isQuickExchange;
+    private double mPrice;
+
+    public void setPrice(double price) {
+        mPrice = price;
+    }
 
     public interface onFastTradeClickListener {
         void onMakeOrder(MakeOrder makeOrder);
@@ -195,6 +200,7 @@ public class FastTradingView extends LinearLayout {
                 updateTradeCurrencyView();
                 updateTradeAmount();
                 updateSelectPercentView();
+                updateEquivalent(price);
 //                updateVolumeSeekBar();
             }
         });
@@ -238,6 +244,12 @@ public class FastTradingView extends LinearLayout {
         });
     }
 
+    private void updateEquivalent(double price) {
+        mTipPrice.setText(getContext().getString(R.string.equivalent_x_x,
+                FinanceUtil.formatWithScale(mPrice * price),
+                Preference.get().getPricingMethod().toUpperCase()));
+    }
+
     private void updateVolumeSeekBar() {
         int max = mPercentSelectView.getMax();
         double progress = (mVolumeInput.getVolume() / mTradeCurrencyVolume * max);
@@ -250,7 +262,7 @@ public class FastTradingView extends LinearLayout {
         }
     }
 
-    @OnClick({R.id.recharge, R.id.tradeButton, R.id.fullTrade, R.id.closeTrade,R.id.tradeType})
+    @OnClick({R.id.recharge, R.id.tradeButton, R.id.fullTrade, R.id.closeTrade, R.id.tradeType})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recharge:
@@ -302,10 +314,12 @@ public class FastTradingView extends LinearLayout {
                 tradeTypeRes = R.string.limit_price;
                 mChangePriceView.setVisibility(View.VISIBLE);
                 mMarketPriceView.setVisibility(View.GONE);
+                mTipPrice.setVisibility(VISIBLE);
             } else {
                 tradeTypeRes = R.string.market_price;
                 mChangePriceView.setVisibility(View.GONE);
                 mMarketPriceView.setVisibility(View.VISIBLE);
+                mTipPrice.setVisibility(INVISIBLE);
             }
             mTradeType.setText(tradeTypeRes);
             if (mCurrencyPair.getStatus() != CurrencyPair.STATUS_START) {
@@ -324,10 +338,12 @@ public class FastTradingView extends LinearLayout {
                 tradeTypeRes = R.string.limit_price;
                 mChangePriceView.setVisibility(View.VISIBLE);
                 mMarketPriceView.setVisibility(View.GONE);
+                mTipPrice.setVisibility(VISIBLE);
             } else {
                 tradeTypeRes = R.string.market_price;
                 mChangePriceView.setVisibility(View.GONE);
                 mMarketPriceView.setVisibility(View.VISIBLE);
+                mTipPrice.setVisibility(INVISIBLE);
             }
             mTradeType.setText(tradeTypeRes);
             mTradeButton.setText(R.string.sell_out);

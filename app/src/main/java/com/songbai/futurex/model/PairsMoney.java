@@ -1,5 +1,7 @@
 package com.songbai.futurex.model;
 
+import com.songbai.futurex.websocket.model.PairsPrice;
+
 /**
  * @author yangguangda
  * @date 2018/9/20

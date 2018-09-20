@@ -133,6 +133,9 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
             ((LegalCurrencyFragment) fragment).setSelectedIndex(index);
             mBottomTabs.performTabClick(mainPageIndex);
         }
+        if (fragment instanceof SimpleOTCFragment) {
+            mBottomTabs.performTabClick(mainPageIndex);
+        }
     }
 
     @Override

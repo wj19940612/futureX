@@ -2,12 +2,13 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgF5"
-    android:orientation="vertical"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <com.songbai.futurex.view.TitleBar
         android:id="@+id/titleBar"
@@ -42,15 +43,31 @@
                     android:textColor="@color/green"
                     android:textSize="34sp"/>
 
-                <TextView
-                    android:id="@+id/priceChange"
+                <LinearLayout
+                    android:id="@+id/equivalentRow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/lastPrice"
-                    android:layout_below="@id/lastPrice"
-                    android:text="--"
-                    android:textColor="@color/green"
-                    android:textSize="15sp"/>
+                    android:layout_below="@id/lastPrice">
+
+                    <TextView
+                        android:id="@+id/equivalent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:textColor="@color/text99"
+                        android:textSize="14sp"
+                        android:visibility="visible"
+                        tools:text="≈41163.36 CNY"/>
+
+                    <TextView
+                        android:id="@+id/priceChange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textColor="@color/green"
+                        android:textSize="14sp"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/highestPrice"
@@ -123,7 +140,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/priceChange"
+                    android:layout_below="@id/equivalentRow"
                     android:layout_marginTop="15dp"
                     android:gravity="center_vertical">
 
@@ -176,15 +193,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:descendantFocusability="blocksDescendants"
                 android:orientation="vertical"
-                android:paddingBottom="52dp"
-                android:descendantFocusability="blocksDescendants" >
+                android:paddingBottom="52dp">
 
                 <com.songbai.futurex.view.RadioHeader
                     android:id="@+id/tradeDetailRadio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/priceChange"
+                    android:layout_below="@id/equivalentRow"
                     android:layout_marginBottom="6dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="6dp"
@@ -218,7 +235,7 @@
                 android:id="@+id/viewStub"
                 android:layout_width="match_parent"
                 android:layout_height="174dp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -237,8 +254,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/buyIn"
@@ -291,10 +308,10 @@
         android:layout_height="270dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="-270dp"
-        android:paddingBottom="20dp"
-        android:paddingTop="4dp"
         android:background="@drawable/bg_white_with_top_shadow"
         android:clickable="true"
+        android:paddingBottom="20dp"
+        android:paddingTop="4dp"
         app:isQuickTrade="true">
     </com.songbai.futurex.view.FastTradingView>
 
