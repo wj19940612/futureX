@@ -87,6 +87,7 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                 mViewPager.setCurrentItem(position);
             }
         });
+        mAwardAmountText.setText(getString(R.string.gained_award_x, mCoinType.toUpperCase()));
         getCurrentPromoterMsg();
         mAwardAmountText.setText(getString(R.string.gained_award_x, mCoinType));
     }
@@ -99,9 +100,9 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                         PromoterInfo promoterInfo = resp.getData();
                         if (promoterInfo != null) {
                             mInviteNum.setText(String.valueOf(promoterInfo.getMyUsersCount()));
-                            mCoinType = promoterInfo.getCoinType();
-                            mAwardAmountText.setText(getString(R.string.gained_award_x, mCoinType));
                             mAwardAmount.setText(String.valueOf(promoterInfo.getTotalCom()));
+                            mCoinType = promoterInfo.getCoinType();
+                            mAwardAmountText.setText(getString(R.string.gained_award_x, mCoinType.toUpperCase()));
                         }
                     }
 

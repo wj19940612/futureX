@@ -89,6 +89,7 @@ public class InviteActivity extends BaseActivity {
                         if (promoterInfo != null) {
                             mCoinType = promoterInfo.getCoinType();
                             mCode = promoterInfo.getCode();
+                            mCoinType = promoterInfo.getCoinType();
                             mInviteCode.setText(mCode);
                         }
                     }

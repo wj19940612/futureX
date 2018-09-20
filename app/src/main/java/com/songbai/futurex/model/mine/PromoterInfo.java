@@ -7,16 +7,16 @@ package com.songbai.futurex.model.mine;
 public class PromoterInfo {
 
     /**
-     * code : 7w2xu
-     * totalCom : 0.00000000
-     * myUsersCount : 0
+     * code : 7w57u
      * coinType : btc
+     * myUsersCount : 0
+     * totalCom : 0.00000000
      */
 
     private String code;
-    private String totalCom;
-    private int myUsersCount;
     private String coinType;
+    private int myUsersCount;
+    private String totalCom;
 
     public String getCode() {
         return code;
@@ -26,12 +26,12 @@ public class PromoterInfo {
         this.code = code;
     }
 
-    public String getTotalCom() {
-        return totalCom;
+    public String getCoinType() {
+        return coinType;
     }
 
-    public void setTotalCom(String totalCom) {
-        this.totalCom = totalCom;
+    public void setCoinType(String coinType) {
+        this.coinType = coinType;
     }
 
     public int getMyUsersCount() {
@@ -42,11 +42,11 @@ public class PromoterInfo {
         this.myUsersCount = myUsersCount;
     }
 
-    public String getCoinType() {
-        return coinType;
+    public String getTotalCom() {
+        return totalCom;
     }
 
-    public void setCoinType(String coinType) {
-        this.coinType = coinType;
+    public void setTotalCom(String totalCom) {
+        this.totalCom = totalCom;
     }
 }

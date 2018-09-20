@@ -15,12 +15,21 @@ public class InvitePersonInfo {
      * username : User086697
      */
 
+    private String coinType;
     private String commission;
     private int dealCount;
     private long registerTime;
     private int userId;
     private String userPortrait;
     private String username;
+
+    public String getCoinType() {
+        return coinType;
+    }
+
+    public void setCoinType(String coinType) {
+        this.coinType = coinType;
+    }
 
     public String getCommission() {
         return commission;
