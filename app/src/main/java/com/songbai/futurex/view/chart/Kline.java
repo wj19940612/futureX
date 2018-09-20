@@ -33,6 +33,10 @@ public class Kline extends BaseChart {
         private float bollUp;
         private float bollLow;
 
+        private float macd;
+        private float macdDea;
+        private float macdDiff;
+
         public IndexData() {
             this.mas = new SparseArray<>();
         }
@@ -59,6 +63,39 @@ public class Kline extends BaseChart {
 
         public float getBollUp() {
             return bollUp;
+        }
+
+        public float getMacd() {
+            return macd;
+        }
+
+        public void setMacd(float macd) {
+            this.macd = macd;
+        }
+
+        public float getMacdDea() {
+            return macdDea;
+        }
+
+        public void setMacdDea(float macdDea) {
+            this.macdDea = macdDea;
+        }
+
+        public float getMacdDiff() {
+            return macdDiff;
+        }
+
+        public void setMacdDiff(float macdDiff) {
+            this.macdDiff = macdDiff;
+        }
+
+        @Override
+        public String toString() {
+            return "IndexData{" +
+                    "mas=" + mas +
+                    ", bollUp=" + bollUp +
+                    ", bollLow=" + bollLow +
+                    '}';
         }
     }
 
@@ -136,6 +173,20 @@ public class Kline extends BaseChart {
         public int compareTo(@NonNull Data o) {
             return (int) (this.timeStamp - o.getTimestamp());
         }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "openPrice=" + openPrice +
+                    ", maxPrice=" + maxPrice +
+                    ", minPrice=" + minPrice +
+                    ", closePrice=" + closePrice +
+                    ", nowVolume=" + nowVolume +
+                    ", time='" + time + '\'' +
+                    ", timeStamp=" + timeStamp +
+                    ", indexData=" + indexData +
+                    '}';
+        }
     }
 
     public interface OnCrossLineAppearListener {
@@ -164,7 +215,6 @@ public class Kline extends BaseChart {
     protected SparseArray<Data> mVisibleList;
     protected List<Data> mDataList;
     protected List<Data> mBufferDataList;
-    protected int mTouchIndex;
     protected int mStart;
     protected int mEnd;
     // visible points index range
@@ -315,8 +365,7 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawData(int left, int top, int width, int height,
-                            boolean volEnable, int volTop, int volHeight, Canvas canvas) {
+    protected void drawMainData(int left, int top, int width, int height, Canvas canvas) {
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
             float chartX = getChartXOfScreen(i, data);
@@ -324,10 +373,6 @@ public class Kline extends BaseChart {
                 drawCandle(chartX, data, mLastPrice, canvas);
             } else {
                 drawCandle(chartX, data, canvas);
-            }
-
-            if (volEnable) {
-                drawVol(chartX, data, canvas);
             }
         }
 
@@ -350,8 +395,13 @@ public class Kline extends BaseChart {
 //        }
     }
 
-    protected void drawVol(float chartX, Data data, Canvas canvas) {
-        drawVolumes(chartX, data, canvas);
+    @Override
+    protected void drawVolData(int left, int volTop, int width, int volChartHeight, int touchIndex, Canvas canvas) {
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            float chartX = getChartXOfScreen(i);
+            drawVolumes(chartX, data, canvas);
+        }
     }
 
     private void drawVolumes(float chartX, Data data, Canvas canvas) {
@@ -492,10 +542,7 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawIndex(int left, int top, int width,
-                             int mainChartHeight, int timeLineHeight, int volChartHeight, int subChartHeight,
-                             Canvas canvas) {
-
+    protected void drawMainIndex(int left, int top, int width, int mainChartHeight, int touchIndex, Canvas canvas) {
         if (mChartCfg.getMainIndex() == ChartCfg.INDEX_MA) {
             drawMALines(canvas);
 
@@ -503,8 +550,8 @@ public class Kline extends BaseChart {
             if (mVisibleList.size() > 0) {
                 data = mVisibleList.get(mVisibleList.size() - 1);
             }
-            if (mTouchIndex >= 0) {
-                data = mVisibleList.get(mTouchIndex);
+            if (touchIndex >= 0) {
+                data = mVisibleList.get(touchIndex);
             }
             if (data == null) return;
 
@@ -529,8 +576,8 @@ public class Kline extends BaseChart {
             if (mVisibleList.size() > 0) {
                 data = mVisibleList.get(mVisibleList.size() - 1);
             }
-            if (mTouchIndex >= 0) {
-                data = mVisibleList.get(mTouchIndex);
+            if (touchIndex >= 0) {
+                data = mVisibleList.get(touchIndex);
             }
             if (data == null) return;
 
@@ -614,9 +661,9 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawCrossLines(boolean indexesEnable, int touchIndex,
-                                  int left, int top, int width, int height,
-                                  int left2, int volTop, int width2, int volHeight, Canvas canvas) {
+    protected void drawCrossLines(int touchIndex, int left, int top, int width, int height,
+                                  boolean volEnable, int volTop, int volHeight,
+                                  boolean subIndexEnable, int subChartTop, int subChartHeight, Canvas canvas) {
         if (!checkTouchIndexValid(touchIndex)) return;
 
         Data data = mVisibleList.get(touchIndex);
@@ -714,13 +761,39 @@ public class Kline extends BaseChart {
 
     private void calculateIndexValues() {
         if (mChartCfg.getMainIndex() == ChartCfg.INDEX_MA) {
-            calculateMovingAverageValues();
+            calculateMAValues();
         } else if (mChartCfg.getMainIndex() == ChartCfg.INDEX_BOLL) {
-            calculateBollValues();
+            calculateBOLLValues();
+        }
+
+        if (mChartCfg.getSubIndex() == ChartCfg.INDEX_MACD) {
+            calculateMACDValues();
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_KDJ) {
+            calculateKDJValues();
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_RSI) {
+            calculateRSIValues();
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_WR) {
+            calculateWRValues();
         }
     }
 
-    private void calculateBollValues() {
+    private void calculateWRValues() {
+
+    }
+
+    private void calculateRSIValues() {
+
+    }
+
+    private void calculateKDJValues() {
+
+    }
+
+    private void calculateMACDValues() {
+
+    }
+
+    private void calculateBOLLValues() {
         int movingAverage = mBoll[0];
         for (int i = mStart; i < mEnd; i++) {
             int start = i - movingAverage + 1;
@@ -743,7 +816,7 @@ public class Kline extends BaseChart {
         return (float) Math.sqrt(result / movingAverage);
     }
 
-    private void calculateMovingAverageValues() {
+    private void calculateMAValues() {
         for (int movingAverage : mMas) {
             for (int i = mStart; i < mEnd; i++) {
                 int start = i - movingAverage + 1;
@@ -800,7 +873,6 @@ public class Kline extends BaseChart {
 
     @Override
     protected void onCrossLinesAppear(int touchIndex) {
-        mTouchIndex = touchIndex;
         if (mOnCrossLineAppearListener != null) {
             Data curData = mVisibleList.get(touchIndex);
             mOnCrossLineAppearListener.onAppear(curData);
@@ -809,7 +881,6 @@ public class Kline extends BaseChart {
 
     @Override
     protected void onCrossLinesDisappear(int touchIndex) {
-        mTouchIndex = touchIndex;
         if (mOnCrossLineAppearListener != null) {
             mOnCrossLineAppearListener.onDisappear();
         }

@@ -19,7 +19,6 @@ import android.util.AttributeSet;
 public class TrendV extends Kline {
 
     private float mTrendLineWidth;
-    private float mMALineWidth;
 
     public TrendV(Context context) {
         super(context);
@@ -34,12 +33,10 @@ public class TrendV extends Kline {
         super.init();
         mTrendLineWidth = dp2Px(2);
         mMas = new int[]{60};
-        mMALineWidth = dp2Px(1);
     }
 
     @Override
-    protected void drawData(int left, int top, int width, int height,
-                            boolean volEnable, int volTop, int VolHeight, Canvas canvas) {
+    protected void drawMainData(int left, int top, int width, int height, Canvas canvas) {
         Path path = getPath();
         float chartX = 0;
         float chartY = 0;
@@ -66,13 +63,6 @@ public class TrendV extends Kline {
         setTrendLineFillPaint(sPaint);
         canvas.drawPath(path, sPaint);
         sPaint.setShader(null);
-
-        if (volEnable) {
-            for (int i = mStart; i < mEnd; i++) {
-                chartX = getChartXOfScreen(i);
-                drawVol(chartX, mDataList.get(i), canvas);
-            }
-        }
     }
 
     private void setTrendLinePaint(Paint paint) {

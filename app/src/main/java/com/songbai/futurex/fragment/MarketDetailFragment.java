@@ -255,19 +255,19 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 break;
             case IndexMenuController.Indexes.MACD:
                 trendChartCfg.setSubIndex(ChartCfg.INDEX_MACD);
-                klineChartCfg.setMainIndex(ChartCfg.INDEX_MACD);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_MACD);
                 break;
             case IndexMenuController.Indexes.KDJ:
                 trendChartCfg.setSubIndex(ChartCfg.INDEX_KDJ);
-                klineChartCfg.setMainIndex(ChartCfg.INDEX_KDJ);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_KDJ);
                 break;
             case IndexMenuController.Indexes.RSI:
                 trendChartCfg.setSubIndex(ChartCfg.INDEX_RSI);
-                klineChartCfg.setMainIndex(ChartCfg.INDEX_RSI);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_RSI);
                 break;
             case IndexMenuController.Indexes.WR:
                 trendChartCfg.setSubIndex(ChartCfg.INDEX_WR);
-                klineChartCfg.setMainIndex(ChartCfg.INDEX_WR);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_WR);
                 break;
         }
         mTrend.notifyCfgChanged();

@@ -12,13 +12,15 @@ public class ChartCfg {
 
     private int mBaseLines;
     private int mVolBaseLines;
+    private int mSubBaseLines;
     private boolean mVolEnable;
     private int mNumberScale;
     private int mXAxis;
     private boolean mEnableDrag;
     private boolean mEnableCrossLine;
     private float[] mBaseLineArray;
-    private double[] mIndexesBaseLineArray;
+    private double[] mVolBaseLineArray;
+    private float[] mSubBaseLineArray;
     private float mViewScale;
     private int mMainIndex;
     private int mSubIndex;
@@ -26,6 +28,7 @@ public class ChartCfg {
     public void setChartCfg(ChartCfg cfg) {
         setBaseLines(cfg.getBaseLines());
         setVolBaseLines(cfg.getVolBaseLines());
+        setSubBaseLines(cfg.getSubBaseLines());
         setVolEnable(cfg.isVolEnable());
         setNumberScale(cfg.getNumberScale());
         setXAxis(cfg.getXAxis());
@@ -37,10 +40,12 @@ public class ChartCfg {
     public ChartCfg() {
         mBaseLines = 2;
         mVolBaseLines = 2;
+        mSubBaseLines = 2;
         mNumberScale = 2;
         mXAxis = 0;
         mBaseLineArray = new float[0];
-        mIndexesBaseLineArray = new double[0];
+        mVolBaseLineArray = new double[0];
+        mSubBaseLineArray = new float[0];
         mViewScale = 1;
         mMainIndex = INDEX_MA;
         mSubIndex = INDEX_NONE;
@@ -57,10 +62,17 @@ public class ChartCfg {
         }
     }
 
+    public void setSubBaseLines(int subBaseLines) {
+        mSubBaseLines = subBaseLines;
+        if (mSubBaseLineArray.length != subBaseLines) {
+            mSubBaseLineArray = new float[subBaseLines];
+        }
+    }
+
     public void setVolBaseLines(int volBaseLines) {
         mVolBaseLines = volBaseLines;
-        if (mIndexesBaseLineArray.length != volBaseLines) {
-            mIndexesBaseLineArray = new double[volBaseLines];
+        if (mVolBaseLineArray.length != volBaseLines) {
+            mVolBaseLineArray = new double[volBaseLines];
         }
     }
 
@@ -72,12 +84,20 @@ public class ChartCfg {
         return mVolBaseLines;
     }
 
+    public int getSubBaseLines() {
+        return mSubBaseLines;
+    }
+
     public float[] getBaseLineArray() {
         return mBaseLineArray;
     }
 
     public double[] getVolBaseLineArray() {
-        return mIndexesBaseLineArray;
+        return mVolBaseLineArray;
+    }
+
+    public float[] getSubBaseLineArray() {
+        return mSubBaseLineArray;
     }
 
     public boolean isVolEnable() {
@@ -90,10 +110,6 @@ public class ChartCfg {
 
     public boolean isSubIndexEnable() {
         return mSubIndex > 0;
-    }
-
-    public boolean isMainIndexEnable() {
-        return mMainIndex > 0;
     }
 
     public int getNumberScale() {

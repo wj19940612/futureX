@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -209,28 +210,36 @@ public abstract class BaseChart extends View {
         }
 
         calculateBaseLines(mChartCfg.getBaseLineArray());
+
         drawBaseLines(mChartCfg.getBaseLineArray(), left, top, width, mMainChartHeight, canvas);
-
-        int volTop = -1;
-        if (mChartCfg.isVolEnable()) {
-            volTop = top + mMainChartHeight + mTimeLineHeight;
-
-            calculateVolBaseLines(mChartCfg.getVolBaseLineArray());
-            drawVolBaseLines(mChartCfg.getVolBaseLineArray(), left, volTop, width, mVolChartHeight, canvas);
-        }
-
-        drawData(left, top, width, mMainChartHeight, mChartCfg.isVolEnable(), volTop, mVolChartHeight, canvas);
+        drawMainData(left, top, width, mMainChartHeight, canvas);
+        drawMainIndex(left, top, width, mMainChartHeight, mTouchIndex, canvas);
 
         drawTimeLine(left, top + mMainChartHeight, width, mTimeLineHeight, canvas);
 
-        drawIndex(left, top, width, mMainChartHeight, mTimeLineHeight, mVolChartHeight, mSubChartHeight, canvas);
+        int volTop = -1;
+        if (mChartCfg.isVolEnable()) {
+            calculateVolBaseLines(mChartCfg.getVolBaseLineArray());
+
+            volTop = top + mMainChartHeight + mTimeLineHeight;
+            drawVolBaseLines(mChartCfg.getVolBaseLineArray(), left, volTop, width, mVolChartHeight, canvas);
+            drawVolData(left, volTop, width, mVolChartHeight, mTouchIndex, canvas);
+        }
+
+        int subChartTop = -1;
+        if (mChartCfg.isSubIndexEnable()) {
+            calculateSubBaseLines(mChartCfg.getSubBaseLineArray());
+
+            subChartTop = top + mMainChartHeight + mTimeLineHeight + mVolChartHeight;
+            drawSubBaseLines(mChartCfg.getSubBaseLineArray(), left, subChartTop, width, mSubChartHeight, canvas);
+            drawSubIndexData(left, subChartTop, width, mSubChartHeight, mTouchIndex, canvas);
+        }
 
         if (mTouchIndex >= 0) {
             if (mChartCfg.isEnableCrossLine()) {
-                drawCrossLines(mChartCfg.isVolEnable(), mTouchIndex,
-                        left, top, width, mMainChartHeight,
-                        left, volTop, width, mVolChartHeight,
-                        canvas);
+                drawCrossLines(mTouchIndex, left, top, width, mMainChartHeight,
+                        mChartCfg.isVolEnable(), volTop, mVolChartHeight,
+                        mChartCfg.isSubIndexEnable(), subChartTop, mSubChartHeight, canvas);
 
                 onCrossLinesAppear(mTouchIndex);
             }
@@ -376,6 +385,7 @@ public abstract class BaseChart extends View {
         int newTouchIndex = calculateTouchIndex(event);
         if (newTouchIndex != mTouchIndex && checkTouchIndexValid(newTouchIndex)) {
             mTouchIndex = newTouchIndex;
+            Log.d("Temp", "triggerCrossLinesRedraw: " + mTouchIndex); // todo remove later
             redraw();
             return true;
         }
@@ -403,24 +413,44 @@ public abstract class BaseChart extends View {
     }
 
     /**
-     * draw touch lines, total area of top without middle
+     * draw touch lines, main chart
      *
-     * @param indexesEnable
      * @param touchIndex
      * @param left
      * @param top
      * @param width
      * @param height
-     * @param left2
-     * @param volTop
-     * @param width2
-     * @param volHeight
      * @param canvas
      */
-    protected void drawCrossLines(boolean indexesEnable, int touchIndex,
-                                  int left, int top, int width, int height,
-                                  int left2, int volTop, int width2, int volHeight,
-                                  Canvas canvas) {
+    protected void drawCrossLines(int touchIndex, int left, int top, int width, int height,
+                                  boolean volEnable, int volTop, int volHeight,
+                                  boolean subIndexEnable, int subChartTop, int subChartHeight, Canvas canvas) {
+    }
+
+    /**
+     * draw touch lines, sub-chart
+     *
+     * @param touchIndex
+     * @param left
+     * @param subChartTop
+     * @param width
+     * @param subChartHeight
+     * @param canvas
+     */
+    private void drawSubChartCrossLines(int touchIndex, int left, int subChartTop, int width, int subChartHeight, Canvas canvas) {
+    }
+
+    /**
+     * draw touch lines, vol area
+     *
+     * @param touchIndex
+     * @param left
+     * @param volTop
+     * @param width
+     * @param volChartHeight
+     * @param canvas
+     */
+    private void drawVolCrossLines(int touchIndex, int left, int volTop, int width, int volChartHeight, Canvas canvas) {
     }
 
     protected void onCrossLinesAppear(int touchIndex) {
@@ -429,9 +459,27 @@ public abstract class BaseChart extends View {
     protected void onCrossLinesDisappear(int touchIndex) {
     }
 
+    /**
+     * calculate main chart baselines
+     *
+     * @param baselines
+     */
     protected abstract void calculateBaseLines(float[] baselines);
 
+    /**
+     * calculate Vol chart baselines
+     *
+     * @param indexesBaseLines
+     */
     protected void calculateVolBaseLines(double[] indexesBaseLines) {
+    }
+
+    /**
+     * calculate Sub chart baselines
+     *
+     * @param subBaseLineArray
+     */
+    private void calculateSubBaseLines(float[] subBaseLineArray) {
     }
 
     /**
@@ -460,6 +508,43 @@ public abstract class BaseChart extends View {
     }
 
     /**
+     * draw vol data
+     *
+     * @param left
+     * @param volTop
+     * @param width
+     * @param volChartHeight
+     * @param canvas
+     */
+    protected void drawVolData(int left, int volTop, int width, int volChartHeight, int touchIndex, Canvas canvas) {
+    }
+
+    /**
+     * draw sub chart baselines
+     *
+     * @param subBaseLineArray
+     * @param left
+     * @param subTop
+     * @param width
+     * @param subChartHeight
+     * @param canvas
+     */
+    private void drawSubBaseLines(float[] subBaseLineArray, int left, int subTop, int width, int subChartHeight, Canvas canvas) {
+    }
+
+    /**
+     * draw sub-chart index data
+     *
+     * @param left
+     * @param subChartTop
+     * @param width
+     * @param subChartHeight
+     * @param canvas
+     */
+    protected void drawSubIndexData(int left, int subChartTop, int width, int subChartHeight, int touchIndex, Canvas canvas) {
+    }
+
+    /**
      * draw real time data
      *
      * @param left
@@ -468,8 +553,7 @@ public abstract class BaseChart extends View {
      * @param height
      * @param canvas
      */
-    protected abstract void drawData(int left, int top, int width, int height, boolean volEnable,
-                                     int volTop, int volHeight, Canvas canvas);
+    protected abstract void drawMainData(int left, int top, int width, int height, Canvas canvas);
 
     /**
      * draw real unstable data
@@ -489,15 +573,14 @@ public abstract class BaseChart extends View {
                                     int left, int top, int width, int topPartHeight,
                                     int left2, int top2, int width1, int bottomPartHeight,
                                     Canvas canvas) {
-
     }
 
 
     /**
      * draw time line
      *
-     * @param left   the left(x) coordinate of time line text
-     * @param top    the top(y coordinate）of time line text
+     * @param left           the left(x) coordinate of time line text
+     * @param top            the top(y coordinate）of time line text
      * @param width
      * @param timeLineHeight
      * @param canvas
@@ -511,14 +594,10 @@ public abstract class BaseChart extends View {
      * @param top
      * @param width
      * @param mainChartHeight
-     * @param timeLineHeight
-     * @param volChartHeight
-     * @param subChartHeight
+     * @param touchIndex
      * @param canvas
      */
-    protected abstract void drawIndex(int left, int top, int width,
-                                      int mainChartHeight, int timeLineHeight, int volChartHeight, int subChartHeight,
-                                      Canvas canvas);
+    protected abstract void drawMainIndex(int left, int top, int width, int mainChartHeight, int touchIndex, Canvas canvas);
 
     /**
      * 返回主图部分
@@ -614,6 +693,10 @@ public abstract class BaseChart extends View {
                 (indexesBaseLines[0] - indexesBaseLines[indexesBaseLines.length - 1]) * height);
 
         return chartY + getPaddingTop() + getMainChartHeight() + mTimeLineHeight;
+    }
+
+    protected float getSubChartY(double y) {
+        return 0;
     }
 
     /**
