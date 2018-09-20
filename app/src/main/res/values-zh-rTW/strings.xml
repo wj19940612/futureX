@@ -812,4 +812,17 @@
     <string name="pause_trade">暫停交易</string>
 
     <string name="require_cash_pwd">需要設置資金密碼</string>
+
+    <string-array name="buy_sell">
+        <item>@string/buy_in</item>
+        <item>@string/sell_out</item>
+    </string-array>
+
+    <string-array name="check_market">
+        <item>@string/limit_price</item>
+        <item>@string/market_price</item>
+    </string-array>
+
+    <string name="quick_exchange">快捷幣幣交易</string>
+    <string name="invalid_qr_code">二維碼無效</string>
 </resources>

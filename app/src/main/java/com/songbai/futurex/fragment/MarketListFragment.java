@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import sbai.com.glide.GlideApp;
 
 /**
  * Modified by john on 2018/8/22
@@ -305,7 +307,7 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                 final Groupable item = getItem(position);
                 if (item instanceof CurrencyPair) {
                     final CurrencyPair pair = (CurrencyPair) item;
-                    ((ViewHolder) holder).bind(position,pair, mMarketDataList, mContext, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()), mPairsSet);
+                    ((ViewHolder) holder).bind(position, pair, mMarketDataList, mContext, mKTrendListMap == null ? null : mKTrendListMap.get(pair.getPairs()), mPairsSet);
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -330,13 +332,15 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
             TextView mPriceChange;
             @BindView(R.id.chart)
             TimeShareChart mTimeShareChart;
+            @BindView(R.id.coinIcon)
+            ImageView mCoinIcon;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind(int position,CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends, Set<String> pairsSet) {
+            public void bind(int position, CurrencyPair pair, Map<String, MarketData> marketDataList, Context context, List<KTrend> mKTrends, Set<String> pairsSet) {
                 double upDropSeed;
                 mBaseCurrency.setText(pair.getPrefixSymbol().toUpperCase());
                 mCounterCurrency.setText(pair.getSuffixSymbol().toUpperCase());
@@ -362,12 +366,13 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                     }
                 }
 
+                GlideApp.with(context).load(pair.getImage()).placeholder(R.drawable.ic_default_head_portrait).into(mCoinIcon);
 
                 if (!pairsSet.contains(pair.getPairs())) {
                     mTimeShareChart.updateData(pair.getPairs(), mKTrends, upDropSeed);
                     pairsSet.add(pair.getPairs());
                 } else {
-                    mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
+                    mTimeShareChart.justDraw(pair.getPairs(), upDropSeed);
                 }
             }
 
@@ -394,7 +399,7 @@ public class MarketListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                     }
                 }
 
-                mTimeShareChart.justDraw(pair.getPairs(),upDropSeed);
+                mTimeShareChart.justDraw(pair.getPairs(), upDropSeed);
             }
         }
 

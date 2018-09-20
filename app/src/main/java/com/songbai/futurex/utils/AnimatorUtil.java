@@ -1,9 +1,11 @@
 package com.songbai.futurex.utils;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 /**
  * @author yangguangda
@@ -166,6 +168,100 @@ public class AnimatorUtil {
             }
         });
         valueAnimator.start();
+    }
+
+    public interface OnStartAndListener {
+        public void onStart(Animator animation);
+
+        public void onEnd(Animator animation);
+    }
+
+    //从底部上浮，并非展开(开始动画前控件的marginBottom使得它在底部)
+    public static ValueAnimator flowView(final View view, final OnStartAndListener onStartAndListener) {
+        int height = view.getMeasuredHeight();
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(height, 0);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+//                mTradeLayout.setTranslationY(-value);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                layoutParams.setMargins(0, 0, 0, (int) -value);
+                view.requestLayout();
+            }
+        });
+
+        valueAnimator.addListener(new ValueAnimator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (onStartAndListener != null) {
+                    onStartAndListener.onStart(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (onStartAndListener != null) {
+                    onStartAndListener.onEnd(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        valueAnimator.setDuration(200);
+        return valueAnimator;
+    }
+
+    //下沉到底部，并非收缩(最后动画前控件的marginBottom使得它在底部)
+    public static ValueAnimator sinkView(final View view, final OnStartAndListener onStartAndListener) {
+        int height = view.getMeasuredHeight();
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, height);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+//                mTradeLayout.setTranslationY(-value);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                layoutParams.setMargins(0, 0, 0, (int) -value);
+                view.requestLayout();
+            }
+        });
+
+        valueAnimator.addListener(new ValueAnimator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (onStartAndListener != null) {
+                    onStartAndListener.onStart(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (onStartAndListener != null) {
+                    onStartAndListener.onEnd(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        valueAnimator.setDuration(200);
+        return valueAnimator;
     }
 
     private static void setHeight(View view, int height) {

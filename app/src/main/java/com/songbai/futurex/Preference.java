@@ -19,6 +19,7 @@ public class Preference {
         String LANGUAGE_STR = "language_str";
         String SYS_MODEL = "sys_model";
         String PRICING_METHOD = "pricing_method";
+        String FAST_TRADE = "fast_trade";
     }
 
     private static Preference sInstance;
@@ -155,5 +156,13 @@ public class Preference {
 
     public String getPricingMethod() {
         return mPrefs.getString(Key.PRICING_METHOD, "cny");
+    }
+
+    public boolean isQuickExchange() {
+        return mPrefs.getBoolean(Key.FAST_TRADE, false);
+    }
+
+    public void setQuickExchange(boolean fastTrade) {
+        apply(Key.FAST_TRADE, fastTrade);
     }
 }

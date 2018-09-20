@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
@@ -45,7 +46,10 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     TextView mLogout;
     @BindView(R.id.pricingMethod)
     IconTextRow mPricingMethod;
+    @BindView(R.id.quickBtn)
+    ImageView mQuickBtn;
     private Unbinder mBind;
+
 
     @Nullable
     @Override
@@ -81,6 +85,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 break;
             default:
         }
+        initView();
     }
 
     private void setOriginLanguageText(ArrayList<SupportLang> data) {
@@ -112,13 +117,17 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 }).fireFreely();
     }
 
+    private void initView() {
+        mQuickBtn.setSelected(Preference.get().isQuickExchange());
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
     }
 
-    @OnClick({R.id.language, R.id.pricingMethod, R.id.aboutUs, R.id.feedback, R.id.logout})
+    @OnClick({R.id.language, R.id.pricingMethod, R.id.aboutUs, R.id.feedback, R.id.logout, R.id.quickBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.language:
@@ -136,8 +145,18 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
             case R.id.logout:
                 showLogoutView();
                 break;
+            case R.id.quickBtn:
+                clickQuickBtn();
+                break;
             default:
         }
+    }
+
+    private void clickQuickBtn() {
+        mQuickBtn.setEnabled(false);
+        Preference.get().setQuickExchange(!mQuickBtn.isSelected());
+        mQuickBtn.setSelected(!mQuickBtn.isSelected());
+        mQuickBtn.setEnabled(true);
     }
 
     private void showLogoutView() {
