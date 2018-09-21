@@ -853,4 +853,7 @@
     <string name="transfer_now">立即劃轉</string>
     <string name="otc_balance_not_enough_hint_x">請先將幣幣賬戶%1$s餘額劃轉至法幣賬戶後繼續賣出。</string>
     <string name="equivalent_x_x">≈%1$s%2$s</string>
+    <string name="switch_host">切換環境</string>
+    <string name="pro">正式</string>
+    <string name="test">測試</string>
 </resources>

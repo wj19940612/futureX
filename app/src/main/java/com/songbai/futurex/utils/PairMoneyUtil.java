@@ -23,6 +23,9 @@ public class PairMoneyUtil {
     }
 
     public static double getPrice(PairsPrice btc) {
+        if (btc == null) {
+            return 0;
+        }
         String pricingMethod = Preference.get().getPricingMethod();
         switch (pricingMethod) {
             case "cny":

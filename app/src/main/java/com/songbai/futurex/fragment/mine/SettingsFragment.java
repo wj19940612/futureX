@@ -1,16 +1,24 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -51,6 +59,14 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     ImageView mQuickBtn;
     @BindView(R.id.pushBtn)
     ImageView mPushBtn;
+    @BindView(R.id.hostGroup)
+    LinearLayout mHostGroup;
+    @BindView(R.id.radioGroup)
+    RadioGroup mRadioGroup;
+    @BindView(R.id.pro)
+    RadioButton mPro;
+    @BindView(R.id.test)
+    RadioButton mTest;
     private Unbinder mBind;
 
 
@@ -69,9 +85,9 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mLogout.setVisibility(LocalUser.getUser().isLogin() ? View.VISIBLE : View.GONE);
-        String currentLangageStr = Preference.get().getCurrentLangageStr();
-        if (!TextUtils.isEmpty(currentLangageStr)) {
-            mLanguage.setSubText(currentLangageStr);
+        String currentLanguageStr = Preference.get().getCurrentLangageStr();
+        if (!TextUtils.isEmpty(currentLanguageStr)) {
+            mLanguage.setSubText(currentLanguageStr);
         } else {
             getSupportLocal();
         }
@@ -89,6 +105,42 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
             default:
         }
         initView();
+        switchHostInAlpha();
+    }
+
+    private void switchHostInAlpha() {
+        if ("alpha".equals(BuildConfig.FLAVOR)) {
+            mTest.setChecked("ex.esongbai.xyz".equals(Preference.get().getAlphaHost()));
+            mPro.setChecked(!"ex.esongbai.xyz".equals(Preference.get().getAlphaHost()));
+        }
+        mHostGroup.setVisibility("alpha".equals(BuildConfig.FLAVOR) ? View.VISIBLE : View.GONE);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.pro:
+                        Log.e("wtf", "onCheckedChanged:pro " + checkedId);
+                        Preference.get().setAlphaHost("m.bitfutu.re");
+                        restart();
+                        break;
+                    case R.id.test:
+                        Log.e("wtf", "onCheckedChanged:test " + checkedId);
+                        Preference.get().setAlphaHost("ex.esongbai.xyz");
+                        restart();
+                        break;
+                    default:
+                }
+            }
+        });
+    }
+
+    public void restart() {
+        Intent intent = getActivity().getPackageManager()
+                .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+        PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager mgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 0.1秒钟后重启应用
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     private void setOriginLanguageText(ArrayList<SupportLang> data) {

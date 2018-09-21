@@ -19,6 +19,7 @@ import com.sbai.httplib.ReqParams;
 import com.sbai.httplib.RequestManager;
 import com.songbai.futurex.App;
 import com.songbai.futurex.BuildConfig;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.utils.AppInfo;
 import com.songbai.futurex.utils.LanguageUtils;
@@ -288,6 +289,13 @@ public class Api extends RequestManager {
     public static String getFixedHost() {
         if (!TextUtils.isEmpty(FIXED_HOST)) {
             return FIXED_HOST;
+        }
+        // 测试包切换环境
+        if ("alpha".equals(BuildConfig.FLAVOR)) {
+            if (!BuildConfig.IS_PROD) {
+                return "http://" + Preference.get().getAlphaHost();
+            }
+            return "https://" + Preference.get().getAlphaHost();
         }
 
         if (!BuildConfig.IS_PROD) {

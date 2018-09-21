@@ -20,6 +20,7 @@ public class Preference {
         String SYS_MODEL = "sys_model";
         String PRICING_METHOD = "pricing_method";
         String FAST_TRADE = "fast_trade";
+        String ALPHA_HOST = "alpha_host";
     }
 
     private static Preference sInstance;
@@ -47,6 +48,10 @@ public class Preference {
 
     private void apply(String key, String value) {
         getEditor().putString(key, value).apply();
+    }
+
+    private void commit(String key, String value) {
+        getEditor().putString(key, value).commit();
     }
 
     private void apply(String key, long value) {
@@ -164,5 +169,13 @@ public class Preference {
 
     public void setQuickExchange(boolean fastTrade) {
         apply(Key.FAST_TRADE, fastTrade);
+    }
+
+    public String getAlphaHost() {
+        return mPrefs.getString(Key.ALPHA_HOST, "ex.esongbai.xyz");
+    }
+
+    public void setAlphaHost(String host) {
+        commit(Key.ALPHA_HOST, host);
     }
 }

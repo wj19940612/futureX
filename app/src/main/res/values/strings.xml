@@ -862,4 +862,7 @@
 
     <string name="quick_exchange">快捷币币交易</string>
     <string name="invalid_qr_code">二维码无效</string>
+    <string name="switch_host">切换环境</string>
+    <string name="pro">正式</string>
+    <string name="test">测试</string>
 </resources>
