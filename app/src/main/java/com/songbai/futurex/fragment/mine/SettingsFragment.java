@@ -18,6 +18,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.SupportLang;
 import com.songbai.futurex.utils.LanguageUtils;
@@ -48,6 +49,8 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     IconTextRow mPricingMethod;
     @BindView(R.id.quickBtn)
     ImageView mQuickBtn;
+    @BindView(R.id.pushBtn)
+    ImageView mPushBtn;
     private Unbinder mBind;
 
 
@@ -119,6 +122,14 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
 
     private void initView() {
         mQuickBtn.setSelected(Preference.get().isQuickExchange());
+        LocalUser localUser = LocalUser.getUser();
+        if (localUser.isLogin()) {
+            UserInfo userInfo = localUser.getUserInfo();
+            mPushBtn.setVisibility(View.VISIBLE);
+            mPushBtn.setSelected(userInfo.getEntrustPush() == 1);
+        } else {
+            mPushBtn.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -127,7 +138,8 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.language, R.id.pricingMethod, R.id.aboutUs, R.id.feedback, R.id.logout, R.id.quickBtn})
+    @OnClick({R.id.language, R.id.pricingMethod, R.id.aboutUs, R.id.feedback, R.id.logout, R.id.quickBtn,
+            R.id.pushBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.language:
@@ -148,8 +160,27 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
             case R.id.quickBtn:
                 clickQuickBtn();
                 break;
+            case R.id.pushBtn:
+                clickPushBtn();
+                break;
             default:
         }
+    }
+
+    private void clickPushBtn() {
+        mPushBtn.setEnabled(false);
+        Apic.turnRemindingPush(mPushBtn.isSelected() ? 0 : 1).callback(new Callback<Resp>() {
+            @Override
+            protected void onRespSuccess(Resp resp) {
+                mPushBtn.setSelected(!mPushBtn.isSelected());
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                mPushBtn.setEnabled(true);
+            }
+        }).fire();
     }
 
     private void clickQuickBtn() {

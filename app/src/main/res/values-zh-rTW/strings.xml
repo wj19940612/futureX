@@ -60,8 +60,8 @@
 
     <string name="click_login">點擊登錄</string>
     <string name="property">我的資產</string>
-    <string name="trade_order_log">幣幣交易歷史</string>
-    <string name="legal_currency_trade_order">法幣交易訂單</string>
+    <string name="trade_order_log">委託記錄</string>
+    <string name="legal_currency_trade_order">法幣訂單</string>
     <string name="invite">邀請返傭</string>
     <string name="invite_friends_can_get">邀請好友可獲傭</string>
     <string name="message_center">消息中心</string>
@@ -825,4 +825,32 @@
 
     <string name="quick_exchange">快捷幣幣交易</string>
     <string name="invalid_qr_code">二維碼無效</string>
+    <string name="pricing_method">計價方式</string>
+    <string name="cny_with_symbol">人民幣(CNY)</string>
+    <string name="cny">人民幣</string>
+    <string name="usd">美元</string>
+    <string name="twd">新臺幣</string>
+    <string name="usd_with_symbol">美元</string>
+    <string name="twd_with_symbol">新臺幣</string>
+    <string name="transfer_coin">轉幣</string>
+    <string name="legal_currency_balance">法幣賬戶餘額(%1$s)：%2$s</string>
+    <string name="buyer">買家</string>
+    <string name="seller">賣家</string>
+    <string name="otc">法幣交易</string>
+    <string name="equivalent_x">摺合%1$s</string>
+    <string name="order_info">訂單信息</string>
+    <string name="trader_x">交易對象：%1$s</string>
+    <string name="buy_price_x">買入單價：%1$s</string>
+    <string name="buy_amount_x">買入數量：%1$s</string>
+    <string name="sell_price_x">賣出單價：%1$s</string>
+    <string name="sell_amount_x">賣出數量：%1$s</string>
+    <string name="deal_amount_x">交易金額：%1$s</string>
+    <string name="otc_deal_fee_x">交易手續費：%1$s</string>
+    <string name="total_deal_amount_x">實際交易金額：%1$s</string>
+    <string name="confirm_buy">確認買入</string>
+    <string name="confirm_sell">確認賣出</string>
+    <string name="otc_balance_not_enough">法幣賬戶餘額不足</string>
+    <string name="transfer_now">立即劃轉</string>
+    <string name="otc_balance_not_enough_hint_x">請先將幣幣賬戶%1$s餘額劃轉至法幣賬戶後繼續賣出。</string>
+    <string name="equivalent_x_x">≈%1$s%2$s</string>
 </resources>

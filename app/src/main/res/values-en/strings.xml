@@ -823,4 +823,12 @@
 
     <string name="quick_exchange">Quick Exchange</string>
     <string name="invalid_qr_code">Invalid QR code</string>
+    <string name="pricing_method">"Price currency "</string>
+    <string name="twd">TWD</string>
+    <string name="usd">USD</string>
+    <string name="cny">RMB</string>
+    <string name="twd_with_symbol">TWD</string>
+    <string name="usd_with_symbol">USD</string>
+    <string name="cny_with_symbol">RMB</string>
+    <string name="equivalent_x_x">≈%1$s%2$s</string>
 </resources>
