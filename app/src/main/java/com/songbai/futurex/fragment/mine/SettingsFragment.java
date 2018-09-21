@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,12 +118,10 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.pro:
-                        Log.e("wtf", "onCheckedChanged:pro " + checkedId);
                         Preference.get().setAlphaHost("m.bitfutu.re");
                         restart();
                         break;
                     case R.id.test:
-                        Log.e("wtf", "onCheckedChanged:test " + checkedId);
                         Preference.get().setAlphaHost("ex.esongbai.xyz");
                         restart();
                         break;
