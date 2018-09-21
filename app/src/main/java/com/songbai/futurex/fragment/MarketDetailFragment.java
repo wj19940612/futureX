@@ -715,6 +715,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         ChartCfg klineCfg = mKline.getChartCfg();
         klineCfg.setBaseLines(6);
         klineCfg.setVolBaseLines(2);
+        klineCfg.setSubBaseLines(2);
         klineCfg.setXAxis(45);
         klineCfg.setNumberScale(mPairDesc.getPairs().getPricePoint());
         klineCfg.setEnableCrossLine(true);
@@ -732,6 +733,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         klineColor.setMaColor(5, Color.parseColor("#1A7AD5"));
         klineColor.setMaColor(10, Color.parseColor("#FFB405"));
         klineColor.setMaColor(30, Color.parseColor("#7C3BB9"));
+        klineColor.setIndexLinesColor(0, Color.parseColor("#1A7AD5"));
+        klineColor.setIndexLinesColor(1, Color.parseColor("#FFB405"));
+        klineColor.setIndexLinesColor(2, Color.parseColor("#7C3BB9"));
 
         mKline.setOnCrossLineAppearListener(new Kline.OnCrossLineAppearListener() {
             @Override

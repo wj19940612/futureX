@@ -37,6 +37,7 @@ public abstract class BaseChart extends View {
     private static final int HEIGHT_TIME_LINE_DP = 30;
     private static final int HEIGHT_MAIN_CHART = 240;
     private static final int HEIGHT_VOL_CHART = 70;
+    private static final int HEIGHT_SUB_CHART_TOP_MARGIN = 10;
     private static final int HEIGHT_SUB_CHART = 90;
 
     private static final int WHAT_LONG_PRESS = 1;
@@ -71,6 +72,7 @@ public abstract class BaseChart extends View {
     protected int mTimeLineHeight;
     protected int mMainChartHeight;
     protected int mVolChartHeight;
+    protected int mSubChartTopMarginHeight;
     protected int mSubChartHeight;
 
     private int mXRectPadding;
@@ -131,6 +133,7 @@ public abstract class BaseChart extends View {
         mTimeLineHeight = (int) dp2Px(HEIGHT_TIME_LINE_DP);
         mMainChartHeight = (int) dp2Px(HEIGHT_MAIN_CHART);
         mVolChartHeight = (int) dp2Px(HEIGHT_VOL_CHART);
+        mSubChartTopMarginHeight = (int) dp2Px(HEIGHT_SUB_CHART_TOP_MARGIN);
         mSubChartHeight = (int) dp2Px(HEIGHT_SUB_CHART);
 
         // gesture
@@ -177,7 +180,7 @@ public abstract class BaseChart extends View {
         }
 
         if (mChartCfg.isSubIndexEnable()) {
-            height += mSubChartHeight;
+            height += mSubChartTopMarginHeight + mSubChartHeight;
         }
         return height;
     }
@@ -230,7 +233,7 @@ public abstract class BaseChart extends View {
         if (mChartCfg.isSubIndexEnable()) {
             calculateSubBaseLines(mChartCfg.getSubBaseLineArray());
 
-            subChartTop = top + mMainChartHeight + mTimeLineHeight + mVolChartHeight;
+            subChartTop = top + mMainChartHeight + mTimeLineHeight + mVolChartHeight + mSubChartTopMarginHeight;
             drawSubBaseLines(mChartCfg.getSubBaseLineArray(), left, subChartTop, width, mSubChartHeight, canvas);
             drawSubIndexData(left, subChartTop, width, mSubChartHeight, mTouchIndex, canvas);
         }
@@ -479,7 +482,7 @@ public abstract class BaseChart extends View {
      *
      * @param subBaseLineArray
      */
-    private void calculateSubBaseLines(float[] subBaseLineArray) {
+    protected void calculateSubBaseLines(float[] subBaseLineArray) {
     }
 
     /**
@@ -529,7 +532,7 @@ public abstract class BaseChart extends View {
      * @param subChartHeight
      * @param canvas
      */
-    private void drawSubBaseLines(float[] subBaseLineArray, int left, int subTop, int width, int subChartHeight, Canvas canvas) {
+    protected void drawSubBaseLines(float[] subBaseLineArray, int left, int subTop, int width, int subChartHeight, Canvas canvas) {
     }
 
     /**
@@ -695,8 +698,17 @@ public abstract class BaseChart extends View {
         return chartY + getPaddingTop() + getMainChartHeight() + mTimeLineHeight;
     }
 
-    protected float getSubChartY(double y) {
-        return 0;
+    protected float getSubChartY(float y) {
+        float[] subBaseLineArray = mChartCfg.getSubBaseLineArray();
+
+        // When values beyond indexes baselines, eg. mv. return -1
+        if (y > subBaseLineArray[0] || y < subBaseLineArray[subBaseLineArray.length - 1]) {
+            return -1;
+        }
+
+        int height = mSubChartHeight;
+        y = (subBaseLineArray[0] - y) / (subBaseLineArray[0] - subBaseLineArray[subBaseLineArray.length - 1]) * height;
+        return y + getPaddingTop() + mMainChartHeight + mTimeLineHeight + mVolChartHeight + mSubChartTopMarginHeight;
     }
 
     /**

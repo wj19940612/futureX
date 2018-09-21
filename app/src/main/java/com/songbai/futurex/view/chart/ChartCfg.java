@@ -38,9 +38,9 @@ public class ChartCfg {
     }
 
     public ChartCfg() {
-        mBaseLines = 2;
-        mVolBaseLines = 2;
-        mSubBaseLines = 2;
+        mBaseLines = 0;
+        mVolBaseLines = 0;
+        mSubBaseLines = 0;
         mNumberScale = 2;
         mXAxis = 0;
         mBaseLineArray = new float[0];
