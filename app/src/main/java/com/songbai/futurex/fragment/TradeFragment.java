@@ -789,6 +789,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
                         mWid = "";
                         requestOrderList();
                         ToastUtil.show(R.string.entrust_success);
+                        mTradeLayout.resetMakeOrder();
                     }
 
                     @Override

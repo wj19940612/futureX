@@ -96,8 +96,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.UniqueActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.auth.LoginActivity"
             android:launchMode="singleTop"

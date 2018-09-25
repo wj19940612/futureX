@@ -259,6 +259,9 @@ public class FastTradingView extends LinearLayout {
     private void updateVolumeInputView(int progress, int max) {
         if (progress > 0) {
             mVolumeInput.setVolume(FinanceUtil.subZeroAndDot(mTradeCurrencyVolume * progress / max, 100));
+        }else{
+            mVolumeInput.reset();
+            resetTradeAmount();
         }
     }
 
@@ -301,7 +304,6 @@ public class FastTradingView extends LinearLayout {
         mVolumeInput.setVolumeScale(pairDesc.getPrefixSymbol().getBalancePoint());
         mChangePriceView.setPriceScale(currencyPair.getMaxPoint());
 
-        mTradeTypeValue = LIMIT_TRADE;
         updateTradeDirectionView();
 
         mVolumeInput.setBaseCurrency(currencyPair.getPrefixSymbol().toUpperCase());
@@ -542,10 +544,9 @@ public class FastTradingView extends LinearLayout {
         if (mOnFastTradeClickListener != null) {
             mOnFastTradeClickListener.onMakeOrder(makeOrder);
         }
-        resetMakeOrder();
     }
 
-    private void resetMakeOrder() {
+    public void resetMakeOrder() {
         mVolumeInput.reset();
         mPercentSelectView.reset();
     }

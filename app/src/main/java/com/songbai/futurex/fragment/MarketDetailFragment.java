@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -184,6 +185,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initTitleBar();
 
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
@@ -658,6 +660,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespSuccess(Resp resp) {
                         ToastUtil.show(R.string.entrust_success);
+                        mTradeLayout.resetMakeOrder();
                         if (mTradeLayout.getViewStatus() != FastTradingView.VIEW_SINKING) {
                             sinkAnim();
                         }
