@@ -1,11 +1,8 @@
 package com.songbai.futurex.view;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-
-import com.songbai.futurex.utils.DateUtil;
 
 /**
  * @author YangGuangda
@@ -21,10 +18,14 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
     private Long mCloseTime = System.currentTimeMillis();
     private CountDownState mCountDownState = CountDownState.stopped;
     private OnStateChangeListener mOnStateChangeListener;
-    int textWrapper;
+    private SetTextCallback mSetTextCallback;
 
     public void setOnStateChangeListener(OnStateChangeListener onStateChangeListener) {
         mOnStateChangeListener = onStateChangeListener;
+    }
+
+    public void setSetTextCallback(SetTextCallback setTextCallback) {
+        mSetTextCallback = setTextCallback;
     }
 
     public enum CountDownState {
@@ -37,13 +38,6 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
 
     public TimerTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-//        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerTextView);
-//        textWrapper = typedArray.getResourceId(R.styleable.TimerTextView_ttvTextWrapper, 0);
-//        typedArray.recycle();
-    }
-
-    public void setTextWrapper(@StringRes int textWrapper) {
-        this.textWrapper = textWrapper;
     }
 
     public void setTimes(String time) {
@@ -56,6 +50,10 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
 
     public interface OnStateChangeListener {
         void onStateChange(CountDownState countDownState);
+    }
+
+    public interface SetTextCallback {
+        String getText(long diff);
     }
 
     public void removeOnStateChangeListener() {
@@ -114,29 +112,15 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
         removeCallbacks(this);
         if (run) {
             computeTime();
-            String strTime;
             if (mDiff < 1000) {
                 mDiff = 0;
-                strTime = DateUtil.format(mDiff, "mm:ss");
                 removeCallbacks(this);
                 run = false;
                 mCountDownState = CountDownState.closed;
-            } else if (mDiff < 60 * 60 * 1000) {
-                strTime = DateUtil.format(mDiff, "mm:ss");
-            } else if (mDiff < 24 * 60 * 60 * 1000) {
-                long hour = mDiff / (60 * 60 * 1000);
-                strTime = DateUtil.format(mDiff, ":mm:ss");
-                strTime = hour + strTime;
             } else {
-                long hour = mDiff / (60 * 60 * 1000);
-                strTime = DateUtil.format(mDiff, ":mm:ss");
-                strTime = hour + strTime;
-            }
-
-            if (textWrapper == 0) {
-                this.setText(strTime);
-            } else {
-                this.setText(getContext().getString(textWrapper, strTime));
+                if (mSetTextCallback != null) {
+                    this.setText(mSetTextCallback.getText(mDiff));
+                }
             }
             postDelayed(this, 1000);
             if (mOnStateChangeListener != null) {
@@ -144,6 +128,7 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
             }
         } else {
             removeCallbacks(this);
+            removeOnStateChangeListener();
         }
     }
 }

@@ -26,6 +26,7 @@ public class LegalCurrencyOrder {
     private String changeName;
     private String changePortrait;
     private String coinSymbol;
+    private long countDown;
     private int direct;
     private double fixedPrice;
     private String id;
@@ -61,6 +62,14 @@ public class LegalCurrencyOrder {
 
     public void setCoinSymbol(String coinSymbol) {
         this.coinSymbol = coinSymbol;
+    }
+
+    public long getCountDown() {
+        return countDown;
+    }
+
+    public void setCountDown(long countDown) {
+        this.countDown = countDown;
     }
 
     public int getDirect() {

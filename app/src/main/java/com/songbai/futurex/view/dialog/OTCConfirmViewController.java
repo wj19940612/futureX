@@ -14,7 +14,6 @@ import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.mine.CashPwdFragment;
 import com.songbai.futurex.model.PreTradeBean;
-import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 
@@ -40,8 +39,6 @@ public class OTCConfirmViewController extends SmartDialog.CustomViewController {
     TextView mPrice;
     @BindView(R.id.amount)
     TextView mAmount;
-    @BindView(R.id.dealAmount)
-    TextView mDealAmount;
     @BindView(R.id.fee)
     TextView mFee;
     @BindView(R.id.totalAmount)
@@ -75,9 +72,8 @@ public class OTCConfirmViewController extends SmartDialog.CustomViewController {
             mTrader.setText(mContext.getString(R.string.trader_x, data.getSellerName()));
             mPrice.setText(mContext.getString(mBuy ? R.string.buy_price_x : R.string.sell_price_x, data.getFixedPrice() + mSelectedLegalSymbol.toUpperCase() + "/" + mSelectedCoinSymbol.toUpperCase()));
             mAmount.setText(mContext.getString(mBuy ? R.string.buy_amount_x : R.string.sell_amount_x, data.getCoinCount() + mSelectedCoinSymbol.toUpperCase()));
-            mDealAmount.setText(mContext.getString(R.string.deal_amount_x, data.getOrderPrice() + mSelectedLegalSymbol.toUpperCase()));
-            mFee.setText(mContext.getString(R.string.otc_deal_fee_x, FinanceUtil.formatToPercentage(data.getRatio())));
-            mTotalAmount.setText(mContext.getString(R.string.total_deal_amount_x, data.getOrderAmount() + mSelectedLegalSymbol.toUpperCase()));
+            mFee.setText(mContext.getString(R.string.otc_deal_fee_x, data.getOrderRate() + mSelectedCoinSymbol.toUpperCase()));
+            mTotalAmount.setText(mContext.getString(R.string.total_deal_amount_x, (mBuy ? data.getOrderAmount() : data.getOrderPrice()) + mSelectedLegalSymbol.toUpperCase()));
             mConfirm.setText(mBuy ? R.string.confirm_buy : R.string.confirm_sell);
             mConfirm.setEnabled(checkConfirmButtonEnable());
         }

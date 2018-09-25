@@ -33,6 +33,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
+import com.songbai.futurex.view.TimerTextView;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -265,7 +266,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
             @BindView(R.id.userName)
             TextView mUserName;
             @BindView(R.id.status)
-            TextView mStatus;
+            TimerTextView mStatus;
             @BindView(R.id.dealType)
             TextView mDealType;
             @BindView(R.id.tradeCount)
@@ -307,7 +308,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
-                mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(),8));
+                mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(), 8));
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
@@ -316,6 +317,24 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                     case OTCOrderStatus.ORDER_UNPAIED:
                         mStatus.setText(R.string.unpaid);
                         mStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
+                        if (legalCurrencyOrder.getCountDown() > 0) {
+                            mStatus.setTimes(System.currentTimeMillis() + legalCurrencyOrder.getCountDown() * 1000);
+                            mStatus.setSetTextCallback(new TimerTextView.SetTextCallback() {
+                                @Override
+                                public String getText(long diff) {
+                                    return getString(R.string.unpaid_countdown, diff / 1000 / 60, diff / 1000 % 60);
+                                }
+                            });
+                            mStatus.setOnStateChangeListener(new TimerTextView.OnStateChangeListener() {
+                                @Override
+                                public void onStateChange(TimerTextView.CountDownState countDownState) {
+                                    if (countDownState == TimerTextView.CountDownState.closed) {
+                                        mStatus.setText(R.string.unpaid);
+                                    }
+                                }
+                            });
+                            mStatus.beginRun();
+                        }
                         break;
                     case OTCOrderStatus.ORDER_PAIED:
                         mStatus.setText(R.string.paid);

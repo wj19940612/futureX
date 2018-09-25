@@ -69,16 +69,6 @@
             tools:text="@string/sell_amount_x"/>
 
         <TextView
-            android:id="@+id/dealAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/text66"
-            android:textSize="13sp"
-            tools:text="@string/deal_amount_x"/>
-
-        <TextView
             android:id="@+id/fee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

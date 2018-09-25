@@ -856,4 +856,5 @@
     <string name="switch_host">切換環境</string>
     <string name="pro">正式</string>
     <string name="test">測試</string>
+    <string name="unpaid_countdown">待付款 (%1$d分:%2$d秒)</string>
 </resources>
