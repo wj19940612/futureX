@@ -27,7 +27,7 @@
     <string name="revoked">已撤單</string>
     <string name="part_deal_with_arrow">部分成交></string>
     <string name="system_revoked">系統撤單</string>
-    <string name="part_deal_part_revoked_with_arrow">部分成交已撤></string>
+    <string name="part_deal_part_revoked_with_arrow">部分成交已撤單></string>
     <string name="unknown_status">未知狀態</string>
 
     <!--委託單-->
@@ -826,12 +826,12 @@
     <string name="quick_exchange">快捷幣幣交易</string>
     <string name="invalid_qr_code">二維碼無效</string>
     <string name="pricing_method">計價方式</string>
-    <string name="cny_with_symbol">人民幣(CNY)</string>
+    <string name="cny_with_symbol">人民幣（CNY）</string>
     <string name="cny">人民幣</string>
     <string name="usd">美元</string>
     <string name="twd">新臺幣</string>
-    <string name="usd_with_symbol">美元</string>
-    <string name="twd_with_symbol">新臺幣</string>
+    <string name="usd_with_symbol">美元（USD）</string>
+    <string name="twd_with_symbol">新臺幣（TWD）</string>
     <string name="transfer_coin">轉幣</string>
     <string name="legal_currency_balance">法幣賬戶餘額(%1$s)：%2$s</string>
     <string name="buyer">買家</string>

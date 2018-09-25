@@ -92,44 +92,31 @@
         app:layout_constraintRight_toRightOf="parent"
         tools:text="买家"/>
 
-
-    <ImageView
-        android:id="@+id/headPortrait"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="2dp"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintLeft_toLeftOf="@id/buyText"
-        app:layout_constraintLeft_toRightOf="@id/userName"
-        app:layout_constraintRight_toLeftOf="@id/userName"
-        app:layout_constraintTop_toBottomOf="@id/buyText"/>
-
-    <ImageView
-        android:id="@+id/certification"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="26dp"
-        android:src="@drawable/ic_senior_star"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@id/headPortrait"
-        app:layout_constraintTop_toTopOf="@id/headPortrait"/>
-
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/traderInfo"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:textColor="@color/text22"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@id/headPortrait"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toRightOf="@id/headPortrait"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="end|center_vertical"
+        app:layout_constraintLeft_toLeftOf="@id/buyText"
         app:layout_constraintRight_toRightOf="@id/buyText"
-        app:layout_constraintTop_toTopOf="@id/headPortrait"
-        tools:text="用户306"/>
+        app:layout_constraintTop_toBottomOf="@id/buyText">
+
+        <ImageView
+            android:id="@+id/headPortrait"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/text22"
+            android:textSize="13sp"
+            tools:text="用户306"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tradeCount"

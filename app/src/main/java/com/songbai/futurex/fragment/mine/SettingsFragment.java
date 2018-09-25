@@ -90,6 +90,18 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
         } else {
             getSupportLocal();
         }
+        setPricingMethod();
+        initView();
+        switchHostInAlpha();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setPricingMethod();
+    }
+
+    private void setPricingMethod() {
         String pricingMethod = Preference.get().getPricingMethod();
         switch (pricingMethod) {
             case "cny":
@@ -103,8 +115,6 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 break;
             default:
         }
-        initView();
-        switchHostInAlpha();
     }
 
     private void switchHostInAlpha() {
@@ -132,11 +142,15 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     }
 
     public void restart() {
-        Intent intent = getActivity().getPackageManager()
-                .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+        LocalUser.getUser().logoutSYNC();
+        Preference.get().setOptionalListRefresh(true);
+        Preference.get().setPosterListRefresh(true);
+        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager mgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 0.1秒钟后重启应用
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), restartIntent); // 0.1秒钟后重启应用
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 

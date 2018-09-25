@@ -70,6 +70,10 @@ public class Preference {
         apply(Key.USER_JSON, userJson);
     }
 
+    public void setUserJsonSYNC(String userJson) {
+        commit(Key.USER_JSON, userJson);
+    }
+
     public String getUserJson() {
         return mPrefs.getString(Key.USER_JSON, null);
     }

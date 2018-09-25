@@ -44,6 +44,11 @@ public class LocalUser {
         Preference.get().setUserJson(userJson);
     }
 
+    private void saveToPreferenceSYNC() {
+        String userJson = new Gson().toJson(this);
+        Preference.get().setUserJsonSYNC(userJson);
+    }
+
     public void login() {
         mToken = CookieManger.getInstance().getNameValuePair("token");
     }
@@ -87,6 +92,12 @@ public class LocalUser {
         mUserInfo = null;
         mToken = null;
         saveToPreference();
+    }
+
+    public void logoutSYNC() {
+        mUserInfo = null;
+        mToken = null;
+        saveToPreferenceSYNC();
     }
 
     @Override

@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -263,8 +262,6 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
         class LegalCurrencyOrderHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.headPortrait)
             ImageView mHeadPortrait;
-            @BindView(R.id.certification)
-            ImageView mCertification;
             @BindView(R.id.userName)
             TextView mUserName;
             @BindView(R.id.status)
@@ -308,17 +305,6 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                 mTradeCount.setText(getString(R.string.x_space_x,
                         FinanceUtil.formatWithScale(legalCurrencyOrder.getOrderAmount())
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
-                // TODO: 2018/6/29 缺少用户认证状态 字段
-//                mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
-//                switch (authStatus) {
-//                    case 1:
-//                        mCertification.setImageResource(R.drawable.ic_primary_star);
-//                        break;
-//                    case 2:
-//                        mCertification.setImageResource(R.drawable.ic_senior_star);
-//                        break;
-//                    default:
-//                }
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
                 mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(),8));
