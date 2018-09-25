@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -34,10 +33,10 @@ public abstract class BaseChart extends View {
     private static final int FONT_BIG_SIZE_DP = 10;
     private static final int TEXT_MARGIN_WITH_LINE_DP = 4;
     private static final int RECT_PADDING_DP = 6;
-    private static final int HEIGHT_TIME_LINE_DP = 30;
+    private static final int HEIGHT_TIME_LINE_DP = 24;
     private static final int HEIGHT_MAIN_CHART = 240;
     private static final int HEIGHT_VOL_CHART = 70;
-    private static final int HEIGHT_SUB_CHART_TOP_MARGIN = 10;
+    private static final int HEIGHT_SUB_CHART_TOP_MARGIN = 4;
     private static final int HEIGHT_SUB_CHART = 90;
 
     private static final int WHAT_LONG_PRESS = 1;
@@ -388,7 +387,6 @@ public abstract class BaseChart extends View {
         int newTouchIndex = calculateTouchIndex(event);
         if (newTouchIndex != mTouchIndex && checkTouchIndexValid(newTouchIndex)) {
             mTouchIndex = newTouchIndex;
-            Log.d("Temp", "triggerCrossLinesRedraw: " + mTouchIndex); // todo remove later
             redraw();
             return true;
         }

@@ -8,7 +8,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
@@ -47,7 +46,9 @@ public class Kline extends BaseChart {
         private Float J; // 3K-2D
 
         // RSI
-        private Float rsi;
+        private Float posDiffSma; // sma(max(close - lastClose, 0), n, 1)
+        private Float absDiffSma; // sma(abs(close - lastClose), n, 1)
+        private Float rsi; // sma(max(close - lastClose, 0), n, 1) / sma(abs(close - lastClose), n, 1) x 100
 
         // WR
         private Float wr;
@@ -143,6 +144,22 @@ public class Kline extends BaseChart {
 
         public void setRsi(Float rsi) {
             this.rsi = rsi;
+        }
+
+        public void setPosDiffSma(Float posDiffSma) {
+            this.posDiffSma = posDiffSma;
+        }
+
+        public void setAbsDiffSma(Float absDiffSma) {
+            this.absDiffSma = absDiffSma;
+        }
+
+        public Float getPosDiffSma() {
+            return posDiffSma;
+        }
+
+        public Float getAbsDiffSma() {
+            return absDiffSma;
         }
 
         public Float getWr() {
@@ -1031,6 +1048,16 @@ public class Kline extends BaseChart {
         float priceY = bgRect.top + rectHeight / 2 + mOffset4CenterBigText;
         setCrossLineTextPaint(sPaint);
         canvas.drawText(price, priceX, priceY, sPaint);
+
+        // cross vol and sub chart
+        if (volEnable) {
+            setCrossLinePaint(sPaint);
+            canvas.drawLine(touchX, top + height + rectHeight, touchX, volTop + volHeight, sPaint);
+        }
+        if (subIndexEnable) {
+            setCrossLinePaint(sPaint);
+            canvas.drawLine(touchX, subChartTop, touchX, subChartTop + subChartHeight, sPaint);
+        }
     }
 
     @Override
@@ -1075,7 +1102,7 @@ public class Kline extends BaseChart {
     }
 
     private void calculateWrValues() {
-        int wrLength = mWr[0];
+        int wrLength = Math.max(mWr[0], 1);
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
             if (i - wrLength + 1 < 0) continue; // data is not enough to calculate
@@ -1099,43 +1126,65 @@ public class Kline extends BaseChart {
     }
 
     private void calculateRsiValues() {
-        int rsiLength = mRsi[0];
+        int rsiLength = Math.max(mRsi[0], 1);
         int dataLength = rsiLength + 1;
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
-            if (i - dataLength + 1 < 0) continue;
+            if (i - dataLength + 1 < 0) continue; // data is not enough to calculate
             if (data.getIndexData().getRsi() != null) continue;
 
-            Float rsi = calculateRsiValue(i, dataLength);
+            Float posDiffSma = calculatePosDiffSma(i, dataLength, rsiLength);
+            Float absDiffSma = calculateAbsDiffSma(i, dataLength, rsiLength);
+            Float rsi = posDiffSma / absDiffSma * 100;
             data.getIndexData().setRsi(rsi);
         }
     }
 
-    private Float calculateRsiValue(int index, int dataLength) {
-        float positiveSum = 0;
-        float negativeSum = 0;
-        int start = index - dataLength + 1;
-        for (int i = start + 1; i < start + dataLength; i++) {
-            float diff = mDataList.get(i).getClosePrice() - mDataList.get(i - 1).getClosePrice();
-            if (diff >= 0) {
-                positiveSum += diff;
-            } else {
-                negativeSum += diff;
+    private Float calculateAbsDiffSma(int index, int dataLength, int rsiLength) {
+        // sma(abs(close - lastClose), n, 1) = Y, abs(close - lastClose) = X
+        // Y = [1 x X + (n - 1) * Y'] / n
+        if (index - dataLength + 1 == 0) {
+            float result = 0;
+            for (int i = dataLength - 1; i > 0; i--) {
+                float diff = mDataList.get(i).getClosePrice() - mDataList.get(i - 1).getClosePrice();
+                result += Math.abs(diff);
             }
-            if (index == mDataList.size() - 1) {
-                Log.d("Temp", "calculateRsiValue: " + mDataList.get(i).getClosePrice() + " - " + mDataList.get(i - 1).getClosePrice() + " = " + diff); // todo remove later
-                Log.d("Temp", "calculateRsiValue: posSum = " + positiveSum); // todo remove later
-                Log.d("Temp", "calculateRsiValue: negSum = " + negativeSum); // todo remove later
-            }
+            return result / rsiLength;
         }
-        if (index == mDataList.size() - 1)
-            Log.d("Temp", "calculateRsiValue:" + positiveSum + "/ " + "(" + positiveSum + " + " + Math.abs(negativeSum) + ") * 100 = " + positiveSum / (positiveSum + Math.abs(negativeSum)) * 100); // todo remove later
-        return positiveSum / (positiveSum + Math.abs(negativeSum)) * 100;
+
+        float diff = mDataList.get(index).getClosePrice() - mDataList.get(index - 1).getClosePrice();
+        Float preAbsDiffSma = mDataList.get(index - 1).getIndexData().getAbsDiffSma();
+        if (preAbsDiffSma == null) {
+            preAbsDiffSma = calculateAbsDiffSma(index - 1, dataLength, rsiLength);
+            mDataList.get(index - 1).getIndexData().setAbsDiffSma(preAbsDiffSma);
+        }
+        return (Math.abs(diff) + (rsiLength - 1) * preAbsDiffSma) / rsiLength;
+    }
+
+    private Float calculatePosDiffSma(int index, int dataLength, int rsiLength) {
+        // sma(max(close - lastClose, 0), n, 1) = Y, max(close - lastClose, 0) = X
+        // Y = [1 x X + (n - 1) * Y'] / n
+        if (index - dataLength + 1 == 0) {
+            float result = 0;
+            for (int i = dataLength - 1; i > 0; i--) {
+                float diff = mDataList.get(i).getClosePrice() - mDataList.get(i - 1).getClosePrice();
+                result += Math.max(diff, 0);
+            }
+            return result / rsiLength;
+        }
+
+        float diff = mDataList.get(index).getClosePrice() - mDataList.get(index - 1).getClosePrice();
+        Float prePosDiffSma = mDataList.get(index - 1).getIndexData().getPosDiffSma();
+        if (prePosDiffSma == null) {
+            prePosDiffSma = calculatePosDiffSma(index - 1, dataLength, rsiLength);
+            mDataList.get(index - 1).getIndexData().setPosDiffSma(prePosDiffSma);
+        }
+        return (Math.max(diff, 0) + (rsiLength - 1) * prePosDiffSma) / rsiLength;
     }
 
     private void calculateKdjValues() {
-        int kLength = mKdj[0];
-        int dLength = mKdj[2];
+        int kLength = Math.max(mKdj[0], 1);
+        int dLength = Math.max(mKdj[2], 1);
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
             if (i - kLength - dLength + 1 < 0) continue; // data is not enough to calculate
@@ -1175,8 +1224,8 @@ public class Kline extends BaseChart {
     }
 
     private void calculateMacdValues() {
-        int quickLength = mMacd[0];
-        int slowLength = mMacd[1];
+        int quickLength = Math.max(mMacd[0], 1);
+        int slowLength = Math.max(mMacd[1], 1);
         int max = Math.max(quickLength, slowLength);
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
@@ -1191,7 +1240,7 @@ public class Kline extends BaseChart {
             mDataList.get(i).getIndexData().putEma(slowLength, slowEmaValue);
             mDataList.get(i).getIndexData().setMacdDiff(quickEmaValue - slowEmaValue);
         }
-        int deaLength = mMacd[2];
+        int deaLength = Math.max(mMacd[2], 1);
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
             if (i - max - deaLength + 1 < 0) continue;
