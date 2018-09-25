@@ -844,9 +844,9 @@
     <string name="otc_balance_not_enough_hint_x">请先将币币账户%1$s余额划转至法币账户后继续卖出。</string>
     <string name="equivalent_x_x">≈%1$s%2$s</string>
     <string name="pricing_method">计价方式</string>
-    <string name="cny_with_symbol">人民币(CNY)</string>
-    <string name="usd_with_symbol">美元(USD)</string>
-    <string name="twd_with_symbol">新台币(TWD)</string>
+    <string name="cny_with_symbol">人民币（CNY）</string>
+    <string name="usd_with_symbol">美元（USD）</string>
+    <string name="twd_with_symbol">新台币（TWD）</string>
     <string name="cny">人民币</string>
     <string name="usd">美元</string>
     <string name="twd">新台币</string>
@@ -865,4 +865,5 @@
     <string name="switch_host">切换环境</string>
     <string name="pro">正式</string>
     <string name="test">测试</string>
+    <string name="unpaid_countdown">待付款 (%1$d分:%2$d秒)</string>
 </resources>

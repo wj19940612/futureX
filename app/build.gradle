@@ -14,7 +14,7 @@ android {
         applicationId "com.songbai.futurex"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 44
+        versionCode 45
         versionName "1.5.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -147,7 +147,4 @@ android {
         implementation project(path: ':swipeloadlayout')
         implementation project(path: ':wrapres')
     }
-}
-
-dependencies {
 }

@@ -854,4 +854,5 @@
     <string name="switch_host">Switch host</string>
     <string name="pro">Pro</string>
     <string name="test">Test</string>
+    <string name="unpaid_countdown">Unpaid(%1$d:%2$d)</string>
 </resources>

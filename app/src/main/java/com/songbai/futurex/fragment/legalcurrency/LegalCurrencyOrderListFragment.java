@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +33,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
+import com.songbai.futurex.view.TimerTextView;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -263,12 +263,10 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
         class LegalCurrencyOrderHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.headPortrait)
             ImageView mHeadPortrait;
-            @BindView(R.id.certification)
-            ImageView mCertification;
             @BindView(R.id.userName)
             TextView mUserName;
             @BindView(R.id.status)
-            TextView mStatus;
+            TimerTextView mStatus;
             @BindView(R.id.dealType)
             TextView mDealType;
             @BindView(R.id.tradeCount)
@@ -308,20 +306,9 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                 mTradeCount.setText(getString(R.string.x_space_x,
                         FinanceUtil.formatWithScale(legalCurrencyOrder.getOrderAmount())
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
-                // TODO: 2018/6/29 缺少用户认证状态 字段
-//                mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
-//                switch (authStatus) {
-//                    case 1:
-//                        mCertification.setImageResource(R.drawable.ic_primary_star);
-//                        break;
-//                    case 2:
-//                        mCertification.setImageResource(R.drawable.ic_senior_star);
-//                        break;
-//                    default:
-//                }
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
-                mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(),8));
+                mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(), 8));
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
@@ -330,6 +317,24 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                     case OTCOrderStatus.ORDER_UNPAIED:
                         mStatus.setText(R.string.unpaid);
                         mStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
+                        if (legalCurrencyOrder.getCountDown() > 0) {
+                            mStatus.setTimes(System.currentTimeMillis() + legalCurrencyOrder.getCountDown() * 1000);
+                            mStatus.setSetTextCallback(new TimerTextView.SetTextCallback() {
+                                @Override
+                                public String getText(long diff) {
+                                    return getString(R.string.unpaid_countdown, diff / 1000 / 60, diff / 1000 % 60);
+                                }
+                            });
+                            mStatus.setOnStateChangeListener(new TimerTextView.OnStateChangeListener() {
+                                @Override
+                                public void onStateChange(TimerTextView.CountDownState countDownState) {
+                                    if (countDownState == TimerTextView.CountDownState.closed) {
+                                        mStatus.setText(R.string.unpaid);
+                                    }
+                                }
+                            });
+                            mStatus.beginRun();
+                        }
                         break;
                     case OTCOrderStatus.ORDER_PAIED:
                         mStatus.setText(R.string.paid);

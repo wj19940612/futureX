@@ -21,7 +21,7 @@
         android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_blue_check_mark"
-        app:rowText="@string/cny"
+        app:rowText="@string/cny_with_symbol"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
         app:rowVerticalPadding="0dp"/>
@@ -33,7 +33,7 @@
         android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_blue_check_mark"
-        app:rowText="@string/usd"
+        app:rowText="@string/usd_with_symbol"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
         app:rowVerticalPadding="0dp"/>
@@ -45,7 +45,7 @@
         android:background="@drawable/bg_white_pressed_f5"
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_blue_check_mark"
-        app:rowText="@string/twd"
+        app:rowText="@string/twd_with_symbol"
         app:rowTextColor="@color/text22"
         app:rowTextSize="16sp"
         app:rowVerticalPadding="0dp"/>
