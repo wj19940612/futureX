@@ -368,6 +368,10 @@ public class Kline extends BaseChart {
 
         float priceRange = (max - min) / (baselines.length - 1);
 
+        if (priceRange == 0) { // max == min
+            priceRange = 1;
+        }
+
         // 额外扩大最大值 最小值
         max += priceRange / 2;
         min -= priceRange / 2;
@@ -574,11 +578,14 @@ public class Kline extends BaseChart {
 
             if (data == null) return;
 
+            float textX = left + mTextMargin;
+            float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+            setBaseTextPaint(sPaint);
             if (data.getIndexData().getRsi() != null) {
-                float textX = left + mTextMargin;
-                float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
-                setBaseTextPaint(sPaint);
                 String kdjText = "RSI(" + mRsi[0] + "):" + formatNumber(data.getIndexData().getRsi());
+                canvas.drawText(kdjText, textX, textY, sPaint);
+            } else {
+                String kdjText = "RSI(" + mRsi[0] + ")";
                 canvas.drawText(kdjText, textX, textY, sPaint);
             }
         } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_WR) {
@@ -586,11 +593,14 @@ public class Kline extends BaseChart {
 
             if (data == null) return;
 
+            float textX = left + mTextMargin;
+            float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+            setBaseTextPaint(sPaint);
             if (data.getIndexData().getWr() != null) {
-                float textX = left + mTextMargin;
-                float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
-                setBaseTextPaint(sPaint);
                 String wrText = "WR(" + mRsi[0] + "):" + formatNumber(data.getIndexData().getWr());
+                canvas.drawText(wrText, textX, textY, sPaint);
+            } else {
+                String wrText = "WR(" + mRsi[0] + ")";
                 canvas.drawText(wrText, textX, textY, sPaint);
             }
         }
@@ -1130,12 +1140,14 @@ public class Kline extends BaseChart {
 
     private Float calculateWrValue(int index, int wrLength) {
         int start = index - wrLength + 1;
-        float highestPrice = Float.MIN_VALUE;
+        float highestPrice = Float.MAX_VALUE * -1;
         float lowestPrice = Float.MAX_VALUE;
         for (int i = start; i < start + wrLength; i++) {
             highestPrice = Math.max(highestPrice, mDataList.get(i).getMaxPrice());
             lowestPrice = Math.min(lowestPrice, mDataList.get(i).getMinPrice());
         }
+        if (highestPrice == lowestPrice) return null;
+
         float closePrice = mDataList.get(index).getClosePrice();
         return (highestPrice - closePrice) / (highestPrice - lowestPrice) * -100;
     }
@@ -1150,8 +1162,10 @@ public class Kline extends BaseChart {
 
             Float posDiffSma = calculatePosDiffSma(i, dataLength, rsiLength);
             Float absDiffSma = calculateAbsDiffSma(i, dataLength, rsiLength);
-            Float rsi = posDiffSma / absDiffSma * 100;
-            data.getIndexData().setRsi(rsi);
+            if (absDiffSma != 0) {
+                Float rsi = posDiffSma / absDiffSma * 100;
+                data.getIndexData().setRsi(rsi);
+            }
         }
     }
 
@@ -1206,9 +1220,11 @@ public class Kline extends BaseChart {
             if (data.getIndexData().getD() != null && data.getIndexData().getJ() != null) continue;
 
             Float d = calculateDValue(i, dLength, kLength);
-            data.getIndexData().setD(d);
-            Float k = data.getIndexData().getK();
-            data.getIndexData().setJ(3 * k - 2 * d);
+            if (d != null) {
+                data.getIndexData().setD(d);
+                Float k = data.getIndexData().getK();
+                data.getIndexData().setJ(3 * k - 2 * d);
+            }
         }
     }
 
@@ -1219,6 +1235,7 @@ public class Kline extends BaseChart {
             IndexData indexData = mDataList.get(i).getIndexData();
             if (indexData.getK() == null) {
                 Float k = calculateKValue(i, kLength);
+                if (k == null) return null;
                 indexData.setK(k);
             }
             result += indexData.getK();
@@ -1228,12 +1245,14 @@ public class Kline extends BaseChart {
 
     private Float calculateKValue(int index, int kLength) {
         int start = index - kLength + 1;
-        float highestPrice = Float.MIN_VALUE;
+        float highestPrice = Float.MAX_VALUE * -1;
         float lowestPrice = Float.MAX_VALUE;
         for (int i = start; i < start + kLength; i++) {
             highestPrice = Math.max(highestPrice, mDataList.get(i).getMaxPrice());
             lowestPrice = Math.min(lowestPrice, mDataList.get(i).getMinPrice());
         }
+        if (highestPrice == lowestPrice) return null;
+
         float closePrice = mDataList.get(index).getClosePrice();
         return (closePrice - lowestPrice) / (highestPrice - lowestPrice) * 100;
     }
@@ -1337,7 +1356,7 @@ public class Kline extends BaseChart {
         for (int i = start; i < start + ma; i++) {
             result += mDataList.get(i).getClosePrice();
         }
-        return result / ma;
+        return Float.valueOf(formatNumber(result / ma)); // 临时修复 result 累加的精度丢失问题
     }
 
     private void calculateCandlesRange() {
