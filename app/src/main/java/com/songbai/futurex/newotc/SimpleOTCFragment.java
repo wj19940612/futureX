@@ -227,6 +227,7 @@ public class SimpleOTCFragment extends BaseFragment {
         accountBalance();
         initSocketListener();
         initMsgPush();
+        setBalance("");
     }
 
     private void initSocketListener() {
