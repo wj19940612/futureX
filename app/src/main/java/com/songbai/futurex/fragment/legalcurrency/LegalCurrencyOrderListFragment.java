@@ -29,7 +29,6 @@ import com.songbai.futurex.model.LegalCurrencyOrder;
 import com.songbai.futurex.model.status.OTCOrderStatus;
 import com.songbai.futurex.swipeload.BaseSwipeLoadFragment;
 import com.songbai.futurex.utils.DateUtil;
-import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
@@ -304,11 +303,11 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                     default:
                 }
                 mTradeCount.setText(getString(R.string.x_space_x,
-                        FinanceUtil.formatWithScale(legalCurrencyOrder.getOrderAmount())
+                        String.valueOf(legalCurrencyOrder.getOrderAmount())
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         "yyyy/MM/dd HH:mm"));
-                mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(), 8));
+                mPrice.setText(String.valueOf(legalCurrencyOrder.getFixedPrice()));
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
