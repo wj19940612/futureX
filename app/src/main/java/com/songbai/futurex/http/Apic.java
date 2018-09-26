@@ -1590,6 +1590,15 @@ public class Apic {
     }
 
     /**
+     * /api/user/v1/userSysConfig/getOtcTransConfig.do
+     * POST
+     * 获取法币开关信息
+     */
+    public static Api getOtcTransConfig() {
+        return Api.post("/api/user/v1/userSysConfig/getOtcTransConfig.do");
+    }
+
+    /**
      * /api/quota/match/pairsMoney.do
      * POST
      * 获取交易对计价货币的汇率

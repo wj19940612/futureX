@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.sbai.httplib.ReqError;
 import com.songbai.futurex.BuildConfig;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Callback;
@@ -56,6 +57,14 @@ public class SplashActivity extends StatusBarActivity {
         ButterKnife.bind(this);
         startSocketPushService();
         translucentStatusBar();
+//        com.songbai.futurex.http.Apic.getOtcTransConfig().tag(TAG)
+//                .callback(new Callback<Resp<Object>>() {
+//                    @Override
+//                    protected void onRespSuccess(Resp<Object> resp) {
+//                        Preference.get().setCloseOTC(true);
+//                    }
+//                }).fireFreely();
+        Preference.get().setCloseOTC(true);
 
         if (hasSelfPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,

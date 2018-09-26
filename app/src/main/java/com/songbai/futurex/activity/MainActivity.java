@@ -85,8 +85,6 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
         mBottomTabs.setOnTabClickListener(new BottomTabs.OnTabClickListener() {
             @Override
             public void onTabClick(int position) {
-                mBottomTabs.selectTab(position);
-                mViewPager.setCurrentItem(position, false);
                 switch (position) {
                     case PAGE_HOME:
                         umengEventCount(UmengCountEventId.HOME0005);
@@ -105,6 +103,13 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
                         break;
                     default:
                 }
+                if (Preference.get().getCloseOTC()) {
+                    if (position > 1) {
+                        position -= 1;
+                    }
+                }
+                mBottomTabs.selectTab(position);
+                mViewPager.setCurrentItem(position, false);
             }
         });
     }
@@ -120,6 +125,14 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
 
     @Override
     public void onNavigation(int mainPageIndex, Intent exUserDefineData) {
+        if (Preference.get().getCloseOTC()) {
+            if (mainPageIndex == PAGE_LEGAL_CURRENCY) {
+                return;
+            }
+            if (mainPageIndex > 1) {
+                mainPageIndex -= 1;
+            }
+        }
         Fragment fragment = mMainFragmentsAdapter.getFragment(mainPageIndex);
         if (fragment instanceof TradeFragment) {
             int tradeDir = exUserDefineData.getIntExtra(ExtraKeys.TRADE_DIRECTION, TradeDir.DIR_BUY_IN);
@@ -127,13 +140,11 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
             ((TradeFragment) fragment).setTradeDir(tradeDir);
             ((TradeFragment) fragment).setCurrencyPair(pair);
             mBottomTabs.performTabClick(mainPageIndex);
-        }
-        if (fragment instanceof LegalCurrencyFragment) {
+        } else if (fragment instanceof LegalCurrencyFragment) {
             int index = exUserDefineData.getIntExtra(ExtraKeys.LEGAL_CURRENCY_PAGE_INDEX, 2);
             ((LegalCurrencyFragment) fragment).setSelectedIndex(index);
             mBottomTabs.performTabClick(mainPageIndex);
-        }
-        if (fragment instanceof SimpleOTCFragment) {
+        } else {
             mBottomTabs.performTabClick(mainPageIndex);
         }
     }
@@ -203,6 +214,11 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
 
         @Override
         public Fragment getItem(int position) {
+            if (Preference.get().getCloseOTC()) {
+                if (position > 1) {
+                    position += 1;
+                }
+            }
             switch (position) {
                 case PAGE_HOME:
                     return new HomeFragment();
@@ -221,6 +237,9 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
 
         @Override
         public int getCount() {
+            if (Preference.get().getCloseOTC()) {
+                return 4;
+            }
             return 5;
         }
 

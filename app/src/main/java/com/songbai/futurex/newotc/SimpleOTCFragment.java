@@ -454,10 +454,14 @@ public class SimpleOTCFragment extends BaseFragment {
     }
 
     public void openTransfer() {
-        UniqueActivity.launcher(this, FundsTransferFragment.class)
-                .putExtra(ExtraKeys.TRANSFER_TYPE, 0)
-                .putExtra(ExtraKeys.SELECTED_COIN_SYMBOL, mSelectedCoinSymbol)
-                .execute();
+        if (LocalUser.getUser().isLogin()) {
+            UniqueActivity.launcher(this, FundsTransferFragment.class)
+                    .putExtra(ExtraKeys.TRANSFER_TYPE, 0)
+                    .putExtra(ExtraKeys.SELECTED_COIN_SYMBOL, mSelectedCoinSymbol)
+                    .execute();
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
     }
 
     private void lunchOrder() {
@@ -603,7 +607,7 @@ public class SimpleOTCFragment extends BaseFragment {
         if (mTradeType == OTCOrderStatus.ORDER_DIRECT_BUY) {
             newOtcPreBuy(coinCount, mSelectedCoinSymbol);
         } else {
-            if (Double.valueOf(coinCount)>Double.valueOf(mBalance)) {
+            if (Double.valueOf(coinCount) > Double.valueOf(mBalance)) {
                 showTransferAlert();
                 return;
             }
