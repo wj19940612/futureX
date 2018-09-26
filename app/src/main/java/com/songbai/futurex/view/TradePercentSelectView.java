@@ -96,7 +96,7 @@ public class TradePercentSelectView extends LinearLayout {
     public void updatePercent(double percent) {
 //        Log.e("zzz", "updatePercent:" + percent);
         int selectPercent = inDiff(percent);
-        if(selectPercent == mSelectPercent) return;
+        if (selectPercent == mSelectPercent) return;
 
 //        Log.e("zzz", "updatePercent:" + percent);
 
@@ -126,7 +126,7 @@ public class TradePercentSelectView extends LinearLayout {
     }
 
     /**
-    不属于四档范围里的返回-1
+     * 不属于四档范围里的返回-1
      */
     private int inDiff(double percent) {
         if (Math.abs(percent - FIRST) <= DIFF) {
@@ -143,15 +143,16 @@ public class TradePercentSelectView extends LinearLayout {
 
     private void selectPercent(int selectPercent) {
 //        Log.e("zzz", "selectPercent");
-        if (mSelectPercent == selectPercent) return;
-
-        mSelectPercent = selectPercent;
         mFirthBtn.setSelected(false);
         mSecondBtn.setSelected(false);
         mThirdBtn.setSelected(false);
         mFourthBtn.setSelected(false);
-
-        switch (selectPercent) {
+        if (mSelectPercent == selectPercent) {
+            mSelectPercent = -1;
+        } else {
+            mSelectPercent = selectPercent;
+        }
+        switch (mSelectPercent) {
             case FIRST:
                 mFirthBtn.setSelected(true);
                 break;
@@ -167,11 +168,12 @@ public class TradePercentSelectView extends LinearLayout {
         }
 
         if (mOnPercentSelectListener != null) {
-            mOnPercentSelectListener.onPercentSelect(selectPercent, FOURTH);
+            mOnPercentSelectListener.onPercentSelect(mSelectPercent, FOURTH);
         }
     }
 
-    public void updateSelectPercent(){
+    public void updateSelectPercent() {
+        if(mSelectPercent < 0 )  return;
         if (mOnPercentSelectListener != null) {
             mOnPercentSelectListener.onPercentSelect(mSelectPercent, FOURTH);
         }

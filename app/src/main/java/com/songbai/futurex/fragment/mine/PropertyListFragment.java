@@ -16,11 +16,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.MyPropertyActivity;
 import com.songbai.futurex.fragment.BaseFragment;
@@ -30,6 +31,7 @@ import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.AccountList;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
@@ -67,6 +69,7 @@ public class PropertyListFragment extends BaseFragment {
     private PropertyListAdapter mAdapter;
     private List<AccountBean> mAccountBeans;
     private SmartDialog mSmartDialog;
+    private double mPrice;
 
     public static PropertyListFragment newInstance(int position) {
         Bundle bundle = new Bundle();
@@ -99,12 +102,15 @@ public class PropertyListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PropertyListAdapter();
         mRecyclerView.setEmptyView(mEmptyView);
+        mAdapter.setPrice(mPrice);
         mAdapter.setOnRVItemClickListener(new OnRVItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Object obj) {
                 AccountBean accountBean = (AccountBean) obj;
-                if (view.getId() == R.id.transfer) {
-                    showTransferDialog(accountBean);
+                if (view.getId() == R.id.trade) {
+                    Launcher.with(getContext(), MainActivity.class)
+                            .putExtra(ExtraKeys.PAGE_INDEX, MainActivity.PAGE_LEGAL_CURRENCY)
+                            .execute();
                 } else {
                     UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class)
                             .putExtra(ExtraKeys.ACCOUNT_BEAN, accountBean)
@@ -213,18 +219,6 @@ public class PropertyListFragment extends BaseFragment {
                 .fireFreely();
     }
 
-    private void userAccount() {
-        Apic.userAccount().tag(TAG)
-                .callback(new Callback<Resp<AccountList>>() {
-
-                    @Override
-                    protected void onRespSuccess(Resp<AccountList> resp) {
-                        setAdapter(2, resp.getData());
-                    }
-                })
-                .fireFreely();
-    }
-
     private void setAdapter(int position, AccountList accountList) {
         ((MyPropertyActivity) getActivity()).setAccountAmount(position, accountList);
         mAccountBeans = accountList.getAccount();
@@ -242,8 +236,6 @@ public class PropertyListFragment extends BaseFragment {
         }
         if (mPropertyType == 1) {
             accountList();
-        } else if (mPropertyType == 2) {
-            userAccount();
         }
     }
 
@@ -257,6 +249,14 @@ public class PropertyListFragment extends BaseFragment {
                     requestData();
                 }
             }
+        }
+    }
+
+    public void setPrice(double price) {
+        mPrice = price;
+        if (mAdapter != null) {
+            mAdapter.setPrice(price);
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -304,10 +304,12 @@ public class PropertyListFragment extends BaseFragment {
     }
 
     class PropertyListAdapter extends RecyclerView.Adapter {
+
         private OnRVItemClickListener mOnRVItemClickListener;
         private List<AccountBean> mList;
         private Context mContext;
         private int mType;
+        private double mPrice;
 
         @NonNull
         @Override
@@ -320,7 +322,7 @@ public class PropertyListFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof PropertyListHolder) {
-                ((PropertyListHolder) holder).bindData(mType, position, mList.get(position));
+                ((PropertyListHolder) holder).bindData(mContext, position, mList.get(position));
             }
         }
 
@@ -344,6 +346,10 @@ public class PropertyListFragment extends BaseFragment {
             mType = type;
         }
 
+        public void setPrice(double price) {
+            mPrice = price;
+        }
+
         class PropertyListHolder extends RecyclerView.ViewHolder {
             private final View mRootView;
             @BindView(R.id.coinType)
@@ -352,10 +358,12 @@ public class PropertyListFragment extends BaseFragment {
             TextView mAvailableAmount;
             @BindView(R.id.freezeAmount)
             TextView mFreezeAmount;
-            @BindView(R.id.transfer)
-            RelativeLayout mTransfer;
-            @BindView(R.id.freezeAmountGroup)
-            LinearLayout mFreezeAmountGroup;
+            @BindView(R.id.trade)
+            TextView mTrade;
+            @BindView(R.id.equivalentText)
+            TextView mEquivalentText;
+            @BindView(R.id.equivalent)
+            TextView mEquivalent;
 
             PropertyListHolder(View itemView) {
                 super(itemView);
@@ -363,25 +371,26 @@ public class PropertyListFragment extends BaseFragment {
                 mRootView = itemView;
             }
 
-            private void bindData(int type, final int position, final AccountBean accountBean) {
+            private void bindData(Context context, final int position, final AccountBean accountBean) {
+                mTrade.setVisibility(accountBean.getLegal() == 1 && !Preference.get().getCloseOTC() ? View.VISIBLE : View.GONE);
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
                 mAvailableAmount.setText(FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
                 mFreezeAmount.setText(FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));
-                mTransfer.setVisibility(type < 2 ? View.GONE : View.VISIBLE);
-                mFreezeAmountGroup.setVisibility(type < 2 ? View.VISIBLE : View.GONE);
+                mEquivalentText.setText(context.getString(R.string.equivalent_x, Preference.get().getPricingMethod().toUpperCase()));
+                mEquivalent.setText(FinanceUtil.formatWithScale(accountBean.getEstimateBtc() * mPrice));
+                mTrade.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnRVItemClickListener != null) {
+                            mOnRVItemClickListener.onItemClick(mTrade, position, accountBean);
+                        }
+                    }
+                });
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mOnRVItemClickListener != null) {
                             mOnRVItemClickListener.onItemClick(mRootView, position, accountBean);
-                        }
-                    }
-                });
-                mTransfer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnRVItemClickListener != null) {
-                            mOnRVItemClickListener.onItemClick(mTransfer, position, accountBean);
                         }
                     }
                 });

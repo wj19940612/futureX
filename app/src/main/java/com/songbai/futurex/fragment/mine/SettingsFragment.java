@@ -1,5 +1,8 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,8 +11,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.songbai.futurex.BuildConfig;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
@@ -17,6 +25,7 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.SupportLang;
 import com.songbai.futurex.utils.LanguageUtils;
@@ -24,7 +33,6 @@ import com.songbai.futurex.view.IconTextRow;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
 import com.songbai.futurex.websocket.MessageProcessor;
-import com.songbai.futurex.websocket.notification.NotificationProcessor;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -44,7 +52,22 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     IconTextRow mLanguage;
     @BindView(R.id.logout)
     TextView mLogout;
+    @BindView(R.id.pricingMethod)
+    IconTextRow mPricingMethod;
+    @BindView(R.id.quickBtn)
+    ImageView mQuickBtn;
+    @BindView(R.id.pushBtn)
+    ImageView mPushBtn;
+    @BindView(R.id.hostGroup)
+    LinearLayout mHostGroup;
+    @BindView(R.id.radioGroup)
+    RadioGroup mRadioGroup;
+    @BindView(R.id.pro)
+    RadioButton mPro;
+    @BindView(R.id.test)
+    RadioButton mTest;
     private Unbinder mBind;
+
 
     @Nullable
     @Override
@@ -61,12 +84,74 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mLogout.setVisibility(LocalUser.getUser().isLogin() ? View.VISIBLE : View.GONE);
-        String currentLangageStr = Preference.get().getCurrentLangageStr();
-        if (!TextUtils.isEmpty(currentLangageStr)) {
-            mLanguage.setSubText(currentLangageStr);
+        String currentLanguageStr = Preference.get().getCurrentLangageStr();
+        if (!TextUtils.isEmpty(currentLanguageStr)) {
+            mLanguage.setSubText(currentLanguageStr);
         } else {
             getSupportLocal();
         }
+        setPricingMethod();
+        initView();
+        switchHostInAlpha();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setPricingMethod();
+    }
+
+    private void setPricingMethod() {
+        String pricingMethod = Preference.get().getPricingMethod();
+        switch (pricingMethod) {
+            case "cny":
+                mPricingMethod.setSubText(R.string.cny);
+                break;
+            case "usd":
+                mPricingMethod.setSubText(R.string.usd);
+                break;
+            case "twd":
+                mPricingMethod.setSubText(R.string.twd);
+                break;
+            default:
+        }
+    }
+
+    private void switchHostInAlpha() {
+        if ("alpha".equals(BuildConfig.FLAVOR)) {
+            mTest.setChecked("ex.esongbai.xyz".equals(Preference.get().getAlphaHost()));
+            mPro.setChecked(!"ex.esongbai.xyz".equals(Preference.get().getAlphaHost()));
+        }
+        mHostGroup.setVisibility("alpha".equals(BuildConfig.FLAVOR) ? View.VISIBLE : View.GONE);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.pro:
+                        Preference.get().setAlphaHost("m.bitfutu.re");
+                        restart();
+                        break;
+                    case R.id.test:
+                        Preference.get().setAlphaHost("ex.esongbai.xyz");
+                        restart();
+                        break;
+                    default:
+                }
+            }
+        });
+    }
+
+    public void restart() {
+        LocalUser.getUser().logoutSYNC();
+        Preference.get().setOptionalListRefresh(true);
+        Preference.get().setPosterListRefresh(true);
+        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager mgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), restartIntent); // 0.1秒钟后重启应用
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     private void setOriginLanguageText(ArrayList<SupportLang> data) {
@@ -98,17 +183,33 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
                 }).fireFreely();
     }
 
+    private void initView() {
+        mQuickBtn.setSelected(Preference.get().isQuickExchange());
+        LocalUser localUser = LocalUser.getUser();
+        if (localUser.isLogin()) {
+            UserInfo userInfo = localUser.getUserInfo();
+            mPushBtn.setVisibility(View.VISIBLE);
+            mPushBtn.setSelected(userInfo.getEntrustPush() == 1);
+        } else {
+            mPushBtn.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
     }
 
-    @OnClick({R.id.language, R.id.aboutUs, R.id.feedback, R.id.logout})
+    @OnClick({R.id.language, R.id.pricingMethod, R.id.aboutUs, R.id.feedback, R.id.logout, R.id.quickBtn,
+            R.id.pushBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.language:
                 UniqueActivity.launcher(getActivity(), SettingLanguageFragment.class).execute();
+                break;
+            case R.id.pricingMethod:
+                UniqueActivity.launcher(getActivity(), SelectPricingFragment.class).execute();
                 break;
             case R.id.aboutUs:
                 UniqueActivity.launcher(getActivity(), AboutUsFragment.class).execute();
@@ -119,8 +220,37 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
             case R.id.logout:
                 showLogoutView();
                 break;
+            case R.id.quickBtn:
+                clickQuickBtn();
+                break;
+            case R.id.pushBtn:
+                clickPushBtn();
+                break;
             default:
         }
+    }
+
+    private void clickPushBtn() {
+        mPushBtn.setEnabled(false);
+        Apic.turnRemindingPush(mPushBtn.isSelected() ? 0 : 1).callback(new Callback<Resp>() {
+            @Override
+            protected void onRespSuccess(Resp resp) {
+                mPushBtn.setSelected(!mPushBtn.isSelected());
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                mPushBtn.setEnabled(true);
+            }
+        }).fire();
+    }
+
+    private void clickQuickBtn() {
+        mQuickBtn.setEnabled(false);
+        Preference.get().setQuickExchange(!mQuickBtn.isSelected());
+        mQuickBtn.setSelected(!mQuickBtn.isSelected());
+        mQuickBtn.setEnabled(true);
     }
 
     private void showLogoutView() {

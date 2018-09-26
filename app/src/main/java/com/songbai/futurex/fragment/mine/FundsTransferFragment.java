@@ -91,6 +91,10 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                 mSelectedCoinType = mOtcAccountList.get(0).getCoinType();
             }
         }
+        mSelectedCoinType = extras.getString(ExtraKeys.SELECTED_COIN_SYMBOL);
+        if (TextUtils.isEmpty(mSelectedCoinType)) {
+            mSelectedCoinType = "";
+        }
     }
 
     @Override
@@ -112,7 +116,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                 if (!TextUtils.isEmpty(amount)) {
                     mConfirmTransfer.setEnabled(mMaxAmount > 0);
                     mConfirmTransfer.setEnabled(Double.valueOf(amount) > 0);
-                }else{
+                } else {
                     mConfirmTransfer.setEnabled(false);
                 }
             }
@@ -137,6 +141,9 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                         AccountList accountList = resp.getData();
                         if (accountList != null) {
                             mOtcAccountList = accountList.getAccount();
+                            if (TextUtils.isEmpty(mSelectedCoinType) && mTransferType == 0 && mOtcAccountList != null && mOtcAccountList.size() > 0) {
+                                mSelectedCoinType = mOtcAccountList.get(0).getCoinType();
+                            }
                             setView();
                         }
                     }
@@ -152,6 +159,9 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                         AccountList accountList = resp.getData();
                         if (accountList != null) {
                             mUserAccount = accountList.getAccount();
+                            if (TextUtils.isEmpty(mSelectedCoinType) && mTransferType == 1 && mUserAccount != null && mUserAccount.size() > 0) {
+                                mSelectedCoinType = mUserAccount.get(0).getCoinType();
+                            }
                             setView();
                         }
                     }

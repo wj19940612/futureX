@@ -14,6 +14,8 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:hasBottomSplitLine="true"
+        app:rightText="@string/otc"
+        app:rightVisible="false"
         tools:titleText="USDT"/>
 
     <android.support.v4.widget.NestedScrollView
@@ -27,44 +29,106 @@
             android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_margin="12dp"
-                android:background="@drawable/bg_f5_r4"
-                android:gravity="center">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                android:background="@color/bgF5"
+                android:gravity="center"
+                android:paddingBottom="19dp"
+                android:paddingTop="19dp">
 
                 <TextView
+                    android:id="@+id/availableText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:singleLine="true"
+                    android:text="@string/available"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/freezeText"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/freezeText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:text="@string/freeze"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/availableText"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toRightOf="@id/availableText"
+                    app:layout_constraintRight_toLeftOf="@id/equivalentText"/>
+
+                <TextView
+                    android:id="@+id/equivalentText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="9dp"
+                    android:gravity="end"
+                    android:singleLine="true"
+                    android:text="@string/equivalent_x"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/availableText"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toRightOf="@id/freezeText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <com.songbai.futurex.view.autofit.AutofitTextView
                     android:id="@+id/ableCoin"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
+                    android:layout_marginTop="9dp"
+                    android:singleLine="true"
                     android:textColor="@color/text22"
-                    android:textSize="14sp"
-                    tools:text="可用   0.00000001"/>
+                    android:textSize="13sp"
+                    app:layout_constraintLeft_toLeftOf="@id/availableText"
+                    app:layout_constraintRight_toRightOf="@id/availableText"
+                    app:layout_constraintTop_toBottomOf="@id/availableText"
+                    tools:text="0.29000000"/>
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="24dp"
-                    android:background="@color/bgDD"/>
-
-                <TextView
+                <com.songbai.futurex.view.autofit.AutofitTextView
                     android:id="@+id/freezeCoin"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
+                    android:layout_marginTop="9dp"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
                     android:textColor="@color/text22"
-                    android:textSize="14sp"
-                    tools:text="冻结   0.00000001"/>
-            </LinearLayout>
+                    android:textSize="13sp"
+                    app:layout_constraintLeft_toLeftOf="@id/freezeText"
+                    app:layout_constraintRight_toRightOf="@id/freezeText"
+                    app:layout_constraintTop_toBottomOf="@id/freezeText"
+                    tools:text="0.29000000"/>
+
+                <com.songbai.futurex.view.autofit.AutofitTextView
+                    android:id="@+id/equivalent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:gravity="end"
+                    android:singleLine="true"
+                    android:textColor="@color/text22"
+                    android:textSize="13sp"
+                    app:layout_constraintLeft_toLeftOf="@id/equivalentText"
+                    app:layout_constraintRight_toRightOf="@id/equivalentText"
+                    app:layout_constraintTop_toBottomOf="@id/equivalentText"
+                    tools:text="0.29000000"/>
+            </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
-                android:layout_marginTop="12dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -73,7 +137,8 @@
                     android:layout_weight="1"
                     android:text="@string/property_flow"
                     android:textColor="@color/text22"
-                    android:textSize="17sp"/>
+                    android:textSize="17sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/history"
@@ -81,8 +146,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/history_record"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="13sp"/>
-
+                    android:textSize="13sp"
+                    android:textStyle="bold"/>
             </LinearLayout>
 
             <include

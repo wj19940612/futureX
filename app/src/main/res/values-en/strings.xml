@@ -705,7 +705,7 @@
     <string name="clear">Clear</string>
     <string name="my_invite">My INVT</string>
     <string name="my_invite_num">Total</string>
-    <string name="gained_bfb_award">Rewards(BFB)</string>
+    <string name="gained_award_x">Rewards(%1$s)</string>
     <string name="x_bfb">%1$s BFB</string>
     <string name="x_btc">%1$s BTC</string>
     <string-array name="invite_header">
@@ -810,4 +810,49 @@
     <string name="receipt_method">Receipt method</string>
     <string name="pause_trade">suspend</string>
     <string name="require_cash_pwd">Require fund pass</string>
+
+    <string-array name="buy_sell">
+        <item>@string/buy_in</item>
+        <item>@string/sell_out</item>
+    </string-array>
+
+    <string-array name="check_market">
+        <item>@string/limit_price</item>
+        <item>@string/market_price</item>
+    </string-array>
+
+    <string name="quick_exchange">Quick Exchange</string>
+    <string name="invalid_qr_code">Invalid QR code</string>
+    <string name="pricing_method">"Price currency "</string>
+    <string name="twd">TWD</string>
+    <string name="usd">USD</string>
+    <string name="cny">RMB</string>
+    <string name="twd_with_symbol">TWD</string>
+    <string name="usd_with_symbol">USD</string>
+    <string name="cny_with_symbol">RMB</string>
+    <string name="equivalent_x_x">≈%1$s%2$s</string>
+    <string name="transfer_coin">Transfer</string>
+    <string name="otc_balance_not_enough_hint_x">Please transfer USDT from Exchange account to OTC account first.</string>
+    <string name="transfer_now">Transfer now</string>
+    <string name="otc_balance_not_enough">Insufficient funds in OTC account</string>
+    <string name="confirm_sell">Confirm to sell</string>
+    <string name="confirm_buy">Confirm to buy</string>
+    <string name="total_deal_amount_x">Actual amount：%1$s</string>
+    <string name="seller">Seller</string>
+    <string name="otc">OTC trade</string>
+    <string name="buyer">Buyer</string>
+    <string name="equivalent_x">Equivalent %1$s</string>
+    <string name="order_info">Order info</string>
+    <string name="trader_x">Counter party: %1$s</string>
+    <string name="buy_price_x">Unit price: %1$s</string>
+    <string name="buy_amount_x">Number: %1$s</string>
+    <string name="sell_price_x">Unit price: %1$s</string>
+    <string name="sell_amount_x">Number: %1$s</string>
+    <string name="deal_amount_x">Trade amount: %1$s</string>
+    <string name="otc_deal_fee_x">Fee: %1$s</string>
+    <string name="legal_currency_balance">OTC balance(%1$s): %2$s</string>
+    <string name="switch_host">Switch host</string>
+    <string name="pro">Pro</string>
+    <string name="test">Test</string>
+    <string name="unpaid_countdown">Unpaid(%1$d:%2$d)</string>
 </resources>

@@ -62,4 +62,5 @@ public interface ExtraKeys {
 
     String NOT_MAIN = "not_main";
     String MARKET_DATA = "market_data";
+    String SELECTED_COIN_SYMBOL = "selected_coin_symbol";
 }

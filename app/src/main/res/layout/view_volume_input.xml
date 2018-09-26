@@ -18,7 +18,7 @@
         android:inputType="numberDecimal"
         android:textColor="@color/text22"
         android:textSize="15sp"
-        android:singleLine="true"/>
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/baseCurrency"

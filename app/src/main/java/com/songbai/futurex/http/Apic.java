@@ -303,12 +303,12 @@ public class Apic {
     }
 
     /**
-     * /api/user/user/findCommissionOfSubordinate
+     * /api/user/v1/findInviteRecord
      * GET
-     * 最近/全部 邀请用户
+     * 邀请记录---v1.5
      */
     public static Api findCommissionOfSubordinate(int page, int pageSize) {
-        return Api.get("/api/user/user/findCommissionOfSubordinate",
+        return Api.get("/api/user/v1/findInviteRecord",
                 new ReqParams()
                         .put("page", page)
                         .put("pageSize", pageSize));
@@ -604,12 +604,12 @@ public class Apic {
     }
 
     /**
-     * /api/user/user/getCurrentPromoterMsg.do
-     * GET
-     * 获取推广员信息
+     * /api/user/v1/findPromoterInfo
+     * POST
+     * 获取推广员信息--v1.5.1
      */
     public static Api getCurrentPromoterMsg() {
-        return Api.get("/api/user/user/getCurrentPromoterMsg.do");
+        return Api.get("/api/user/v1/findPromoterInfo");
     }
 
     /**
@@ -622,12 +622,12 @@ public class Apic {
     }
 
     /**
-     * /api/user/v1/user/inviteAward.do
+     * /api/user/v1//awardDetail
      * GET
-     * 奖励记录--v1.5
+     * 奖励记录--v1.5.1
      */
     public static Api inviteAward(int page, int pageSize, String wid) {
-        return Api.get("/api/user/v1/user/inviteAward.do",
+        return Api.get("/api/user/v1//awardDetail",
                 new ReqParams()
                         .put("page", page)
                         .put("pageSize", pageSize)
@@ -1516,29 +1516,56 @@ public class Apic {
     }
 
     /**
-     * /api/otc/newOtc/v1/destineOrder.do
+     * /api/otc/v2/newOtc/preBuy.do
      * POST
-     * 用户购买usdt--v1.5
+     * 法币交易预购买
      */
-    public static Api newOtcDestineOrder(String cost, String coinCount, String coinSymbol) {
-        return Api.post("/api/otc/newOtc/v1/destineOrder.do",
+    public static Api newOtcPreBuy(String coinCount, String coinSymbol) {
+        return Api.post("/api/otc/v2/newOtc/preBuy.do",
                 new ReqParams()
-                        .put("cost", cost)
                         .put("coinCount", coinCount)
                         .put("coinSymbol", coinSymbol));
     }
 
     /**
-     * /api/otc/newOtc/v1/sell.do
+     * /api/otc/v2/newOtc/destineOrder.do
      * POST
-     * 用户出售usdt
+     * 法币购买
      */
-    public static Api newOtcSell(String coinCount, String coinSymbol, String drawPass) {
-        return Api.post("/api/otc/newOtc/v1/sell.do",
+    public static Api newOtcDestineOrder(String coinCount, String coinSymbol, int waresType, int waresId) {
+        return Api.post("/api/otc/v2/newOtc/destineOrder.do",
                 new ReqParams()
                         .put("coinCount", coinCount)
                         .put("coinSymbol", coinSymbol)
-                        .put("drawPass", drawPass));
+                        .put("waresType", waresType)
+                        .put("waresId", waresId));
+    }
+
+    /**
+     * /api/otc/v2/newOtc/preSell.do
+     * POST
+     * 法币交易预出售
+     */
+    public static Api newOtcPreSell(String coinCount, String coinSymbol) {
+        return Api.post("/api/otc/v2/newOtc/preSell.do",
+                new ReqParams()
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol));
+    }
+
+    /**
+     * /api/otc/v2/newOtc/sell.do
+     * POST
+     * 法币出售
+     */
+    public static Api newOtcSell(String coinCount, String coinSymbol, String drawPass, int waresType, int waresId) {
+        return Api.post("/api/otc/v2/newOtc/sell.do",
+                new ReqParams()
+                        .put("coinCount", coinCount)
+                        .put("coinSymbol", coinSymbol)
+                        .put("drawPass", drawPass)
+                        .put("waresType", waresType)
+                        .put("waresId", waresId));
     }
 
     /**
@@ -1560,5 +1587,33 @@ public class Apic {
                 new ReqParams()
                         .put("waresOrderId", waresOrderId)
                         .put("syncUrl", syncUrl));
+    }
+
+    /**
+     * /api/user/v1/userSysConfig/getOtcTransConfig.do
+     * POST
+     * 获取法币开关信息
+     */
+    public static Api getOtcTransConfig() {
+        return Api.post("/api/user/v1/userSysConfig/getOtcTransConfig.do");
+    }
+
+    /**
+     * /api/quota/match/pairsMoney.do
+     * POST
+     * 获取交易对计价货币的汇率
+     */
+    public static Api pairsMoney() {
+        return Api.get("/api/quota/match/pairsMoney.do");
+    }
+
+    /**
+     * 判断二维码扫出来的地址是否有效
+     */
+    public static Api judgeAddress(String coinType, String toAddr) {
+        return Api.get("/api/user/wallet/checkAddrCoinType.do",
+                new ReqParams()
+                        .put("coinType", coinType)
+                        .put("toAddr", toAddr));
     }
 }

@@ -141,7 +141,7 @@ public class ChangePriceView extends FrameLayout {
 
     public void reset() {
         mTextWatcherDisable = true;
-        mPrice.setText("");
+        mPrice.setText(R.string.limit_price);
         mTextWatcherDisable = false;
         mModifiedManually = false;
     }

@@ -10,7 +10,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
@@ -41,7 +43,10 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
     RadioHeader mRadioHeader;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
+    @BindView(R.id.awardAmountText)
+    TextView mAwardAmountText;
     private Unbinder mBind;
+    private String mCoinType;
 
     @Nullable
     @Override
@@ -53,7 +58,7 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onCreateWithExtras(Bundle savedInstanceState, Bundle extras) {
-
+        mCoinType = extras.getString(ExtraKeys.COIN_TYPE, "");
     }
 
     @Override
@@ -82,7 +87,9 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                 mViewPager.setCurrentItem(position);
             }
         });
+        mAwardAmountText.setText(getString(R.string.gained_award_x, mCoinType.toUpperCase()));
         getCurrentPromoterMsg();
+        mAwardAmountText.setText(getString(R.string.gained_award_x, mCoinType));
     }
 
     private void getCurrentPromoterMsg() {
@@ -93,7 +100,9 @@ public class MyInviteFragment extends UniqueActivity.UniFragment {
                         PromoterInfo promoterInfo = resp.getData();
                         if (promoterInfo != null) {
                             mInviteNum.setText(String.valueOf(promoterInfo.getMyUsersCount()));
-                            mAwardAmount.setText(getString(R.string.x_bfb, String.valueOf(promoterInfo.getTotalCom())));
+                            mAwardAmount.setText(String.valueOf(promoterInfo.getTotalCom()));
+                            mCoinType = promoterInfo.getCoinType();
+                            mAwardAmountText.setText(getString(R.string.gained_award_x, mCoinType.toUpperCase()));
                         }
                     }
 

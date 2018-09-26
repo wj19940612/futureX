@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.BaseActivity;
 import com.songbai.futurex.activity.UniqueActivity;
@@ -58,6 +59,7 @@ public class InviteActivity extends BaseActivity {
     private String mCode;
     private String mPromotionShare;
     private PromotionInfos.ShareContentBean mShareContent;
+    private String mCoinType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +70,8 @@ public class InviteActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (LocalUser.getUser().isLogin()) {
-                    UniqueActivity.launcher(InviteActivity.this, MyInviteFragment.class).execute();
+                    UniqueActivity.launcher(InviteActivity.this, MyInviteFragment.class)
+                            .putExtra(ExtraKeys.COIN_TYPE, mCoinType).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -84,7 +87,9 @@ public class InviteActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<PromoterInfo> resp) {
                         PromoterInfo promoterInfo = resp.getData();
                         if (promoterInfo != null) {
+                            mCoinType = promoterInfo.getCoinType();
                             mCode = promoterInfo.getCode();
+                            mCoinType = promoterInfo.getCoinType();
                             mInviteCode.setText(mCode);
                         }
                     }
@@ -158,7 +163,7 @@ public class InviteActivity extends BaseActivity {
     }
 
     private void showShareDialog(boolean hasPoster) {
-        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode, mPromotionShare,mShareContent);
+        ShareFriendsDialogFragment shareFriendsDialogFragment = ShareFriendsDialogFragment.newInstance(hasPoster, mCode, mPromotionShare, mShareContent);
         shareFriendsDialogFragment.show(getSupportFragmentManager());
     }
 

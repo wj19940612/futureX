@@ -1,5 +1,7 @@
 package com.songbai.futurex.fragment;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,16 +14,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.httplib.ReqError;
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.SingleTradeActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.auth.LoginActivity;
+import com.songbai.futurex.activity.mine.MyPropertyActivity;
+import com.songbai.futurex.fragment.mine.ReChargeCoinFragment;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Callback4Resp;
@@ -30,14 +37,21 @@ import com.songbai.futurex.model.CoinIntroduce;
 import com.songbai.futurex.model.CurrencyPair;
 import com.songbai.futurex.model.PairDesc;
 import com.songbai.futurex.model.local.LocalUser;
+import com.songbai.futurex.model.local.MakeOrder;
+import com.songbai.futurex.model.mine.CoinAbleAmount;
+import com.songbai.futurex.utils.AnimatorUtil;
 import com.songbai.futurex.utils.CurrencyUtils;
+import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
+import com.songbai.futurex.utils.PairMoneyUtil;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.ChartsRadio;
+import com.songbai.futurex.view.FastTradingView;
 import com.songbai.futurex.view.IntroduceView;
 import com.songbai.futurex.view.RadioHeader;
 import com.songbai.futurex.view.RealtimeDealView;
+import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.TitleBar;
 import com.songbai.futurex.view.TradeVolumeView;
 import com.songbai.futurex.view.chart.BaseChart;
@@ -49,6 +63,7 @@ import com.songbai.futurex.view.chart.Kline;
 import com.songbai.futurex.view.chart.KlineDataDetailView;
 import com.songbai.futurex.view.chart.KlineUtils;
 import com.songbai.futurex.view.chart.TrendV;
+import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
 import com.songbai.futurex.websocket.OnDataRecListener;
@@ -59,6 +74,7 @@ import com.songbai.futurex.websocket.model.DealData;
 import com.songbai.futurex.websocket.model.DeepData;
 import com.songbai.futurex.websocket.model.MarketData;
 import com.songbai.futurex.websocket.model.PairMarket;
+import com.songbai.futurex.websocket.model.PairsPrice;
 import com.songbai.futurex.websocket.model.TradeDir;
 
 import java.lang.ref.WeakReference;
@@ -134,6 +150,14 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     LinearLayout mTradeButtons;
     @BindView(R.id.tradePause)
     TextView mTradePause;
+    @BindView(R.id.tradeLayout)
+    FastTradingView mTradeLayout;
+    @BindView(R.id.viewStub)
+    View mViewStub;
+    @BindView(R.id.equivalent)
+    TextView mEquivalent;
+
+    private ValueAnimator mValueAnimator;
 
     private CurrencyPair mCurrencyPair;
     private MarketSubscriber mMarketSubscriber;
@@ -161,6 +185,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initTitleBar();
 
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
@@ -211,6 +236,16 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             }
         });
 
+        mTradeVolumeView.setOnItemClickListener(new TradeVolumeView.OnItemClickListener() {
+            @Override
+            public void onItemClick(String price, String volume) {
+                if (mTradeLayout.getHeight() == ((RelativeLayout.LayoutParams) mTradeLayout.getLayoutParams()).bottomMargin) {
+                    return;
+                }
+                mTradeLayout.updatePrice(price);
+            }
+        });
+
         mMarketSubscriber = new MarketSubscriber(new OnDataRecListener() {
             @Override
             public void onDataReceive(String data, int code, String dest) {
@@ -226,6 +261,41 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                             updateTradeDealView(pairMarketResponse.getContent().getDetail());
                         }
                     }.parse();
+                }
+            }
+        });
+
+        mTradeLayout.setonFastTradeClickListener(new FastTradingView.onFastTradeClickListener() {
+            @Override
+            public void onMakeOrder(MakeOrder makeOrder) {
+                requestMakeOrder(makeOrder);
+                requestUserAccount();
+            }
+
+            @Override
+            public void onFullTradeClick(int direction) {
+                jumpFullTrade(direction);
+                sinkAnim();
+            }
+
+            @Override
+            public void onCloseTradeClick() {
+                sinkAnim();
+            }
+
+            @Override
+            public void onRecharge() {
+                umengEventCount(UmengCountEventId.COIN0005);
+                if (LocalUser.getUser().isLogin()) {
+                    if (mCurrencyPair != null) {
+                        UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
+                                .putExtra(ExtraKeys.COIN_TYPE, mCurrencyPair.getSuffixSymbol())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), MyPropertyActivity.class).execute();
+                    }
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
         });
@@ -356,7 +426,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mTradeDealView.setCurrencyPair(mCurrencyPair);
         mPairName.setText(mCurrencyPair.getUpperCasePairName());
 
+        mTradeLayout.resetView();
         requestPairDescription();
+        mTradeLayout.updateDirection();
     }
 
     private void openSearchPage() {
@@ -433,12 +505,78 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         }
     }
 
+    public boolean onBackPressed() {
+        if (mTradeLayout.isVisible()) {
+            sinkAnim();
+            return true;
+        }
+
+        if (mValueAnimator != null) {
+            mValueAnimator.cancel();
+        }
+        return false;
+    }
+
     private void clickBuySell(int direction) {
+        if (!Preference.get().isQuickExchange()) {
+            jumpFullTrade(direction);
+        } else {
+            if (!LocalUser.getUser().isLogin()) {
+                Launcher.with(getContext(), LoginActivity.class).execute();
+                return;
+            }
+            if (mPairDesc == null) return;
+
+            if (!mTradeLayout.isFlowing()) {
+                mTradeLayout.setDirection(direction);
+            }
+            flowAnim();
+        }
+
+    }
+
+    private void jumpFullTrade(int direction) {
         Launcher.with(MarketDetailFragment.this, SingleTradeActivity.class)
                 .putExtra(ExtraKeys.CURRENCY_PAIR, mCurrencyPair)
                 .putExtra(ExtraKeys.TRADE_DIRECTION, direction)
                 .putExtra(ExtraKeys.NOT_MAIN, true)
                 .execute();
+    }
+
+    private void flowAnim() {
+        if (mTradeLayout.isGone()) {
+            mValueAnimator = AnimatorUtil.flowView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
+                @Override
+                public void onStart(Animator animation) {
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_FLOWING);
+                    mViewStub.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onEnd(Animator animation) {
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_VISIBLE);
+                }
+            });
+            mValueAnimator.start();
+        }
+    }
+
+    private void sinkAnim() {
+        if (!mTradeLayout.isSinking()) {
+            mValueAnimator = AnimatorUtil.sinkView(mTradeLayout, new AnimatorUtil.OnStartAndListener() {
+                @Override
+                public void onStart(Animator animation) {
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_SINKING);
+                    mViewStub.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onEnd(Animator animation) {
+                    mTradeLayout.setViewStatus(FastTradingView.VIEW_GONE);
+                }
+            });
+            mValueAnimator.start();
+        }
     }
 
     private void toggleOptionalStatus() {
@@ -518,6 +656,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     @Override
                     protected void onRespData(PairDesc data) {
                         mPairDesc = data;
+                        mCurrencyPair = mPairDesc.getPairs().getCurrencyPair();
+
                         initCharts();
                         initMarketViews();
                         requestDeepList();
@@ -526,8 +666,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         requestIntroduceData();
                         updateTradeButtons();
                         updateOptionalStatus();
+                        requestUserAccount();
                         mChartRadio.performChildClick(0);
                         mTradeDetailRadio.selectTab(0);
+
+                        mTradeLayout.updateData(mCurrencyPair, mPairDesc, mTradeVolumeView);
                     }
                 }).fireFreely();
     }
@@ -560,6 +703,70 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         updateIntroduce(data);
                     }
                 }).fireFreely();
+    }
+
+    private void requestMakeOrder(final MakeOrder makeOrder) {
+        Apic.makeOrder(makeOrder).tag(TAG)
+                .callback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        ToastUtil.show(R.string.entrust_success);
+                        mTradeLayout.resetMakeOrder();
+                        if (mTradeLayout.getViewStatus() != FastTradingView.VIEW_SINKING) {
+                            sinkAnim();
+                        }
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.Code.NEEDS_FUND_PASSWORD) {
+                            showFundPasswordDialog(makeOrder);
+                        } else {
+                            super.onRespFailure(failedResp);
+                        }
+                    }
+                }).fire();
+    }
+
+    private void showFundPasswordDialog(final MakeOrder makeOrder) {
+        WithDrawPsdViewController withDrawPsdViewController = new WithDrawPsdViewController(getActivity(),
+                new WithDrawPsdViewController.OnClickListener() {
+                    @Override
+                    public void onForgetClick() {
+                        umengEventCount(UmengCountEventId.TRADE0004);
+                    }
+
+                    @Override
+                    public void onConfirmClick(String cashPwd, String googleAuth) {
+                        makeOrder.setDrawPass(md5Encrypt(cashPwd));
+                        requestMakeOrder(makeOrder);
+                    }
+                });
+        withDrawPsdViewController.setShowGoogleAuth(false);
+        SmartDialog smartDialog = SmartDialog.solo(getActivity());
+        smartDialog.setCustomViewController(withDrawPsdViewController)
+                .show();
+        withDrawPsdViewController.setTitle(R.string.fund_password_verification);
+    }
+
+    private void requestUserAccount() {
+        if (LocalUser.getUser().isLogin()) {
+            Apic.getAccountByUserForMuti(mCurrencyPair.getPrefixSymbol() + "," + mCurrencyPair.getSuffixSymbol()).tag(TAG)
+                    .callback(new Callback<Resp<List<CoinAbleAmount>>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<List<CoinAbleAmount>> resp) {
+                            mTradeLayout.updateCoinAbleAmount(resp);
+                            mTradeLayout.updateSelectPercentView();
+                        }
+
+                        @Override
+                        public void onFailure(ReqError reqError) {
+                            super.onFailure(reqError);
+                        }
+                    }).fireFreely();
+        } else {
+            mTradeLayout.updateNoLoginUserAccount();
+        }
     }
 
     private void updateIntroduce(CoinIntroduce data) {
@@ -616,6 +823,13 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
         }
         mTradeVolume.setText(CurrencyUtils.get24HourVolume(marketData.getVolume()));
+        PairsPrice conversion = marketData.getConversion();
+        double price = PairMoneyUtil.getPrice(conversion);
+        mTradeLayout.setPrice(price / marketData.getLastPrice());
+        mEquivalent.setText(getString(R.string.equivalent_x_x,
+                FinanceUtil.formatWithScale(price),
+                Preference.get().getPricingMethod().toUpperCase()));
+        mTradeLayout.updatePriceView(marketData);
     }
 
     @Override
@@ -632,6 +846,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         super.onResume();
         mMarketSubscriber.resume();
         mMarketSubscriber.subscribe(mCurrencyPair.getPairs());
+        if (getUserVisibleHint() && isAdded()) {
+            requestPairDescription();
+        }
     }
 
     @Override

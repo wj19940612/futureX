@@ -18,6 +18,10 @@ public class Preference {
         String REFRESH_LANGUAGE = "refresh_language";
         String LANGUAGE_STR = "language_str";
         String SYS_MODEL = "sys_model";
+        String PRICING_METHOD = "pricing_method";
+        String FAST_TRADE = "fast_trade";
+        String ALPHA_HOST = "alpha_host";
+        String CLOSE_OTC = "close_otc";
     }
 
     private static Preference sInstance;
@@ -47,6 +51,14 @@ public class Preference {
         getEditor().putString(key, value).apply();
     }
 
+    private void commit(String key, String value) {
+        getEditor().putString(key, value).commit();
+    }
+
+    private void commit(String key, boolean value) {
+        getEditor().putBoolean(key, value).commit();
+    }
+
     private void apply(String key, long value) {
         getEditor().putLong(key, value).apply();
     }
@@ -61,6 +73,10 @@ public class Preference {
 
     public void setUserJson(String userJson) {
         apply(Key.USER_JSON, userJson);
+    }
+
+    public void setUserJsonSYNC(String userJson) {
+        commit(Key.USER_JSON, userJson);
     }
 
     public String getUserJson() {
@@ -146,5 +162,37 @@ public class Preference {
 
     public String getSysModel() {
         return mPrefs.getString(Key.SYS_MODEL, "");
+    }
+
+    public void setPricingMethod(String pricingMethod) {
+        apply(Key.PRICING_METHOD, pricingMethod);
+    }
+
+    public String getPricingMethod() {
+        return mPrefs.getString(Key.PRICING_METHOD, "cny");
+    }
+
+    public boolean isQuickExchange() {
+        return mPrefs.getBoolean(Key.FAST_TRADE, false);
+    }
+
+    public void setQuickExchange(boolean fastTrade) {
+        apply(Key.FAST_TRADE, fastTrade);
+    }
+
+    public String getAlphaHost() {
+        return mPrefs.getString(Key.ALPHA_HOST, "ex.esongbai.xyz");
+    }
+
+    public void setAlphaHost(String host) {
+        commit(Key.ALPHA_HOST, host);
+    }
+
+    public boolean getCloseOTC() {
+        return mPrefs.getBoolean(Key.CLOSE_OTC, false);
+    }
+
+    public void setCloseOTC(boolean closeOTC) {
+        commit(Key.CLOSE_OTC, closeOTC);
     }
 }

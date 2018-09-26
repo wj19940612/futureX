@@ -5,9 +5,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
+import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.activity.mine.PropertyFlowActivity;
 import com.songbai.futurex.fragment.mine.adapter.PropertyFlowAdapter;
@@ -24,6 +24,7 @@ import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.PagingWrap;
 import com.songbai.futurex.http.Resp;
+import com.songbai.futurex.model.PairsMoney;
 import com.songbai.futurex.model.local.GetUserFinanceFlowData;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.mine.AccountBean;
@@ -32,7 +33,7 @@ import com.songbai.futurex.model.mine.CoinPropertyFlow;
 import com.songbai.futurex.utils.Display;
 import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
-import com.songbai.futurex.utils.StrUtil;
+import com.songbai.futurex.utils.PairMoneyUtil;
 import com.songbai.futurex.utils.UmengCountEventId;
 import com.songbai.futurex.view.EmptyRecyclerView;
 import com.songbai.futurex.view.SmartDialog;
@@ -76,6 +77,10 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     LinearLayout mEmptyView;
     @BindView(R.id.history)
     TextView mHistory;
+    @BindView(R.id.equivalent)
+    TextView mEquivalent;
+    @BindView(R.id.equivalentText)
+    TextView mEquivalentText;
     private Unbinder mBind;
     private AccountBean mAccountBean;
     private int mTransferType;
@@ -83,6 +88,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     private GetUserFinanceFlowData mGetUserFinanceFlowData;
     private int mAccountType;
     private String mWid;
+    private double mPrice;
 
     @Nullable
     @Override
@@ -121,6 +127,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 Rect r = new Rect();
                 mHistory.getGlobalVisibleRect(r);
                 mEmptyView.setMinimumHeight((int) (Display.getScreenHeight() - r.bottom - Display.dp2Px(49, getResources())));
+                mEmptyView.setMinimumHeight((int) (Display.getScreenHeight() - r.bottom - Display.dp2Px(49, getResources())));
             }
         });
         mRecyclerView.setEmptyView(mEmptyView);
@@ -139,6 +146,23 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mRecyclerView.setAdapter(mAdapter);
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
+        mTitleBar.setRightVisible(mAccountBean.getLegal() == 1 && !Preference.get().getCloseOTC());
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getContext(), MainActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, MainActivity.PAGE_LEGAL_CURRENCY)
+                        .execute();
+            }
+        });
+        Apic.pairsMoney().tag(TAG).callback(new Callback<Resp<PairsMoney>>() {
+            @Override
+            protected void onRespSuccess(Resp<PairsMoney> resp) {
+                PairsMoney data = resp.getData();
+                mPrice = PairMoneyUtil.getCoinPrice("btc", data);
+                setCoinAccountInfo(mAccountBean);
+            }
+        }).fire();
         getCoinBalance();
         getFlow();
     }
@@ -160,14 +184,10 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     }
 
     private void setCoinAccountInfo(AccountBean accountBean) {
-        SpannableString ableCoinStr = StrUtil.mergeTextWithColor(getString(R.string.available_amount_space),
-                ContextCompat.getColor(getContext(), R.color.text99),
-                FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
-        mAbleCoin.setText(ableCoinStr);
-        SpannableString freezeCoinStr = StrUtil.mergeTextWithColor(getString(R.string.freeze_amount_space),
-                ContextCompat.getColor(getContext(), R.color.text99),
-                FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));
-        mFreezeCoin.setText(freezeCoinStr);
+        mAbleCoin.setText(FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
+        mFreezeCoin.setText(FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));
+        mEquivalentText.setText(getString(R.string.equivalent_x, Preference.get().getPricingMethod().toUpperCase()));
+        mEquivalent.setText(FinanceUtil.formatWithScale(accountBean.getEstimateBtc() * mPrice));
     }
 
     private void getAccountByUser(String coinType) {
@@ -178,8 +198,8 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         CoinAccountBalance data = resp.getData();
                         List<AccountBean> account = data.getAccount();
                         if (account.size() > 0) {
-                            AccountBean coinAbleAmount = account.get(0);
-                            setCoinAccountInfo(coinAbleAmount);
+                            mAccountBean = account.get(0);
+                            setCoinAccountInfo(mAccountBean);
                         }
                     }
                 })
@@ -194,8 +214,8 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         CoinAccountBalance data = resp.getData();
                         List<AccountBean> account = data.getAccount();
                         if (account.size() > 0) {
-                            AccountBean coinAbleAmount = account.get(0);
-                            setCoinAccountInfo(coinAbleAmount);
+                            mAccountBean = account.get(0);
+                            setCoinAccountInfo(mAccountBean);
                         }
                     }
                 })

@@ -15,6 +15,8 @@ public class BFBInfo {
     private String frontProduce;
     private String nowProduce;
     private String volume;
+    private String frontMillionBfbConvertBtc;
+    private int display;
 
     public String getFrontProduce() {
         return frontProduce;
@@ -38,5 +40,21 @@ public class BFBInfo {
 
     public void setVolume(String volume) {
         this.volume = volume;
+    }
+
+    public String getFrontMillionBfbConvertBtc() {
+        return frontMillionBfbConvertBtc;
+    }
+
+    public void setFrontMillionBfbConvertBtc(String frontMillionBfbConvertBtc) {
+        this.frontMillionBfbConvertBtc = frontMillionBfbConvertBtc;
+    }
+
+    public int getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(int display) {
+        this.display = display;
     }
 }

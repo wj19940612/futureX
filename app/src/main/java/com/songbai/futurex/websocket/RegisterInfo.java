@@ -1,6 +1,7 @@
 package com.songbai.futurex.websocket;
 
 import com.songbai.futurex.BuildConfig;
+import com.songbai.futurex.Preference;
 
 /**
  * Modified by john on 2018/6/12
@@ -19,6 +20,13 @@ public class RegisterInfo {
 
     public RegisterInfo(String tokens) {
         host = BuildConfig.HOST;
+        // 测试包切换环境
+        if ("alpha".equals(BuildConfig.FLAVOR)) {
+            if (!BuildConfig.IS_PROD) {
+                host = Preference.get().getAlphaHost();
+            }
+            host = Preference.get().getAlphaHost();
+        }
         String[] strings = processTokens(tokens);
         if (strings.length == 2) {
             token1 = strings[0];

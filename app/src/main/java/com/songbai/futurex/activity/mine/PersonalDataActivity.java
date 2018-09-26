@@ -16,8 +16,6 @@ import com.songbai.futurex.activity.UniqueActivity;
 import com.songbai.futurex.fragment.dialog.UploadUserImageDialogFragment;
 import com.songbai.futurex.fragment.mine.BindMailFragment;
 import com.songbai.futurex.fragment.mine.BindPhoneFragment;
-import com.songbai.futurex.fragment.mine.DrawCoinAddressFragment;
-import com.songbai.futurex.fragment.mine.LegalCurrencyPayFragment;
 import com.songbai.futurex.fragment.mine.PrimaryCertificationFragment;
 import com.songbai.futurex.fragment.mine.SeniorCertificationFragment;
 import com.songbai.futurex.http.Apic;
@@ -61,8 +59,6 @@ public class PersonalDataActivity extends BaseActivity {
     IconTextRow mPrimaryCertification;
     @BindView(R.id.seniorCertification)
     IconTextRow mSeniorCertification;
-    @BindView(R.id.pushBtn)
-    ImageView mPushBtn;
     private Unbinder mBind;
     private boolean mHasPhone;
     private boolean mHasEmail;
@@ -138,10 +134,6 @@ public class PersonalDataActivity extends BaseActivity {
                     break;
                 default:
             }
-            mPushBtn.setVisibility(View.VISIBLE);
-            mPushBtn.setSelected(userInfo.getEntrustPush() == 1 ? true : false);
-        } else {
-            mPushBtn.setVisibility(View.GONE);
         }
     }
 
@@ -162,8 +154,7 @@ public class PersonalDataActivity extends BaseActivity {
     }
 
     @OnClick({R.id.headImageLayout, R.id.nickName, R.id.realName, R.id.phoneCertification,
-            R.id.mailCertification, R.id.primaryCertification, R.id.seniorCertification,
-            R.id.legalCurrencyPayManagement, R.id.addressManagement, R.id.pushBtn})
+            R.id.mailCertification, R.id.primaryCertification, R.id.seniorCertification})
     public void onViewClicked(View view) {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         switch (view.getId()) {
@@ -205,39 +196,8 @@ public class PersonalDataActivity extends BaseActivity {
                         .putExtra(ExtraKeys.AUTHENTICATION_STATUS, mAuthenticationStatus)
                         .execute(MODIFY_PERSONAL_DATA);
                 break;
-            case R.id.legalCurrencyPayManagement:
-                if (userInfo.getAuthenticationStatus() < AuthenticationStatus.AUTHENTICATION_PRIMARY) {
-                    ToastUtil.show(R.string.passed_primary_certification);
-                } else {
-                    UniqueActivity.launcher(getActivity(), LegalCurrencyPayFragment.class)
-                            .execute(MODIFY_PERSONAL_DATA);
-                }
-                break;
-            case R.id.addressManagement:
-                UniqueActivity.launcher(getActivity(), DrawCoinAddressFragment.class)
-                        .execute(MODIFY_PERSONAL_DATA);
-                break;
-            case R.id.pushBtn:
-                clickPushBtn();
-                break;
             default:
         }
-    }
-
-    private void clickPushBtn() {
-        mPushBtn.setEnabled(false);
-        Apic.turnRemindingPush(mPushBtn.isSelected() ? 0 : 1).callback(new Callback<Resp>() {
-            @Override
-            protected void onRespSuccess(Resp resp) {
-                mPushBtn.setSelected(!mPushBtn.isSelected());
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                mPushBtn.setEnabled(true);
-            }
-        }).fire();
     }
 
     @Override

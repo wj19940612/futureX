@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     def verName = System.getProperties().getProperty("verName")
     def verCode = System.getProperties().getProperty("verCode")
@@ -15,8 +14,8 @@ android {
         applicationId "com.songbai.futurex"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 32
-        versionName "1.5.0"
+        versionCode 45
+        versionName "1.5.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"m.bitfutu.re\"')

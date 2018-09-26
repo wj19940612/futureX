@@ -120,7 +120,9 @@ public class DrawCoinAddressListFragment extends UniqueActivity.UniFragment impl
 
     @OnClick(R.id.addAddress)
     public void onViewClicked() {
-        UniqueActivity.launcher(this, AddAddressFragment.class).putExtra(ExtraKeys.COIN_ADDRESS_INFO, mCoinAddressCount).execute(this, REQUEST_ADD_ADDRESS);
+        UniqueActivity.launcher(this, AddAddressFragment.class)
+                .putExtra(ExtraKeys.COIN_ADDRESS_INFO, mCoinAddressCount)
+                .execute(this, REQUEST_ADD_ADDRESS);
     }
 
     @Override

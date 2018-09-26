@@ -8,120 +8,143 @@
     android:layout_marginTop="12dp"
     android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/headPortrait"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@id/dealType"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/userName"
-        app:layout_constraintRight_toLeftOf="@id/userName"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageView
-        android:id="@+id/certification"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="26dp"
-        android:src="@drawable/ic_senior_star"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@id/headPortrait"
-        app:layout_constraintTop_toTopOf="@id/headPortrait"/>
-
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:textColor="@color/text22"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@id/headPortrait"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toRightOf="@id/headPortrait"
-        app:layout_constraintRight_toLeftOf="@id/statusContainer"
-        app:layout_constraintTop_toTopOf="@id/headPortrait"
-        tools:text="用户306"/>
-
-    <FrameLayout
-        android:id="@+id/statusContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="12dp"
-        app:layout_constraintBottom_toBottomOf="@id/headPortrait"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/headPortrait">
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_common_right_arrow"
-            android:textColor="@color/text99"
-            android:textSize="13sp"
-            tools:text="@string/completed"/>
-    </FrameLayout>
-
     <TextView
         android:id="@+id/dealType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
         android:textColor="@color/text22"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@id/tradeCount"
-        app:layout_constraintLeft_toLeftOf="@id/headPortrait"
-        app:layout_constraintTop_toBottomOf=" @id/headPortrait"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="买入 USDT"/>
+
+    <com.songbai.futurex.view.TimerTextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/text99"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/completed"/>
+
+    <TextView
+        android:id="@+id/tradeCountText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/turnover"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/priceText"
+        app:layout_constraintTop_toBottomOf="@id/dealType"/>
+
+    <TextView
+        android:id="@+id/priceText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:gravity="end"
+        android:text="@string/single_price"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tradeCountText"
+        app:layout_constraintHorizontal_weight="0.6"
+        app:layout_constraintLeft_toRightOf="@id/tradeCountText"
+        app:layout_constraintRight_toLeftOf="@id/buyText"/>
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tradeCount"
+        app:layout_constraintLeft_toLeftOf="@id/priceText"
+        app:layout_constraintRight_toRightOf="@id/priceText"
+        tools:text="6.66"/>
+
+    <TextView
+        android:id="@+id/buyText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+        android:gravity="end"
+        android:textColor="@color/text66"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tradeCountText"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@id/priceText"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="买家"/>
+
+    <LinearLayout
+        android:id="@+id/traderInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:gravity="end|center_vertical"
+        app:layout_constraintLeft_toLeftOf="@id/buyText"
+        app:layout_constraintRight_toRightOf="@id/buyText"
+        app:layout_constraintTop_toBottomOf="@id/buyText">
+
+        <ImageView
+            android:id="@+id/headPortrait"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/text22"
+            android:textSize="13sp"
+            tools:text="用户306"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tradeCount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/text66"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/timestamp"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toLeftOf="@id/headPortrait"
-        app:layout_constraintRight_toLeftOf="@id/desc"
-        app:layout_constraintTop_toBottomOf="@id/dealType"
-        tools:text="交易金额：3225.00 CNY"/>
+        app:layout_constraintLeft_toLeftOf="@id/tradeCountText"
+        app:layout_constraintRight_toRightOf="@+id/tradeCountText"
+        app:layout_constraintTop_toBottomOf="@id/tradeCountText"
+        tools:text="3225.00 CNY"/>
 
     <TextView
         android:id="@+id/timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/text66"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="18dp"
+        android:textColor="@color/text99"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/headPortrait"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tradeCount"
         tools:text="2018/04/25"/>
-
-    <TextView
-        android:id="@+id/desc"
-        android:layout_width="130dp"
-        android:layout_height="60dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/bg_f5_r2"
-        android:gravity="center|left"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textColor="@color/text66"
-        android:textSize="13sp"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintLeft_toRightOf="@id/tradeCount"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusContainer"
-        tools:text="您已取消这笔交易"/>
 
     <TextView
         android:id="@+id/redPoint"
@@ -136,6 +159,5 @@
         android:textSize="9dp"
         android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusContainer"
         tools:text="9+"/>
 </android.support.constraint.ConstraintLayout>

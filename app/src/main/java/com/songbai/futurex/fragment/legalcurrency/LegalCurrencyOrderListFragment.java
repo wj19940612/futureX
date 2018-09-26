@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +33,7 @@ import com.songbai.futurex.utils.FinanceUtil;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.utils.OnRVItemClickListener;
 import com.songbai.futurex.view.EmptyRecyclerView;
+import com.songbai.futurex.view.TimerTextView;
 import com.zcmrr.swipelayout.foot.LoadMoreFooterView;
 import com.zcmrr.swipelayout.header.RefreshHeaderView;
 
@@ -231,7 +232,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof LegalCurrencyOrderHolder) {
-                ((LegalCurrencyOrderHolder) holder).bindData(position, mList.get(position));
+                ((LegalCurrencyOrderHolder) holder).bindData(mContext, position, mList.get(position));
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -262,29 +263,27 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
         class LegalCurrencyOrderHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.headPortrait)
             ImageView mHeadPortrait;
-            @BindView(R.id.certification)
-            ImageView mCertification;
             @BindView(R.id.userName)
             TextView mUserName;
             @BindView(R.id.status)
-            TextView mStatus;
-            @BindView(R.id.statusContainer)
-            FrameLayout mStatusContainer;
+            TimerTextView mStatus;
             @BindView(R.id.dealType)
             TextView mDealType;
             @BindView(R.id.tradeCount)
             TextView mTradeCount;
             @BindView(R.id.timestamp)
             TextView mTimestamp;
-            @BindView(R.id.desc)
-            TextView mDesc;
+            @BindView(R.id.price)
+            TextView mPrice;
+            @BindView(R.id.buyText)
+            TextView mBuyText;
 
             public LegalCurrencyOrderHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindData(final int position, final LegalCurrencyOrder legalCurrencyOrder) {
+            public void bindData(Context context, final int position, final LegalCurrencyOrder legalCurrencyOrder) {
                 GlideApp
                         .with(mContext)
                         .load(legalCurrencyOrder.getChangePortrait())
@@ -295,45 +294,55 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                     case OTCOrderStatus.ORDER_DIRECT_BUY:
                         mDealType.setText(mContext.getString(R.string.buy_x,
                                 legalCurrencyOrder.getCoinSymbol().toUpperCase()));
+                        mBuyText.setText(R.string.seller);
                         break;
                     case OTCOrderStatus.ORDER_DIRECT_SELL:
                         mDealType.setText(mContext.getString(R.string.sell_x,
                                 legalCurrencyOrder.getCoinSymbol().toUpperCase()));
+                        mBuyText.setText(R.string.buyer);
                         break;
                     default:
                 }
-                mTradeCount.setText(getString(R.string.trade_count_symbol_x,
+                mTradeCount.setText(getString(R.string.x_space_x,
                         FinanceUtil.formatWithScale(legalCurrencyOrder.getOrderAmount())
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
-                // TODO: 2018/6/29 缺少用户认证状态 字段
-//                mCertification.setVisibility(authStatus == 1 || authStatus == 2 ? View.VISIBLE : View.GONE);
-//                switch (authStatus) {
-//                    case 1:
-//                        mCertification.setImageResource(R.drawable.ic_primary_star);
-//                        break;
-//                    case 2:
-//                        mCertification.setImageResource(R.drawable.ic_senior_star);
-//                        break;
-//                    default:
-//                }
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
+                mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(), 8));
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
-                        mDesc.setText(R.string.canceled);
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.text99));
                         break;
                     case OTCOrderStatus.ORDER_UNPAIED:
                         mStatus.setText(R.string.unpaid);
-                        mDesc.setText(R.string.unpaid);
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
+                        if (legalCurrencyOrder.getCountDown() > 0) {
+                            mStatus.setTimes(System.currentTimeMillis() + legalCurrencyOrder.getCountDown() * 1000);
+                            mStatus.setSetTextCallback(new TimerTextView.SetTextCallback() {
+                                @Override
+                                public String getText(long diff) {
+                                    return getString(R.string.unpaid_countdown, diff / 1000 / 60, diff / 1000 % 60);
+                                }
+                            });
+                            mStatus.setOnStateChangeListener(new TimerTextView.OnStateChangeListener() {
+                                @Override
+                                public void onStateChange(TimerTextView.CountDownState countDownState) {
+                                    if (countDownState == TimerTextView.CountDownState.closed) {
+                                        mStatus.setText(R.string.unpaid);
+                                    }
+                                }
+                            });
+                            mStatus.beginRun();
+                        }
                         break;
                     case OTCOrderStatus.ORDER_PAIED:
                         mStatus.setText(R.string.paid);
-                        mDesc.setText(R.string.paid);
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.text99));
                         break;
                     case OTCOrderStatus.ORDER_COMPLATED:
                         mStatus.setText(R.string.completed);
-                        mDesc.setText(R.string.otc_trade_complete_desc);
+                        mStatus.setTextColor(ContextCompat.getColor(context, R.color.green));
                         break;
                     default:
                 }
