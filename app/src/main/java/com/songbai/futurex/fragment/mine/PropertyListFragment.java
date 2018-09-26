@@ -109,7 +109,7 @@ public class PropertyListFragment extends BaseFragment {
                 AccountBean accountBean = (AccountBean) obj;
                 if (view.getId() == R.id.trade) {
                     Launcher.with(getContext(), MainActivity.class)
-                            .putExtra(ExtraKeys.PAGE_INDEX,2)
+                            .putExtra(ExtraKeys.PAGE_INDEX, MainActivity.PAGE_LEGAL_CURRENCY)
                             .execute();
                 } else {
                     UniqueActivity.launcher(PropertyListFragment.this, CoinPropertyFragment.class)
@@ -372,7 +372,7 @@ public class PropertyListFragment extends BaseFragment {
             }
 
             private void bindData(Context context, final int position, final AccountBean accountBean) {
-                mTrade.setVisibility(accountBean.getLegal() == 1 ? View.VISIBLE : View.GONE);
+                mTrade.setVisibility(accountBean.getLegal() == 1 && !Preference.get().getCloseOTC() ? View.VISIBLE : View.GONE);
                 mCoinType.setText(accountBean.getCoinType().toUpperCase());
                 mAvailableAmount.setText(FinanceUtil.formatWithScale(accountBean.getAbleCoin(), 8));
                 mFreezeAmount.setText(FinanceUtil.formatWithScale(accountBean.getFreezeCoin(), 8));

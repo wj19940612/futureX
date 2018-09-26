@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 
 
@@ -80,6 +81,11 @@ public class BottomTabs extends LinearLayout {
         for (int i = 0; i < mLength; i++) {
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.weight = 1;
+            if (Preference.get().getCloseOTC()) {
+                if (i == 2) {
+                    continue;
+                }
+            }
             addView(createTab(i), params);
         }
         selectTab(0);
@@ -135,6 +141,11 @@ public class BottomTabs extends LinearLayout {
         if (index < 0 || index >= mLength) return;
         unSelectAll();
         getChildAt(index).setSelected(true);
+        if (Preference.get().getCloseOTC()) {
+            if (index > 1) {
+                index += 1;
+            }
+        }
         mSelectedIndex = index;
     }
 

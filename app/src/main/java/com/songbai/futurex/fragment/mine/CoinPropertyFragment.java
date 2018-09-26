@@ -146,12 +146,12 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
         mRecyclerView.setAdapter(mAdapter);
         mGetUserFinanceFlowData = new GetUserFinanceFlowData();
         mGetUserFinanceFlowData.setCoinType(mAccountBean.getCoinType());
-        mTitleBar.setRightVisible(mAccountBean.getLegal() == 1);
+        mTitleBar.setRightVisible(mAccountBean.getLegal() == 1 && !Preference.get().getCloseOTC());
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Launcher.with(getContext(), MainActivity.class)
-                        .putExtra(ExtraKeys.PAGE_INDEX,2)
+                        .putExtra(ExtraKeys.PAGE_INDEX, MainActivity.PAGE_LEGAL_CURRENCY)
                         .execute();
             }
         });

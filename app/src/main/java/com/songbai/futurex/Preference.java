@@ -21,6 +21,7 @@ public class Preference {
         String PRICING_METHOD = "pricing_method";
         String FAST_TRADE = "fast_trade";
         String ALPHA_HOST = "alpha_host";
+        String CLOSE_OTC = "close_otc";
     }
 
     private static Preference sInstance;
@@ -52,6 +53,10 @@ public class Preference {
 
     private void commit(String key, String value) {
         getEditor().putString(key, value).commit();
+    }
+
+    private void commit(String key, boolean value) {
+        getEditor().putBoolean(key, value).commit();
     }
 
     private void apply(String key, long value) {
@@ -181,5 +186,13 @@ public class Preference {
 
     public void setAlphaHost(String host) {
         commit(Key.ALPHA_HOST, host);
+    }
+
+    public boolean getCloseOTC() {
+        return mPrefs.getBoolean(Key.CLOSE_OTC, false);
+    }
+
+    public void setCloseOTC(boolean closeOTC) {
+        commit(Key.CLOSE_OTC, closeOTC);
     }
 }
