@@ -11,8 +11,6 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -368,17 +366,13 @@ public class Kline extends BaseChart {
 
         if (max == Float.MAX_VALUE * -1 || min == Float.MAX_VALUE) return;
 
-        float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
-                .divide(new BigDecimal(baselines.length - 1),
-                        mChartCfg.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
+        float priceRange = (max - min) / (baselines.length - 1);
 
         // 额外扩大最大值 最小值
         max += priceRange / 2;
         min -= priceRange / 2;
 
-        priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
-                .divide(new BigDecimal(baselines.length - 1),
-                        mChartCfg.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
+        priceRange = (max - min) / (baselines.length - 1);
 
         baselines[0] = max;
         baselines[baselines.length - 1] = min;
@@ -398,6 +392,11 @@ public class Kline extends BaseChart {
             }
         }
         double volumeRange = maxVolume / (indexesBaseLines.length - 1);
+
+        // 额外扩大最大值
+        maxVolume += volumeRange / 3;
+        volumeRange = maxVolume / (indexesBaseLines.length - 1);
+
         indexesBaseLines[0] = maxVolume;
         indexesBaseLines[indexesBaseLines.length - 1] = 0;
         for (int i = indexesBaseLines.length - 2; i > 0; i--) {
@@ -502,7 +501,7 @@ public class Kline extends BaseChart {
 
         float priceRange = (max - min) / (subBaseLineArray.length - 1);
         // 额外扩大最大值 最小值
-        max += priceRange / 2;
+        max += priceRange / 3;
         //min -= priceRange / 2;
 
         priceRange = (max - min) / (subBaseLineArray.length - 1);
@@ -732,6 +731,22 @@ public class Kline extends BaseChart {
             float chartX = getChartXOfScreen(i);
             drawVolumes(chartX, data, canvas);
         }
+
+        Data data = null;
+        if (mVisibleList.size() > 0) {
+            data = mVisibleList.get(mVisibleList.size() - 1);
+        }
+        if (touchIndex >= 0) {
+            data = mVisibleList.get(touchIndex);
+        }
+        if (data == null) return;
+
+        float textX = left + mTextMargin;
+        float textY = volTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+        setBaseTextPaint(sPaint);
+        String volText = "VOL:" + formatNumber(data.getNowVolume(), 8);
+        canvas.drawText(volText, textX, textY, sPaint);
+
     }
 
     private void drawVolumes(float chartX, Data data, Canvas canvas) {
@@ -1052,11 +1067,11 @@ public class Kline extends BaseChart {
         // cross vol and sub chart
         if (volEnable) {
             setCrossLinePaint(sPaint);
-            canvas.drawLine(touchX, top + height + rectHeight, touchX, volTop + volHeight, sPaint);
-        }
-        if (subIndexEnable) {
-            setCrossLinePaint(sPaint);
-            canvas.drawLine(touchX, subChartTop, touchX, subChartTop + subChartHeight, sPaint);
+            float stopY = volTop + volHeight;
+            if (subIndexEnable) {
+                stopY = subChartTop + subChartHeight;
+            }
+            canvas.drawLine(touchX, top + height + rectHeight, touchX, stopY, sPaint);
         }
     }
 
@@ -1457,7 +1472,7 @@ public class Kline extends BaseChart {
         paint.setTextSize(mBigFontSize);
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
-        paint.setColor(mChartColor.getIndexLinesColor(key));
+        paint.setColor(mChartColor.getIndexTextColor(key));
     }
 
     private void setCrossLinePaint(Paint paint) {

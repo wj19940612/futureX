@@ -36,7 +36,7 @@ public abstract class BaseChart extends View {
     private static final int HEIGHT_TIME_LINE_DP = 24;
     private static final int HEIGHT_MAIN_CHART = 240;
     private static final int HEIGHT_VOL_CHART = 70;
-    private static final int HEIGHT_SUB_CHART_TOP_MARGIN = 4;
+    private static final int HEIGHT_SUB_CHART_TOP_MARGIN = 6;
     private static final int HEIGHT_SUB_CHART = 90;
 
     private static final int WHAT_LONG_PRESS = 1;

@@ -241,10 +241,6 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 trendChartCfg.setMainIndex(ChartCfg.INDEX_NONE);
                 klineChartCfg.setMainIndex(ChartCfg.INDEX_NONE);
                 break;
-            case IndexMenuController.Indexes.SUB_HIDE:
-                trendChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
-                klineChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
-                break;
             case IndexMenuController.Indexes.MA:
                 trendChartCfg.setMainIndex(ChartCfg.INDEX_MA);
                 klineChartCfg.setMainIndex(ChartCfg.INDEX_MA);
@@ -252,6 +248,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
             case IndexMenuController.Indexes.BOLL:
                 trendChartCfg.setMainIndex(ChartCfg.INDEX_BOLL);
                 klineChartCfg.setMainIndex(ChartCfg.INDEX_BOLL);
+                break;
+
+            case IndexMenuController.Indexes.SUB_HIDE:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
                 break;
             case IndexMenuController.Indexes.MACD:
                 trendChartCfg.setSubIndex(ChartCfg.INDEX_MACD);
@@ -733,9 +734,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         klineColor.setMaColor(5, Color.parseColor("#1A7AD5"));
         klineColor.setMaColor(10, Color.parseColor("#FFB405"));
         klineColor.setMaColor(30, Color.parseColor("#7C3BB9"));
-        klineColor.setIndexLinesColor(0, Color.parseColor("#1A7AD5"));
-        klineColor.setIndexLinesColor(1, Color.parseColor("#FFB405"));
-        klineColor.setIndexLinesColor(2, Color.parseColor("#7C3BB9"));
+        klineColor.setIndexTextColor(0, Color.parseColor("#494949"));
+        klineColor.setIndexTextColor(1, Color.parseColor("#FF7405"));
+        klineColor.setIndexTextColor(2, Color.parseColor("#BF305B"));
+        klineColor.setIndexLinesColor(0, Color.parseColor("#666666"));
+        klineColor.setIndexLinesColor(1, Color.parseColor("#FABB89"));
+        klineColor.setIndexLinesColor(2, Color.parseColor("#DB829D"));
 
         mKline.setOnCrossLineAppearListener(new Kline.OnCrossLineAppearListener() {
             @Override

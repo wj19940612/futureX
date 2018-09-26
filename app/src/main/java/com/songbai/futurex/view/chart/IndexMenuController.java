@@ -78,7 +78,11 @@ public class IndexMenuController implements ChartsRadio.IndexMenuController {
     }
 
     private void handleViewClick(View view) {
-        int index = Indexes.MA;
+        if (view.isSelected()) {
+            return;
+        }
+
+        int index;
         switch (view.getId()) {
             case R.id.ma:
                 clearMainIndex();
