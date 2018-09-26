@@ -3,7 +3,6 @@ package com.songbai.futurex.activity.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -324,12 +323,12 @@ public class MyPropertyActivity extends BaseActivity {
                                 }
                             }
                             if (list.size() > 0) {
-                                openTransfer(list, context, position);
+                                openTransfer(context, position);
                             }
                             break;
                         case 1:
                             umengEventCount(UmengCountEventId.LEGALACT0001);
-                            openTransfer((ArrayList<? extends Parcelable>) accountBeans, context, position);
+                            openTransfer(context, position);
                             break;
                         default:
                     }
@@ -394,10 +393,9 @@ public class MyPropertyActivity extends BaseActivity {
         }
     }
 
-    private static void openTransfer(ArrayList<? extends Parcelable> accountBeans, Context context, int position) {
+    private static void openTransfer(Context context, int position) {
         UniqueActivity.launcher(context, FundsTransferFragment.class)
                 .putExtra(ExtraKeys.TRANSFER_TYPE, position)
-                .putExtra(ExtraKeys.ACCOUNT_BEANS, accountBeans)
                 .execute(REQUEST_TRANSFER);
     }
 
