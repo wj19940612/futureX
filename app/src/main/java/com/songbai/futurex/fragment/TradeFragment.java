@@ -14,7 +14,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -743,7 +742,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSwipeTarget.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+        if (mSwipeTarget != null) {
+            mSwipeTarget.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+        }
     }
 
     private void toggleOptionalStatus() {
