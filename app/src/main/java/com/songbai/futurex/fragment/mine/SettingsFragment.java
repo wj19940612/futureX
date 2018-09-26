@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -66,6 +67,10 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     RadioButton mPro;
     @BindView(R.id.test)
     RadioButton mTest;
+    @BindView(R.id.quickExchange)
+    LinearLayout mQuickExchange;
+    @BindView(R.id.remindingTransaction)
+    LinearLayout mRemindingTransaction;
     private Unbinder mBind;
 
 
@@ -151,7 +156,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
         PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager mgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, System.currentTimeMillis(), restartIntent); // 0.1秒钟后重启应用
-        android.os.Process.killProcess(android.os.Process.myPid());
+        Process.killProcess(Process.myPid());
     }
 
     private void setOriginLanguageText(ArrayList<SupportLang> data) {
