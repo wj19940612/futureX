@@ -120,7 +120,7 @@ public class IconTextRow extends LinearLayout {
             mPaint.setColor(mSplitLineColor.getDefaultColor());
             mPaint.setStrokeWidth(mSplitLineHeight);
             mPaint.setStyle(Paint.Style.STROKE);
-            canvas.drawLine(mSplitLineLeftPadding, getHeight() - mSplitLineHeight, getWidth(), getHeight() - mSplitLineHeight, mPaint);
+            canvas.drawLine(mSplitLineLeftPadding, getHeight() - mSplitLineHeight / 2, getWidth(), getHeight() - mSplitLineHeight / 2, mPaint);
         }
     }
 

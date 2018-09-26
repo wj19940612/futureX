@@ -290,7 +290,6 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                     accountBeans.add(mAccountBean);
                     UniqueActivity.launcher(getContext(), FundsTransferFragment.class)
                             .putExtra(ExtraKeys.TRANSFER_TYPE, mTransferType)
-                            .putExtra(ExtraKeys.ACCOUNT_BEANS, accountBeans)
                             .execute(this, REQUEST_FUNDS_TRANSFER);
                 }
                 break;

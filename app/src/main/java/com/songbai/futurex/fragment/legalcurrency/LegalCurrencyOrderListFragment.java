@@ -307,7 +307,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         FinanceUtil.formatWithScale(legalCurrencyOrder.getOrderAmount())
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
-                        DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR));
+                        "yyyy/MM/dd HH:mm"));
                 mPrice.setText(FinanceUtil.subZeroAndDot(legalCurrencyOrder.getFixedPrice(), 8));
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:

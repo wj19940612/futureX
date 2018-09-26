@@ -198,7 +198,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
                     android:layout_weight="1"
-                    android:text="@string/sell_out_amount"
                     android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
