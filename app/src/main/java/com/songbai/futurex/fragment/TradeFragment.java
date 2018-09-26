@@ -3,6 +3,7 @@ package com.songbai.futurex.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,6 +17,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -140,6 +142,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     View mDimView;
     @BindView(R.id.tradeLayout)
     FastTradingView mTradeLayout;
+    @BindView(R.id.tradeButton)
+    TextView mTradeButton;
 
     Unbinder unbinder;
 
@@ -164,6 +168,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
 
     private boolean mNotMain;
     private String mWid;
+    private int mExtraScrollY;
+
+    private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
 
     public static TradeFragment newsInstance(CurrencyPair currencyPair, int direction, boolean notMain) {
         TradeFragment tradeFragment = new TradeFragment();
@@ -246,6 +253,8 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        addLayoutListener(mSwipeTarget, mTradeButton);
 
         initTitleBar();
         mSwipeToLoadLayout.setOnRefreshListener(this);
@@ -613,7 +622,7 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
             mLastPrice.setText(CurrencyUtils.getPrice(quota.getLastPrice(), mPairDesc.getPairs().getPricePoint()));
             PairsPrice conversion = quota.getConversion();
             double price = PairMoneyUtil.getPrice(conversion);
-            mTradeLayout.setPrice(price/quota.getLastPrice());
+            mTradeLayout.setPrice(price / quota.getLastPrice());
             mEquivalent.setText(getString(R.string.equivalent_x_x,
                     FinanceUtil.formatWithScale(price),
                     Preference.get().getPricingMethod().toUpperCase()));
@@ -728,6 +737,14 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSwipeTarget != null) {
+            mSwipeTarget.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+        }
     }
 
     private void toggleOptionalStatus() {
@@ -915,6 +932,42 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
         mPickerView.setPicker(deepList);
         mPickerView.setSelectOptions(selectedOption);
         mPickerView.show();
+    }
+
+    public void addLayoutListener(final View main, final View scroll) {
+        mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                //1、获取main在窗体的可视区域
+                main.getWindowVisibleDisplayFrame(rect);
+                //2、获取main在窗体的不可视区域高度，在键盘没有弹起时，main.getRootView().getHeight()调节度应该和rect.bottom高度一样
+                int mainInvisibleHeight = main.getRootView().getHeight() - rect.bottom;
+                int screenHeight = main.getRootView().getHeight();//屏幕高度
+                //3、不可见区域大于屏幕本身高度的1/4：说明键盘弹起了
+                if (mainInvisibleHeight > screenHeight / 4) {
+                    int[] location = new int[2];
+                    scroll.getLocationInWindow(location);
+                    // 4､获取Scroll的窗体坐标，算出main需要滚动的高度
+                    int scrollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
+                    //5､让界面整体上移键盘的高度
+                    if (scrollHeight > 0) {
+                        mExtraScrollY = scrollHeight;
+//                        Log.e("zzz", "srollHeight" + scrollHeight + "  location1 :" + location[1]+" mExtraScrollY:"+mExtraScrollY);
+                        main.scrollTo(0, scrollHeight + main.getScrollY());
+                    }
+                } else {
+                    //3、不可见区域小于屏幕高度1/4时,说明键盘隐藏了，把界面下移，移回到原有高度
+
+                    if (mExtraScrollY > 0) {
+//                        Log.e("zzz", "onGlobal 界面下移:"+mExtraScrollY);
+                        main.scrollTo(0, main.getScrollY() - mExtraScrollY);
+                        mExtraScrollY = 0;
+                    }
+                }
+            }
+        };
+        main.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
     }
 
     static class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

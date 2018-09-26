@@ -15,6 +15,7 @@ import com.songbai.futurex.http.Api;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
 import com.songbai.futurex.model.Host;
+import com.songbai.futurex.model.OtcConfig;
 import com.songbai.futurex.service.SocketPushService;
 import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.SmartDialog;
@@ -57,15 +58,15 @@ public class SplashActivity extends StatusBarActivity {
         ButterKnife.bind(this);
         startSocketPushService();
         translucentStatusBar();
-//        com.songbai.futurex.http.Apic.getOtcTransConfig().tag(TAG)
-//                .callback(new Callback<Resp<Object>>() {
-//                    @Override
-//                    protected void onRespSuccess(Resp<Object> resp) {
-//                        Preference.get().setCloseOTC(true);
-//                    }
-//                }).fireFreely();
-        Preference.get().setCloseOTC(true);
-
+        com.songbai.futurex.http.Apic.getOtcTransConfig().tag(TAG)
+                .callback(new Callback<Resp<OtcConfig>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<OtcConfig> resp) {
+                        if (resp != null) {
+                            Preference.get().setCloseOTC(resp.getData().getOtcConfig() == 1);
+                        }
+                    }
+                }).fireFreely();
         if (hasSelfPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_PHONE_STATE})) {

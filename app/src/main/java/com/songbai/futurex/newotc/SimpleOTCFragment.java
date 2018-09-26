@@ -227,6 +227,7 @@ public class SimpleOTCFragment extends BaseFragment {
         accountBalance();
         initSocketListener();
         initMsgPush();
+        setBalance("");
     }
 
     private void initSocketListener() {
@@ -278,6 +279,9 @@ public class SimpleOTCFragment extends BaseFragment {
             getPrice();
             accountBalance();
             getYetOrder();
+            if (!LocalUser.getUser().isLogin()) {
+                setBalance("");
+            }
         }
         mMsgProcessor.resume();
     }
@@ -295,6 +299,9 @@ public class SimpleOTCFragment extends BaseFragment {
             getPrice();
             accountBalance();
             getYetOrder();
+            if (!LocalUser.getUser().isLogin()) {
+                setBalance("");
+            }
         }
     }
 

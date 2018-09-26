@@ -1595,7 +1595,7 @@ public class Apic {
      * 获取法币开关信息
      */
     public static Api getOtcTransConfig() {
-        return Api.post("/api/user/v1/userSysConfig/getOtcTransConfig.do");
+        return Api.get("/api/user/v1/userSysConfig/getOtcTransConfig.do");
     }
 
     /**

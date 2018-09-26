@@ -728,9 +728,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                     protected void onRespSuccess(Resp resp) {
                         ToastUtil.show(R.string.entrust_success);
                         mTradeLayout.resetMakeOrder();
-                        if (mTradeLayout.getViewStatus() != FastTradingView.VIEW_SINKING) {
-                            sinkAnim();
-                        }
+//                        if (mTradeLayout.getViewStatus() != FastTradingView.VIEW_SINKING) {
+//                            sinkAnim();
+//                        }
                     }
 
                     @Override

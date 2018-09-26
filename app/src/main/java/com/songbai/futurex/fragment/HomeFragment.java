@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -33,7 +34,10 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.songbai.futurex.ExtraKeys;
+import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.MainActivity;
 import com.songbai.futurex.activity.StatusBarActivity;
@@ -197,6 +201,39 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
         });
         Network.registerNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
         initMarketPush();
+        restoreData();
+    }
+
+    private void restoreData() {
+        String bannerJson = Preference.get().getBannerJson();
+        if (!TextUtils.isEmpty(bannerJson)) {
+            ArrayList<Banner> banners = new Gson().fromJson(bannerJson, new TypeToken<List<Banner>>() {
+            }.getType());
+            setBannerList(banners);
+        }
+        String newsJson = Preference.get().getNewsJson();
+        if (!TextUtils.isEmpty(newsJson)) {
+            mNewsList = new Gson().fromJson(newsJson, new TypeToken<List<HomeNews>>() {
+            }.getType());
+            setNewsList();
+        }
+        String entrustPairsJson = Preference.get().getEntrustPairsJson();
+        if (!TextUtils.isEmpty(entrustPairsJson)) {
+            mLatelyBeans = new Gson().fromJson(entrustPairsJson, new TypeToken<List<EntrustPair.LatelyBean>>() {
+            }.getType());
+            setEntrustPairList();
+        }
+        String bfbJson = Preference.get().getBFBJson();
+        if (!TextUtils.isEmpty(bfbJson)) {
+            BFBInfo bfbInfo = new Gson().fromJson(bfbJson, BFBInfo.class);
+            setBFBInfo(bfbInfo);
+        }
+        String indexRiseJson = Preference.get().getIndexRiseJson();
+        if (!TextUtils.isEmpty(indexRiseJson)) {
+            mPairRiseListBeans = new Gson().fromJson(indexRiseJson, new TypeToken<List<PairRiseListBean>>() {
+            }.getType());
+            setIndexRiseList();
+        }
     }
 
     private void initMarketPush() {
@@ -283,11 +320,17 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                 .callback(new Callback<Resp<ArrayList<Banner>>>() {
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<Banner>> resp) {
-                        mHomeBanner.setHomeAdvertisement(resp.getData());
-                        mHomeBanner.startLoop();
+                        ArrayList<Banner> data = resp.getData();
+                        setBannerList(data);
+                        Preference.get().setBannerJson(new Gson().toJson(data));
                     }
                 })
                 .fire();
+    }
+
+    private void setBannerList(ArrayList<Banner> data) {
+        mHomeBanner.setHomeAdvertisement(data);
+        mHomeBanner.startLoop();
     }
 
     private void findNewsList(int type) {
@@ -296,11 +339,16 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<HomeNews>> resp) {
                         mNewsList = resp.getData();
-                        mNoticeWrapper.setVisibility(View.VISIBLE);
-                        setNotice();
+                        setNewsList();
+                        Preference.get().setNewsJson(new Gson().toJson(mNewsList));
                     }
                 })
                 .fire();
+    }
+
+    private void setNewsList() {
+        mNoticeWrapper.setVisibility(View.VISIBLE);
+        setNotice();
     }
 
     private void entrustPairsList() {
@@ -309,11 +357,16 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     @Override
                     protected void onRespSuccess(Resp<EntrustPair> resp) {
                         mLatelyBeans = resp.getData().getLately();
-                        mAdapter.setList(mLatelyBeans);
-                        mAdapter.notifyDataSetChanged();
+                        Preference.get().setEntrustPairsJson(new Gson().toJson(mLatelyBeans));
+                        setEntrustPairList();
                     }
                 })
                 .fire();
+    }
+
+    private void setEntrustPairList() {
+        mAdapter.setList(mLatelyBeans);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void bfbInfo() {
@@ -323,14 +376,19 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     protected void onRespSuccess(Resp<BFBInfo> resp) {
                         BFBInfo bfbInfo = resp.getData();
                         if (bfbInfo != null) {
-                            mMiningGroup.setVisibility(bfbInfo.getDisplay() == 1 ? View.VISIBLE : View.GONE);
-                            mYesterdayAmount.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getFrontProduce())));
-                            mTodayAmount.setText(getString(R.string.x_btc, String.valueOf(bfbInfo.getNowProduce())));
-                            mBfbTotal.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getVolume())));
+                            setBFBInfo(bfbInfo);
+                            Preference.get().setBFBJson(new Gson().toJson(bfbInfo));
                         }
                     }
                 })
                 .fire();
+    }
+
+    private void setBFBInfo(BFBInfo bfbInfo) {
+        mMiningGroup.setVisibility(bfbInfo.getDisplay() == 1 ? View.VISIBLE : View.GONE);
+        mYesterdayAmount.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getFrontProduce())));
+        mTodayAmount.setText(getString(R.string.x_btc, String.valueOf(bfbInfo.getNowProduce())));
+        mBfbTotal.setText(getString(R.string.x_bfb, String.valueOf(bfbInfo.getVolume())));
     }
 
     private void indexRiseList() {
@@ -339,11 +397,16 @@ public class HomeFragment extends BaseFragment implements HomeBanner.OnBannerCli
                     @Override
                     protected void onRespSuccess(Resp<ArrayList<PairRiseListBean>> resp) {
                         mPairRiseListBeans = resp.getData();
-                        mIncreaseRankAdapter.setList(mPairRiseListBeans);
-                        mIncreaseRankAdapter.notifyDataSetChanged();
+                        setIndexRiseList();
+                        Preference.get().setIndexRiseJson(new Gson().toJson(mPairRiseListBeans));
                     }
                 })
                 .fire();
+    }
+
+    private void setIndexRiseList() {
+        mIncreaseRankAdapter.setList(mPairRiseListBeans);
+        mIncreaseRankAdapter.notifyDataSetChanged();
     }
 
     @Override
