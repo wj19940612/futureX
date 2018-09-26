@@ -234,7 +234,7 @@
             <View
                 android:id="@+id/viewStub"
                 android:layout_width="match_parent"
-                android:layout_height="174dp"
+                android:layout_height="214dp"
                 android:visibility="gone"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

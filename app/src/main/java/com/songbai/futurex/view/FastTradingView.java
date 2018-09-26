@@ -163,6 +163,7 @@ public class FastTradingView extends LinearLayout {
         }
 
         initView();
+        resetView();
     }
 
     private void initView() {
