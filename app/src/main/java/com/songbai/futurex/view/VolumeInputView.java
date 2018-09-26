@@ -145,7 +145,7 @@ public class VolumeInputView extends FrameLayout {
     }
 
     public void reset() {
-        Log.e("zzz","reset");
+//        Log.e("zzz","reset");
         mTextWatcherDisable = true;
         mVolume.setText("");
         mTextWatcherDisable = false;

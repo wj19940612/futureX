@@ -142,7 +142,7 @@ public class TradePercentSelectView extends LinearLayout {
     }
 
     private void selectPercent(int selectPercent) {
-        Log.e("zzz", "selectPercent");
+//        Log.e("zzz", "selectPercent");
         mFirthBtn.setSelected(false);
         mSecondBtn.setSelected(false);
         mThirdBtn.setSelected(false);
