@@ -855,4 +855,7 @@
     <string name="pro">Pro</string>
     <string name="test">Test</string>
     <string name="unpaid_countdown">Unpaid(%1$d:%2$d)</string>
+
+    <string name="loading_failed_retry">Loading failed. Click to retry.</string>
+    <string name="no_data_retry">No data. Click to retry.</string>
 </resources>

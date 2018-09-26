@@ -62,6 +62,7 @@ import com.songbai.futurex.view.chart.IndexMenuController;
 import com.songbai.futurex.view.chart.Kline;
 import com.songbai.futurex.view.chart.KlineDataDetailView;
 import com.songbai.futurex.view.chart.KlineUtils;
+import com.songbai.futurex.view.chart.MarketLoadView;
 import com.songbai.futurex.view.chart.TrendV;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
@@ -156,6 +157,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     View mViewStub;
     @BindView(R.id.equivalent)
     TextView mEquivalent;
+    @BindView(R.id.marketLoadView)
+    MarketLoadView mMarketLoadView;
 
     private ValueAnimator mValueAnimator;
 
@@ -185,11 +188,22 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initTitleBar();
 
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mTradeDealView.setCurrencyPair(mCurrencyPair);
+
+        mMarketLoadView.setOnViewClickListener(new MarketLoadView.OnViewClickListener() {
+            @Override
+            public void onMarketRefreshClick(View view) {
+                if (mChartRadio.getSelectedPosition() == 0) {
+                    requestTrendData();
+                } else {
+                    requestKlineData(true);
+                }
+            }
+        });
 
         mChartRadio.setOnTabSelectedListener(new ChartsRadio.OnTabSelectedListener() {
             @Override
@@ -197,9 +211,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 if (position == 0) {
                     showTrendView();
                     requestTrendData();
+                    mTrend.clear();
                 } else {
                     showKlineView();
                     requestKlineData(true);
+                    mKline.clear();
                 }
             }
         });
@@ -867,16 +883,41 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         Apic.getTrendData(code, endTime).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<TrendV.Data>>, List<TrendV.Data>>() {
                     @Override
+                    public void onStart() {
+                        mMarketLoadView.showMarketLoadingView();
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
                     protected void onRespData(List<TrendV.Data> data) {
                         Collections.sort(data);
                         if (TextUtils.isEmpty(endTime)) {
+                            if (data.isEmpty()) {
+                                mMarketLoadView.showMarketNoDataView();
+                            } else {
+                                mMarketLoadView.hide();
+                            }
+
                             mTrend.setDataList(data);
                             mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
 
                             startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
                         } else {
-                            if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
+                            if (data.isEmpty()) {
+                                ToastUtil.show(R.string.no_more_data);
+                            }
                             mTrend.addHistoryData(data);
+                            mMarketLoadView.hide();
                         }
                     }
                 }).fire();
@@ -896,9 +937,31 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         Apic.getKlineData(code, klineType, endTime).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<Kline.Data>>, List<Kline.Data>>() {
                     @Override
+                    public void onStart() {
+                        mMarketLoadView.showMarketLoadingView();
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
                     protected void onRespData(List<Kline.Data> data) {
                         Collections.sort(data);
                         if (TextUtils.isEmpty(endTime)) {
+                            if (data.isEmpty()) {
+                                mMarketLoadView.showMarketNoDataView();
+                            } else {
+                                mMarketLoadView.hide();
+                            }
+
                             mKline.setDataList(data);
                             mKline.setDateFormatStr(KlineUtils.getDateFormat(mChartRadio.getSelectedPosition()));
                             mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
@@ -911,8 +974,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                                 stopScheduleJob();
                             }
                         } else {
-                            if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
+                            if (data.isEmpty()) {
+                                ToastUtil.show(R.string.no_more_data);
+                            }
                             mKline.addHistoryData(data);
+                            mMarketLoadView.hide();
                         }
                     }
                 }).fire();

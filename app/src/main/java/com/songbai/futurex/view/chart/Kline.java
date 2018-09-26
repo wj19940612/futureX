@@ -417,7 +417,7 @@ public class Kline extends BaseChart {
 
     @Override
     protected void drawBaseLines(float[] baselines, int left, int top, int width, int height, Canvas canvas) {
-        if (baselines.length == 0) return;
+        if (mDataList == null || mDataList.size() == 0) return;
 
         float verticalInterval = height * 1.0f / (baselines.length - 1);
         mPriceAreaWidth = calculatePriceWidth(baselines[0]);
@@ -1544,6 +1544,11 @@ public class Kline extends BaseChart {
             mLastPrice = lastPrice;
             redraw();
         }
+    }
+
+    public void clear() {
+        setDataList(null);
+        flush();
     }
 
     public ChartColor getChartColor() {

@@ -857,4 +857,7 @@
     <string name="pro">正式</string>
     <string name="test">測試</string>
     <string name="unpaid_countdown">待付款 (%1$d分:%2$d秒)</string>
+
+    <string name="loading_failed_retry">加載失敗，點擊重試</string>
+    <string name="no_data_retry">暫無數據，點擊重試</string>
 </resources>
