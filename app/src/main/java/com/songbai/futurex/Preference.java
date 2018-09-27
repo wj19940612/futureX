@@ -22,6 +22,12 @@ public class Preference {
         String FAST_TRADE = "fast_trade";
         String ALPHA_HOST = "alpha_host";
         String CLOSE_OTC = "close_otc";
+
+        String BANNDER_JSON = "banner_json";
+        String NEWS_JSON = "news_json";
+        String BFB_JSON = "bfb_json";
+        String INDESRISE_JSON = "index_rise_json";
+        String ENTRUST_PAIRS_JSON = "entrust_pairs_json";
     }
 
     private static Preference sInstance;
@@ -194,5 +200,45 @@ public class Preference {
 
     public void setCloseOTC(boolean closeOTC) {
         commit(Key.CLOSE_OTC, closeOTC);
+    }
+
+    public String getBannerJson() {
+        return mPrefs.getString(Key.BANNDER_JSON, "");
+    }
+
+    public void setBannerJson(String bannerJson) {
+        apply(Key.BANNDER_JSON, bannerJson);
+    }
+
+    public String getNewsJson() {
+        return mPrefs.getString(Key.NEWS_JSON, "");
+    }
+
+    public void setNewsJson(String newsJson) {
+        apply(Key.NEWS_JSON, newsJson);
+    }
+
+    public String getEntrustPairsJson() {
+        return mPrefs.getString(Key.ENTRUST_PAIRS_JSON, "");
+    }
+
+    public void setEntrustPairsJson(String newsJson) {
+        apply(Key.ENTRUST_PAIRS_JSON, newsJson);
+    }
+
+    public String getBFBJson() {
+        return mPrefs.getString(Key.BFB_JSON, "");
+    }
+
+    public void setBFBJson(String newsJson) {
+        apply(Key.BFB_JSON, newsJson);
+    }
+
+    public String getIndexRiseJson() {
+        return mPrefs.getString(Key.INDESRISE_JSON, "");
+    }
+
+    public void setIndexRiseJson(String newsJson) {
+        apply(Key.INDESRISE_JSON, newsJson);
     }
 }

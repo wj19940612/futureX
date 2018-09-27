@@ -27,8 +27,7 @@ public class CurrencyUtils {
      * @return
      */
     public static String getVolume(double volume) {
-        // TODO: 2018/6/13 how show
-        return String.valueOf(volume);
+        return FinanceUtil.formatWithScale(volume, 8);
     }
 
     public static String getVolume(double volume, int scale) {

@@ -19,7 +19,6 @@ import android.util.AttributeSet;
 public class TrendV extends Kline {
 
     private float mTrendLineWidth;
-    private float mMALineWidth;
 
     public TrendV(Context context) {
         super(context);
@@ -34,13 +33,10 @@ public class TrendV extends Kline {
         super.init();
         mTrendLineWidth = dp2Px(2);
         mMas = new int[]{60};
-        mMALineWidth = dp2Px(1);
     }
 
     @Override
-    protected void drawData(boolean indexesEnable,
-                            int left, int top, int width, int height,
-                            int left2, int top2, int width2, int height2, Canvas canvas) {
+    protected void drawMainData(int left, int top, int width, int height, Canvas canvas) {
         Path path = getPath();
         float chartX = 0;
         float chartY = 0;
@@ -67,41 +63,6 @@ public class TrendV extends Kline {
         setTrendLineFillPaint(sPaint);
         canvas.drawPath(path, sPaint);
         sPaint.setShader(null);
-
-        if (indexesEnable) {
-            for (int i = mStart; i < mEnd; i++) {
-                chartX = getChartXOfScreen(i);
-                drawIndexes(chartX, mDataList.get(i), canvas);
-            }
-        }
-
-        // draw MAs
-        for (int ma : mMas) {
-            setMovingAveragesPaint(sPaint);
-            float startX = -1;
-            float startY = -1;
-            for (int i = mStart; i < mEnd; i++) {
-                Float movingAverageValue = mDataList.get(i).getMas(ma);
-                if (movingAverageValue == null) continue;
-                chartX = getChartXOfScreen(i);
-                chartY = getChartY(movingAverageValue.floatValue());
-                if (startX == -1 && startY == -1) { // start
-                    startX = chartX;
-                    startY = chartY;
-                } else {
-                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
-                    startX = chartX;
-                    startY = chartY;
-                }
-            }
-        }
-    }
-
-    private void setMovingAveragesPaint(Paint paint) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(mMALineWidth);
-        paint.setPathEffect(null);
-        paint.setColor(Color.parseColor("#FFB405"));
     }
 
     private void setTrendLinePaint(Paint paint) {

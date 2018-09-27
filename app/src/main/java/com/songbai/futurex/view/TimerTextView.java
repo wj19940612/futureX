@@ -60,6 +60,10 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
         mOnStateChangeListener = null;
     }
 
+    public void removeSetTextCallback() {
+        mSetTextCallback = null;
+    }
+
     /**
      * 倒计时计算
      */
@@ -128,6 +132,7 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
             }
         } else {
             removeCallbacks(this);
+            removeSetTextCallback();
             removeOnStateChangeListener();
         }
     }

@@ -100,7 +100,6 @@
         android:layout_width="0dp"
         android:layout_height="24dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:background="@drawable/bg_radio_button_header_tab"
         android:gravity="center|bottom"
@@ -133,8 +132,7 @@
         android:layout_weight="1"
         android:background="@drawable/bg_radio_button_header_tab"
         android:gravity="center|bottom"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/indexesTab"

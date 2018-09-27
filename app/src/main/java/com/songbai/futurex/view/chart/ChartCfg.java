@@ -2,21 +2,34 @@ package com.songbai.futurex.view.chart;
 
 public class ChartCfg {
 
+    public static final int INDEX_NONE = -1;
+    public static final int INDEX_MA = 1;
+    public static final int INDEX_BOLL = 2;
+    public static final int INDEX_MACD = 3;
+    public static final int INDEX_KDJ = 4;
+    public static final int INDEX_RSI = 5;
+    public static final int INDEX_WR = 6;
+
     private int mBaseLines;
-    private int mIndexesBaseLines;
-    private boolean mIndexesEnable;
+    private int mVolBaseLines;
+    private int mSubBaseLines;
+    private boolean mVolEnable;
     private int mNumberScale;
     private int mXAxis;
     private boolean mEnableDrag;
     private boolean mEnableCrossLine;
     private float[] mBaseLineArray;
-    private double[] mIndexesBaseLineArray;
+    private double[] mVolBaseLineArray;
+    private float[] mSubBaseLineArray;
     private float mViewScale;
+    private int mMainIndex;
+    private int mSubIndex;
 
     public void setChartCfg(ChartCfg cfg) {
         setBaseLines(cfg.getBaseLines());
-        setIndexesBaseLines(cfg.getIndexesBaseLines());
-        setIndexesEnable(cfg.isIndexesEnable());
+        setVolBaseLines(cfg.getVolBaseLines());
+        setSubBaseLines(cfg.getSubBaseLines());
+        setVolEnable(cfg.isVolEnable());
         setNumberScale(cfg.getNumberScale());
         setXAxis(cfg.getXAxis());
         setEnableDrag(cfg.isEnableDrag());
@@ -25,13 +38,17 @@ public class ChartCfg {
     }
 
     public ChartCfg() {
-        mBaseLines = 2;
-        mIndexesBaseLines = 2;
+        mBaseLines = 0;
+        mVolBaseLines = 0;
+        mSubBaseLines = 0;
         mNumberScale = 2;
         mXAxis = 0;
         mBaseLineArray = new float[0];
-        mIndexesBaseLineArray = new double[0];
+        mVolBaseLineArray = new double[0];
+        mSubBaseLineArray = new float[0];
         mViewScale = 1;
+        mMainIndex = INDEX_MA;
+        mSubIndex = INDEX_NONE;
     }
 
     public void setViewScale(float viewScale) {
@@ -45,10 +62,17 @@ public class ChartCfg {
         }
     }
 
-    public void setIndexesBaseLines(int indexesBaseLines) {
-        mIndexesBaseLines = indexesBaseLines;
-        if (mIndexesBaseLineArray.length != indexesBaseLines) {
-            mIndexesBaseLineArray = new double[indexesBaseLines];
+    public void setSubBaseLines(int subBaseLines) {
+        mSubBaseLines = subBaseLines;
+        if (mSubBaseLineArray.length != subBaseLines) {
+            mSubBaseLineArray = new float[subBaseLines];
+        }
+    }
+
+    public void setVolBaseLines(int volBaseLines) {
+        mVolBaseLines = volBaseLines;
+        if (mVolBaseLineArray.length != volBaseLines) {
+            mVolBaseLineArray = new double[volBaseLines];
         }
     }
 
@@ -56,24 +80,36 @@ public class ChartCfg {
         return mBaseLines;
     }
 
-    public int getIndexesBaseLines() {
-        return mIndexesBaseLines;
+    public int getVolBaseLines() {
+        return mVolBaseLines;
+    }
+
+    public int getSubBaseLines() {
+        return mSubBaseLines;
     }
 
     public float[] getBaseLineArray() {
         return mBaseLineArray;
     }
 
-    public double[] getIndexesBaseLineArray() {
-        return mIndexesBaseLineArray;
+    public double[] getVolBaseLineArray() {
+        return mVolBaseLineArray;
     }
 
-    public boolean isIndexesEnable() {
-        return mIndexesEnable;
+    public float[] getSubBaseLineArray() {
+        return mSubBaseLineArray;
     }
 
-    public void setIndexesEnable(boolean indexesEnable) {
-        mIndexesEnable = indexesEnable;
+    public boolean isVolEnable() {
+        return mVolEnable;
+    }
+
+    public void setVolEnable(boolean volEnable) {
+        mVolEnable = volEnable;
+    }
+
+    public boolean isSubIndexEnable() {
+        return mSubIndex > 0;
     }
 
     public int getNumberScale() {
@@ -110,5 +146,21 @@ public class ChartCfg {
 
     public float getViewScale() {
         return mViewScale;
+    }
+
+    public int getMainIndex() {
+        return mMainIndex;
+    }
+
+    public void setMainIndex(int mainIndex) {
+        mMainIndex = mainIndex;
+    }
+
+    public int getSubIndex() {
+        return mSubIndex;
+    }
+
+    public void setSubIndex(int subIndex) {
+        mSubIndex = subIndex;
     }
 }

@@ -58,12 +58,12 @@ import com.songbai.futurex.view.chart.BaseChart;
 import com.songbai.futurex.view.chart.ChartCfg;
 import com.songbai.futurex.view.chart.ChartColor;
 import com.songbai.futurex.view.chart.DeepView;
+import com.songbai.futurex.view.chart.IndexMenuController;
 import com.songbai.futurex.view.chart.Kline;
 import com.songbai.futurex.view.chart.KlineDataDetailView;
 import com.songbai.futurex.view.chart.KlineUtils;
-import com.songbai.futurex.view.chart.KlineView;
+import com.songbai.futurex.view.chart.MarketLoadView;
 import com.songbai.futurex.view.chart.TrendV;
-import com.songbai.futurex.view.chart.TrendView;
 import com.songbai.futurex.view.dialog.WithDrawPsdViewController;
 import com.songbai.futurex.view.popup.CurrencyPairsPopup;
 import com.songbai.futurex.websocket.DataParser;
@@ -118,13 +118,13 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     @BindView(R.id.chartRadio)
     ChartsRadio mChartRadio;
     @BindView(R.id.kline)
-    KlineView mKline;
+    Kline mKline;
     @BindView(R.id.tradeDetailRadio)
     RadioHeader mTradeDetailRadio;
     @BindView(R.id.klineDataDetailView)
     KlineDataDetailView mKlineDataDetailView;
     @BindView(R.id.trend)
-    TrendView mTrend;
+    TrendV mTrend;
     @BindView(R.id.deepView)
     DeepView mDeepView;
     @BindView(R.id.optional)
@@ -157,6 +157,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     View mViewStub;
     @BindView(R.id.equivalent)
     TextView mEquivalent;
+    @BindView(R.id.marketLoadView)
+    MarketLoadView mMarketLoadView;
 
     private ValueAnimator mValueAnimator;
 
@@ -164,8 +166,9 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
     private MarketSubscriber mMarketSubscriber;
     private PairDesc mPairDesc;
     private CurrencyPairsPopup mPairsPopup;
-    TextView mPairName;
-    ImageView mPairArrow;
+    private TextView mPairName;
+    private ImageView mPairArrow;
+    private IndexMenuController mIndexMenuController;
 
     private List<DeepData> mBuyDeepList;
     private List<DeepData> mSellDeepList;
@@ -185,11 +188,22 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initTitleBar();
 
         mTradeVolumeView.setCurrencyPair(mCurrencyPair);
         mTradeDealView.setCurrencyPair(mCurrencyPair);
+
+        mMarketLoadView.setOnViewClickListener(new MarketLoadView.OnViewClickListener() {
+            @Override
+            public void onMarketRefreshClick(View view) {
+                if (mChartRadio.getSelectedPosition() == 0) {
+                    requestTrendData();
+                } else {
+                    requestKlineData(true);
+                }
+            }
+        });
 
         mChartRadio.setOnTabSelectedListener(new ChartsRadio.OnTabSelectedListener() {
             @Override
@@ -197,14 +211,25 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                 if (position == 0) {
                     showTrendView();
                     requestTrendData();
+                    mTrend.clear();
                 } else {
                     showKlineView();
                     requestKlineData(true);
+                    mKline.clear();
                 }
             }
         });
-        mChartRadio.setChartsRadioDropMenu(mChartRadioDropMenu);
-        mChartRadio.setIndexesDropMenu(mIndexDropMenu);
+        mChartRadio.setMoreDropMenu(mChartRadioDropMenu);
+        mIndexMenuController = new IndexMenuController(mIndexDropMenu);
+        mChartRadio.setIndexMenuController(mIndexMenuController);
+        mIndexMenuController.setOnIndexSelectedListener(new IndexMenuController.OnIndexSelectedListener() {
+            @Override
+            public void onIndexSelected(int indexes) {
+                mChartRadio.closeIndexDropMenu();
+                switchChartIndex(indexes);
+            }
+        });
+
         mTradeDetailRadio.setOnTabSelectedListener(new RadioHeader.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, String content) {
@@ -292,6 +317,48 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         });
 
         requestPairDescription();
+    }
+
+    private void switchChartIndex(int indexes) {
+        ChartCfg trendChartCfg = mTrend.getChartCfg();
+        ChartCfg klineChartCfg = mKline.getChartCfg();
+        switch (indexes) {
+            case IndexMenuController.Indexes.MAIN_HIDE:
+                trendChartCfg.setMainIndex(ChartCfg.INDEX_NONE);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_NONE);
+                break;
+            case IndexMenuController.Indexes.MA:
+                trendChartCfg.setMainIndex(ChartCfg.INDEX_MA);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_MA);
+                break;
+            case IndexMenuController.Indexes.BOLL:
+                trendChartCfg.setMainIndex(ChartCfg.INDEX_BOLL);
+                klineChartCfg.setMainIndex(ChartCfg.INDEX_BOLL);
+                break;
+
+            case IndexMenuController.Indexes.SUB_HIDE:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_NONE);
+                break;
+            case IndexMenuController.Indexes.MACD:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_MACD);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_MACD);
+                break;
+            case IndexMenuController.Indexes.KDJ:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_KDJ);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_KDJ);
+                break;
+            case IndexMenuController.Indexes.RSI:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_RSI);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_RSI);
+                break;
+            case IndexMenuController.Indexes.WR:
+                trendChartCfg.setSubIndex(ChartCfg.INDEX_WR);
+                klineChartCfg.setSubIndex(ChartCfg.INDEX_WR);
+                break;
+        }
+        mTrend.notifyCfgChanged();
+        mKline.notifyCfgChanged();
     }
 
     private void initTitleBar() {
@@ -816,16 +883,41 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         Apic.getTrendData(code, endTime).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<TrendV.Data>>, List<TrendV.Data>>() {
                     @Override
+                    public void onStart() {
+                        mMarketLoadView.showMarketLoadingView();
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
                     protected void onRespData(List<TrendV.Data> data) {
                         Collections.sort(data);
                         if (TextUtils.isEmpty(endTime)) {
+                            if (data.isEmpty()) {
+                                mMarketLoadView.showMarketNoDataView();
+                            } else {
+                                mMarketLoadView.hide();
+                            }
+
                             mTrend.setDataList(data);
                             mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
 
                             startScheduleJobNext(KlineUtils.getRefreshInterval(mChartRadio.getSelectedPosition()));
                         } else {
-                            if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
+                            if (data.isEmpty()) {
+                                ToastUtil.show(R.string.no_more_data);
+                            }
                             mTrend.addHistoryData(data);
+                            mMarketLoadView.hide();
                         }
                     }
                 }).fire();
@@ -845,9 +937,31 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         Apic.getKlineData(code, klineType, endTime).tag(TAG)
                 .callback(new Callback4Resp<Resp<List<Kline.Data>>, List<Kline.Data>>() {
                     @Override
+                    public void onStart() {
+                        mMarketLoadView.showMarketLoadingView();
+                    }
+
+                    @Override
+                    public void onFailure(ReqError reqError) {
+                        super.onFailure(reqError);
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        mMarketLoadView.showMarketLoadFailureView();
+                    }
+
+                    @Override
                     protected void onRespData(List<Kline.Data> data) {
                         Collections.sort(data);
                         if (TextUtils.isEmpty(endTime)) {
+                            if (data.isEmpty()) {
+                                mMarketLoadView.showMarketNoDataView();
+                            } else {
+                                mMarketLoadView.hide();
+                            }
+
                             mKline.setDataList(data);
                             mKline.setDateFormatStr(KlineUtils.getDateFormat(mChartRadio.getSelectedPosition()));
                             mKlineDataDetailView.setDateFormatStr(KlineUtils.getHeaderDateFormat(mChartRadio.getSelectedPosition()));
@@ -860,8 +974,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                                 stopScheduleJob();
                             }
                         } else {
-                            if (data.isEmpty()) ToastUtil.show(R.string.no_more_data);
+                            if (data.isEmpty()) {
+                                ToastUtil.show(R.string.no_more_data);
+                            }
                             mKline.addHistoryData(data);
+                            mMarketLoadView.hide();
                         }
                     }
                 }).fire();
@@ -881,12 +998,13 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         // kline
         ChartCfg klineCfg = mKline.getChartCfg();
         klineCfg.setBaseLines(6);
-        klineCfg.setIndexesBaseLines(2);
+        klineCfg.setVolBaseLines(2);
+        klineCfg.setSubBaseLines(2);
         klineCfg.setXAxis(45);
         klineCfg.setNumberScale(mPairDesc.getPairs().getPricePoint());
         klineCfg.setEnableCrossLine(true);
         klineCfg.setEnableDrag(true);
-        klineCfg.setIndexesEnable(true);
+        klineCfg.setVolEnable(true);
         klineCfg.setViewScale(1);
 
         ChartColor klineColor = mKline.getChartColor();
@@ -899,6 +1017,12 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         klineColor.setMaColor(5, Color.parseColor("#1A7AD5"));
         klineColor.setMaColor(10, Color.parseColor("#FFB405"));
         klineColor.setMaColor(30, Color.parseColor("#7C3BB9"));
+        klineColor.setIndexTextColor(0, Color.parseColor("#494949"));
+        klineColor.setIndexTextColor(1, Color.parseColor("#FF7405"));
+        klineColor.setIndexTextColor(2, Color.parseColor("#BF305B"));
+        klineColor.setIndexLinesColor(0, Color.parseColor("#666666"));
+        klineColor.setIndexLinesColor(1, Color.parseColor("#FABB89"));
+        klineColor.setIndexLinesColor(2, Color.parseColor("#DB829D"));
 
         mKline.setOnCrossLineAppearListener(new Kline.OnCrossLineAppearListener() {
             @Override
@@ -937,7 +1061,7 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         ChartColor trendColor = mTrend.getChartColor();
         trendColor.setChartColor(klineColor);
         trendColor.setClosePriceColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-
+        trendColor.setMaColor(60, Color.parseColor("#FFB405"));
         mTrend.setDateFormatStr("HH:mm");
         mTrend.setOnCrossLineAppearListener(new Kline.OnCrossLineAppearListener() {
             @Override

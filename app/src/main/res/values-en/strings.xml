@@ -832,7 +832,7 @@
     <string name="cny_with_symbol">RMB</string>
     <string name="equivalent_x_x">≈%1$s%2$s</string>
     <string name="transfer_coin">Transfer</string>
-    <string name="otc_balance_not_enough_hint_x">Please transfer USDT from Exchange account to OTC account first.</string>
+    <string name="otc_balance_not_enough_hint_x">Please transfer %1$s from Exchange account to OTC account first.</string>
     <string name="transfer_now">Transfer now</string>
     <string name="otc_balance_not_enough">Insufficient funds in OTC account</string>
     <string name="confirm_sell">Confirm to sell</string>
@@ -855,4 +855,7 @@
     <string name="pro">Pro</string>
     <string name="test">Test</string>
     <string name="unpaid_countdown">Unpaid(%1$d:%2$d)</string>
+
+    <string name="loading_failed_retry">Loading failed. Click to retry.</string>
+    <string name="no_data_retry">No data. Click to retry.</string>
 </resources>

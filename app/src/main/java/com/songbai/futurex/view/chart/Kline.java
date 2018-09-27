@@ -11,8 +11,6 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +25,151 @@ import java.util.List;
  */
 public class Kline extends BaseChart {
 
+    public static class IndexData {
+
+        // MA & BOLL
+        private SparseArray<Float> mas;
+        private float bollUp;
+        private float bollLow;
+
+        // MACD
+        private SparseArray<Float> emas;
+        private Float macd;
+        private Float macdDea;
+        private Float macdDiff;
+
+        // KDJ
+        private Float K; // (ClosePrice-L)/(H-L)x100
+        private Float D; // K's ma
+        private Float J; // 3K-2D
+
+        // RSI
+        private Float posDiffSma; // sma(max(close - lastClose, 0), n, 1)
+        private Float absDiffSma; // sma(abs(close - lastClose), n, 1)
+        private Float rsi; // sma(max(close - lastClose, 0), n, 1) / sma(abs(close - lastClose), n, 1) x 100
+
+        // WR
+        private Float wr;
+
+        public IndexData() {
+            this.mas = new SparseArray<>();
+            this.emas = new SparseArray<>();
+        }
+
+        public void putMa(int maKey, float maValue) {
+            mas.put(maKey, Float.valueOf(maValue));
+        }
+
+        public Float getMa(int maKey) {
+            return mas.get(maKey);
+        }
+
+        public void putEma(int key, float emaValue) {
+            emas.put(key, emaValue);
+        }
+
+        public Float getEma(int key) {
+            return emas.get(key);
+        }
+
+        public void setBollUp(float bollUp) {
+            this.bollUp = bollUp;
+        }
+
+        public float getBollLow() {
+            return bollLow;
+        }
+
+        public void setBollLow(float bollLow) {
+            this.bollLow = bollLow;
+        }
+
+        public float getBollUp() {
+            return bollUp;
+        }
+
+        public Float getMacd() {
+            return macd;
+        }
+
+        public void setMacd(Float macd) {
+            this.macd = macd;
+        }
+
+        public Float getMacdDea() {
+            return macdDea;
+        }
+
+        public void setMacdDea(Float macdDea) {
+            this.macdDea = macdDea;
+        }
+
+        public Float getMacdDiff() {
+            return macdDiff;
+        }
+
+        public void setMacdDiff(Float macdDiff) {
+            this.macdDiff = macdDiff;
+        }
+
+        public Float getK() {
+            return K;
+        }
+
+        public void setK(Float k) {
+            K = k;
+        }
+
+        public Float getD() {
+            return D;
+        }
+
+        public void setD(Float d) {
+            D = d;
+        }
+
+        public Float getJ() {
+            return J;
+        }
+
+        public void setJ(Float j) {
+            J = j;
+        }
+
+        public Float getRsi() {
+            return rsi;
+        }
+
+        public void setRsi(Float rsi) {
+            this.rsi = rsi;
+        }
+
+        public void setPosDiffSma(Float posDiffSma) {
+            this.posDiffSma = posDiffSma;
+        }
+
+        public void setAbsDiffSma(Float absDiffSma) {
+            this.absDiffSma = absDiffSma;
+        }
+
+        public Float getPosDiffSma() {
+            return posDiffSma;
+        }
+
+        public Float getAbsDiffSma() {
+            return absDiffSma;
+        }
+
+        public Float getWr() {
+            return wr;
+        }
+
+        public void setWr(Float wr) {
+            this.wr = wr;
+        }
+    }
+
+
     public static class Data implements Comparable<Data> {
         private float openPrice;
         private float maxPrice;
@@ -36,8 +179,8 @@ public class Kline extends BaseChart {
         private String time;
         private long timeStamp;
 
-        // local cal data
-        private SparseArray<Float> mas;
+        // local index data
+        private IndexData indexData;
 
         public Data(float openPrice, float maxPrice, float minPrice, float closePrice, long timestamp) {
             this.openPrice = openPrice;
@@ -45,7 +188,6 @@ public class Kline extends BaseChart {
             this.minPrice = minPrice;
             this.closePrice = closePrice;
             this.timeStamp = timestamp;
-            this.mas = new SparseArray<>();
         }
 
         public float getOpenPrice() {
@@ -76,25 +218,44 @@ public class Kline extends BaseChart {
             return nowVolume;
         }
 
-        public void addMas(int maKey, float mvValue) {
-            checkMasIfEmpty();
-            mas.put(maKey, Float.valueOf(mvValue));
+        public void addMas(int maKey, Float mvValue) {
+            checkIndexDataIfEmpty();
+            indexData.putMa(maKey, mvValue);
         }
 
         public Float getMas(int maKey) {
-            checkMasIfEmpty();
-            return mas.get(maKey);
+            checkIndexDataIfEmpty();
+            return indexData.getMa(maKey);
         }
 
-        private void checkMasIfEmpty() {
-            if (mas == null) {
-                mas = new SparseArray<>();
+        public IndexData getIndexData() {
+            checkIndexDataIfEmpty();
+            return indexData;
+        }
+
+        private void checkIndexDataIfEmpty() {
+            if (indexData == null) {
+                indexData = new IndexData();
             }
         }
 
         @Override
         public int compareTo(@NonNull Data o) {
             return (int) (this.timeStamp - o.getTimestamp());
+        }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "openPrice=" + openPrice +
+                    ", maxPrice=" + maxPrice +
+                    ", minPrice=" + minPrice +
+                    ", closePrice=" + closePrice +
+                    ", nowVolume=" + nowVolume +
+                    ", time='" + time + '\'' +
+                    ", timeStamp=" + timeStamp +
+                    ", indexData=" + indexData +
+                    '}';
         }
     }
 
@@ -104,17 +265,12 @@ public class Kline extends BaseChart {
         void onDisappear();
     }
 
-    public interface OnMADataChangedListener {
-        void onMADataChanged(Data data);
-    }
-
     public interface OnSidesReachedListener {
         void onStartSideReached(Data data);
 
         void onEndSideReached(Data data);
     }
 
-    private OnMADataChangedListener mOnMADataChangedListener;
     private OnCrossLineAppearListener mOnCrossLineAppearListener;
     private OnSidesReachedListener mOnSidesReachedListener;
     private float mBaseLineWidth;
@@ -122,22 +278,28 @@ public class Kline extends BaseChart {
     private Date mDate;
     private float mLastPrice;
 
+    // index
+    protected int[] mMas;
+    protected int[] mBoll;
+    private int[] mMacd;
+    private int[] mKdj;
+    private int[] mRsi;
+    private int[] mWr;
+
     protected SparseArray<Data> mVisibleList;
     protected List<Data> mDataList;
     protected List<Data> mBufferDataList;
-    protected int mTouchIndex;
-    protected int[] mMas;
     protected int mStart;
     protected int mEnd;
     // visible points index range
     private int mFirstVisibleIndex;
     private int mLastVisibleIndex;
     private int mCandleNum;
-    
+
     private float mCandleGap;
     private float mCandleLineWidth;
     private float mPriceAreaWidth;
-    private float mRightPadding;
+    private float mDataRightPadding;
     private float mMALineWidth;
 
     private ChartColor mChartColor;
@@ -156,7 +318,6 @@ public class Kline extends BaseChart {
         mDataList = new ArrayList<>();
         mBufferDataList = new ArrayList<>();
         mVisibleList = new SparseArray<>();
-        mMas = new int[]{5, 10, 30};
         mChartColor = new ChartColor();
         mBaseLineWidth = dp2Px(1);
         mCandleGap = dp2Px(0.5f);
@@ -164,22 +325,37 @@ public class Kline extends BaseChart {
         mMALineWidth = dp2Px(1f);
         mDateFormat = new SimpleDateFormat();
         mDate = new Date();
+
+        mMas = new int[]{5, 10, 30};
+        mBoll = new int[]{20, 2};
+        mMacd = new int[]{12, 26, 9};
+        mKdj = new int[]{14, 1, 3};
+        mRsi = new int[]{14};
+        mWr = new int[]{14};
     }
 
     @Override
     protected void calculateBaseLines(float[] baselines) {
-        float max = Float.MIN_VALUE;
+        float max = Float.MAX_VALUE * -1;
         float min = Float.MAX_VALUE;
         for (int i = mStart; i < mEnd; i++) {
             Data data = mDataList.get(i);
             max = Math.max(max, data.getMaxPrice());
             min = Math.min(min, data.getMinPrice());
 
-            for (int ma : mMas) {
-                Float mvValue = mDataList.get(i).getMas(ma);
-                if (mvValue == null) continue;
-                max = Math.max(max, mvValue.floatValue());
-                min = Math.min(min, mvValue.floatValue());
+            if (mChartCfg.getMainIndex() == ChartCfg.INDEX_MA) {
+                for (int ma : mMas) {
+                    Float mvValue = mDataList.get(i).getMas(ma);
+                    if (mvValue == null) continue;
+                    max = Math.max(max, mvValue.floatValue());
+                    min = Math.min(min, mvValue.floatValue());
+                }
+            } else if (mChartCfg.getMainIndex() == ChartCfg.INDEX_BOLL) {
+                Float mid = mDataList.get(i).getMas(mBoll[0]);
+                if (mid == null) continue;
+                IndexData indexData = mDataList.get(i).getIndexData();
+                max = Math.max(max, indexData.getBollUp());
+                min = Math.min(min, indexData.getBollLow());
             }
         }
 
@@ -188,19 +364,19 @@ public class Kline extends BaseChart {
             min = Math.min(min, mLastPrice);
         }
 
-        if (max == Float.MIN_VALUE || min == Float.MAX_VALUE) return;
+        if (max == Float.MAX_VALUE * -1 || min == Float.MAX_VALUE) return;
 
-        float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
-                .divide(new BigDecimal(baselines.length - 1),
-                        mChartCfg.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
+        float priceRange = (max - min) / (baselines.length - 1);
+
+        if (priceRange == 0) { // max == min
+            priceRange = 1;
+        }
 
         // 额外扩大最大值 最小值
         max += priceRange / 2;
         min -= priceRange / 2;
 
-        priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
-                .divide(new BigDecimal(baselines.length - 1),
-                        mChartCfg.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
+        priceRange = (max - min) / (baselines.length - 1);
 
         baselines[0] = max;
         baselines[baselines.length - 1] = min;
@@ -210,26 +386,31 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void calculateIndexesBaseLines(double[] indexesBaseLines) {
-        if (mDataList != null && mDataList.size() > 0) {
-            double maxVolume = mDataList.get(mStart).getNowVolume();
-            for (int i = mStart; i < mEnd; i++) {
-                if (maxVolume < mDataList.get(i).getNowVolume()) {
-                    maxVolume = mDataList.get(i).getNowVolume();
-                }
+    protected void calculateVolBaseLines(double[] indexesBaseLines) {
+        if (mDataList == null || mDataList.size() == 0) return;
+
+        double maxVolume = mDataList.get(mStart).getNowVolume();
+        for (int i = mStart; i < mEnd; i++) {
+            if (maxVolume < mDataList.get(i).getNowVolume()) {
+                maxVolume = mDataList.get(i).getNowVolume();
             }
-            double volumeRange = maxVolume / (indexesBaseLines.length - 1);
-            indexesBaseLines[0] = maxVolume;
-            indexesBaseLines[indexesBaseLines.length - 1] = 0;
-            for (int i = indexesBaseLines.length - 2; i > 0; i--) {
-                indexesBaseLines[i] = indexesBaseLines[i + 1] + volumeRange;
-            }
+        }
+        double volumeRange = maxVolume / (indexesBaseLines.length - 1);
+
+        // 额外扩大最大值
+        maxVolume += volumeRange / 3;
+        volumeRange = maxVolume / (indexesBaseLines.length - 1);
+
+        indexesBaseLines[0] = maxVolume;
+        indexesBaseLines[indexesBaseLines.length - 1] = 0;
+        for (int i = indexesBaseLines.length - 2; i > 0; i--) {
+            indexesBaseLines[i] = indexesBaseLines[i + 1] + volumeRange;
         }
     }
 
     @Override
     protected float calculateOneXAxisWidth() {
-        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mRightPadding;
+        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mDataRightPadding;
         return width / mCandleNum;
     }
 
@@ -239,11 +420,8 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawBaseLines(boolean indexesEnable,
-                                 float[] baselines, int left, int top, int width, int height,
-                                 double[] indexesBaseLines, int left2, int top2, int width2, int height2,
-                                 Canvas canvas) {
-        if (baselines.length == 0) return;
+    protected void drawBaseLines(float[] baselines, int left, int top, int width, int height, Canvas canvas) {
+        if (mDataList == null || mDataList.size() == 0) return;
 
         float verticalInterval = height * 1.0f / (baselines.length - 1);
         mPriceAreaWidth = calculatePriceWidth(baselines[0]);
@@ -259,7 +437,7 @@ public class Kline extends BaseChart {
                 setBaseTextPaint(sPaint);
                 String baseLineValue = formatNumber(baselines[i]);
                 float textW = sPaint.measureText(baseLineValue);
-                mRightPadding = mPriceAreaWidth - textW;
+                mDataRightPadding = mPriceAreaWidth - textW;
                 float x = left + width - mPriceAreaWidth;
                 float y = topY - mTextMargin - mBigFontHeight / 2 + mOffset4CenterText;
                 canvas.drawText(baseLineValue, x, y, sPaint);
@@ -269,34 +447,216 @@ public class Kline extends BaseChart {
         }
     }
 
-    @Override
-    protected void drawData(boolean indexesEnable,
-                            int left, int top, int width, int height,
-                            int left2, int top2, int width2, int height2, Canvas canvas) {
-        for (int i = mStart; i < mEnd; i++) {
-            Data data = mDataList.get(i);
-            float chartX = getChartXOfScreen(i, data);
-            if (i == mDataList.size() - 1 && mLastPrice != 0) { // last data
-                drawCandle(chartX, data, mLastPrice, canvas);
-            } else {
-                drawCandle(chartX, data, canvas);
-            }
+    private float safeMax(float max, Float value) {
+        if (value != null) {
+            return Math.max(max, value);
+        }
+        return max;
+    }
 
-            if (indexesEnable) {
-                drawIndexes(chartX, data, canvas);
+    private float safeMin(float min, Float value) {
+        if (value != null) {
+            return Math.min(min, value);
+        }
+        return min;
+    }
+
+    @Override
+    protected void calculateSubBaseLines(float[] subBaseLineArray) {
+        if (mDataList == null || mDataList.size() == 0) return;
+
+        float max = Float.MAX_VALUE * -1;
+        float min = Float.MAX_VALUE;
+        if (mChartCfg.getSubIndex() == ChartCfg.INDEX_MACD) {
+            for (int i = mStart; i < mEnd; i++) {
+                IndexData indexData = mDataList.get(i).getIndexData();
+                max = safeMax(max, indexData.getMacd());
+                max = safeMax(max, indexData.getMacdDea());
+                max = safeMax(max, indexData.getMacdDiff());
+                min = safeMin(min, indexData.getMacd());
+                min = safeMin(min, indexData.getMacdDea());
+                min = safeMin(min, indexData.getMacdDiff());
+            }
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_KDJ) {
+            for (int i = mStart; i < mEnd; i++) {
+                IndexData indexData = mDataList.get(i).getIndexData();
+                max = safeMax(max, indexData.getK());
+                max = safeMax(max, indexData.getD());
+                max = safeMax(max, indexData.getJ());
+                min = safeMin(min, indexData.getK());
+                min = safeMin(min, indexData.getD());
+                min = safeMin(min, indexData.getJ());
+            }
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_RSI) {
+            for (int i = mStart; i < mEnd; i++) {
+                IndexData indexData = mDataList.get(i).getIndexData();
+                max = safeMax(max, indexData.getRsi());
+                min = safeMin(min, indexData.getRsi());
+            }
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_WR) {
+            for (int i = mStart; i < mEnd; i++) {
+                IndexData indexData = mDataList.get(i).getIndexData();
+                max = safeMax(max, indexData.getWr());
+                min = safeMin(min, indexData.getWr());
             }
         }
 
-        // draw MAs
-        for (int ma : mMas) {
-            setMovingAveragesPaint(sPaint, ma);
+        if (max == Float.MAX_VALUE * -1 || min == Float.MAX_VALUE) return;
+
+        float priceRange = (max - min) / (subBaseLineArray.length - 1);
+        // 额外扩大最大值 最小值
+        max += priceRange / 3;
+        //min -= priceRange / 2;
+
+        priceRange = (max - min) / (subBaseLineArray.length - 1);
+        subBaseLineArray[0] = max;
+        subBaseLineArray[subBaseLineArray.length - 1] = min;
+        for (int i = subBaseLineArray.length - 2; i > 0; i--) {
+            subBaseLineArray[i] = subBaseLineArray[i + 1] + priceRange;
+        }
+    }
+
+    @Override
+    protected void drawSubIndexData(int left, int subChartTop, int width, int subChartHeight,
+                                    int touchIndex, Canvas canvas) {
+        Data data = null;
+        if (mVisibleList.size() > 0) {
+            data = mVisibleList.get(mVisibleList.size() - 1);
+        }
+        if (touchIndex >= 0) {
+            data = mVisibleList.get(touchIndex);
+        }
+
+        if (mChartCfg.getSubIndex() == ChartCfg.INDEX_MACD) {
+            drawMacdLines(canvas);
+
+            if (data == null) return;
+
+            float textX = left + mTextMargin;
+            float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+            setBaseTextPaint(sPaint);
+            String macdText = "MACD(" + mMacd[0] + "," + mMacd[1] + "," + mMacd[2] + ")";
+            canvas.drawText(macdText, textX, textY, sPaint);
+
+            textX += sPaint.measureText(macdText) + 2 * mTextMargin;
+            IndexData indexData = data.getIndexData();
+            for (int key = 0; key < 3; key++) {
+                Float v = key == 0 ? indexData.getMacd() : (key == 1 ? indexData.getMacdDiff() : indexData.getMacdDea());
+                if (v != null) {
+                    setIndexTextPaint(sPaint, key);
+                    macdText = key == 0 ? "MACD:" : (key == 1 ? "DIFF:" : "DEA:");
+                    macdText += formatNumber(v);
+                    canvas.drawText(macdText, textX, textY, sPaint);
+                    textX += sPaint.measureText(macdText) + 2 * mTextMargin;
+                }
+            }
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_KDJ) {
+            drawKdjLines(canvas);
+
+            if (data == null) return;
+
+            float textX = left + mTextMargin;
+            float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+            setBaseTextPaint(sPaint);
+            String kdjText = "KDJ(" + mKdj[0] + "," + mKdj[1] + "," + mKdj[2] + ")";
+            canvas.drawText(kdjText, textX, textY, sPaint);
+
+            textX += sPaint.measureText(kdjText) + 2 * mTextMargin;
+            IndexData indexData = data.getIndexData();
+            for (int key = 0; key < 3; key++) {
+                Float v = key == 0 ? indexData.getK() : (key == 1 ? indexData.getD() : indexData.getJ());
+                if (v != null) {
+                    setIndexTextPaint(sPaint, key);
+                    kdjText = key == 0 ? "K:" : (key == 1 ? "D:" : "J:");
+                    kdjText += formatNumber(v);
+                    canvas.drawText(kdjText, textX, textY, sPaint);
+                    textX += sPaint.measureText(kdjText) + 2 * mTextMargin;
+                }
+            }
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_RSI) {
+            drawRsiLines(canvas);
+
+            if (data == null) return;
+
+            float textX = left + mTextMargin;
+            float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+            setBaseTextPaint(sPaint);
+            if (data.getIndexData().getRsi() != null) {
+                String kdjText = "RSI(" + mRsi[0] + "):" + formatNumber(data.getIndexData().getRsi());
+                canvas.drawText(kdjText, textX, textY, sPaint);
+            } else {
+                String kdjText = "RSI(" + mRsi[0] + ")";
+                canvas.drawText(kdjText, textX, textY, sPaint);
+            }
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_WR) {
+            drawWrLines(canvas);
+
+            if (data == null) return;
+
+            float textX = left + mTextMargin;
+            float textY = subChartTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+            setBaseTextPaint(sPaint);
+            if (data.getIndexData().getWr() != null) {
+                String wrText = "WR(" + mRsi[0] + "):" + formatNumber(data.getIndexData().getWr());
+                canvas.drawText(wrText, textX, textY, sPaint);
+            } else {
+                String wrText = "WR(" + mRsi[0] + ")";
+                canvas.drawText(wrText, textX, textY, sPaint);
+            }
+        }
+    }
+
+    private void drawWrLines(Canvas canvas) {
+        float startX = -1;
+        float startY = -1;
+        setIndexLinePaint(sPaint, 0);
+        for (int i = mStart; i < mEnd; i++) {
+            Float v = mDataList.get(i).getIndexData().getWr();
+            if (v == null) continue;
+            float chartX = getChartXOfScreen(i);
+            float chartY = getSubChartY(v.floatValue());
+            if (startX == -1 && startY == -1) { // start
+                startX = chartX;
+                startY = chartY;
+            } else {
+                canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+                startX = chartX;
+                startY = chartY;
+            }
+        }
+    }
+
+    private void drawRsiLines(Canvas canvas) {
+        float startX = -1;
+        float startY = -1;
+        setIndexLinePaint(sPaint, 0);
+        for (int i = mStart; i < mEnd; i++) {
+            Float v = mDataList.get(i).getIndexData().getRsi();
+            if (v == null) continue;
+            float chartX = getChartXOfScreen(i);
+            float chartY = getSubChartY(v.floatValue());
+            if (startX == -1 && startY == -1) { // start
+                startX = chartX;
+                startY = chartY;
+            } else {
+                canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+                startX = chartX;
+                startY = chartY;
+            }
+        }
+    }
+
+    private void drawKdjLines(Canvas canvas) {
+        for (int key = 0; key < 3; key++) { // 0-k, 1-d, 2-j
             float startX = -1;
             float startY = -1;
+            setIndexLinePaint(sPaint, key);
             for (int i = mStart; i < mEnd; i++) {
-                Float movingAverageValue = mDataList.get(i).getMas(ma);
-                if (movingAverageValue == null) continue;
+                IndexData indexData = mDataList.get(i).getIndexData();
+                Float v = key == 0 ? indexData.getK() : (key == 1 ? indexData.getD() : indexData.getJ());
+                if (v == null) continue;
                 float chartX = getChartXOfScreen(i);
-                float chartY = getChartY(movingAverageValue.floatValue());
+                float chartY = getSubChartY(v.floatValue());
                 if (startX == -1 && startY == -1) { // start
                     startX = chartX;
                     startY = chartY;
@@ -307,7 +667,53 @@ public class Kline extends BaseChart {
                 }
             }
         }
+    }
 
+    private void drawMacdLines(Canvas canvas) {
+        for (int i = mStart; i < mEnd; i++) {
+            Float macd = mDataList.get(i).getIndexData().getMacd();
+            if (macd == null) continue;
+            float chartX = getChartXOfScreen(i);
+            float chartY = getSubChartY(macd.floatValue());
+            float startX = chartX;
+            float startY = getSubChartY(0);
+            setMacdPaint(sPaint, macd >= 0);
+            canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+        }
+
+        for (int key = 1; key <= 2; key++) { // 1 is diff and 2 is dea
+            float startX = -1;
+            float startY = -1;
+            setIndexLinePaint(sPaint, key);
+            for (int i = mStart; i < mEnd; i++) {
+                IndexData indexData = mDataList.get(i).getIndexData();
+                Float v = key == 1 ? indexData.getMacdDiff() : indexData.getMacdDea();
+                if (v == null) continue;
+                float chartX = getChartXOfScreen(i);
+                float chartY = getSubChartY(v.floatValue());
+                if (startX == -1 && startY == -1) { // start
+                    startX = chartX;
+                    startY = chartY;
+                } else {
+                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+                    startX = chartX;
+                    startY = chartY;
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void drawMainData(int left, int top, int width, int height, Canvas canvas) {
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            float chartX = getChartXOfScreen(i, data);
+            if (i == mDataList.size() - 1 && mLastPrice != 0) { // last data
+                drawCandle(chartX, data, mLastPrice, canvas);
+            } else {
+                drawCandle(chartX, data, canvas);
+            }
+        }
 
         // draw last price line
 //        float[] baseLines = mChartCfg.getBaseLineArray();
@@ -328,8 +734,29 @@ public class Kline extends BaseChart {
 //        }
     }
 
-    protected void drawIndexes(float chartX, Data data, Canvas canvas) {
-        drawVolumes(chartX, data, canvas);
+    @Override
+    protected void drawVolData(int left, int volTop, int width, int volChartHeight, int touchIndex, Canvas canvas) {
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            float chartX = getChartXOfScreen(i);
+            drawVolumes(chartX, data, canvas);
+        }
+
+        Data data = null;
+        if (mVisibleList.size() > 0) {
+            data = mVisibleList.get(mVisibleList.size() - 1);
+        }
+        if (touchIndex >= 0) {
+            data = mVisibleList.get(touchIndex);
+        }
+        if (data == null) return;
+
+        float textX = left + mTextMargin;
+        float textY = volTop + mBigFontHeight / 2 + mOffset4CenterBigText;
+        setBaseTextPaint(sPaint);
+        String volText = "VOL:" + formatNumber(data.getNowVolume(), 8);
+        canvas.drawText(volText, textX, textY, sPaint);
+
     }
 
     private void drawVolumes(float chartX, Data data, Canvas canvas) {
@@ -342,9 +769,9 @@ public class Kline extends BaseChart {
         setCandleBodyPaint(sPaint, color);
         RectF rectf = getRectF();
         rectf.left = chartX - candleWidth / 2;
-        rectf.top = getIndexesChartY(data.nowVolume);
+        rectf.top = getVolChartY(data.nowVolume);
         rectf.right = chartX + candleWidth / 2;
-        rectf.bottom = getIndexesChartY(0);
+        rectf.bottom = getVolChartY(0);
         canvas.drawRect(rectf, sPaint);
     }
 
@@ -407,7 +834,6 @@ public class Kline extends BaseChart {
         if (minPrice != 0 && bottomPrice != 0) {
             canvas.drawLine(chartX, getChartY(bottomPrice), chartX, getChartY(minPrice), sPaint);
         }
-
     }
 
     protected float getChartXOfScreen(int index) {
@@ -444,7 +870,7 @@ public class Kline extends BaseChart {
     }
 
     @Override
-    protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
+    protected void drawTimeLine(int left, int top, int width, int timeLineHeight, Canvas canvas) {
         int interval = mCandleNum / 4;
         float textY = top + mTextMargin / 2 + mBigFontHeight / 2 + mOffset4CenterBigText;
         setBaseTextPaint(sPaint);
@@ -469,15 +895,129 @@ public class Kline extends BaseChart {
         }
     }
 
+    @Override
+    protected void drawMainIndex(int left, int top, int width, int mainChartHeight, int touchIndex, Canvas canvas) {
+        if (mChartCfg.getMainIndex() == ChartCfg.INDEX_MA) {
+            drawMALines(canvas);
+
+            Data data = null;
+            if (mVisibleList.size() > 0) {
+                data = mVisibleList.get(mVisibleList.size() - 1);
+            }
+            if (touchIndex >= 0) {
+                data = mVisibleList.get(touchIndex);
+            }
+            if (data == null) return;
+
+            float textX = left + width - mTextMargin;
+            int textY = (int) (top + mTextMargin * 3 + mOffset4CenterText);
+            for (int i = mMas.length - 1; i >= 0; i--) {
+                int ma = mMas[i];
+                Float maValue = data.getMas(ma);
+                if (maValue == null) continue;
+
+                String maText = "MA" + ma + ": " + formatNumber(maValue.floatValue());
+                setMovingAveragesTextPaint(sPaint, ma);
+                float maTextLength = sPaint.measureText(maText);
+                textX -= maTextLength;
+                canvas.drawText(maText, textX, textY, sPaint);
+                textX -= mTextMargin * 1.5;
+            }
+        } else if (mChartCfg.getMainIndex() == ChartCfg.INDEX_BOLL) {
+            drawBollLines(canvas);
+
+            Data data = null;
+            if (mVisibleList.size() > 0) {
+                data = mVisibleList.get(mVisibleList.size() - 1);
+            }
+            if (touchIndex >= 0) {
+                data = mVisibleList.get(touchIndex);
+            }
+            if (data == null) return;
+
+            Float mid = data.getMas(mBoll[0]);
+            if (mid == null) return;
+
+            float textX = left + width - mTextMargin;
+            int textY = (int) (top + mTextMargin * 3 + mOffset4CenterText);
+            IndexData indexData = data.getIndexData();
+            for (int i = mMas.length - 1; i >= 0; i--) { // low 2, high 1, mid 0
+                String maText = "BOLL: " + formatNumber(mid.floatValue());
+                if (i == 2) {
+                    maText = "LB: " + formatNumber(indexData.getBollLow());
+                } else if (i == 1) {
+                    maText = "UB: " + formatNumber(indexData.getBollUp());
+                }
+                setBollTextPaint(sPaint, i);
+                float bollTextLength = sPaint.measureText(maText);
+                textX -= bollTextLength;
+                canvas.drawText(maText, textX, textY, sPaint);
+                textX -= mTextMargin * 1.5;
+            }
+        }
+    }
+
+    private void drawBollLines(Canvas canvas) {
+        for (int i = 0; i < mMas.length; i++) { // mid 0, high 1, low 2
+            setBollLinePaint(sPaint, i);
+            float startX = -1;
+            float startY = -1;
+            for (int k = mStart; k < mEnd; k++) {
+                Float mid = mDataList.get(k).getMas(mBoll[0]);
+                if (mid == null) continue;
+
+                float priceValue = mid.floatValue();
+                IndexData indexData = mDataList.get(k).getIndexData();
+                if (i == 1) { // high
+                    priceValue = indexData.getBollUp();
+                } else if (i == 2) { // low
+                    priceValue = indexData.getBollLow();
+                }
+                float chartX = getChartXOfScreen(k);
+                float chartY = getChartY(priceValue);
+                if (startX == -1 && startY == -1) { // start
+                    startX = chartX;
+                    startY = chartY;
+                } else {
+                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+                    startX = chartX;
+                    startY = chartY;
+                }
+            }
+        }
+    }
+
+    protected void drawMALines(Canvas canvas) {
+        for (int ma : mMas) {
+            setMovingAveragesPaint(sPaint, ma);
+            float startX = -1;
+            float startY = -1;
+            for (int i = mStart; i < mEnd; i++) {
+                Float movingAverageValue = mDataList.get(i).getMas(ma);
+                if (movingAverageValue == null) continue;
+                float chartX = getChartXOfScreen(i);
+                float chartY = getChartY(movingAverageValue.floatValue());
+                if (startX == -1 && startY == -1) { // start
+                    startX = chartX;
+                    startY = chartY;
+                } else {
+                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
+                    startX = chartX;
+                    startY = chartY;
+                }
+            }
+        }
+    }
+
     private String formatTimestamp(long timestamp) {
         mDate.setTime(timestamp);
         return mDateFormat.format(mDate);
     }
 
     @Override
-    protected void drawCrossLines(boolean indexesEnable, int touchIndex,
-                                  int left, int top, int width, int height,
-                                  int left2, int top2, int width2, int height2, Canvas canvas) {
+    protected void drawCrossLines(int touchIndex, int left, int top, int width, int height,
+                                  boolean volEnable, int volTop, int volHeight,
+                                  boolean subIndexEnable, int subChartTop, int subChartHeight, Canvas canvas) {
         if (!checkTouchIndexValid(touchIndex)) return;
 
         Data data = mVisibleList.get(touchIndex);
@@ -533,16 +1073,24 @@ public class Kline extends BaseChart {
         float priceY = bgRect.top + rectHeight / 2 + mOffset4CenterBigText;
         setCrossLineTextPaint(sPaint);
         canvas.drawText(price, priceX, priceY, sPaint);
+
+        // cross vol and sub chart
+        if (volEnable) {
+            setCrossLinePaint(sPaint);
+            float stopY = volTop + volHeight;
+            if (subIndexEnable) {
+                stopY = subChartTop + subChartHeight;
+            }
+            canvas.drawLine(touchX, top + height + rectHeight, touchX, stopY, sPaint);
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         calculateCandlesRange();
-        calculateMovingAverageValues();
+        calculateIndexValues();
 
         super.onDraw(canvas);
-
-        onMADataChanged();
 
         if (isDragging()) {
             onSidesReached();
@@ -560,52 +1108,255 @@ public class Kline extends BaseChart {
         }
     }
 
-    private void onMADataChanged() {
-        Data maData = null;
-        if (mVisibleList.size() > 0) {
-            maData = mVisibleList.get(mVisibleList.size() - 1);
+    private void calculateIndexValues() {
+        if (mChartCfg.getMainIndex() == ChartCfg.INDEX_MA) {
+            calculateMaValues();
+        } else if (mChartCfg.getMainIndex() == ChartCfg.INDEX_BOLL) {
+            calculateBollValues();
         }
-        if (mTouchIndex >= 0) {
-            maData = mVisibleList.get(mTouchIndex);
-        }
-        if (mOnMADataChangedListener != null) {
-            mOnMADataChangedListener.onMADataChanged(maData);
+
+        if (mChartCfg.getSubIndex() == ChartCfg.INDEX_MACD) {
+            calculateMacdValues();
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_KDJ) {
+            calculateKdjValues();
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_RSI) {
+            calculateRsiValues();
+        } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_WR) {
+            calculateWrValues();
         }
     }
 
-    @Override
-    protected float getChartY(float y) {
-        float[] baseLines = mChartCfg.getBaseLineArray();
+    private void calculateWrValues() {
+        int wrLength = Math.max(mWr[0], 1);
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            if (i - wrLength + 1 < 0) continue; // data is not enough to calculate
+            if (data.getIndexData().getWr() != null) continue;
 
-        // When values beyond baselines, eg. ma. return -1
-        if (y > baseLines[0] || y < baseLines[baseLines.length - 1]) {
-            return -1;
+            Float wr = calculateWrValue(i, wrLength);
+            data.getIndexData().setWr(wr);
         }
-
-        int height = getTopPartHeight() - 2 * mTextMargin; //
-        y = (baseLines[0] - y) / (baseLines[0] - baseLines[baseLines.length - 1]) * height;
-        return y + getPaddingTop() + mTextMargin;
     }
 
-    private void calculateMovingAverageValues() {
-        for (int movingAverage : mMas) {
-            for (int i = mStart; i < mEnd; i++) {
-                int start = i - movingAverage + 1;
-                if (start < 0) continue;
-                if (mDataList.get(i).getMas(movingAverage) != null) continue;
+    private Float calculateWrValue(int index, int wrLength) {
+        int start = index - wrLength + 1;
+        float highestPrice = Float.MAX_VALUE * -1;
+        float lowestPrice = Float.MAX_VALUE;
+        for (int i = start; i < start + wrLength; i++) {
+            highestPrice = Math.max(highestPrice, mDataList.get(i).getMaxPrice());
+            lowestPrice = Math.min(lowestPrice, mDataList.get(i).getMinPrice());
+        }
+        if (highestPrice == lowestPrice) return null;
 
-                float maValue = calculateMovingAverageValue(start, movingAverage);
-                mDataList.get(i).addMas(movingAverage, maValue);
+        float closePrice = mDataList.get(index).getClosePrice();
+        return (highestPrice - closePrice) / (highestPrice - lowestPrice) * -100;
+    }
+
+    private void calculateRsiValues() {
+        int rsiLength = Math.max(mRsi[0], 1);
+        int dataLength = rsiLength + 1;
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            if (i - dataLength + 1 < 0) continue; // data is not enough to calculate
+            if (data.getIndexData().getRsi() != null) continue;
+
+            Float posDiffSma = calculatePosDiffSma(i, dataLength, rsiLength);
+            Float absDiffSma = calculateAbsDiffSma(i, dataLength, rsiLength);
+            if (absDiffSma != 0) {
+                Float rsi = posDiffSma / absDiffSma * 100;
+                data.getIndexData().setRsi(rsi);
             }
         }
     }
 
-    private float calculateMovingAverageValue(int start, int movingAverage) {
+    private Float calculateAbsDiffSma(int index, int dataLength, int rsiLength) {
+        // sma(abs(close - lastClose), n, 1) = Y, abs(close - lastClose) = X
+        // Y = [1 x X + (n - 1) * Y'] / n
+        if (index - dataLength + 1 == 0) {
+            float result = 0;
+            for (int i = dataLength - 1; i > 0; i--) {
+                float diff = mDataList.get(i).getClosePrice() - mDataList.get(i - 1).getClosePrice();
+                result += Math.abs(diff);
+            }
+            return result / rsiLength;
+        }
+
+        float diff = mDataList.get(index).getClosePrice() - mDataList.get(index - 1).getClosePrice();
+        Float preAbsDiffSma = mDataList.get(index - 1).getIndexData().getAbsDiffSma();
+        if (preAbsDiffSma == null) {
+            preAbsDiffSma = calculateAbsDiffSma(index - 1, dataLength, rsiLength);
+            mDataList.get(index - 1).getIndexData().setAbsDiffSma(preAbsDiffSma);
+        }
+        return (Math.abs(diff) + (rsiLength - 1) * preAbsDiffSma) / rsiLength;
+    }
+
+    private Float calculatePosDiffSma(int index, int dataLength, int rsiLength) {
+        // sma(max(close - lastClose, 0), n, 1) = Y, max(close - lastClose, 0) = X
+        // Y = [1 x X + (n - 1) * Y'] / n
+        if (index - dataLength + 1 == 0) {
+            float result = 0;
+            for (int i = dataLength - 1; i > 0; i--) {
+                float diff = mDataList.get(i).getClosePrice() - mDataList.get(i - 1).getClosePrice();
+                result += Math.max(diff, 0);
+            }
+            return result / rsiLength;
+        }
+
+        float diff = mDataList.get(index).getClosePrice() - mDataList.get(index - 1).getClosePrice();
+        Float prePosDiffSma = mDataList.get(index - 1).getIndexData().getPosDiffSma();
+        if (prePosDiffSma == null) {
+            prePosDiffSma = calculatePosDiffSma(index - 1, dataLength, rsiLength);
+            mDataList.get(index - 1).getIndexData().setPosDiffSma(prePosDiffSma);
+        }
+        return (Math.max(diff, 0) + (rsiLength - 1) * prePosDiffSma) / rsiLength;
+    }
+
+    private void calculateKdjValues() {
+        int kLength = Math.max(mKdj[0], 1);
+        int dLength = Math.max(mKdj[2], 1);
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            if (i - kLength - dLength + 1 < 0) continue; // data is not enough to calculate
+            if (data.getIndexData().getD() != null && data.getIndexData().getJ() != null) continue;
+
+            Float d = calculateDValue(i, dLength, kLength);
+            if (d != null) {
+                data.getIndexData().setD(d);
+                Float k = data.getIndexData().getK();
+                data.getIndexData().setJ(3 * k - 2 * d);
+            }
+        }
+    }
+
+    private Float calculateDValue(int index, int dLength, int kLength) {
         float result = 0;
-        for (int i = start; i < start + movingAverage; i++) {
+        int start = index - dLength + 1;
+        for (int i = start; i < start + dLength; i++) {
+            IndexData indexData = mDataList.get(i).getIndexData();
+            if (indexData.getK() == null) {
+                Float k = calculateKValue(i, kLength);
+                if (k == null) return null;
+                indexData.setK(k);
+            }
+            result += indexData.getK();
+        }
+        return result / dLength;
+    }
+
+    private Float calculateKValue(int index, int kLength) {
+        int start = index - kLength + 1;
+        float highestPrice = Float.MAX_VALUE * -1;
+        float lowestPrice = Float.MAX_VALUE;
+        for (int i = start; i < start + kLength; i++) {
+            highestPrice = Math.max(highestPrice, mDataList.get(i).getMaxPrice());
+            lowestPrice = Math.min(lowestPrice, mDataList.get(i).getMinPrice());
+        }
+        if (highestPrice == lowestPrice) return null;
+
+        float closePrice = mDataList.get(index).getClosePrice();
+        return (closePrice - lowestPrice) / (highestPrice - lowestPrice) * 100;
+    }
+
+    private void calculateMacdValues() {
+        int quickLength = Math.max(mMacd[0], 1);
+        int slowLength = Math.max(mMacd[1], 1);
+        int max = Math.max(quickLength, slowLength);
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            if (i - max + 1 < 0) continue; // data is not enough to calculate
+            if (data.getIndexData().getEma(quickLength) != null
+                    && data.getIndexData().getEma(slowLength) != null
+                    && data.getIndexData().getMacdDiff() != null) continue;
+
+            Float quickEmaValue = calculateEmaValue(i, quickLength);
+            Float slowEmaValue = calculateEmaValue(i, slowLength);
+            mDataList.get(i).getIndexData().putEma(quickLength, quickEmaValue);
+            mDataList.get(i).getIndexData().putEma(slowLength, slowEmaValue);
+            mDataList.get(i).getIndexData().setMacdDiff(quickEmaValue - slowEmaValue);
+        }
+        int deaLength = Math.max(mMacd[2], 1);
+        for (int i = mStart; i < mEnd; i++) {
+            Data data = mDataList.get(i);
+            if (i - max - deaLength + 1 < 0) continue;
+            if (data.getIndexData().getMacdDea() != null) continue;
+
+            Float dea = calculateDeaValue(i, deaLength);
+            data.getIndexData().setMacdDea(dea);
+            data.getIndexData().setMacd(data.getIndexData().getMacdDiff().floatValue() - dea.floatValue());
+        }
+    }
+
+    private Float calculateDeaValue(int index, int deaLength) {
+        float result = 0;
+        int start = index - deaLength + 1;
+        for (int i = start; i < start + deaLength; i++) {
+            Float diff = mDataList.get(i).getIndexData().getMacdDiff();
+            if (diff != null) {
+                result += diff.floatValue();
+            }
+        }
+        return result / deaLength;
+    }
+
+    private Float calculateEmaValue(int index, int N) {
+        // EMA = closePrice * 2/(N+1) + preEMA * (N+1-2)/(N+1)
+        if (index - N + 1 == 0) {
+            Float ema = calculateMaValue(index, N);
+            return ema;
+        }
+
+        float closePrice = mDataList.get(index).getClosePrice();
+        Float preEma = mDataList.get(index - 1).getIndexData().getEma(N);
+        if (preEma == null) {
+            preEma = calculateEmaValue(index - 1, N);
+            mDataList.get(index - 1).getIndexData().putEma(N, preEma);
+        }
+        Float ema = closePrice * 2 / (N + 1) + preEma.floatValue() * (N - 1) / (N + 1);
+        return ema;
+    }
+
+    private void calculateBollValues() {
+        int ma = mBoll[0];
+        for (int i = mStart; i < mEnd; i++) {
+            if (i - ma + 1 < 0) continue; // data is not enough to calculate
+            if (mDataList.get(i).getMas(ma) != null) continue;
+
+            Float maValue = calculateMaValue(i, ma);
+            mDataList.get(i).addMas(ma, maValue);
+            float mdValue = calculateBollMdValue(i, maValue, ma);
+            mDataList.get(i).getIndexData().setBollUp(maValue + mBoll[1] * mdValue);
+            mDataList.get(i).getIndexData().setBollLow(maValue - mBoll[1] * mdValue);
+        }
+    }
+
+    private float calculateBollMdValue(int index, float maValue, int ma) {
+        double result = 0;
+        int start = index - ma + 1;
+        for (int i = start; i < start + ma; i++) {
+            result += Math.pow(mDataList.get(i).getClosePrice() - maValue, 2);
+        }
+        return (float) Math.sqrt(result / ma);
+    }
+
+    private void calculateMaValues() {
+        for (int ma : mMas) {
+            for (int i = mStart; i < mEnd; i++) {
+                if (i - ma + 1 < 0) continue; // data is not enough to calculate
+                if (mDataList.get(i).getMas(ma) != null) continue;
+
+                Float maValue = calculateMaValue(i, ma);
+                mDataList.get(i).addMas(ma, maValue);
+            }
+        }
+    }
+
+    private Float calculateMaValue(int index, int ma) {
+        float result = 0;
+        int start = index - ma + 1;
+        for (int i = start; i < start + ma; i++) {
             result += mDataList.get(i).getClosePrice();
         }
-        return result / movingAverage;
+        return Float.valueOf(formatNumber(result / ma)); // 临时修复 result 累加的精度丢失问题
     }
 
     private void calculateCandlesRange() {
@@ -644,7 +1395,6 @@ public class Kline extends BaseChart {
 
     @Override
     protected void onCrossLinesAppear(int touchIndex) {
-        mTouchIndex = touchIndex;
         if (mOnCrossLineAppearListener != null) {
             Data curData = mVisibleList.get(touchIndex);
             mOnCrossLineAppearListener.onAppear(curData);
@@ -653,7 +1403,6 @@ public class Kline extends BaseChart {
 
     @Override
     protected void onCrossLinesDisappear(int touchIndex) {
-        mTouchIndex = touchIndex;
         if (mOnCrossLineAppearListener != null) {
             mOnCrossLineAppearListener.onDisappear();
         }
@@ -677,10 +1426,6 @@ public class Kline extends BaseChart {
 
     public void setOnCrossLineAppearListener(OnCrossLineAppearListener onCrossLineAppearListener) {
         mOnCrossLineAppearListener = onCrossLineAppearListener;
-    }
-
-    public void setOnMADataChangedListener(OnMADataChangedListener onMADataChangedListener) {
-        mOnMADataChangedListener = onMADataChangedListener;
     }
 
     public void setOnSidesReachedListener(OnSidesReachedListener onSidesReachedListener) {
@@ -721,6 +1466,34 @@ public class Kline extends BaseChart {
         paint.setColor(mChartColor.getMaColor(ma));
     }
 
+    private void setBollLinePaint(Paint paint, int index) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(mMALineWidth);
+        paint.setPathEffect(null);
+        paint.setColor(mChartColor.getMaColor(mMas[index]));
+    }
+
+    private void setMacdPaint(Paint paint, boolean positive) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(mMALineWidth);
+        paint.setPathEffect(null);
+        paint.setColor(positive ? mChartColor.getPositiveColor() : mChartColor.getNegativeColor());
+    }
+
+    private void setIndexLinePaint(Paint paint, int key) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(mMALineWidth);
+        paint.setPathEffect(null);
+        paint.setColor(mChartColor.getIndexLinesColor(key));
+    }
+
+    private void setIndexTextPaint(Paint paint, int key) {
+        paint.setTextSize(mBigFontSize);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+        paint.setColor(mChartColor.getIndexTextColor(key));
+    }
+
     private void setCrossLinePaint(Paint paint) {
         paint.setColor(mChartColor.getCrossLineColor());
         paint.setStrokeWidth(mBaseLineWidth);
@@ -730,6 +1503,20 @@ public class Kline extends BaseChart {
 
     private void setPriceTextPaint(Paint paint) {
         paint.setColor(mChartColor.getCrossLineColor());
+        paint.setTextSize(mFontSize);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+    }
+
+    private void setBollTextPaint(Paint paint, int index) {
+        paint.setColor(mChartColor.getMaColor(mMas[index]));
+        paint.setTextSize(mFontSize);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+    }
+
+    private void setMovingAveragesTextPaint(Paint paint, int ma) {
+        paint.setColor(mChartColor.getMaColor(ma));
         paint.setTextSize(mFontSize);
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
@@ -776,6 +1563,11 @@ public class Kline extends BaseChart {
             mLastPrice = lastPrice;
             redraw();
         }
+    }
+
+    public void clear() {
+        setDataList(null);
+        flush();
     }
 
     public ChartColor getChartColor() {
