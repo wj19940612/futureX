@@ -832,7 +832,7 @@
     <string name="cny_with_symbol">RMB</string>
     <string name="equivalent_x_x">≈%1$s%2$s</string>
     <string name="transfer_coin">Transfer</string>
-    <string name="otc_balance_not_enough_hint_x">Please transfer USDT from Exchange account to OTC account first.</string>
+    <string name="otc_balance_not_enough_hint_x">Please transfer %1$s from Exchange account to OTC account first.</string>
     <string name="transfer_now">Transfer now</string>
     <string name="otc_balance_not_enough">Insufficient funds in OTC account</string>
     <string name="confirm_sell">Confirm to sell</string>
