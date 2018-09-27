@@ -23,6 +23,7 @@ import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
 import com.songbai.futurex.R;
 import com.songbai.futurex.activity.UniqueActivity;
+import com.songbai.futurex.activity.auth.LoginActivity;
 import com.songbai.futurex.http.Apic;
 import com.songbai.futurex.http.Callback;
 import com.songbai.futurex.http.Resp;
@@ -30,6 +31,7 @@ import com.songbai.futurex.model.UserInfo;
 import com.songbai.futurex.model.local.LocalUser;
 import com.songbai.futurex.model.local.SupportLang;
 import com.songbai.futurex.utils.LanguageUtils;
+import com.songbai.futurex.utils.Launcher;
 import com.songbai.futurex.view.IconTextRow;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.MsgHintController;
@@ -88,14 +90,12 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
 
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
-        mLogout.setVisibility(LocalUser.getUser().isLogin() ? View.VISIBLE : View.GONE);
         String currentLanguageStr = Preference.get().getCurrentLangageStr();
         if (!TextUtils.isEmpty(currentLanguageStr)) {
             mLanguage.setSubText(currentLanguageStr);
         } else {
             getSupportLocal();
         }
-        setPricingMethod();
         initView();
         switchHostInAlpha();
     }
@@ -103,7 +103,7 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     @Override
     public void onResume() {
         super.onResume();
-        setPricingMethod();
+        initView();
     }
 
     private void setPricingMethod() {
@@ -189,14 +189,16 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     }
 
     private void initView() {
+        setPricingMethod();
         mQuickBtn.setSelected(Preference.get().isQuickExchange());
         LocalUser localUser = LocalUser.getUser();
         if (localUser.isLogin()) {
+            mLogout.setVisibility(View.VISIBLE);
             UserInfo userInfo = localUser.getUserInfo();
-            mPushBtn.setVisibility(View.VISIBLE);
             mPushBtn.setSelected(userInfo.getEntrustPush() == 1);
         } else {
-            mPushBtn.setVisibility(View.GONE);
+            mLogout.setVisibility(View.GONE);
+            mPushBtn.setSelected(false);
         }
     }
 
@@ -236,6 +238,10 @@ public class SettingsFragment extends UniqueActivity.UniFragment {
     }
 
     private void clickPushBtn() {
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+            return;
+        }
         mPushBtn.setEnabled(false);
         Apic.turnRemindingPush(mPushBtn.isSelected() ? 0 : 1).callback(new Callback<Resp>() {
             @Override

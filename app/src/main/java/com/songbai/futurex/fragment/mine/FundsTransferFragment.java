@@ -90,6 +90,18 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
         getLegalCoin();
         getCoinBalance();
         setView();
+        mTransferAmount.addTextChangedListener(new ValidationWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String amount = mTransferAmount.getText().toString().trim();
+                if (!TextUtils.isEmpty(amount)) {
+                    mConfirmTransfer.setEnabled(mMaxAmount > 0);
+                    mConfirmTransfer.setEnabled(Double.valueOf(amount) > 0);
+                }else{
+                    mConfirmTransfer.setEnabled(false);
+                }
+            }
+        });
     }
 
     private void setView() {
