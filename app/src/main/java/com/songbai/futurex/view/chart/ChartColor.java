@@ -21,6 +21,8 @@ public class ChartColor {
     private int crossLinePriceColor;
 
     private SparseIntArray masColor;
+    private SparseIntArray indexLinesColor;
+    private SparseIntArray indexTextColor;
 
     public void setChartColor(ChartColor color) {
         baseLineColor = color.baseLineColor;
@@ -32,10 +34,14 @@ public class ChartColor {
         crossLineDateColor = color.crossLineDateColor;
         crossLinePriceColor = color.crossLinePriceColor;
         masColor = color.masColor;
+        indexLinesColor = color.indexLinesColor;
+        indexTextColor = color.indexTextColor;
     }
 
     public ChartColor() {
         this.masColor = new SparseIntArray(3);
+        this.indexLinesColor = new SparseIntArray(3);
+        this.indexTextColor = new SparseIntArray(3);
     }
 
     public int getBaseLineColor() {
@@ -60,6 +66,22 @@ public class ChartColor {
 
     public void setMaColor(int ma, int maColor) {
         masColor.put(ma, maColor);
+    }
+
+    public void setIndexLinesColor(int key, int lineColor) {
+        indexLinesColor.put(key, lineColor);
+    }
+
+    public int getIndexLinesColor(int key) {
+        return indexLinesColor.get(key);
+    }
+
+    public void setIndexTextColor(int key, int textColor) {
+        indexTextColor.put(key, textColor);
+    }
+
+    public int getIndexTextColor(int key) {
+        return indexTextColor.get(key);
     }
 
     public int getCrossLineColor() {

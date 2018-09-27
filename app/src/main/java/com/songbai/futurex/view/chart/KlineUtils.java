@@ -56,6 +56,7 @@ public class KlineUtils {
     public static String getKlineType(int selectedTabPosition) {
         switch (selectedTabPosition) {
             case 0:
+                return "1";
             case 1:
                 return "15";
             case 2:

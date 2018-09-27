@@ -28,43 +28,24 @@ public class ChartsRadio extends LinearLayout {
         void onTabSelected(int position);
     }
 
-    public interface OnIndexSelectedListener {
-        void onIndexSelected(int indexes);
+    public interface IndexMenuController {
+        View getView();
     }
 
     private OnTabSelectedListener mOnTabSelectedListener;
-
     private LinearLayout mChartsRadioMain;
-    private ViewGroup mChartsRadioDropMenu;
-    private ViewGroup mIndexesDropMenu;
+    private ViewGroup mMoreDropMenu;
+    private ViewGroup mIndexDropMenu;
+    private IndexMenuController mIndexMenuController;
 
     private int mMoreTabIndex;
     private TextView mMoreTab;
     private ImageView mMoreTriangle;
 
     private int mIndexTabIndex;
-    private TextView mIndexTab;
     private ImageView mIndexTriangle;
 
     private int mSelectedPosition;
-
-    private OnIndexSelectedListener mOnIndexSelectedListener;
-
-    private TextView mMa;
-    private TextView mBoll;
-    private TextView mMacd;
-    private TextView mKdj;
-    private TextView mRsi;
-    private TextView mWr;
-
-    public interface Indexes {
-        int MA = 0;
-        int BOLL = 1;
-        int MACD = 2;
-        int KDJ = 3;
-        int RSI = 4;
-        int WR = 5;
-    }
 
     public ChartsRadio(@NonNull Context context) {
         super(context);
@@ -86,7 +67,6 @@ public class ChartsRadio extends LinearLayout {
 
         mMoreTab = mChartsRadioMain.findViewById(R.id.moreTab);
         mMoreTriangle = mChartsRadioMain.findViewById(R.id.moreTriangle);
-        mIndexTab = mChartsRadioMain.findViewById(R.id.indexesTab);
         mIndexTriangle = mChartsRadioMain.findViewById(R.id.indexesTriangle);
 
         initChartsRadioMain();
@@ -104,97 +84,20 @@ public class ChartsRadio extends LinearLayout {
         mOnTabSelectedListener = onTabSelectedListener;
     }
 
-    public void setIndexesDropMenu(ViewGroup indexesDropMenu) {
-        mIndexesDropMenu = indexesDropMenu;
-        if (mIndexesDropMenu == null) return;
-
-        mMa = (TextView) mIndexesDropMenu.findViewById(R.id.ma);
-        mBoll = (TextView) mIndexesDropMenu.findViewById(R.id.boll);
-        mMacd = (TextView) mIndexesDropMenu.findViewById(R.id.macd);
-        mKdj = (TextView) mIndexesDropMenu.findViewById(R.id.kdj);
-        mRsi = (TextView) mIndexesDropMenu.findViewById(R.id.rsi);
-        mWr = (TextView) mIndexesDropMenu.findViewById(R.id.wr);
-        for (int i = 0; i < mIndexesDropMenu.getChildCount(); i++) {
-            mIndexesDropMenu.getChildAt(i).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    handleViewClick(view);
-                }
-            });
+    public void setIndexMenuController(IndexMenuController indexMenuController) {
+        mIndexMenuController = indexMenuController;
+        if (mIndexMenuController.getView() instanceof ViewGroup) {
+            mIndexDropMenu = (ViewGroup) mIndexMenuController.getView();
         }
     }
 
+    public void setMoreDropMenu(ViewGroup moreDropMenu) {
+        mMoreDropMenu = moreDropMenu;
+        if (mMoreDropMenu == null) return;
 
-    private void handleViewClick(View view) {
-        int index = -1;
-
-        switch (view.getId()) {
-            case R.id.ma:
-                clearMainIndex();
-                mMa.setSelected(true);
-                index = Indexes.MA;
-                break;
-            case R.id.boll:
-                clearMainIndex();
-                mBoll.setSelected(true);
-                index = Indexes.BOLL;
-                break;
-            case R.id.macd:
-                clearViceIndex();
-                mMacd.setSelected(true);
-                index = Indexes.MACD;
-                break;
-            case R.id.kdj:
-                clearViceIndex();
-                mKdj.setSelected(true);
-                index = Indexes.KDJ;
-                break;
-            case R.id.rsi:
-                clearViceIndex();
-                mRsi.setSelected(true);
-                index = Indexes.RSI;
-                break;
-            case R.id.wr:
-                clearViceIndex();
-                mWr.setSelected(true);
-                index = Indexes.WR;
-                break;
-            case R.id.mainHide:
-                clearMainIndex();
-                break;
-            case R.id.viceHide:
-                clearViceIndex();
-                break;
-            default:
-                return;
-        }
-
-        if (index >= 0 && mOnIndexSelectedListener != null) {
-            mOnIndexSelectedListener.onIndexSelected(index);
-        }
-
-        closeIndexDropMenu();
-    }
-
-    private void clearMainIndex() {
-        mMa.setSelected(false);
-        mBoll.setSelected(false);
-    }
-
-    private void clearViceIndex() {
-        mMacd.setSelected(false);
-        mKdj.setSelected(false);
-        mRsi.setSelected(false);
-        mWr.setSelected(false);
-    }
-
-    public void setChartsRadioDropMenu(ViewGroup chartsRadioDropMenu) {
-        mChartsRadioDropMenu = chartsRadioDropMenu;
-        if (mChartsRadioDropMenu == null) return;
-
-        for (int i = 0; i < mChartsRadioDropMenu.getChildCount(); i++) {
+        for (int i = 0; i < mMoreDropMenu.getChildCount(); i++) {
             final int finalI = i;
-            mChartsRadioDropMenu.getChildAt(i).setOnClickListener(new OnClickListener() {
+            mMoreDropMenu.getChildAt(i).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mMoreTriangle.setImageResource(R.drawable.ic_triangle);
@@ -261,47 +164,47 @@ public class ChartsRadio extends LinearLayout {
     }
 
     private boolean isMoreDropMenuShow() {
-        if (mChartsRadioDropMenu != null && mChartsRadioDropMenu.getVisibility() == VISIBLE) {
+        if (mMoreDropMenu != null && mMoreDropMenu.getVisibility() == VISIBLE) {
             return true;
         }
         return false;
     }
 
     private boolean isIndexDropMenuShow() {
-        if (mIndexesDropMenu != null && mIndexesDropMenu.getVisibility() == VISIBLE) {
+        if (mIndexDropMenu != null && mIndexDropMenu.getVisibility() == VISIBLE) {
             return true;
         }
         return false;
     }
 
-    private void showMoreDropMenu() {
+    public void showMoreDropMenu() {
         if (isIndexDropMenuShow()) {
             closeIndexDropMenu();
         }
         mMoreTriangle.setImageResource(R.drawable.ic_triangle_highlight);
-        Animation expendY = AnimUtils.createExpendY(mChartsRadioDropMenu, 300);
-        mChartsRadioDropMenu.startAnimation(expendY);
+        Animation expendY = AnimUtils.createExpendY(mMoreDropMenu, 300);
+        mMoreDropMenu.startAnimation(expendY);
     }
 
-    private void closeMoreDropMenu() {
+    public void closeMoreDropMenu() {
         mMoreTriangle.setImageResource(R.drawable.ic_triangle);
-        Animation collapseY = AnimUtils.createCollapseY(mChartsRadioDropMenu, 300);
-        mChartsRadioDropMenu.startAnimation(collapseY);
+        Animation collapseY = AnimUtils.createCollapseY(mMoreDropMenu, 300);
+        mMoreDropMenu.startAnimation(collapseY);
     }
 
-    private void showIndexDropMenu() {
+    public void showIndexDropMenu() {
         if (isMoreDropMenuShow()) {
             closeMoreDropMenu();
         }
         mIndexTriangle.setImageResource(R.drawable.ic_triangle_highlight);
-        Animation expendY = AnimUtils.createExpendY(mIndexesDropMenu, 300);
-        mIndexesDropMenu.startAnimation(expendY);
+        Animation expendY = AnimUtils.createExpendY(mIndexDropMenu, 300);
+        mIndexDropMenu.startAnimation(expendY);
     }
 
-    private void closeIndexDropMenu() {
+    public void closeIndexDropMenu() {
         mIndexTriangle.setImageResource(R.drawable.ic_triangle);
-        Animation collapseY = AnimUtils.createCollapseY(mIndexesDropMenu, 300);
-        mIndexesDropMenu.startAnimation(collapseY);
+        Animation collapseY = AnimUtils.createCollapseY(mIndexDropMenu, 300);
+        mIndexDropMenu.startAnimation(collapseY);
     }
 
     private void onTabSelected(int index) {
