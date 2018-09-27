@@ -306,7 +306,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                         String.valueOf(legalCurrencyOrder.getOrderAmount())
                         , legalCurrencyOrder.getPayCurrency().toUpperCase()));
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
-                        "yyyy/MM/dd HH:mm"));
+                        "yyyy/MM/dd HH:mm:ss"));
                 mPrice.setText(String.valueOf(legalCurrencyOrder.getOrderPrice()));
                 mStatus.setTimes(System.currentTimeMillis());
                 mStatus.stopRun();
