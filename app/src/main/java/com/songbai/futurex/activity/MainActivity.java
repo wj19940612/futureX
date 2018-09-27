@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 
 import com.songbai.futurex.ExtraKeys;
 import com.songbai.futurex.Preference;
@@ -50,6 +51,9 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
     BottomTabs mBottomTabs;
     private MainFragmentsAdapter mMainFragmentsAdapter;
     private long mFirstBackTime;
+
+    private boolean mShouldHideInputMethod;
+    private View mLastFocusView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,10 +198,21 @@ public class MainActivity extends BaseActivity implements OnNavigationListener, 
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
+            mLastFocusView = v;
             if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
-                KeyBoardUtils.closeKeyboard(v);
-                v.clearFocus();
+                mShouldHideInputMethod = true;
+                mLastFocusView.clearFocus();
             }
+            return super.dispatchTouchEvent(ev);
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            View v = getCurrentFocus();
+            if (mShouldHideInputMethod && !(v instanceof EditText)) {
+                KeyBoardUtils.closeKeyboard(mLastFocusView);
+                mShouldHideInputMethod = false;
+            }
+            return super.dispatchTouchEvent(ev);
+        } else if (ev.getAction() == MotionEvent.ACTION_CANCEL) {
+            mShouldHideInputMethod = false;
             return super.dispatchTouchEvent(ev);
         }
         return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);

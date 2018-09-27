@@ -743,7 +743,9 @@ public class TradeFragment extends BaseSwipeLoadFragment<NestedScrollView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSwipeTarget.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+        if (mSwipeTarget != null) {
+            mSwipeTarget.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+        }
     }
 
     private void toggleOptionalStatus() {

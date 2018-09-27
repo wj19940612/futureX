@@ -109,7 +109,19 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
                 Intent intent = new Intent(getActivity(), CaptureActivity.class);
                 startActivityForResult(intent, CODE_SCAN);
             } else {
-                requestPermission(getActivity(), REQ_CODE_PERMISSION, new String[]{Manifest.permission.CAMERA});
+                requestPermission(getActivity(), REQ_CODE_PERMISSION, new String[]{Manifest.permission.CAMERA},new PermissionCallback(){
+
+                    @Override
+                    public void onPermissionGranted(int requestCode) {
+                        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                        startActivityForResult(intent, CODE_SCAN);
+                    }
+
+                    @Override
+                    public void onPermissionDenied(int requestCode) {
+                        ToastUtil.show(R.string.please_open_camera_permission);
+                    }
+                });
             }
         } else {
             if (PermissionUtil.cameraIsCanUse()) {

@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.songbai.futurex.R;
 import com.songbai.futurex.fragment.BaseFragment;
@@ -23,6 +26,9 @@ public class UniqueActivity extends BaseActivity {
 
     private String mFragmentName;
     private Bundle mExtras;
+
+    private boolean mShouldHideInputMethod;
+    private View mLastFocusView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +51,21 @@ public class UniqueActivity extends BaseActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
+            mLastFocusView = v;
             if (KeyBoardUtils.isShouldHideKeyboard(v, ev)) {
-                KeyBoardUtils.closeKeyboard(v);
-                v.clearFocus();
+                mShouldHideInputMethod = true;
+                mLastFocusView.clearFocus();
             }
+            return super.dispatchTouchEvent(ev);
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            View v = getCurrentFocus();
+            if (mShouldHideInputMethod && !(v instanceof EditText)) {
+                KeyBoardUtils.closeKeyboard(mLastFocusView);
+                mShouldHideInputMethod = false;
+            }
+            return super.dispatchTouchEvent(ev);
+        } else if (ev.getAction() == MotionEvent.ACTION_CANCEL) {
+            mShouldHideInputMethod = false;
             return super.dispatchTouchEvent(ev);
         }
         return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
