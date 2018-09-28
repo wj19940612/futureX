@@ -14,7 +14,7 @@ android {
         applicationId "com.songbai.futurex"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 45
+        versionCode 54
         versionName "1.5.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
