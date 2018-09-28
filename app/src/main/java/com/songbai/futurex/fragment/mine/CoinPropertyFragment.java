@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +88,6 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     private PropertyFlowAdapter mAdapter;
     private GetUserFinanceFlowData mGetUserFinanceFlowData;
     private int mAccountType;
-    private String mWid;
     private double mPrice;
 
     @Nullable
@@ -191,6 +191,9 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     }
 
     private void getAccountByUser(String coinType) {
+        if (TextUtils.isEmpty(coinType)) {
+            return;
+        }
         Apic.getAccountByUser(coinType).tag(TAG)
                 .callback(new Callback<Resp<CoinAccountBalance>>() {
                     @Override
@@ -207,6 +210,9 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     }
 
     private void otcAccountList(String coinType) {
+        if (TextUtils.isEmpty(coinType)) {
+            return;
+        }
         Apic.otcAccountList(coinType).tag(TAG)
                 .callback(new Callback<Resp<CoinAccountBalance>>() {
                     @Override
@@ -223,15 +229,11 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
     }
 
     private void getUserFinanceFlow(GetUserFinanceFlowData getUserFinanceFlowData) {
-        Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5, mWid).tag(TAG)
+        Apic.getUserFinanceFlow(getUserFinanceFlowData, 0, 5, "").tag(TAG)
                 .callback(new Callback<Resp<PagingWrap<CoinPropertyFlow>>>() {
                     @Override
                     protected void onRespSuccess(Resp<PagingWrap<CoinPropertyFlow>> resp) {
                         PagingWrap<CoinPropertyFlow> pagingWrap = resp.getData();
-                        List<CoinPropertyFlow> data = pagingWrap.getData();
-                        if (data.size() > 0) {
-                            mWid = data.get(data.size() - 1).getWid();
-                        }
                         mAdapter.setList(pagingWrap);
                         mAdapter.setAccount(mAccountType);
                         mAdapter.notifyDataSetChanged();
@@ -288,7 +290,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                 if (mAccountBean.getLegal() == AccountBean.IS_LEGAL) {
                     ArrayList<AccountBean> accountBeans = new ArrayList<>();
                     accountBeans.add(mAccountBean);
-                    UniqueActivity.launcher(getContext(), FundsTransferFragment.class)
+                    UniqueActivity.launcher(this, FundsTransferFragment.class)
                             .putExtra(ExtraKeys.TRANSFER_TYPE, mTransferType)
                             .execute(this, REQUEST_FUNDS_TRANSFER);
                 }
@@ -296,7 +298,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
             case R.id.recharge:
                 umengEventCount(UmengCountEventId.COINACT0002);
                 if (mAccountBean.getRecharge() == AccountBean.CAN_RECHARGE) {
-                    UniqueActivity.launcher(getContext(), ReChargeCoinFragment.class)
+                    UniqueActivity.launcher(this, ReChargeCoinFragment.class)
                             .putExtra(ExtraKeys.COIN_TYPE, mAccountBean.getCoinType())
                             .execute(this, REQUEST_RECHARGE_COIN);
                 }
@@ -308,7 +310,7 @@ public class CoinPropertyFragment extends UniqueActivity.UniFragment {
                         showAlertMsgHint();
                         return;
                     }
-                    UniqueActivity.launcher(getContext(), WithDrawCoinFragment.class)
+                    UniqueActivity.launcher(this, WithDrawCoinFragment.class)
                             .putExtra(ExtraKeys.ACCOUNT_BEAN, mAccountBean)
                             .execute(this, REQUEST_WITHDRAW_COIN);
                 }
