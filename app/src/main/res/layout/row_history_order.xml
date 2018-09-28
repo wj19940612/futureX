@@ -92,13 +92,17 @@
         app:layout_constraintTop_toBottomOf="@id/entrustPriceTitle"
         app:layout_constraintTop_toTopOf="@id/time"/>
 
-    <TextView
+    <com.songbai.futurex.view.autofit.AutofitTextView
         android:id="@+id/entrustVolume"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:gravity="end"
+        android:singleLine="true"
         android:text="21.89"
         android:textColor="@color/text66"
         android:textSize="13sp"
+        app:layout_constraintLeft_toRightOf="@id/entrustPrice"
         app:layout_constraintRight_toRightOf="@id/entrustVolumeTitle"
         app:layout_constraintTop_toBottomOf="@id/entrustVolumeTitle"
         app:layout_constraintTop_toTopOf="@id/entrustPrice"/>
@@ -156,12 +160,16 @@
         app:layout_constraintTop_toTopOf="@id/dealTotalAmt"
         tools:text="10.1001"/>
 
-    <TextView
+    <com.songbai.futurex.view.autofit.AutofitTextView
         android:id="@+id/dealVolume"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:gravity="end"
+        android:singleLine="true"
         android:textColor="@color/text66"
         android:textSize="13sp"
+        app:layout_constraintLeft_toRightOf="@id/dealAveragePrice"
         app:layout_constraintRight_toRightOf="@id/dealVolumeTitle"
         app:layout_constraintTop_toTopOf="@id/dealTotalAmt"
         tools:text="300.1400"/>
