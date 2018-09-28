@@ -477,6 +477,8 @@ public class Kline extends BaseChart {
                 min = safeMin(min, indexData.getMacdDea());
                 min = safeMin(min, indexData.getMacdDiff());
             }
+            max = safeMax(max, Float.valueOf(0));
+            min = safeMin(min, Float.valueOf(0));
         } else if (mChartCfg.getSubIndex() == ChartCfg.INDEX_KDJ) {
             for (int i = mStart; i < mEnd; i++) {
                 IndexData indexData = mDataList.get(i).getIndexData();
