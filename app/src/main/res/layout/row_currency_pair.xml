@@ -34,7 +34,8 @@
                 android:textColor="@color/text49"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="BTC" />
+                tools:text="BTC"
+                android:includeFontPadding="false"/>
 
             <TextView
                 android:id="@+id/counterCurrency"
@@ -44,7 +45,8 @@
                 android:layout_marginLeft="6dp"
                 android:textColor="@color/text99"
                 android:textSize="10sp"
-                tools:text="USDT"/>
+                tools:text="USDT"
+                android:includeFontPadding="false"/>
         </LinearLayout>
 
         <TextView
@@ -55,7 +57,8 @@
             android:layout_marginTop="8dp"
             android:textColor="@color/text99"
             android:textSize="12sp"
-            tools:text="24H量 1531"/>
+            tools:text="24H量 1531"
+            android:includeFontPadding="false"/>
     </LinearLayout>
 
     <com.songbai.futurex.view.chart.TimeShareChart
