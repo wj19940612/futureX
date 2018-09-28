@@ -1,6 +1,9 @@
 package com.songbai.futurex.fragment.mine;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,10 +28,12 @@ import com.songbai.futurex.model.mine.AccountBean;
 import com.songbai.futurex.model.mine.CoinAddress;
 import com.songbai.futurex.model.mine.DrawLimit;
 import com.songbai.futurex.utils.FinanceUtil;
+import com.songbai.futurex.utils.PermissionUtil;
 import com.songbai.futurex.utils.ToastUtil;
 import com.songbai.futurex.utils.ValidationWatcher;
 import com.songbai.futurex.view.SmartDialog;
 import com.songbai.futurex.view.dialog.ItemSelectController;
+import com.songbai.futurex.zxing.activity.CaptureActivity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -43,6 +48,8 @@ import butterknife.Unbinder;
  * @date 2018/5/30
  */
 public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
+    public static final int CODE_SCAN = 10123;
+    public static final int REQ_CODE_PERMISSION = 10000;
     @BindView(R.id.etWithDrawAddress)
     EditText mEtWithDrawAddress;
     @BindView(R.id.withDrawAmount)
@@ -180,9 +187,12 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.withDrawAddress, R.id.drawAll, R.id.confirmDraw})
+    @OnClick({R.id.withDrawScan, R.id.withDrawAddress, R.id.drawAll, R.id.confirmDraw})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.withDrawScan:
+                scanWithDraw();
+                break;
             case R.id.withDrawAddress:
                 getDrawWalletAddrByCoinType(mAccountBean.getCoinType());
                 break;
@@ -202,6 +212,40 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
                         md5Encrypt(value));
                 break;
             default:
+        }
+    }
+
+    private void scanWithDraw() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (hasSelfPermissions(getActivity(), new String[]{Manifest.permission.CAMERA, Manifest.permission.VIBRATE})) {
+                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                startActivityForResult(intent, CODE_SCAN);
+            } else {
+                requestPermission(getActivity(), REQ_CODE_PERMISSION, new String[]{Manifest.permission.CAMERA}, new PermissionCallback() {
+
+                    @Override
+                    public void onPermissionGranted(int requestCode) {
+                        if (requestCode == REQ_CODE_PERMISSION) {
+                            Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                            startActivityForResult(intent, CODE_SCAN);
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(int requestCode) {
+                        if (requestCode == REQ_CODE_PERMISSION) {
+                            ToastUtil.show(R.string.please_open_camera_permission);
+                        }
+                    }
+                });
+            }
+        } else {
+            if (PermissionUtil.cameraIsCanUse()) {
+                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                startActivityForResult(intent, CODE_SCAN);
+            } else {
+                ToastUtil.show(R.string.please_open_camera_permission);
+            }
         }
     }
 
@@ -264,6 +308,38 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         if (mSmartDialog != null) {
             mSmartDialog.dismiss();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CODE_SCAN && resultCode == Activity.RESULT_OK && data != null) {
+            String result = data.getStringExtra(CaptureActivity.RESULT);
+            checkWithDrawResult(result);
+        }
+    }
+
+    private void checkWithDrawResult(final String result) {
+        Apic.judgeAddress(mAccountBean.getCoinType(), result).tag(TAG).callback(new Callback<Resp<Boolean>>() {
+
+            @Override
+            protected void onRespSuccess(Resp resp) {
+                if ((resp.getData() != null) && (Boolean) resp.getData()) {
+                    mEtWithDrawAddress.setText(result);
+                } else {
+                    showErrorAddress();
+                }
+            }
+
+            @Override
+            protected void onRespFailure(Resp failedResp) {
+//                super.onRespFailure(failedResp);
+                showErrorAddress();
+            }
+        }).fireFreely();
+    }
+
+    private void showErrorAddress() {
+        ToastUtil.show(R.string.invalid_qr_code);
     }
 
     static class DrawCoinAddressListAdapter extends RecyclerView.Adapter {
