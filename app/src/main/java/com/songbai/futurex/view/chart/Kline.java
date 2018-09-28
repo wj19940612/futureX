@@ -884,15 +884,8 @@ public class Kline extends BaseChart {
             if (i == mStart) {
                 textX = left + mTextMargin;
             } else if (i == mEnd - 1) {
-                break;
+                textX = left + width - textWidth - mTextMargin;
             }
-            canvas.drawText(timestamp, textX, textY, sPaint);
-        }
-        if (mEnd > 0 && mEnd - mStart == mCandleNum) { // full width screen
-            Data data = mDataList.get(mEnd - 1);
-            String timestamp = formatTimestamp(data.getTimestamp());
-            float textWidth = sPaint.measureText(timestamp);
-            float textX = left + width - textWidth - mTextMargin;
             canvas.drawText(timestamp, textX, textY, sPaint);
         }
     }
