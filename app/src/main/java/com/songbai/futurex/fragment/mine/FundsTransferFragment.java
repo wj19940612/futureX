@@ -118,6 +118,7 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
                         mLegalCoins = resp.getData();
                         if (TextUtils.isEmpty(mSelectedCoinType) && mLegalCoins.size() > 0) {
                             mSelectedCoinType = mLegalCoins.get(0).getSymbol();
+                            getCoinBalance();
                             setSelectedItem(mSelectedCoinType);
                         }
                     }
@@ -125,6 +126,9 @@ public class FundsTransferFragment extends UniqueActivity.UniFragment {
     }
 
     private void getCoinBalance() {
+        if (TextUtils.isEmpty(mSelectedCoinType)) {
+            return;
+        }
         getAccountByUser(mSelectedCoinType);
         otcAccountList(mSelectedCoinType);
     }

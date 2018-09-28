@@ -123,8 +123,36 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
         String fee = data.getFee();
         String confirmText = data.getConfirmNum() + "/" + data.getConfirm();
         String toAddr = data.getToAddr();
+        int status = data.getStatus();
+        switch (status) {
+            case CurrencyFlowStatus.SUCCESS:
+                mStatus.setText(R.string.completed);
+                break;
+            case CurrencyFlowStatus.FREEZE:
+                mStatus.setText(R.string.freeze);
+                break;
+            case CurrencyFlowStatus.DRAW_REJECT:
+                mStatus.setText(R.string.withdraw_coin_rejected);
+                break;
+            case CurrencyFlowStatus.ENTRUS_RETURN:
+                mStatus.setText(R.string.entrust_return);
+                break;
+            case CurrencyFlowStatus.FREEZE_DEDUCT:
+                mStatus.setText(R.string.freeze_deduct);
+                break;
+            case CurrencyFlowStatus.ENTRUSE_RETURN_SYS:
+                mStatus.setText(R.string.sys_withdraw);
+                break;
+            case CurrencyFlowStatus.FREEZE_RETURN:
+                mStatus.setText(R.string.freeze_return);
+                break;
+            default:
+                mStatus.setText(R.string.others);
+                break;
+        }
         switch (flowType) {
             case CurrencyFlowType.DRAW:
+                mFlowType.setText(R.string.draw_coin);
                 setIoStatus(data.getIoStatus());
                 mAddress.setText(toAddr);
                 mFee.setText(getString(R.string.x_space_x, fee, data.getCoinType().toUpperCase()));
@@ -134,6 +162,7 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
                 mVolumeGroup.setVisibility(View.VISIBLE);
                 break;
             case CurrencyFlowType.DEPOSITE:
+                mFlowType.setText(R.string.recharge_coin);
                 setIoStatus(data.getIoStatus());
                 mAddress.setText(toAddr);
                 mFee.setText(getString(R.string.x_space_x, fee, data.getCoinType().toUpperCase()));
@@ -209,54 +238,27 @@ public class PropertyFlowDetailFragment extends UniqueActivity.UniFragment {
                 mFlowType.setText(R.string.others);
                 break;
         }
-        int status = data.getStatus();
-        switch (status) {
-            case CurrencyFlowStatus.SUCCESS:
-                mStatus.setText(R.string.completed);
-                break;
-            case CurrencyFlowStatus.FREEZE:
-                mStatus.setText(R.string.freeze);
-                break;
-            case CurrencyFlowStatus.DRAW_REJECT:
-                mStatus.setText(R.string.withdraw_coin_rejected);
-                break;
-            case CurrencyFlowStatus.ENTRUS_RETURN:
-                mStatus.setText(R.string.entrust_return);
-                break;
-            case CurrencyFlowStatus.FREEZE_DEDUCT:
-                mStatus.setText(R.string.freeze_deduct);
-                break;
-            case CurrencyFlowStatus.ENTRUSE_RETURN_SYS:
-                mStatus.setText(R.string.sys_withdraw);
-                break;
-            case CurrencyFlowStatus.FREEZE_RETURN:
-                mStatus.setText(R.string.freeze_return);
-                break;
-            default:
-                mStatus.setText(R.string.others);
-                break;
-        }
     }
 
     private void setIoStatus(int ioStatus) {
         switch (ioStatus) {
             case IoStatus.AUDITING:
-                mFlowType.setText(R.string.auditing);
+                mStatus.setText(R.string.auditing);
                 break;
             case IoStatus.REJECTED:
-                mFlowType.setText(R.string.rejected);
+                mStatus.setText(R.string.rejected);
                 break;
             case IoStatus.CONFIRMING:
-                mFlowType.setText(R.string.confirming);
+                mStatus.setText(R.string.confirming);
                 break;
             case IoStatus.SUCCEEDED:
-                mFlowType.setText(R.string.succeeded);
+                mStatus.setText(R.string.succeeded);
                 break;
             case IoStatus.FAILED:
-                mFlowType.setText(R.string.failed);
+                mStatus.setText(R.string.failed);
                 break;
             default:
-                mFlowType.setText(R.string.others);
+                mStatus.setText(R.string.others);
                 break;
         }
     }
