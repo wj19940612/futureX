@@ -429,10 +429,8 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
         mLowestPrice.setText("--");
         mTradeVolume.setText("--");
 
-        mTrend.setDataList(null);
-        mTrend.flush();
-        mKline.setDataList(null);
-        mKline.flush();
+        mTrend.clear();
+        mKline.clear();
         mDeepView.reset();
         mTradeVolumeView.reset();
         mTradeDealView.reset();
@@ -678,12 +676,11 @@ public class MarketDetailFragment extends UniqueActivity.UniFragment {
                         initMarketViews();
                         requestDeepList();
                         requestDealList();
-                        requestTrendData();
                         requestIntroduceData();
                         updateTradeButtons();
                         updateOptionalStatus();
                         requestUserAccount();
-                        mChartRadio.performChildClick(0);
+                        mChartRadio.performChildClick(1);
                         mTradeDetailRadio.selectTab(0);
 
                         mTradeLayout.updateData(mCurrencyPair, mPairDesc, mTradeVolumeView);
