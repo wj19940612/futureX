@@ -94,6 +94,8 @@ public class TimerTextView extends AppCompatTextView implements Runnable {
     public void stopRun() {
         this.run = false;
         removeCallbacks(this);
+        removeSetTextCallback();
+        removeOnStateChangeListener();
     }
 
     @Override

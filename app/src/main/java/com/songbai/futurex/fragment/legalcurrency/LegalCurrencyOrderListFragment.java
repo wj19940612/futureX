@@ -308,8 +308,8 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                 mTimestamp.setText(DateUtil.format(legalCurrencyOrder.getOrderTime(),
                         "yyyy/MM/dd HH:mm:ss"));
                 mPrice.setText(String.valueOf(legalCurrencyOrder.getOrderPrice()));
-                mStatus.setTimes(System.currentTimeMillis());
                 mStatus.stopRun();
+                mStatus.setTimes(System.currentTimeMillis());
                 switch (legalCurrencyOrder.getStatus()) {
                     case OTCOrderStatus.ORDER_CANCLED:
                         mStatus.setText(R.string.canceled);
@@ -318,7 +318,7 @@ public class LegalCurrencyOrderListFragment extends BaseSwipeLoadFragment implem
                     case OTCOrderStatus.ORDER_UNPAIED:
                         mStatus.setText(R.string.unpaid);
                         mStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
-                        if (legalCurrencyOrder.getCountDown() > 0) {
+                        if (legalCurrencyOrder.getDirect() == OTCOrderStatus.ORDER_DIRECT_BUY && legalCurrencyOrder.getCountDown() > 0) {
                             mStatus.setTimes(System.currentTimeMillis() + legalCurrencyOrder.getCountDown() * 1000);
                             mStatus.setSetTextCallback(new TimerTextView.SetTextCallback() {
                                 @Override
