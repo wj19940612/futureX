@@ -858,4 +858,5 @@
 
     <string name="loading_failed_retry">Loading failed. Click to retry.</string>
     <string name="no_data_retry">No data. Click to retry.</string>
+    <string name="qr_code">QR code</string>
 </resources>

@@ -860,4 +860,5 @@
 
     <string name="loading_failed_retry">加載失敗，點擊重試</string>
     <string name="no_data_retry">暫無數據，點擊重試</string>
+    <string name="qr_code">二維碼</string>
 </resources>
