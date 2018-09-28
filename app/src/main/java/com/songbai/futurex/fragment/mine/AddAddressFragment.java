@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
     @Override
     protected void onPostActivityCreated(Bundle savedInstanceState) {
         mAddress.addTextChangedListener(mWatcher);
-        mRemark.setText(mCoinAddressCount.getCoinType().toUpperCase()+"-Address Name");
+        mRemark.setText(mCoinAddressCount.getCoinType().toUpperCase() + "-Address Name");
     }
 
     private ValidationWatcher mWatcher = new ValidationWatcher() {
@@ -109,7 +110,25 @@ public class AddAddressFragment extends UniqueActivity.UniFragment {
                 Intent intent = new Intent(getActivity(), CaptureActivity.class);
                 startActivityForResult(intent, CODE_SCAN);
             } else {
-                requestPermission(getActivity(), REQ_CODE_PERMISSION, new String[]{Manifest.permission.CAMERA});
+                requestPermission(getActivity(), REQ_CODE_PERMISSION, new String[]{Manifest.permission.CAMERA}, new PermissionCallback() {
+
+                    @Override
+                    public void onPermissionGranted(int requestCode) {
+                        Log.e("zzz", "onPermissionGranted");
+                        if (requestCode == REQ_CODE_PERMISSION) {
+                            Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                            startActivityForResult(intent, CODE_SCAN);
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(int requestCode) {
+                        Log.e("zzz", "onPermissionDenied");
+                        if (requestCode == REQ_CODE_PERMISSION) {
+                            ToastUtil.show(R.string.please_open_camera_permission);
+                        }
+                    }
+                });
             }
         } else {
             if (PermissionUtil.cameraIsCanUse()) {

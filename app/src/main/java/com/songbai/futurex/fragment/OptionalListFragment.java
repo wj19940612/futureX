@@ -481,7 +481,7 @@ public class OptionalListFragment extends BaseSwipeLoadFragment<RecyclerView> {
                     }
                 }
 
-                GlideApp.with(context).load(pair.getImage()).placeholder(R.drawable.ic_default_head_portrait).into(mCoinIcon);
+                GlideApp.with(context).load(pair.getImage()).placeholder(R.drawable.ic_default_coin_icon).into(mCoinIcon);
 
 
                 if (editMode) {

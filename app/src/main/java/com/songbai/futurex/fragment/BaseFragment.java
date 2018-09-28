@@ -64,7 +64,7 @@ public class BaseFragment extends Fragment implements ReqIndeterminate, TimerHan
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // Android 6.0
             List<String> deniedPermissions = findDeniedPermissions(activity, permissions);
             if (deniedPermissions.size() > 0) {
-                activity.requestPermissions(permissions, mRequestCode);
+                requestPermissions(permissions, mRequestCode);
             }
         } else {
             mPermissionCallback.onPermissionGranted(mRequestCode);

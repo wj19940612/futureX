@@ -96,6 +96,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.UniqueActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.auth.LoginActivity"
