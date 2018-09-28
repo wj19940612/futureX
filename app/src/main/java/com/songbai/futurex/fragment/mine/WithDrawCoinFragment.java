@@ -178,7 +178,8 @@ public class WithDrawCoinFragment extends UniqueActivity.UniFragment {
         String minWithDrawAmountStr = FinanceUtil.subZeroAndDot(drawLimit.getMinWithdrawAmount(), 8);
         mFee.setText(getString(R.string.amount_space_coin_x, FinanceUtil.formatWithScale(drawLimit.getWithdrawRate(), 8), mAccountBean.getCoinType().toUpperCase()));
         mWithDrawAmount.setHint(getString(R.string.min_draw_amount_coin_x, minWithDrawAmountStr, mAccountBean.getCoinType().toUpperCase()));
-        mWithDrawRules.setText(getString(R.string.with_draw_rules_x, minWithDrawAmountStr, drawLimit.getConfirm()));
+        String maxWithdrawAmount = FinanceUtil.subZeroAndDot(drawLimit.getMaxWithdrawAmount(), 8);
+        mWithDrawRules.setText(getString(R.string.with_draw_rules_x, minWithDrawAmountStr, maxWithdrawAmount, drawLimit.getConfirm()));
     }
 
     @Override

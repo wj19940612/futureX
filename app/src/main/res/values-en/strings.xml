@@ -283,7 +283,7 @@
     <string name="cash_pwd">Fund password</string>
     <string name="set_cash_pwd_rules">Notice: Your fund password will be used for trade, withdrawal and security setting. It is suggested to be different than login password. The platform will take no responsibility if your account is stolen because of the password.</string>
     <string name="confirm_with_draw">Confirm</string>
-    <string name="with_draw_rules_x">1. Minimum withdrawal: %1$s\n2. Make sure the address is correct before you withdraw. Once sent to the block chain network, the transaction is irrevocable.\n3. After transfer to the address above, you need the confirmation of all network nodes. %2$d times network confirm later, you are able to get the coins.\n4. Please do not take coins directly to ICO\'s crowdfunding address, which will prevent you from receiving crowdfunding digital assets.\n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
+    <string name="with_draw_rules_x">1. Minimum withdrawal: %1$s, Maximum withdrawal: %2$s\n2. Make sure the address is correct before you withdraw. Once sent to the block chain network, the transaction is irrevocable.\n3. After transfer to the address above, you need the confirmation of all network nodes. %3$d times network confirm later, you are able to get the coins.\n4. Please do not take coins directly to ICO\'s crowdfunding address, which will prevent you from receiving crowdfunding digital assets.\n5. Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</string>
     <string name="arrivals_num">Arrivals</string>
     <string name="filtrate">Filter</string>
     <string name="coin_type">Token</string>

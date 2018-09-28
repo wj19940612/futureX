@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    android:id="@+id/indexDropMenu"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/indexDropMenu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_f5_with_bottom_shadow"
@@ -26,35 +26,38 @@
         android:id="@+id/ma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MA"
         android:background="@drawable/btn_transparent"
+        android:text="MA"
         android:textColor="@color/selected_primary_normal_66"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/mainIndexTitle"
-        app:layout_constraintLeft_toRightOf="@id/mainIndexTitle"/>
+        app:layout_constraintLeft_toRightOf="@id/mainIndexTitle"
+        app:layout_constraintTop_toTopOf="@id/mainIndexTitle"/>
 
     <TextView
         android:id="@+id/boll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:text="BOLL"
         android:background="@drawable/btn_transparent"
+        android:text="BOLL"
         android:textColor="@color/selected_primary_normal_66"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/mainIndexTitle"
-        app:layout_constraintLeft_toRightOf="@id/ma"/>
+        app:layout_constraintLeft_toRightOf="@id/ma"
+        app:layout_constraintTop_toTopOf="@id/mainIndexTitle"/>
 
     <TextView
         android:id="@+id/mainHide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
-        android:text="@string/hide"
         android:background="@drawable/btn_transparent"
+        android:text="@string/hide"
         android:textColor="@color/text66"
         app:layout_constraintBottom_toBottomOf="@id/mainIndexTitle"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mainIndexTitle"/>
 
     <TextView
         android:id="@+id/viceIndexTitle"
@@ -71,48 +74,52 @@
         android:id="@+id/macd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MACD"
         android:background="@drawable/btn_transparent"
+        android:text="MACD"
         android:textColor="@color/selected_primary_normal_66"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/viceIndexTitle"
-        app:layout_constraintLeft_toRightOf="@id/viceIndexTitle"/>
+        app:layout_constraintLeft_toRightOf="@id/viceIndexTitle"
+        app:layout_constraintTop_toTopOf="@id/viceIndexTitle"/>
 
     <TextView
         android:id="@+id/kdj"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:text="KDJ"
         android:background="@drawable/btn_transparent"
+        android:text="KDJ"
         android:textColor="@color/selected_primary_normal_66"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/viceIndexTitle"
-        app:layout_constraintLeft_toRightOf="@id/macd"/>
+        app:layout_constraintLeft_toRightOf="@id/macd"
+        app:layout_constraintTop_toTopOf="@id/viceIndexTitle"/>
 
     <TextView
         android:id="@+id/rsi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:text="RSI"
         android:background="@drawable/btn_transparent"
+        android:text="RSI"
         android:textColor="@color/selected_primary_normal_66"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/viceIndexTitle"
-        app:layout_constraintLeft_toRightOf="@id/kdj"/>
+        app:layout_constraintLeft_toRightOf="@id/kdj"
+        app:layout_constraintTop_toTopOf="@id/viceIndexTitle"/>
 
     <TextView
         android:id="@+id/wr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:text="WR"
         android:background="@drawable/btn_transparent"
+        android:text="WR"
         android:textColor="@color/selected_primary_normal_66"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/viceIndexTitle"
-        app:layout_constraintLeft_toRightOf="@id/rsi"/>
+        app:layout_constraintLeft_toRightOf="@id/rsi"
+        app:layout_constraintTop_toTopOf="@id/viceIndexTitle"/>
 
     <TextView
         android:id="@+id/viceHide"
@@ -122,7 +129,8 @@
         android:text="@string/hide"
         android:textColor="@color/text66"
         app:layout_constraintBottom_toBottomOf="@id/viceIndexTitle"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/viceIndexTitle"/>
 </android.support.constraint.ConstraintLayout>
 
 

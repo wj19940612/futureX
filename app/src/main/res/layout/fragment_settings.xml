@@ -42,8 +42,7 @@
         android:layout_height="44dp"
         android:background="@drawable/bg_white_pressed_f5"
         android:gravity="center_vertical"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp">
+        android:paddingLeft="14dp">
 
         <TextView
             android:layout_width="0dp"
@@ -55,8 +54,8 @@
 
         <ImageView
             android:id="@+id/quickBtn"
-            android:layout_width="50dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/switch_track"/>
     </LinearLayout>
 
@@ -71,8 +70,7 @@
         android:layout_height="44dp"
         android:background="@drawable/bg_white_pressed_f5"
         android:gravity="center_vertical"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp">
+        android:paddingLeft="14dp">
 
         <TextView
             android:layout_width="0dp"
@@ -84,8 +82,8 @@
 
         <ImageView
             android:id="@+id/pushBtn"
-            android:layout_width="50dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/switch_track"/>
 
     </LinearLayout>
