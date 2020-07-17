@@ -10,7 +10,8 @@ android {
     println alphaVersionName
     println alphaVersionCode
 
-    compileSdkVersion 28
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.songbai.futurex"
         minSdkVersion 14
